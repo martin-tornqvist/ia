@@ -35,12 +35,13 @@ LosResult check_cell(const P& p0,
 {
     LosResult los_result;
 
-    los_result.is_blocked_hard      = true; //Assume we are blocked initially
-    los_result.is_blocked_by_drk    = false;
+    los_result.is_blocked_hard = true; // Assume we are blocked initially
+
+    los_result.is_blocked_by_drk = false;
 
     if (!is_in_fov_range(p0, p1) || !map::is_pos_inside_map(p1))
     {
-        //Target too far away, return the hard blocked result
+        // Target too far away, return the hard blocked result
         return los_result;
     }
 
@@ -51,7 +52,7 @@ LosResult check_cell(const P& p0,
 
     if (!path_deltas_ptr)
     {
-        //No valid line to target, return the hard blocked result
+        // No valid line to target, return the hard blocked result
         return los_result;
     }
 
@@ -59,7 +60,7 @@ LosResult check_cell(const P& p0,
 
     const bool tgt_is_lgt = map::cells[p1.x][p1.y].is_lit;
 
-    //Ok, target is in range and we have a line - let's go
+    // Ok, target is in range and we have a line - let's go
     los_result.is_blocked_hard = false;
 
     P current_p;
@@ -73,14 +74,17 @@ LosResult check_cell(const P& p0,
 
         if (i > 1)
         {
-            //Check if we are blocked
+            // Check if we are blocked
 
             pre_p.set(p0 + path_deltas[i - 1]);
 
             const auto& pre_cell = map::cells[pre_p.x][pre_p.y];
+
             const auto& current_cell = map::cells[current_p.x][current_p.y];
 
-            if (!tgt_is_lgt && !current_cell.is_lit && (current_cell.is_dark || pre_cell.is_dark))
+            if (!tgt_is_lgt &&
+                !current_cell.is_lit &&
+                (current_cell.is_dark || pre_cell.is_dark))
             {
                 los_result.is_blocked_by_drk = true;
             }
@@ -91,7 +95,7 @@ LosResult check_cell(const P& p0,
             break;
         }
 
-        if (i > 0 && hard_blocked[current_p.x][current_p.y])
+        if ((i > 0) && hard_blocked[current_p.x][current_p.y])
         {
             los_result.is_blocked_hard = true;
             break;
@@ -116,7 +120,7 @@ void run(const P& p0,
         }
     }
 
-     const R r = get_fov_rect(p0);
+    const R r = get_fov_rect(p0);
 
     for (int x = r.p0.x; x <= r.p1.x; ++x)
     {
@@ -129,4 +133,4 @@ void run(const P& p0,
     out[p0.x][p0.y].is_blocked_hard = false;
 }
 
-} //fov
+} // fov

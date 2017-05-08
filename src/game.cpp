@@ -1392,6 +1392,7 @@ void GameState::draw_map()
                 }
 
                 if (f->is_los_passable() &&
+                    !f->is_bottomless() &&
                     cell.is_lit)
                 {
                     render_data->mark_lit = true;
@@ -1592,7 +1593,9 @@ void GameState::draw_map()
                     }
 
                     // Fade dark cells
-                    if (cell.is_dark && !cell.is_lit)
+                    if (!cell.rigid->is_bottomless() &&
+                        cell.is_dark &&
+                        !cell.is_lit)
                     {
                         const double div = 1.75;
 
@@ -1771,7 +1774,7 @@ void GameState::draw_map()
             bool did_draw = false;
 
             // Draw tile here if tile mode, and a tile has been set
-            if (is_tile_mode && render_data->tile != TileId::empty)
+            if (is_tile_mode && (render_data->tile != TileId::empty))
             {
                 io::draw_tile(render_data->tile,
                               Panel::map,
@@ -1782,8 +1785,8 @@ void GameState::draw_map()
                 did_draw = true;
             }
             // Text mode, or no tile set - draw glyph?
-            else if (render_data->glyph != 0 &&
-                     render_data->glyph != ' ')
+            else if ((render_data->glyph != 0) &&
+                     (render_data->glyph != ' '))
             {
                 //
                 // NOTE: It can happen that text is drawn on the map even in
@@ -1808,10 +1811,10 @@ void GameState::draw_map()
                 game::draw_life_bar(pos, render_data->lifebar_length);
             }
 
-            if (!cell.is_explored)
-            {
-                game::render_array[x][y] = CellRenderData();
-            }
+            // if (!cell.is_explored)
+            // {
+            //     game::render_array[x][y] = CellRenderData();
+            // }
         }
     }
 

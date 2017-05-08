@@ -111,7 +111,7 @@ void mk_metal_doors_and_levers()
     //
     // Only make metal on some maps, and never late game (theme)
     //
-    const Fraction chance_to_mk_metal_door(1, 2);
+    const Fraction chance_to_mk_metal_door(1, 3);
 
     if ((map::dlvl >= dlvl_first_late_game) ||
         !chance_to_mk_metal_door.roll())

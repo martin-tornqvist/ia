@@ -339,7 +339,8 @@ void init_data_list()
     {
         return new Chasm(p);
     };
-    d.glyph = ' ';
+    d.glyph = '.';
+    d.tile = TileId::floor;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
     d.can_have_blood = false;

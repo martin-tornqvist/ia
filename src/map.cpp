@@ -172,7 +172,6 @@ Rigid* put(Rigid* const f)
     cell.rigid = f;
 
 #ifdef DEMO_MODE
-
     if (f->id() == FeatureId::floor)
     {
         for (int x = 0; x < map_w; ++x)
@@ -191,7 +190,6 @@ Rigid* put(Rigid* const f)
         // NOTE: Delay must be > 1 for user input to be read
         sdl_base::sleep(10);
     }
-
 #endif // DEMO_MODE
 
     return f;
@@ -261,6 +259,7 @@ void delete_and_remove_room_from_list(Room* const room)
 bool is_pos_seen_by_player(const P& p)
 {
     ASSERT(map::is_pos_inside_map(p));
+
     return cells[p.x][p.y].is_seen_by_player;
 }
 

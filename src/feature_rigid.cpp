@@ -1427,12 +1427,13 @@ void Chasm::on_hit(const int dmg,
 std::string Chasm::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
+
     return ret + "chasm";
 }
 
 Clr Chasm::clr_default() const
 {
-    return clr_black;
+    return clr_blue;
 }
 
 // -----------------------------------------------------------------------------

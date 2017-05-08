@@ -2057,7 +2057,9 @@ void Player::update_fov()
             Cell& cell = map::cells[x][y];
 
             cell.is_seen_by_player = false;
+
             cell.player_los.is_blocked_hard = true;
+
             cell.player_los.is_blocked_by_drk = false;
         }
     }
@@ -2090,6 +2092,17 @@ void Player::update_fov()
                     !los.is_blocked_by_drk;
 
                 cell.player_los = los;
+
+#ifndef NDEBUG
+                // Sanity check - if the cell is ONLY blocked by darkness
+                // (i.e. not by a wall or other blocking feature), it should
+                // NOT be lit
+                if (!los.is_blocked_hard &&
+                    los.is_blocked_by_drk)
+                {
+                    ASSERT(!cell.is_lit);
+                }
+#endif // NDEBUG
             }
         }
 

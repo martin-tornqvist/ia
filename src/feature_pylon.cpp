@@ -79,7 +79,7 @@ std::string Pylon::name(const Article article) const
         "activated " :
         "deactivated ";
 
-    str += " Pylon";
+    str += "Pylon";
 
     return str;
 }

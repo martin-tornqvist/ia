@@ -20,7 +20,7 @@ void mk_pylons_and_levers()
     std::vector<int> nr_weights =
     {
         10, // 0 pylon(s)
-        4,  // 1 -
+        2,  // 1 -
         2,  // 2 -
         1,  // 3 -
     };

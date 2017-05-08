@@ -637,14 +637,16 @@ void ThrowingExplosive::on_draw()
         div_clr(clr_bg, 2.0);
 
         // Draw explosion radius area overlay
-        for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
+        for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
         {
-            for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
+            for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
             {
                 const auto& render_d = game::render_array[x][y];
 
                 const auto& marker_render_d = marker_render_data_[x][y];
 
+                // Draw overlay if the cell contains either a map symbol, or a
+                // marker symbol
                 if (render_d.glyph != 0 ||
                     marker_render_d.glyph != 0)
                 {
