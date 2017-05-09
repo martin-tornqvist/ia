@@ -205,9 +205,14 @@ int show_menu_msg(const std::string& msg,
     text_format::split(msg, text_w_std, lines);
 
     const int title_h = title.empty() ? 0 : 1;
-    const int nr_msg_lines = int(lines.size());
-    const int nr_blank_lines = (nr_msg_lines == 0 && title_h == 0) ? 0 : 1;
-    const int nr_choices = int(choices.size());
+
+    const int nr_msg_lines = (int)lines.size();
+
+    const int nr_blank_lines =
+        ((nr_msg_lines == 0) && (title_h == 0)) ?
+        0 : 1;
+
+    const int nr_choices = (int)choices.size();
 
     const int text_h_tot =
         title_h +
@@ -229,12 +234,15 @@ int show_menu_msg(const std::string& msg,
                             text_h_tot,
                             title);
 
+    audio::play(SfxId::menu_browse);
+
     while (true)
     {
         const auto input = io::get(true);
 
-        const MenuAction action = browser.read(input,
-                                               MenuInputMode::scrolling);
+        const MenuAction action =
+            browser.read(input,
+                         MenuInputMode::scrolling);
 
         switch (action)
         {

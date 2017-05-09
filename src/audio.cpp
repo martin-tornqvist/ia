@@ -26,7 +26,7 @@ int nr_files_loaded_ = 0;
 // Subtracting AMB_START and AMB_END
 const int nr_files_tot = (int)SfxId::END - 2;
 
-void load_audio_file(const SfxId sfx, const std::string& filename)
+void load(const SfxId sfx, const std::string& filename)
 {
     // Read events, so that we don't freeze the game while we loading sounds
     SDL_PumpEvents();
@@ -146,67 +146,81 @@ void init()
     {
         audio_chunks_.resize(size_t(SfxId::END));
 
+        //
         // Monster sounds
-        load_audio_file(SfxId::dog_snarl,              "sfx_dog_snarl.ogg");
-        load_audio_file(SfxId::wolf_howl,              "sfx_wolf_howl.ogg");
-        load_audio_file(SfxId::hiss,                   "sfx_hiss.ogg");
-        load_audio_file(SfxId::zombie_growl,           "sfx_zombie_growl.ogg");
-        load_audio_file(SfxId::ghoul_growl,            "sfx_ghoul_growl.ogg");
-        load_audio_file(SfxId::ooze_gurgle,            "sfx_ooze_gurgle.ogg");
-        load_audio_file(SfxId::flapping_wings,         "sfx_flapping_wings.ogg");
-        load_audio_file(SfxId::ape,                    "sfx_ape.ogg");
+        //
+        load(SfxId::dog_snarl, "sfx_dog_snarl.ogg");
+        load(SfxId::wolf_howl, "sfx_wolf_howl.ogg");
+        load(SfxId::hiss, "sfx_hiss.ogg");
+        load(SfxId::zombie_growl, "sfx_zombie_growl.ogg");
+        load(SfxId::ghoul_growl, "sfx_ghoul_growl.ogg");
+        load(SfxId::ooze_gurgle, "sfx_ooze_gurgle.ogg");
+        load(SfxId::flapping_wings, "sfx_flapping_wings.ogg");
+        load(SfxId::ape, "sfx_ape.ogg");
 
+        //
         // Weapon and attack sounds
-        load_audio_file(SfxId::hit_small,              "sfx_hit_small.ogg");
-        load_audio_file(SfxId::hit_medium,             "sfx_hit_medium.ogg");
-        load_audio_file(SfxId::hit_hard,               "sfx_hit_hard.ogg");
-        load_audio_file(SfxId::hit_corpse_break,       "sfx_hit_corpse_break.ogg");
-        load_audio_file(SfxId::miss_light,             "sfx_miss_light.ogg");
-        load_audio_file(SfxId::miss_medium,            "sfx_miss_medium.ogg");
-        load_audio_file(SfxId::miss_heavy,             "sfx_miss_heavy.ogg");
-        load_audio_file(SfxId::hit_sharp,              "sfx_hit_sharp.ogg");
-        load_audio_file(SfxId::pistol_fire,            "sfx_pistol_fire.ogg");
-        load_audio_file(SfxId::pistol_reload,          "sfx_pistol_reload.ogg");
-        load_audio_file(SfxId::shotgun_sawed_off_fire, "sfx_shotgun_sawed_off_fire.ogg");
-        load_audio_file(SfxId::shotgun_pump_fire,      "sfx_shotgun_pump_fire.ogg");
-        load_audio_file(SfxId::shotgun_reload,         "sfx_shotgun_reload.ogg");
-        load_audio_file(SfxId::machine_gun_fire,       "sfx_machine_gun_fire.ogg");
-        load_audio_file(SfxId::machine_gun_reload,     "sfx_machine_gun_reload.ogg");
-        load_audio_file(SfxId::mi_go_gun_fire,         "sfx_migo_gun.ogg");
-        load_audio_file(SfxId::spike_gun,              "sfx_spike_gun.ogg");
-        load_audio_file(SfxId::bite,                   "sfx_bite.ogg");
+        //
+        load(SfxId::hit_small, "sfx_hit_small.ogg");
+        load(SfxId::hit_medium, "sfx_hit_medium.ogg");
+        load(SfxId::hit_hard, "sfx_hit_hard.ogg");
+        load(SfxId::hit_corpse_break, "sfx_hit_corpse_break.ogg");
+        load(SfxId::miss_light, "sfx_miss_light.ogg");
+        load(SfxId::miss_medium, "sfx_miss_medium.ogg");
+        load(SfxId::miss_heavy, "sfx_miss_heavy.ogg");
+        load(SfxId::hit_sharp, "sfx_hit_sharp.ogg");
+        load(SfxId::pistol_fire, "sfx_pistol_fire.ogg");
+        load(SfxId::pistol_reload, "sfx_pistol_reload.ogg");
+        load(SfxId::shotgun_sawed_off_fire, "sfx_shotgun_sawed_off_fire.ogg");
+        load(SfxId::shotgun_pump_fire, "sfx_shotgun_pump_fire.ogg");
+        load(SfxId::shotgun_reload, "sfx_shotgun_reload.ogg");
+        load(SfxId::machine_gun_fire, "sfx_machine_gun_fire.ogg");
+        load(SfxId::machine_gun_reload, "sfx_machine_gun_reload.ogg");
+        load(SfxId::mi_go_gun_fire, "sfx_migo_gun.ogg");
+        load(SfxId::spike_gun, "sfx_spike_gun.ogg");
+        load(SfxId::bite, "sfx_bite.ogg");
 
+        //
         // Environment sounds
-        load_audio_file(SfxId::metal_clank,            "sfx_metal_clank.ogg");
-        load_audio_file(SfxId::ricochet,               "sfx_ricochet.ogg");
-        load_audio_file(SfxId::explosion,              "sfx_explosion.ogg");
-        load_audio_file(SfxId::explosion_molotov,      "sfx_explosion_molotov.ogg");
-        load_audio_file(SfxId::gas,                    "sfx_gas.ogg");
-        load_audio_file(SfxId::door_open,              "sfx_door_open.ogg");
-        load_audio_file(SfxId::door_close,             "sfx_door_close.ogg");
-        load_audio_file(SfxId::door_bang,              "sfx_door_bang.ogg");
-        load_audio_file(SfxId::door_break,             "sfx_door_break.ogg");
-        load_audio_file(SfxId::tomb_open,              "sfx_tomb_open.ogg");
-        load_audio_file(SfxId::fountain_drink,         "sfx_fountain_drink.ogg");
-        load_audio_file(SfxId::boss_voice1,            "sfx_boss_voice1.ogg");
-        load_audio_file(SfxId::boss_voice2,            "sfx_boss_voice2.ogg");
+        //
+        load(SfxId::metal_clank, "sfx_metal_clank.ogg");
+        load(SfxId::ricochet, "sfx_ricochet.ogg");
+        load(SfxId::explosion, "sfx_explosion.ogg");
+        load(SfxId::explosion_molotov, "sfx_explosion_molotov.ogg");
+        load(SfxId::gas, "sfx_gas.ogg");
+        load(SfxId::door_open, "sfx_door_open.ogg");
+        load(SfxId::door_close, "sfx_door_close.ogg");
+        load(SfxId::door_bang, "sfx_door_bang.ogg");
+        load(SfxId::door_break, "sfx_door_break.ogg");
+        load(SfxId::tomb_open, "sfx_tomb_open.ogg");
+        load(SfxId::fountain_drink, "sfx_fountain_drink.ogg");
+        load(SfxId::boss_voice1, "sfx_boss_voice1.ogg");
+        load(SfxId::boss_voice2, "sfx_boss_voice2.ogg");
 
+        //
         // User interface sounds
-        load_audio_file(SfxId::backpack,               "sfx_backpack.ogg");
-        load_audio_file(SfxId::pickup,                 "sfx_pickup.ogg");
-        load_audio_file(SfxId::lantern,                "sfx_electric_lantern.ogg");
-        load_audio_file(SfxId::potion_quaff,           "sfx_potion_quaff.ogg");
-        load_audio_file(SfxId::spell_generic,          "sfx_spell_generic.ogg");
-        load_audio_file(SfxId::spell_shield_break,     "sfx_spell_shield_break.ogg");
-        load_audio_file(SfxId::insanity_rise,          "sfx_insanity_rising.ogg");
-        load_audio_file(SfxId::glop,                   "sfx_glop.ogg");
-        load_audio_file(SfxId::chains,                 "sfx_chains.ogg");
-        load_audio_file(SfxId::death,                  "sfx_death.ogg");
+        //
+        load(SfxId::backpack, "sfx_backpack.ogg");
+        load(SfxId::pickup, "sfx_pickup.ogg");
+        load(SfxId::lantern, "sfx_electric_lantern.ogg");
+        load(SfxId::potion_quaff, "sfx_potion_quaff.ogg");
+        load(SfxId::spell_generic, "sfx_spell_generic.ogg");
+        load(SfxId::spell_shield_break, "sfx_spell_shield_break.ogg");
+        load(SfxId::insanity_rise, "sfx_insanity_rising.ogg");
+        load(SfxId::glop, "sfx_glop.ogg");
+        load(SfxId::chains, "sfx_chains.ogg");
+        load(SfxId::death, "sfx_death.ogg");
+        load(SfxId::menu_browse, "sfx_menu_browse.ogg");
+        load(SfxId::menu_select, "sfx_menu_select.ogg");
 
+        //
+        // Ambient sounds
+        //
         int a = 1;
 
-        const int first = int(SfxId::AMB_START) + 1;
-        const int last = int(SfxId::AMB_END) - 1;
+        const int first = (int)SfxId::AMB_START + 1;
+
+        const int last = (int)SfxId::AMB_END - 1;
 
         for (int i = first; i <= last; ++i)
         {
@@ -216,15 +230,19 @@ void init()
 
             const std::string idx_str = std::to_string(a);
 
-            const std::string file_name = "amb_" + padding_str + idx_str + ".ogg";
+            const std::string file_name =
+                "amb_" +
+                padding_str +
+                idx_str +
+                ".ogg";
 
-            load_audio_file(SfxId(i), file_name);
+            load(SfxId(i), file_name);
 
             ++a;
         }
 
-        load_audio_file(SfxId::mus_cthulhiana_Madness,
-                        "musica_cthulhiana-fragment-madness.ogg");
+        load(SfxId::mus_cthulhiana_Madness,
+             "musica_cthulhiana-fragment-madness.ogg");
 
         ASSERT(nr_files_loaded_ == nr_files_tot);
     }
@@ -265,11 +283,15 @@ int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
         !config::is_bot_playing())
     {
         const int free_channel = find_free_channel(current_channel_);
+
         const size_t ms_now = SDL_GetTicks();
+
         size_t& ms_last = ms_at_sfx_played_[(size_t)sfx];
+
         const size_t ms_diff = ms_now - ms_last;
 
-        if (free_channel >= 0 && ms_diff >= min_ms_between_same_sfx)
+        if ((free_channel >= 0) &&
+            (ms_diff >= min_ms_between_same_sfx))
         {
             current_channel_ = free_channel;
 

@@ -2,6 +2,7 @@
 
 #include "io.hpp"
 #include "config.hpp"
+#include "audio.hpp"
 
 MenuBrowser::MenuBrowser(const int nr_items, const int list_h) :
     nr_items_       (0),
@@ -54,20 +55,22 @@ MenuAction MenuBrowser::read(const InputData& input,
 
     if (mode == MenuInputMode::scrolling_and_letters)
     {
-        bool is_shift_held  = false;
-        char c              = input.key;
+        bool is_shift_held = false;
 
-        const bool is_lower_case_letter = c >= 'a' && c <= 'z';
-        const bool is_upper_case_letter = c >= 'A' && c <= 'Z';
+        char c = input.key;
 
-        //First, if this is an upper case letter, convert to lower case
+        const bool is_lower_case_letter = (c >= 'a') && (c <= 'z');
+        const bool is_upper_case_letter = (c >= 'A') && (c <= 'Z');
+
+        // First, if this is an upper case letter, convert to lower case
         if (is_upper_case_letter)
         {
-            is_shift_held   = true;
-            c               = c - 'A' + 'a';
+            is_shift_held = true;
+
+            c = c - 'A' + 'a';
         }
 
-        //Is a letter between a and z pressed?
+        // Is a letter between a and z pressed?
         const char last_letter = 'a' + nr_items_shown() - 1;
 
         if (c >= 'a' && c <= last_letter)
@@ -76,6 +79,8 @@ MenuAction MenuBrowser::read(const InputData& input,
             const int idx = top + c - 'a';
 
             set_y(idx);
+
+            audio::play(SfxId::menu_select);
 
             return is_shift_held ?
                 MenuAction::selected_shift :
@@ -93,6 +98,8 @@ MenuAction MenuBrowser::read(const InputData& input,
 
     if (input.key == SDLK_RETURN)
     {
+        audio::play(SfxId::menu_select);
+
         return input.is_shift_held ?
             MenuAction::selected_shift :
             MenuAction::selected;
@@ -119,12 +126,14 @@ void MenuBrowser::move(const VerDir dir)
     {
         y_ = y_ == 0 ? last_idx : (y_ - 1);
     }
-    else //Down
+    else // Down
     {
         y_ = y_ == last_idx ? 0 : (y_ + 1);
     }
 
     update_range_shown();
+
+    audio::play(SfxId::menu_browse);
 }
 
 void MenuBrowser::move_page(const VerDir dir)
@@ -135,18 +144,18 @@ void MenuBrowser::move_page(const VerDir dir)
         {
             y_ -= list_h_;
         }
-        else //List height undefined (i.e. showing all)
+        else // List height undefined (i.e. showing all)
         {
             y_ = 0;
         }
     }
-    else //Down
+    else // Down
     {
         if (list_h_ >= 0)
         {
             y_ += list_h_;
         }
-        else //List height undefined (i.e. showing all)
+        else // List height undefined (i.e. showing all)
         {
             y_ = nr_items_ - 1;
         }
@@ -155,6 +164,8 @@ void MenuBrowser::move_page(const VerDir dir)
     set_y_nearest_valid();
 
     update_range_shown();
+
+    audio::play(SfxId::menu_browse);
 }
 
 void MenuBrowser::set_y(const int y)
@@ -226,12 +237,12 @@ int MenuBrowser::top_idx_shown() const
 
 int MenuBrowser::btm_idx_shown() const
 {
-    //Shown ranged defined?
+    // Shown ranged defined?
     if (list_h_ >= 0)
     {
         return range_shown_.max;
     }
-    else //List height undefined (i.e. showing all)
+    else // List height undefined (i.e. showing all)
     {
         return nr_items_ - 1;
     }
@@ -239,12 +250,12 @@ int MenuBrowser::btm_idx_shown() const
 
 bool MenuBrowser::is_on_top_page() const
 {
-    //Shown ranged defined?
+    // Shown ranged defined?
     if (list_h_ >= 0)
     {
         return range_shown_.min == 0;
     }
-    else //List height undefined (i.e. showing all)
+    else // List height undefined (i.e. showing all)
     {
         return true;
     }
@@ -252,12 +263,12 @@ bool MenuBrowser::is_on_top_page() const
 
 bool MenuBrowser::is_on_btm_page() const
 {
-    //Shown ranged defined?
+    // Shown ranged defined?
     if (list_h_ >= 0)
     {
         return range_shown_.max == nr_items_ - 1;
     }
-    else //List height undefined (i.e. showing all)
+    else // List height undefined (i.e. showing all)
     {
         return true;
     }
