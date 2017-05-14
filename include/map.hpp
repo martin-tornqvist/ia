@@ -62,7 +62,7 @@ struct ChokePointData
 
     P p;
 
-    //These shall have value 0 or 1
+    // These shall only ever have a value of 0 or 1
     int player_side;
     int stairs_side;
 

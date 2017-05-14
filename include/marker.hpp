@@ -223,8 +223,7 @@ protected:
 class CtrlTele: public MarkerState
 {
 public:
-    CtrlTele(const P& origin) :
-        MarkerState(origin) {}
+    CtrlTele(const P& origin, const bool blocked[map_w][map_h]);
 
     ~CtrlTele() {}
 
@@ -236,8 +235,6 @@ protected:
     void handle_input(const InputData& input) override;
 
 private:
-    int chance_of_success_pct(const P& tgt) const;
-
     bool blocked_[map_w][map_h];
 };
 

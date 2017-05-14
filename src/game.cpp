@@ -916,7 +916,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->prop_handler().try_add(
-            new PropDeaf(PropTurns::std));
+            new PropTeleControl(PropTurns::std));
     }
     break;
 

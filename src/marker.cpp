@@ -730,24 +730,18 @@ int ThrowingExplosive::red_from_king_dist() const
 // -----------------------------------------------------------------------------
 // Teleport control marker state
 // -----------------------------------------------------------------------------
+CtrlTele::CtrlTele(const P& origin, const bool blocked[map_w][map_h]) :
+    MarkerState(origin)
+{
+    memcpy(blocked_, blocked, nr_map_cells);
+}
+
 void CtrlTele::on_start_hook()
 {
-    map_parsers::BlocksActor(*map::player, ParseActors::yes)
-        .run(blocked_);
-
     msg_log::add("I have the power to control teleportation.",
                  clr_white,
                  false,
                  MorePromptOnMsg::yes);
-}
-
-int CtrlTele::chance_of_success_pct(const P& tgt) const
-{
-    const int dist = king_dist(map::player->pos, tgt);
-
-    const int chance = constr_in_range(25, 100 - dist, 95);
-
-    return chance;
 }
 
 void CtrlTele::on_moved()
@@ -756,10 +750,6 @@ void CtrlTele::on_moved()
 
     if (pos_ != map::player->pos)
     {
-        const int chance_pct = chance_of_success_pct(pos_);
-
-        msg_log::add(std::to_string(chance_pct) + "% chance of success.");
-
         msg_log::add("[enter] to try teleporting here");
 
         msg_log::add(cancel_info_str_no_space);
@@ -781,17 +771,13 @@ void CtrlTele::handle_input(const InputData& input)
     {
         if (pos_ != map::player->pos)
         {
-            const int chance = chance_of_success_pct(pos_);
-
-            const bool roll_ok = rnd::percent(chance);
-
-            const bool is_tele_success =
-                roll_ok &&
-                !blocked_[pos_.x][pos_.y];
+            const bool is_tele_success = !blocked_[pos_.x][pos_.y];
 
             states::pop();
 
+            //
             // NOTE: This object is now destroyed!
+            //
 
             if (is_tele_success)
             {

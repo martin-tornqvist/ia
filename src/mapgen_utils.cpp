@@ -992,7 +992,7 @@ void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
             }
 
             const int other_side_idx =
-                choke_point.player_side == 0 ?
+                (choke_point.player_side == 0) ?
                 1 : 0;
 
             const auto& other_side_positions =

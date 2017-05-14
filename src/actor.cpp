@@ -20,6 +20,7 @@
 #include "look.hpp"
 #include "map_travel.hpp"
 #include "popup.hpp"
+#include "feature_door.hpp"
 
 Actor::Actor() :
     pos             (),
@@ -262,6 +263,53 @@ void Actor::on_std_turn_common()
 
 void Actor::teleport()
 {
+    bool blocks_flood[map_w][map_h];
+
+    map_parsers::BlocksActor(*this, ParseActors::no)
+        .run(blocks_flood);
+
+    // Consider all doors, except for metal doors, to be free
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            const auto* const r = map::cells[x][y].rigid;
+
+            if (r->id() == FeatureId::door)
+            {
+                const auto* const door = static_cast<const Door*>(r);
+
+                if (door->type() != DoorType::metal)
+                {
+                    blocks_flood[x][y] = false;
+                }
+            }
+        }
+    }
+
+    int flood[map_w][map_h];
+
+    floodfill(pos,
+              blocks_flood,
+              flood);
+
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksActor(*this, ParseActors::yes)
+        .run(blocked);
+
+    // Block cells behind metal doors
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (flood[x][y] <= 0)
+            {
+                blocked[x][y] = true;
+            }
+        }
+    }
+
     //
     // Teleport control?
     //
@@ -270,7 +318,7 @@ void Actor::teleport()
         !prop_handler_->has_prop(PropId::confused))
     {
         auto tele_ctrl_state = std::unique_ptr<State>(
-            new CtrlTele(pos));
+            new CtrlTele(pos, blocked));
 
         states::push(std::move(tele_ctrl_state));
 
@@ -280,11 +328,6 @@ void Actor::teleport()
     //
     // Teleport randomly
     //
-    bool blocked[map_w][map_h];
-
-    map_parsers::BlocksActor(*this, ParseActors::yes)
-        .run(blocked);
-
     const auto pos_bucket = to_vec(blocked, false);
 
     if (pos_bucket.empty())
