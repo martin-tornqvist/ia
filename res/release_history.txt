@@ -49,6 +49,7 @@ Gameplay
 * Added property "Deaf", deafening traps, and a deafening spell (for monsters)
 
 Interface
+* The throwing slot has been removed - now you simply press [t], and select something from the inventory to throw (this also has gameplay effects, since you don't have to spend turns to equip different items to throw them)
 * All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
 * When picking a trait, instead of showing all available and blocked traits in the same list, the trait selection screen now has two modes (toggled with [TAB]) - the first mode shows available traits, and the second shows traits for which the prerequisites are not yet fulfilled
 * Reduced "more" prompt message spam from traps (less interruption)
