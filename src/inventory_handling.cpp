@@ -18,6 +18,7 @@
 #include "audio.hpp"
 #include "map.hpp"
 #include "text_format.hpp"
+#include "marker.hpp"
 
 //
 // TODO: All this should probably be moved to the inventory screen base class
@@ -37,17 +38,20 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
     if (inv_type == InvType::slots)
     {
         ASSERT(idx < (int)SlotId::END);
+
         item = inv.slots_[idx].item;
     }
     else // Backpack
     {
         ASSERT(idx < inv.backpack_.size());
+
         item = inv.backpack_[idx];
     }
 
     if (!item)
     {
         TRACE_FUNC_END;
+
         return false;
     }
 
@@ -143,7 +147,8 @@ InvState::InvState() :
 void InvState::draw_slot(const SlotId id,
                          const int y,
                          const char key,
-                         const bool is_marked) const
+                         const bool is_marked,
+                         const ItemRefAttInf att_info) const
 {
     //
     // Draw key
@@ -193,27 +198,9 @@ void InvState::draw_slot(const SlotId id,
 
         p.x += 2;
 
-        const ItemDataT& d = item->data();
-
-        ItemRefAttInf att_inf = ItemRefAttInf::none;
-
-        if (slot.id == SlotId::wpn ||
-            slot.id == SlotId::wpn_alt)
-        {
-            // Thrown weapons are forced to show melee info instead
-            att_inf =
-                d.main_att_mode == AttMode::thrown ?
-                ItemRefAttInf::melee :
-                ItemRefAttInf::wpn_main_att_mode;
-        }
-        else if (slot.id == SlotId::thrown)
-        {
-            att_inf = ItemRefAttInf::thrown;
-        }
-
         std::string item_name = item->name(ItemRefType::plural,
                                            ItemRefInf::yes,
-                                           att_inf);
+                                           att_info);
 
         ASSERT(!item_name.empty());
 
@@ -640,7 +627,8 @@ void BrowseInv::draw()
             draw_slot((SlotId)i,
                       y,
                       key,
-                      is_marked);
+                      is_marked,
+                      ItemRefAttInf::wpn_main_att_mode);
         }
         else // This index is in backpack
         {
@@ -834,6 +822,7 @@ void Apply::on_start()
     for (size_t i = 0; i < backpack.size(); ++i)
     {
         const Item* const item = backpack[i];
+
         const ItemDataT& d = item->data();
 
         if (d.has_std_activate)
@@ -856,6 +845,8 @@ void Apply::on_start()
 
     browser_.reset(filtered_backpack_indexes_.size(),
                    inv_h_);
+
+    audio::play(SfxId::backpack);
 }
 
 void Apply::draw()
@@ -1019,13 +1010,6 @@ void Equip::on_start()
             }
             break;
 
-        case SlotId::thrown:
-            if (data.ranged.is_throwable_wpn)
-            {
-                filtered_backpack_indexes_.push_back(i);
-            }
-            break;
-
         case SlotId::body:
             if (data.type == ItemType::armor)
             {
@@ -1070,13 +1054,6 @@ void Equip::draw()
             has_item ?
             "Prepare which weapon?" :
             "I carry no weapon to wield.";
-        break;
-
-    case SlotId::thrown:
-        heading =
-            has_item ?
-            "Use which item as thrown weapon?" :
-            "I carry no weapon to throw.";
         break;
 
     case SlotId::body:
@@ -1147,10 +1124,6 @@ void Equip::draw()
                 d.main_att_mode == AttMode::thrown ?
                 ItemRefAttInf::melee :
                 ItemRefAttInf::wpn_main_att_mode;
-        }
-        else if (slot_to_equip_.id == SlotId::thrown)
-        {
-            att_inf = ItemRefAttInf::thrown;
         }
 
         draw_backpack_item(backpack_idx,
@@ -1253,6 +1226,236 @@ void Equip::update()
 }
 
 // -----------------------------------------------------------------------------
+// Select throwing state
+// -----------------------------------------------------------------------------
+void SelectThrow::on_start()
+{
+    auto& inv = map::player->inv();
+
+    inv.sort_backpack();
+
+    //
+    // Filter slots
+    //
+    for (InvSlot& slot : inv.slots_)
+    {
+        const Item* const item = slot.item;
+
+        if (item)
+        {
+            const ItemDataT& d = item->data();
+
+            if (d.ranged.is_throwable_wpn)
+            {
+                slots_.push_back(slot.id);
+            }
+        }
+    }
+
+    //
+    // Filter backpack
+    //
+    const auto& backpack = inv.backpack_;
+
+    filtered_backpack_indexes_.clear();
+
+    for (size_t i = 0; i < backpack.size(); ++i)
+    {
+        const auto* const item = backpack[i];
+
+        const auto& d = item->data();
+
+        if (d.ranged.is_throwable_wpn)
+        {
+            filtered_backpack_indexes_.push_back(i);
+        }
+    }
+
+    const int list_size =
+        (int)slots_.size() +
+        (int)filtered_backpack_indexes_.size();
+
+    if (list_size == 0)
+    {
+        //
+        // Nothing to throw, exit screen
+        //
+        states::pop();
+
+        msg_log::add("I carry no throwing weapons.");
+
+        return;
+    }
+
+    browser_.reset(list_size, inv_h_);
+
+    audio::play(SfxId::backpack);
+}
+
+void SelectThrow::draw()
+{
+    io::draw_text_center("Throw which item?" + drop_info_str,
+                         Panel::log,
+                         P(screen_w / 2, 0),
+                         clr_brown_gray);
+
+    const int browser_y = browser_.y();
+
+    const Range idx_range_shown = browser_.range_shown();
+
+    int y = inv_y0_;
+
+    char key = 'a';
+
+    for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
+    {
+        const bool is_marked = browser_y == i;
+
+        if (i < (int)slots_.size())
+        {
+            const SlotId slot_id = slots_[i];
+
+            draw_slot(slot_id,
+                      y,
+                      key,
+                      is_marked,
+                      ItemRefAttInf::thrown);
+        }
+        else // This index is in backpack
+        {
+            const size_t backpack_idx =
+                filtered_backpack_indexes_[i - (int)slots_.size()];
+
+            draw_backpack_item(backpack_idx,
+                               y,
+                               key,
+                               is_marked,
+                               ItemRefAttInf::thrown);
+        }
+
+        ++key;
+
+        ++y;
+    }
+
+    // Draw "more" labels
+    if (!browser_.is_on_top_page())
+    {
+        io::draw_text("(More - Page Up)",
+                      Panel::screen,
+                      P(0, top_more_y_),
+                      clr_white_lgt);
+    }
+
+    if (!browser_.is_on_btm_page())
+    {
+        io::draw_text("(More - Page Down)",
+                      Panel::screen,
+                      P(0, btm_more_y_),
+                      clr_white_lgt);
+    }
+}
+
+void SelectThrow::update()
+{
+    auto inv_type = [&]()
+    {
+        const InvType inv_type_marked =
+            (browser_.y() < (int)slots_.size()) ?
+            InvType::slots :
+            InvType::backpack;
+
+        return inv_type_marked;
+    };
+
+    const auto input = io::get(false);
+
+    const MenuAction action =
+        browser_.read(input,
+                      MenuInputMode::scrolling_and_letters);
+
+    const auto inv_type_marked = inv_type();
+
+    Inventory& inv = map::player->inv();
+
+    Item* item;
+
+    // Index relative to the current inventory part (slots/backpack)
+    size_t relative_inv_idx;
+
+    if (inv_type_marked == InvType::slots)
+    {
+        const SlotId slot_id_marked = slots_[browser_.y()];
+
+        relative_inv_idx = (size_t)slot_id_marked;
+
+        InvSlot& slot = inv.slots_[relative_inv_idx];
+
+        item = slot.item;
+    }
+    else // Backpack item selected
+    {
+        const size_t relative_browser_idx = browser_.y() - (int)slots_.size();
+
+        relative_inv_idx = filtered_backpack_indexes_[relative_browser_idx];
+
+        item = inv.backpack_[relative_inv_idx];
+    }
+
+    switch (action)
+    {
+    case MenuAction::selected:
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        // NOTE: This object is now destroyed
+
+        // Run throw aiming state
+        std::unique_ptr<State> throwing(
+            new Throwing(map::player->pos,
+                         *item));
+
+        states::push(std::move(throwing));
+
+        return;
+    }
+    break;
+
+    case MenuAction::selected_shift:
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        /* const bool did_drop = */
+        run_drop_query(inv_type_marked, relative_inv_idx);
+
+        return;
+    }
+    break;
+
+    case MenuAction::esc:
+    case MenuAction::space:
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+
+        return;
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Select identify state
 // -----------------------------------------------------------------------------
 void SelectIdentify::on_start()
@@ -1261,6 +1464,9 @@ void SelectIdentify::on_start()
 
     inv.sort_backpack();
 
+    //
+    // Filter slots
+    //
     for (InvSlot& slot : inv.slots_)
     {
         const Item* const item = slot.item;
@@ -1276,6 +1482,9 @@ void SelectIdentify::on_start()
         }
     }
 
+    //
+    // Filter backpack
+    //
     for (size_t i = 0; i < inv.backpack_.size(); ++i)
     {
         const Item* const item = inv.backpack_[i];
@@ -1295,10 +1504,7 @@ void SelectIdentify::on_start()
         (int)slots_.size() +
         (int)backpack_indexes_.size();
 
-    browser_.reset(list_size, inv_h_);
-
-    if (slots_.empty() &&
-        backpack_indexes_.empty())
+    if (list_size == 0)
     {
         //
         // Nothing to identify, exit screen
@@ -1310,10 +1516,9 @@ void SelectIdentify::on_start()
         return;
     }
 
-    if (list_size > 0)
-    {
-        audio::play(SfxId::backpack);
-    }
+    browser_.reset(list_size, inv_h_);
+
+    audio::play(SfxId::backpack);
 }
 
 void SelectIdentify::draw()
@@ -1344,7 +1549,8 @@ void SelectIdentify::draw()
             draw_slot(slot_id,
                       y,
                       key,
-                      is_marked);
+                      is_marked,
+                      ItemRefAttInf::wpn_main_att_mode);
         }
         else // This index is in backpack
         {
@@ -1386,7 +1592,7 @@ void SelectIdentify::update()
     auto inv_type = [&]()
     {
         const InvType inv_type_marked =
-            browser_.y() < (int)slots_.size() ?
+            (browser_.y() < (int)slots_.size()) ?
             InvType::slots :
             InvType::backpack;
 
@@ -1417,10 +1623,13 @@ void SelectIdentify::update()
 
             item_to_identify = slot.item;
         }
-        else // In backpack inventory
+        else // Backpack item selected
         {
+            const size_t relative_browser_idx =
+                browser_.y() - (int)slots_.size();
+
             const size_t backpack_idx_marked =
-                backpack_indexes_[browser_.y() - (int)slots_.size()];
+                backpack_indexes_[relative_browser_idx];
 
             item_to_identify = inv.backpack_[backpack_idx_marked];
         }

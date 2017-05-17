@@ -541,7 +541,7 @@ void Throwing::on_moved()
             ThrowAttData data(map::player,
                               actor->pos,       // Aim position
                               actor->pos,       // Current position
-                              *item_to_throw_);
+                              *inv_item_);
 
             msg_log::add(std::to_string(data.hit_chance_tot) + "% hit chance.");
         }
@@ -557,8 +557,6 @@ void Throwing::handle_input(const InputData& input)
     case SDLK_ESCAPE:
     case SDLK_SPACE:
     {
-        delete item_to_throw_;
-
         states::pop();
     }
     break;
@@ -579,17 +577,22 @@ void Throwing::handle_input(const InputData& input)
 
             const P pos = pos_;
 
-            Item* const item_to_throw = item_to_throw_;
+            Item* item_to_throw = item_factory::copy_item(*inv_item_);
+
+            item_to_throw->nr_items_ = 1;
+
+            item_to_throw->clear_actor_carrying();
+
+            map::player->inv().decr_item(inv_item_);
 
             states::pop();
 
-            // NOTE: This object is now destroyed!
+            // NOTE: This object is now destroyed
 
+            // Perform the actual throwing
             throwing::throw_item(*map::player,
                                  pos,
                                  *item_to_throw);
-
-            map::player->inv().decr_item_in_slot(SlotId::thrown);
         }
     }
     break;
@@ -601,16 +604,22 @@ void Throwing::handle_input(const InputData& input)
 
 int Throwing::orange_from_king_dist() const
 {
-    const int effective_range = item_to_throw_->data().ranged.effective_range;
+    const int effective_range = inv_item_->data().ranged.effective_range;
 
-    return (effective_range < 0) ? -1 : (effective_range + 1);
+    return
+        (effective_range < 0) ?
+        -1 :
+        (effective_range + 1);
 }
 
 int Throwing::red_from_king_dist() const
 {
-    const int max_range = item_to_throw_->data().ranged.max_range;
+    const int max_range = inv_item_->data().ranged.max_range;
 
-    return (max_range < 0) ? -1 : (max_range + 1);
+    return
+        (max_range < 0) ?
+        -1 :
+        (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------

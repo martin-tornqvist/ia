@@ -32,7 +32,7 @@ Contents:
    N      Make some noise (to lure monsters)
    r      Reload wielded firearm
    s      Wait (and search) for a few turns
-   t      Throw something from the "Thrown" slot, or throw held explosive
+   t      Throw a carried object, or throw held explosive
    v      View descriptions of things on the map
    w      Kick or strike objects, or destroy corpses (*Wham*)
    x      Cast spell
@@ -78,7 +78,7 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 The following is an example of what the interface lines can look like:
 
    HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60)     } M1911 Colt 1d8+5 60% 5/7
-   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 7 Throwing Knives 1d6+1 60%
+   Dlvl:2  W:40% [:1  %:Off(500) %:60
    Blind Diseased                                                         T:264
 
 From left to right, the first line displays:
@@ -95,17 +95,16 @@ The second line displays:
    * Armor Points (each point reduces physical damage taken by 1)
    * Electric Lantern status (Off or On, and how many turns it can be used for)
    * Medical Bag Supplies (see "Hit Points, Wounds and healing")
-   * Your thrown weapon.
 
 The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties, or properties granted by wearing or wielding items. To the far right on the third row the current turn number is displayed. If you are "Dexterous" (occasional free steps), this is marked green when your next step will be free.
 
 --------------------------------------------------------------------------------
 4. Inventory handling
 --------------------------------------------------------------------------------
-The inventory can be accessed in two ways:
+The inventory can be accessed in three ways:
 
    (1) Pressing "i" opens a full view of your inventory
-Here, you can see all of your "inventory slots" (see below), and a complete list of your carried items. Selecting an inventory slot (with enter or a letter key), either puts away an existing item from the slot, or opens a list of items that you can equip in the slot.
+Here, you can see all of your inventory slots (see below), and a complete list of your carried items. Selecting an inventory slot (with enter or a letter key), either puts away an existing item from the slot, or opens a list of items that you can equip in the slot.
 
    (2) Pressing "a" shows only items which wich you can "activate" or consume
 This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
@@ -113,12 +112,13 @@ This is merely a convenience feature - you can just as well use items by selecti
 To wear or wield items, they are placed in different inventory slots:
    * Wielded  - your currently used melee weapon or firearm
    * Prepared - the weapon to switch to when pressing "z"
-   * Thrown   - the weapon to throw when pressing "t"
    * Body     - item worn over your body (e.g. an armor or a jacket)
    * Head     - item worn on your head (e.g. a gas mask)
-   * Neck     - item worn around your neck (an amulet)
 
-Note that the "Thrown" slot is only for throwing attack weapons such as throwing knives or rocks. Explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive. In this state, you are ready to throw the explosive - press "t", and aim somewhere with the movement keys (the game will mark the area around your aim position to indicate the explosion radius - be careful though, there may be unseen walls that blocks the throw path). Press "t" again, or enter, to throw the explosive toward the aim position.
+   (3) Pressing "t" opens a list of items which can be thrown (as an attack)
+After selecting an item to throw, aim somewhere with the movement keys, and press "t" again to throw it.
+
+Note that explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive (don't hold on to it too long). Press "t", and aim somewhere (the game will mark the area around your aim position to indicate the explosion size - be careful though, there may be unseen objects blocking the throw path). Press "t" again (or enter) to throw the explosive toward the aim position.
 
 To drop an item, select them item while holding shift (i.e. shift + enter, or shift + letter). This can be done from any inventory screen. If you are dropping a stack of something (e.g. a number of Shotgun shells), the game will ask how many to drop, by letting you type in a number.
 

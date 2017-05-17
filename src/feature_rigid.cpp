@@ -2290,20 +2290,7 @@ void ItemContainer::open(const P& feature_pos,
             {
                 audio::play(SfxId::pickup);
 
-                Inventory& inv = map::player->inv();
-
-                Item* const thrown_item =
-                    inv.slots_[(size_t)SlotId::thrown].item;
-
-                if (thrown_item && thrown_item->id() == item->id())
-                {
-                    thrown_item->nr_items_ += item->nr_items_;
-                    delete item;
-                }
-                else // Item does not stack with current thrown weapon
-                {
-                    inv.put_in_backpack(item);
-                }
+                map::player->inv().put_in_backpack(item);
             }
             else if (answer == BinaryAnswer::no)
             {

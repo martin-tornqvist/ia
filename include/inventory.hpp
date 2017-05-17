@@ -15,7 +15,6 @@ enum class SlotId
 {
     wpn,
     wpn_alt,
-    thrown,
     body,
     head,
     END
@@ -118,7 +117,9 @@ public:
     int total_item_weight() const;
 
     InvSlot slots_[(size_t)SlotId::END];
+
     std::vector<Item*> backpack_;
+
     std::vector<Item*> intrinsics_;
 
 private:

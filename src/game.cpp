@@ -534,10 +534,6 @@ void handle_player_input(const InputData& input)
     //
     case 'a':
     {
-        //
-        // TODO: Push apply-item state
-        //
-
         std::unique_ptr<State> apply_state(new Apply);
 
         states::push(std::move(apply_state));
@@ -674,30 +670,9 @@ void handle_player_input(const InputData& input)
 
             if (is_allowed)
             {
-                Inventory& player_inv = map::player->inv();
+                std::unique_ptr<State> select_throw(new SelectThrow);
 
-                Item* item_stack =
-                    player_inv.item_in_slot(SlotId::thrown);
-
-                if (item_stack)
-                {
-                    Item* item_to_throw =
-                        item_factory::copy_item(*item_stack);
-
-                    item_to_throw->nr_items_ = 1;
-
-                    item_to_throw->clear_actor_carrying();
-
-                    std::unique_ptr<State> throwing(
-                        new Throwing(map::player->pos, *item_to_throw));
-
-                    states::push(std::move(throwing));
-                }
-                else // No item equipped
-                {
-                    msg_log::add("I have no weapon chosen for throwing "
-                                 "(press [i]).");
-                }
+                states::push(std::move(select_throw));
             }
         }
     }

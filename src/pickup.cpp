@@ -35,49 +35,6 @@ void try_pick()
 
     const std::string item_name = item->name(ItemRefType::plural);
 
-    // First try to add it to carried item stack in thrown slot.
-    Item* const equiped_throwing = inv.item_in_slot(SlotId::thrown);
-
-    if (equiped_throwing)
-    {
-        if (item->data().is_stackable &&
-            item->id() == equiped_throwing->data().id)
-        {
-            audio::play(SfxId::pickup);
-
-            msg_log::add("I add " + item_name + " to my missile stack.");
-
-            equiped_throwing->nr_items_ += item->nr_items_;
-
-            delete item;
-
-            map::cells[pos.x][pos.y].item = nullptr;
-
-            game_time::tick();
-
-            return;
-        }
-    }
-    else // Nothing equiped in the throwing slot
-    {
-        // If this is a throwing weapon (i.e. not just a throwABLE weapon)
-        // equip this item
-        if (item->data().type == ItemType::throwing_wpn)
-        {
-            audio::play(SfxId::pickup);
-
-            inv.put_in_slot(SlotId::thrown,
-                            item,
-                            Verbosity::verbose);
-
-            map::cells[pos.x][pos.y].item = nullptr;
-
-            game_time::tick();
-
-            return;
-        }
-    }
-
     audio::play(SfxId::pickup);
 
     msg_log::add("I pick up " + item_name + ".");

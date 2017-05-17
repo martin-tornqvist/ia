@@ -155,9 +155,9 @@ protected:
 class Throwing: public MarkerState
 {
 public:
-    Throwing(const P& origin, Item& item_to_throw) :
-        MarkerState     (origin),
-        item_to_throw_  (&item_to_throw) {}
+    Throwing(const P& origin, Item& inv_item) :
+        MarkerState (origin),
+        inv_item_   (&inv_item) {}
 
     ~Throwing() {}
 
@@ -180,7 +180,7 @@ protected:
 
     int red_from_king_dist() const override;
 
-    Item* item_to_throw_;
+    Item* inv_item_;
 };
 
 // -----------------------------------------------------------------------------

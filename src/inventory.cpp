@@ -26,7 +26,6 @@ Inventory::Inventory(Actor* const owning_actor) :
 
     set_slot(SlotId::wpn, "Wielded");
     set_slot(SlotId::wpn_alt, "Prepared");
-    set_slot(SlotId::thrown, "Thrown");
     set_slot(SlotId::body, "Body");
     set_slot(SlotId::head, "Head");
 }
@@ -187,7 +186,9 @@ bool Inventory::try_stack_in_backpack(Item* item)
                 // Keeping picked up item and destroying the one in the
                 // inventory (then the parameter pointer is still valid).
                 item->nr_items_ += other->nr_items_;
+
                 delete other;
+
                 backpack_[i] = item;
 
                 return true;
@@ -207,6 +208,7 @@ void Inventory::put_in_backpack(Item* item)
     if (!is_stacked)
     {
         backpack_.push_back(item);
+
         sort_backpack();
     }
 
@@ -341,6 +343,7 @@ Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx,
     if (delete_item)
     {
         delete item;
+
         item = nullptr;
     }
 
@@ -377,7 +380,8 @@ void Inventory::decr_item_in_backpack(const size_t idx)
     if (is_stackable)
     {
         --item->nr_items_;
-        should_delete_item = item->nr_items_ <= 0;
+
+        should_delete_item = (item->nr_items_ <= 0);
     }
 
     if (should_delete_item)
@@ -511,10 +515,6 @@ UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
             break;
 
         case SlotId::wpn_alt:
-            msg = "I put away my " + name + ".";
-            break;
-
-        case SlotId::thrown:
             msg = "I put away my " + name + ".";
             break;
 
@@ -691,10 +691,6 @@ void Inventory::equip(const SlotId id,
 
         case SlotId::wpn_alt:
             msg = "I am now using " + name + " as a prepared weapon.";
-            break;
-
-        case SlotId::thrown:
-            msg = "I now have " + name + " at hand for throwing.";
             break;
 
         case SlotId::body:

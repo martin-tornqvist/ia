@@ -24,7 +24,8 @@ protected:
     void draw_slot(const SlotId id,
                    const int y,
                    const char key,
-                   const bool is_marked) const;
+                   const bool is_marked,
+                   const ItemRefAttInf att_info) const;
 
     void draw_backpack_item(const size_t backpack_idx,
                             const int y,
@@ -128,6 +129,25 @@ private:
     InvSlot& slot_to_equip_;
 
     BrowseInv& browse_inv_state_;
+};
+
+class SelectThrow: public InvState
+{
+public:
+    SelectThrow() :
+        InvState                    (),
+        slots_                      (),
+        filtered_backpack_indexes_  () {}
+
+    void on_start() override;
+
+    void draw() override;
+
+    void update() override;
+
+private:
+    std::vector<SlotId> slots_;
+    std::vector<size_t> filtered_backpack_indexes_;
 };
 
 class SelectIdentify: public InvState

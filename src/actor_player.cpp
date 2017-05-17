@@ -248,9 +248,8 @@ void Player::mk_start_items()
 
     if (nr_thr_knives > 0)
     {
-        inv_->put_in_slot(SlotId::thrown,
-                          item_factory::mk(ItemId::thr_knife, nr_thr_knives),
-                          Verbosity::silent);
+        inv_->put_in_backpack(
+            item_factory::mk(ItemId::thr_knife, nr_thr_knives));
     }
 
     if (has_medbag)

@@ -322,6 +322,8 @@ std::string Item::name(const ItemRefType ref_type,
 
     ItemRefAttInf att_inf_used = att_inf;
 
+    // If caller requested attack info depending on main attack mode,
+    // setup the attack info used to a specific type
     if (att_inf == ItemRefAttInf::wpn_main_att_mode)
     {
         switch (data_->main_att_mode)
@@ -344,7 +346,7 @@ std::string Item::name(const ItemRefType ref_type,
         }
     }
 
-    const DiceParam zero_dice(0, 0);
+    const DiceParam zero_dice(0, 0); // To compare against
 
     switch (att_inf_used)
     {
@@ -429,7 +431,7 @@ std::string Item::name(const ItemRefType ref_type,
         // zero melee damage (melee weapons use melee damage when thrown)
         if ((data_->ranged.throw_dmg != zero_dice) ||
             ((data_->main_att_mode == AttMode::melee) &&
-             (data_->ranged.throw_dmg != zero_dice)))
+             (data_->melee.dmg != zero_dice)))
         {
             //
             // NOTE: "dmg" will return melee damage if this is a melee weapon
