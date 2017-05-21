@@ -39,6 +39,7 @@ enum class ShockSrc
 
 class MedicalBag;
 class Explosive;
+class Item;
 class Wpn;
 
 class Player: public Actor
@@ -128,6 +129,7 @@ public:
     // are unique monsters on the map, and the player is observant
     void mon_feeling();
 
+    Item* thrown_item;
     MedicalBag* active_medical_bag;
     Explosive* active_explosive;
     Actor* tgt_;

@@ -19,6 +19,7 @@
 #include "query.hpp"
 #include "attack.hpp"
 #include "fov.hpp"
+#include "item.hpp"
 #include "item_factory.hpp"
 #include "actor_factory.hpp"
 #include "player_bon.hpp"
@@ -38,6 +39,7 @@
 
 Player::Player() :
     Actor(),
+    thrown_item                     (),
     active_medical_bag              (nullptr),
     active_explosive                (nullptr),
     tgt_                            (nullptr),
@@ -70,7 +72,7 @@ void Player::mk_start_items()
     int nr_cartridges = 2;
     int nr_dynamite = 2;
     int nr_molotov = 2;
-    int nr_thr_knives = 6;
+    int nr_throwing_knives = 6;
 
     // -------------------------------------------------------------------------
     // Background specific setup
@@ -86,7 +88,7 @@ void Player::mk_start_items()
         --nr_cartridges;
         nr_dynamite = 0;
         nr_molotov = 0;
-        nr_thr_knives = 0;
+        nr_throwing_knives = 0;
 
         // Occultist starts with some spells and a potion
 
@@ -121,7 +123,7 @@ void Player::mk_start_items()
     case Bg::rogue:
     {
         // Rogue starts with extra throwing knives
-        nr_thr_knives += 6;
+        nr_throwing_knives += 6;
 
         // Rogue starts with a +1 dagger
         auto* const dagger = item_factory::mk(ItemId::dagger);
@@ -164,7 +166,7 @@ void Player::mk_start_items()
         nr_cartridges = 0;
         nr_dynamite = 0;
         nr_molotov = 0;
-        nr_thr_knives = 0;
+        nr_throwing_knives = 0;
     }
     break;
 
@@ -246,10 +248,14 @@ void Player::mk_start_items()
             item_factory::mk(ItemId::molotov, nr_molotov));
     }
 
-    if (nr_thr_knives > 0)
+    if (nr_throwing_knives > 0)
     {
-        inv_->put_in_backpack(
-            item_factory::mk(ItemId::thr_knife, nr_thr_knives));
+        Item* const throwing_knives =
+            item_factory::mk(ItemId::thr_knife, nr_throwing_knives);
+
+        inv_->put_in_backpack(throwing_knives);
+
+        thrown_item = throwing_knives;
     }
 
     if (has_medbag)

@@ -117,6 +117,8 @@ void draw()
     p.x = std::max(x_wielded_default,
                    (int)(p.x + str.size() + 1));
 
+    int x_wielded = p.x;
+
     const Item* wpn = player.inv().item_in_slot(SlotId::wpn);
 
     if (!wpn)
@@ -316,10 +318,40 @@ void draw()
         io::draw_text(str, panel, p, clr_white);
     }
 
+    // Thrown item
+    p.x = x_wielded;
+
+    auto* const thr_item = player.thrown_item;
+
+    if (thr_item)
+    {
+        const Clr item_clr = thr_item->clr();
+
+        if (config::is_tiles_mode())
+        {
+            io::draw_tile(thr_item->tile(), panel, p, item_clr);
+        }
+        else // Text mode
+        {
+            io::draw_glyph(thr_item->glyph(), panel, p, item_clr);
+        }
+
+        p.x += 2;
+
+        str = thr_item->name(ItemRefType::plural,
+                             ItemRefInf::yes,
+                             ItemRefAttInf::thrown);
+
+        text_format::first_to_upper(str);
+
+        io::draw_text(str, panel, p, clr_white);
+    }
+
     // -------------------------------------------------------------------------
     // Third row
     // -------------------------------------------------------------------------
     ++p.y;
+
     p.x = 0;
 
     const auto props_line = player.prop_handler().props_line();

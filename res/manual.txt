@@ -33,6 +33,7 @@ Contents:
    r      Reload wielded firearm
    s      Wait (and search) for a few turns
    t      Throw a carried object, or throw held explosive
+   T      Select which item to use as thrown weapon
    v      View descriptions of things on the map
    w      Kick or strike objects, or destroy corpses (*Wham*)
    x      Cast spell
@@ -106,17 +107,17 @@ The inventory can be accessed in three ways:
    (1) Pressing "i" opens a full view of your inventory
 Here, you can see all of your inventory slots (see below), and a complete list of your carried items. Selecting an inventory slot (with enter or a letter key), either puts away an existing item from the slot, or opens a list of items that you can equip in the slot.
 
-   (2) Pressing "a" shows only items which wich you can "activate" or consume
-This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
-
 To wear or wield items, they are placed in different inventory slots:
    * Wielded  - your currently used melee weapon or firearm
    * Prepared - the weapon to switch to when pressing "z"
    * Body     - item worn over your body (e.g. an armor or a jacket)
    * Head     - item worn on your head (e.g. a gas mask)
 
-   (3) Pressing "t" opens a list of items which can be thrown (as an attack)
-After selecting an item to throw, aim somewhere with the movement keys, and press "t" again to throw it.
+   (2) Pressing "a" shows only items which wich you can "activate" or consume
+This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
+
+   (3) Pressing "T" opens a list to select an item for throwing attacks
+The item currently used for throwing can be seen at the bottom right corner of the screen. To throw this item, press "t", aim somewhere with the movement keys, and press "t" again to throw it.
 
 Note that explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive (don't hold on to it too long). Press "t", and aim somewhere (the game will mark the area around your aim position to indicate the explosion size - be careful though, there may be unseen objects blocking the throw path). Press "t" again (or enter) to throw the explosive toward the aim position.
 

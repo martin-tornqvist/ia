@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <vector>
+#include <memory>
 
 #include "init.hpp"
 #include "popup.hpp"
@@ -664,17 +665,37 @@ void handle_player_input(const InputData& input)
         }
         else // Not holding explosive - run throwing attack instead
         {
+            if (!map::player->thrown_item)
+            {
+                msg_log::add("No item selected for throwing (press [T]).");
+
+                return;
+            }
+
             const bool is_allowed =
                 map::player->prop_handler().
                 allow_attack_ranged(Verbosity::verbose);
 
             if (is_allowed)
             {
-                std::unique_ptr<State> select_throw(new SelectThrow);
+                std::unique_ptr<State> throwing(
+                    new Throwing(map::player->pos,
+                                 *map::player->thrown_item));
 
-                states::push(std::move(select_throw));
+                states::push(std::move(throwing));
             }
         }
+    }
+    break;
+
+    //
+    // Select item for throwing
+    //
+    case 'T':
+    {
+        std::unique_ptr<State> select_throw(new SelectThrow);
+
+        states::push(std::move(select_throw));
     }
     break;
 

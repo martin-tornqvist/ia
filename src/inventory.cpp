@@ -183,13 +183,25 @@ bool Inventory::try_stack_in_backpack(Item* item)
 
             if (other->id() == item->id())
             {
-                // Keeping picked up item and destroying the one in the
-                // inventory (then the parameter pointer is still valid).
+                //
+                // NOTE: We are keeping the new item and destroying old one
+                //       (so the parameter pointer is still valid)
+                //
                 item->nr_items_ += other->nr_items_;
 
                 delete other;
 
                 backpack_[i] = item;
+
+                if (owning_actor_ == map::player)
+                {
+                    // If the old item was selected for throwing, then select
+                    // the new stack instead (the old pointer is invalidated)
+                    if (map::player->thrown_item == other)
+                    {
+                        map::player->thrown_item = item;
+                    }
+                }
 
                 return true;
             }
@@ -220,32 +232,24 @@ void Inventory::drop_all_non_intrinsic(const P& pos)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    Item* item = nullptr;
-
     // Drop from slots
     for (InvSlot& slot : slots_)
     {
-        item = slot.item;
+        Item* const item = remove_item_in_slot(slot.id, false);
 
         if (item)
         {
-            item->on_removed_from_inv();
-
             item_drop::drop_item_on_map(pos, *item);
-
-            slot.item = nullptr;
         }
     }
 
     // Drop from backpack
-    for (Item* item : backpack_)
+    while (!backpack_.empty())
     {
-        item->on_removed_from_inv();
+        Item* const item = remove_item_in_backpack_with_idx(0, false);
 
         item_drop::drop_item_on_map(pos, *item);
     }
-
-    backpack_.clear();
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -310,6 +314,11 @@ Item* Inventory::remove_item_in_slot(const SlotId slot_id,
 
     Item* item = slot.item;
 
+    if (item == map::player->thrown_item)
+    {
+        map::player->thrown_item = nullptr;
+    }
+
     if (item)
     {
         slot.item = nullptr;
@@ -336,6 +345,11 @@ Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx,
 
     Item* item = backpack_[idx];
 
+    if (item == map::player->thrown_item)
+    {
+        map::player->thrown_item = nullptr;
+    }
+
     backpack_.erase(begin(backpack_) + idx);
 
     item->on_removed_from_inv();
@@ -348,6 +362,34 @@ Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx,
     }
 
     return item;
+}
+
+Item* Inventory::remove_item(Item* const item,
+                             const bool delete_item)
+{
+    Item* item_returned = nullptr;
+
+    for (InvSlot& slot : slots_)
+    {
+        if (slot.item == item)
+        {
+            item_returned = remove_item_in_slot(slot.id, delete_item);
+
+            return item_returned;
+        }
+    }
+
+    for (size_t i = 0; i < backpack_.size(); ++i)
+    {
+        if (backpack_[i] == item)
+        {
+            item_returned = remove_item_in_backpack_with_idx(i, delete_item);
+
+            return item_returned;
+        }
+    }
+
+    return item_returned;
 }
 
 Item* Inventory::remove_item_in_backpack_with_ptr(Item* const item,
@@ -446,6 +488,7 @@ UnequipAllowed Inventory::try_move_from_slot_to_backpack(const SlotId id)
             if (!is_stacked)
             {
                 backpack_.push_back(item);
+
                 sort_backpack();
             }
         }

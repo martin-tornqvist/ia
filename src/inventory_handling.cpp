@@ -781,7 +781,7 @@ void BrowseInv::update()
         //
         states::pop();
 
-        /* const bool did_drop = */ run_drop_query(inv_type_marked, idx);
+        run_drop_query(inv_type_marked, idx);
 
         return;
     }
@@ -1214,7 +1214,7 @@ void Equip::update()
         //
         states::pop();
 
-        /* const bool did_drop = */ run_drop_query(InvType::backpack, idx);
+        run_drop_query(InvType::backpack, idx);
 
         return;
     }
@@ -1406,19 +1406,12 @@ void SelectThrow::update()
     {
     case MenuAction::selected:
     {
+        map::player->thrown_item = item;
+
         //
         // Exit screen
         //
         states::pop();
-
-        // NOTE: This object is now destroyed
-
-        // Run throw aiming state
-        std::unique_ptr<State> throwing(
-            new Throwing(map::player->pos,
-                         *item));
-
-        states::push(std::move(throwing));
 
         return;
     }
@@ -1431,7 +1424,6 @@ void SelectThrow::update()
         //
         states::pop();
 
-        /* const bool did_drop = */
         run_drop_query(inv_type_marked, relative_inv_idx);
 
         return;
