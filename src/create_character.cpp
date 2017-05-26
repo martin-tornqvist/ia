@@ -36,10 +36,16 @@ const int descr_w_ = descr_x1_ - descr_y1_ + 1;
 // -----------------------------------------------------------------------------
 void NewGameState::on_pushed()
 {
+    std::unique_ptr<State> game_state(
+        new GameState(GameEntryMode::new_game));
+
     std::unique_ptr<State> name_state(new EnterNameState);
+
     std::unique_ptr<State> trait_state(new PickTraitState);
+
     std::unique_ptr<State> bg_state(new PickBgState);
 
+    states::push(std::move(game_state));
     states::push(std::move(name_state));
     states::push(std::move(trait_state));
     states::push(std::move(bg_state));
@@ -47,17 +53,7 @@ void NewGameState::on_pushed()
 
 void NewGameState::on_resume()
 {
-    // Some backgrounds and traits may have affected maximum hp and spi (either
-    // positively or negatively), so here we need to set the current hp and SPI
-    // equal to the maximum values.
-    map::player->set_hp_and_spi_to_max();
-
     states::pop();
-
-    std::unique_ptr<State> game_state(
-        new GameState(GameEntryMode::new_game));
-
-    states::push(std::move(game_state));
 }
 
 // -----------------------------------------------------------------------------

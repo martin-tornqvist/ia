@@ -63,10 +63,13 @@ enum class SfxId
     amb028, amb029, amb030, amb031, amb032, amb033, amb034, amb035, amb036,
     amb037, amb038, amb039, amb040, amb041, amb042, amb043, amb044, amb045,
     amb046, amb047, amb049,
-    AMB_END,
 
-    mus_cthulhiana_Madness,
+    END
+};
 
+enum class MusId
+{
+    cthulhiana_madness,
     END
 };
 
@@ -76,10 +79,9 @@ namespace audio
 void init();
 void cleanup();
 
-// Returns channel playing on
-int play(const SfxId sfx,
-         const int vol_percent_tot = 100,
-         const int vol_percent_l = 50);
+void play(const SfxId sfx,
+          const int vol_percent_tot = 100,
+          const int vol_percent_l = 50);
 
 void play(const SfxId sfx,
           const Dir dir,
@@ -87,7 +89,10 @@ void play(const SfxId sfx,
 
 void try_play_amb(const int one_in_n_chance_to_play);
 
-void fade_out_channel(const int channel_nr);
+// Plays music if not already playing any music
+void play_music(const MusId sfx);
+
+void fade_out_music();
 
 }
 

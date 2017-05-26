@@ -17,7 +17,7 @@ public:
 
     void on_start() override;
 
-    void on_pause() override;
+    void on_resume() override;
 
 private:
     MenuBrowser browser_;

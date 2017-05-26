@@ -1199,6 +1199,11 @@ const std::vector<HistoryEvent>& history()
 // -----------------------------------------------------------------------------
 void GameState::on_start()
 {
+    // Some backgrounds and traits may have affected maximum hp and spi (either
+    // positively or negatively), so here we need to (re)set the current hp and
+    // spi to the maximum values
+    map::player->set_hp_and_spi_to_max();
+
     if (entry_mode_ == GameEntryMode::new_game)
     {
         map::player->mk_start_items();

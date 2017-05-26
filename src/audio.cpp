@@ -16,6 +16,8 @@ namespace
 
 std::vector<Mix_Chunk*> audio_chunks_;
 
+std::vector<Mix_Music*> mus_chunks_;
+
 size_t ms_at_sfx_played_[(size_t)SfxId::END];
 
 int current_channel_ = 0;
@@ -23,8 +25,8 @@ int seconds_at_amb_played_ = -1;
 
 int nr_files_loaded_ = 0;
 
-// Subtracting AMB_START and AMB_END
-const int nr_files_tot = (int)SfxId::END - 2;
+// Subtracting AMB_START
+const int nr_sfx_tot = (int)SfxId::END - 1;
 
 void load(const SfxId sfx, const std::string& filename)
 {
@@ -37,7 +39,7 @@ void load(const SfxId sfx, const std::string& filename)
 
     const std::string nr_loaded_str =
         std::to_string(nr_files_loaded_) + "/" +
-        std::to_string(nr_files_tot) ;
+        std::to_string(nr_sfx_tot) ;
 
     io::draw_text("Loading audio file " +
                   nr_loaded_str +
@@ -58,7 +60,7 @@ void load(const SfxId sfx, const std::string& filename)
     }
 
     // Draw a loading bar
-    const int pct_loaded = (nr_files_loaded_ * 100) / nr_files_tot;
+    const int pct_loaded = (nr_files_loaded_ * 100) / nr_sfx_tot;
     const int bar_w_tot = 32;
     const int bar_w_l = (bar_w_tot * pct_loaded) / 100;
     const int bar_w_r = bar_w_tot - bar_w_l;
@@ -142,110 +144,120 @@ void init()
 
     cleanup();
 
-    if (config::is_audio_enabled())
+    if (!config::is_audio_enabled())
     {
-        audio_chunks_.resize(size_t(SfxId::END));
-
-        //
-        // Monster sounds
-        //
-        load(SfxId::dog_snarl, "sfx_dog_snarl.ogg");
-        load(SfxId::wolf_howl, "sfx_wolf_howl.ogg");
-        load(SfxId::hiss, "sfx_hiss.ogg");
-        load(SfxId::zombie_growl, "sfx_zombie_growl.ogg");
-        load(SfxId::ghoul_growl, "sfx_ghoul_growl.ogg");
-        load(SfxId::ooze_gurgle, "sfx_ooze_gurgle.ogg");
-        load(SfxId::flapping_wings, "sfx_flapping_wings.ogg");
-        load(SfxId::ape, "sfx_ape.ogg");
-
-        //
-        // Weapon and attack sounds
-        //
-        load(SfxId::hit_small, "sfx_hit_small.ogg");
-        load(SfxId::hit_medium, "sfx_hit_medium.ogg");
-        load(SfxId::hit_hard, "sfx_hit_hard.ogg");
-        load(SfxId::hit_corpse_break, "sfx_hit_corpse_break.ogg");
-        load(SfxId::miss_light, "sfx_miss_light.ogg");
-        load(SfxId::miss_medium, "sfx_miss_medium.ogg");
-        load(SfxId::miss_heavy, "sfx_miss_heavy.ogg");
-        load(SfxId::hit_sharp, "sfx_hit_sharp.ogg");
-        load(SfxId::pistol_fire, "sfx_pistol_fire.ogg");
-        load(SfxId::pistol_reload, "sfx_pistol_reload.ogg");
-        load(SfxId::shotgun_sawed_off_fire, "sfx_shotgun_sawed_off_fire.ogg");
-        load(SfxId::shotgun_pump_fire, "sfx_shotgun_pump_fire.ogg");
-        load(SfxId::shotgun_reload, "sfx_shotgun_reload.ogg");
-        load(SfxId::machine_gun_fire, "sfx_machine_gun_fire.ogg");
-        load(SfxId::machine_gun_reload, "sfx_machine_gun_reload.ogg");
-        load(SfxId::mi_go_gun_fire, "sfx_migo_gun.ogg");
-        load(SfxId::spike_gun, "sfx_spike_gun.ogg");
-        load(SfxId::bite, "sfx_bite.ogg");
-
-        //
-        // Environment sounds
-        //
-        load(SfxId::metal_clank, "sfx_metal_clank.ogg");
-        load(SfxId::ricochet, "sfx_ricochet.ogg");
-        load(SfxId::explosion, "sfx_explosion.ogg");
-        load(SfxId::explosion_molotov, "sfx_explosion_molotov.ogg");
-        load(SfxId::gas, "sfx_gas.ogg");
-        load(SfxId::door_open, "sfx_door_open.ogg");
-        load(SfxId::door_close, "sfx_door_close.ogg");
-        load(SfxId::door_bang, "sfx_door_bang.ogg");
-        load(SfxId::door_break, "sfx_door_break.ogg");
-        load(SfxId::tomb_open, "sfx_tomb_open.ogg");
-        load(SfxId::fountain_drink, "sfx_fountain_drink.ogg");
-        load(SfxId::boss_voice1, "sfx_boss_voice1.ogg");
-        load(SfxId::boss_voice2, "sfx_boss_voice2.ogg");
-
-        //
-        // User interface sounds
-        //
-        load(SfxId::backpack, "sfx_backpack.ogg");
-        load(SfxId::pickup, "sfx_pickup.ogg");
-        load(SfxId::lantern, "sfx_electric_lantern.ogg");
-        load(SfxId::potion_quaff, "sfx_potion_quaff.ogg");
-        load(SfxId::spell_generic, "sfx_spell_generic.ogg");
-        load(SfxId::spell_shield_break, "sfx_spell_shield_break.ogg");
-        load(SfxId::insanity_rise, "sfx_insanity_rising.ogg");
-        load(SfxId::glop, "sfx_glop.ogg");
-        load(SfxId::chains, "sfx_chains.ogg");
-        load(SfxId::death, "sfx_death.ogg");
-        load(SfxId::menu_browse, "sfx_menu_browse.ogg");
-        load(SfxId::menu_select, "sfx_menu_select.ogg");
-
-        //
-        // Ambient sounds
-        //
-        int a = 1;
-
-        const int first = (int)SfxId::AMB_START + 1;
-
-        const int last = (int)SfxId::AMB_END - 1;
-
-        for (int i = first; i <= last; ++i)
-        {
-            const std::string padding_str =
-                (a < 10) ? "00" :
-                (a < 100) ? "0" : "";
-
-            const std::string idx_str = std::to_string(a);
-
-            const std::string file_name =
-                "amb_" +
-                padding_str +
-                idx_str +
-                ".ogg";
-
-            load(SfxId(i), file_name);
-
-            ++a;
-        }
-
-        load(SfxId::mus_cthulhiana_Madness,
-             "musica_cthulhiana-fragment-madness.ogg");
-
-        ASSERT(nr_files_loaded_ == nr_files_tot);
+        TRACE_FUNC_END;
     }
+
+    audio_chunks_.resize(size_t(SfxId::END));
+
+    //
+    // Monster sounds
+    //
+    load(SfxId::dog_snarl, "sfx_dog_snarl.ogg");
+    load(SfxId::wolf_howl, "sfx_wolf_howl.ogg");
+    load(SfxId::hiss, "sfx_hiss.ogg");
+    load(SfxId::zombie_growl, "sfx_zombie_growl.ogg");
+    load(SfxId::ghoul_growl, "sfx_ghoul_growl.ogg");
+    load(SfxId::ooze_gurgle, "sfx_ooze_gurgle.ogg");
+    load(SfxId::flapping_wings, "sfx_flapping_wings.ogg");
+    load(SfxId::ape, "sfx_ape.ogg");
+
+    //
+    // Weapon and attack sounds
+    //
+    load(SfxId::hit_small, "sfx_hit_small.ogg");
+    load(SfxId::hit_medium, "sfx_hit_medium.ogg");
+    load(SfxId::hit_hard, "sfx_hit_hard.ogg");
+    load(SfxId::hit_corpse_break, "sfx_hit_corpse_break.ogg");
+    load(SfxId::miss_light, "sfx_miss_light.ogg");
+    load(SfxId::miss_medium, "sfx_miss_medium.ogg");
+    load(SfxId::miss_heavy, "sfx_miss_heavy.ogg");
+    load(SfxId::hit_sharp, "sfx_hit_sharp.ogg");
+    load(SfxId::pistol_fire, "sfx_pistol_fire.ogg");
+    load(SfxId::pistol_reload, "sfx_pistol_reload.ogg");
+    load(SfxId::shotgun_sawed_off_fire, "sfx_shotgun_sawed_off_fire.ogg");
+    load(SfxId::shotgun_pump_fire, "sfx_shotgun_pump_fire.ogg");
+    load(SfxId::shotgun_reload, "sfx_shotgun_reload.ogg");
+    load(SfxId::machine_gun_fire, "sfx_machine_gun_fire.ogg");
+    load(SfxId::machine_gun_reload, "sfx_machine_gun_reload.ogg");
+    load(SfxId::mi_go_gun_fire, "sfx_migo_gun.ogg");
+    load(SfxId::spike_gun, "sfx_spike_gun.ogg");
+    load(SfxId::bite, "sfx_bite.ogg");
+
+    //
+    // Environment sounds
+    //
+    load(SfxId::metal_clank, "sfx_metal_clank.ogg");
+    load(SfxId::ricochet, "sfx_ricochet.ogg");
+    load(SfxId::explosion, "sfx_explosion.ogg");
+    load(SfxId::explosion_molotov, "sfx_explosion_molotov.ogg");
+    load(SfxId::gas, "sfx_gas.ogg");
+    load(SfxId::door_open, "sfx_door_open.ogg");
+    load(SfxId::door_close, "sfx_door_close.ogg");
+    load(SfxId::door_bang, "sfx_door_bang.ogg");
+    load(SfxId::door_break, "sfx_door_break.ogg");
+    load(SfxId::tomb_open, "sfx_tomb_open.ogg");
+    load(SfxId::fountain_drink, "sfx_fountain_drink.ogg");
+    load(SfxId::boss_voice1, "sfx_boss_voice1.ogg");
+    load(SfxId::boss_voice2, "sfx_boss_voice2.ogg");
+
+    //
+    // User interface sounds
+    //
+    load(SfxId::backpack, "sfx_backpack.ogg");
+    load(SfxId::pickup, "sfx_pickup.ogg");
+    load(SfxId::lantern, "sfx_electric_lantern.ogg");
+    load(SfxId::potion_quaff, "sfx_potion_quaff.ogg");
+    load(SfxId::spell_generic, "sfx_spell_generic.ogg");
+    load(SfxId::spell_shield_break, "sfx_spell_shield_break.ogg");
+    load(SfxId::insanity_rise, "sfx_insanity_rising.ogg");
+    load(SfxId::glop, "sfx_glop.ogg");
+    load(SfxId::chains, "sfx_chains.ogg");
+    load(SfxId::death, "sfx_death.ogg");
+    load(SfxId::menu_browse, "sfx_menu_browse.ogg");
+    load(SfxId::menu_select, "sfx_menu_select.ogg");
+
+    //
+    // Ambient sounds
+    //
+    int a = 1;
+
+    const int first = (int)SfxId::AMB_START + 1;
+
+    const int last = (int)SfxId::END - 1;
+
+    for (int i = first; i <= last; ++i)
+    {
+        const std::string padding_str =
+            (a < 10) ? "00" :
+            (a < 100) ? "0" : "";
+
+        const std::string idx_str = std::to_string(a);
+
+        const std::string file_name =
+            "amb_" +
+            padding_str +
+            idx_str +
+            ".ogg";
+
+        load(SfxId(i), file_name);
+
+        ++a;
+    }
+
+    ASSERT(nr_files_loaded_ == nr_sfx_tot);
+
+    //
+    // Load music
+    //
+    mus_chunks_.resize((size_t)MusId::END);
+
+    //
+    // TOOD: Copy/pasted from the load function above - this needs refactoring
+    //
+    mus_chunks_[(size_t)MusId::cthulhiana_madness] =
+        Mix_LoadMUS("res/audio/musica_cthulhiana-fragment-madness.ogg");
 
     TRACE_FUNC_END;
 }
@@ -266,6 +278,11 @@ void cleanup()
 
     audio_chunks_.clear();
 
+    for (Mix_Music* chunk : mus_chunks_)
+    {
+        Mix_FreeMusic(chunk);
+    }
+
     current_channel_ =  0;
     seconds_at_amb_played_ = -1;
 
@@ -274,11 +291,12 @@ void cleanup()
     TRACE_FUNC_END;
 }
 
-int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
+void play(const SfxId sfx,
+          const int vol_pct_tot,
+          const int vol_pct_l)
 {
     if (!audio_chunks_.empty() &&
         sfx != SfxId::AMB_START &&
-        sfx != SfxId::AMB_END &&
         sfx != SfxId::END &&
         !config::is_bot_playing())
     {
@@ -299,20 +317,22 @@ int play(const SfxId sfx, const int vol_pct_tot, const int vol_pct_l)
             const int vol_l = (vol_pct_l * vol_tot) / 100;
             const int vol_r = vol_tot - vol_l;
 
-            Mix_SetPanning(current_channel_, vol_l, vol_r);
+            Mix_SetPanning(current_channel_,
+                           vol_l,
+                           vol_r);
 
-            Mix_PlayChannel(current_channel_, audio_chunks_[(size_t)sfx], 0);
+            Mix_PlayChannel(current_channel_,
+                            audio_chunks_[(size_t)sfx],
+                            0);
 
             ms_last = SDL_GetTicks();
-
-            return current_channel_;
         }
     }
-
-    return -1;
 }
 
-void play(const SfxId sfx, const Dir dir, const int distance_pct)
+void play(const SfxId sfx,
+          const Dir dir,
+          const int distance_pct)
 {
     if (!audio_chunks_.empty() && dir != Dir::END)
     {
@@ -364,7 +384,9 @@ void play(const SfxId sfx, const Dir dir, const int distance_pct)
             break;
         }
 
-        play(sfx, vol_pct_tot, vol_pct_l);
+        play(sfx,
+             vol_pct_tot,
+             vol_pct_l);
     }
 }
 
@@ -381,8 +403,11 @@ void try_play_amb(const int one_in_n_chance_to_play)
             seconds_at_amb_played_ = seconds_now;
 
             const int vol_pct = rnd::range(15, 100);
+
             const int first_int = (int)SfxId::AMB_START + 1;
-            const int last_int = (int)SfxId::AMB_END - 1;
+
+            const int last_int = (int)SfxId::END - 1;
+
             const SfxId sfx = (SfxId)rnd::range(first_int, last_int);
 
             play(sfx , vol_pct);
@@ -390,12 +415,21 @@ void try_play_amb(const int one_in_n_chance_to_play)
     }
 }
 
-void fade_out_channel(const int channel_nr)
+void play_music(const MusId mus)
 {
-    if (!audio_chunks_.empty())
+    // Only play if not already playing music
+    if (!Mix_PlayingMusic())
     {
-        Mix_FadeOutChannel(channel_nr, 5000);
+        auto* const chunk = mus_chunks_[(size_t)mus];
+
+        // Loop forever
+        Mix_PlayMusic(chunk, -1);
     }
+}
+
+void fade_out_music()
+{
+    Mix_FadeOutMusic(2000);
 }
 
 } // audio

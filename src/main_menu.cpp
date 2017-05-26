@@ -22,8 +22,6 @@
 namespace
 {
 
-int intro_mus_chan_ = -1;
-
 std::string current_quote_ = "";
 
 std::vector<std::string> quotes_ =
@@ -34,8 +32,6 @@ std::vector<std::string> quotes_ =
     "Our means of receiving impressions are absurdly few, and our notions of "
     "surrounding objects infinitely narrow. We see things only as we are "
     "constructed to see them, and can gain no idea of their absolute nature.",
-
-    "Disintegration is quite painless, I assure you.",
 
     "I am writing this under an appreciable mental strain, since by tonight I "
     "shall be no more...",
@@ -392,6 +388,8 @@ void MainMenuState::update()
             }
 #endif // NDEBUG
 
+            audio::fade_out_music();
+
             init::init_session();
 
             std::unique_ptr<State> new_game_state(new NewGameState);
@@ -404,6 +402,8 @@ void MainMenuState::update()
         {
             if (saving::is_save_available())
             {
+                audio::fade_out_music();
+
                 init::init_session();
 
                 saving::load_game();
@@ -463,10 +463,10 @@ void MainMenuState::on_start()
 {
     current_quote_ = rnd::element(quotes_);
 
-    intro_mus_chan_ = audio::play(SfxId::mus_cthulhiana_Madness);
+    audio::play_music(MusId::cthulhiana_madness);
 }
 
-void MainMenuState::on_pause()
+void MainMenuState::on_resume()
 {
-    audio::fade_out_channel(intro_mus_chan_);
+    audio::play_music(MusId::cthulhiana_madness);
 }

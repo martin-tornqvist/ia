@@ -51,53 +51,58 @@ void start()
 
 void draw()
 {
-    if (!states_.empty())
+    if (states_.empty())
     {
-        // Find the first state from the end which is NOT drawn overlayed
-        auto draw_from = end(states_);
+        return;
+    }
 
-        while (draw_from != begin(states_))
+    // Find the first state from the end which is NOT drawn overlayed
+    auto draw_from = end(states_);
+
+    while (draw_from != begin(states_))
+    {
+        --draw_from;
+
+        const auto& state_ptr = *draw_from;
+
+        // If not drawn overlayed, draw from this state as bottom layer
+        // (but only if the state has been started, see note below)
+        if (!state_ptr->draw_overlayed() &&
+            state_ptr->has_started())
         {
-            --draw_from;
-
-            const auto& state_ptr = *draw_from;
-
-            // If not drawn overlayed, draw from this state as bottom layer
-            // (but only if the state has been started, see note below)
-            if (!state_ptr->draw_overlayed() &&
-                state_ptr->has_started())
-            {
-                break;
-            }
+            break;
         }
+    }
 
-        // Draw every state from this (non-overlayed) state onward
-        for (/* No declaration */ ; draw_from != end(states_); ++draw_from)
+    // Draw every state from this (non-overlayed) state onward
+    for (/* No declaration */ ; draw_from != end(states_); ++draw_from)
+    {
+        const auto& state_ptr = *draw_from;
+
+        // Do NOT draw states which are not yet started (they may need to
+        // set up menus etc in their start function, and expect the chance
+        // to do so before drawing is called)
+
+        if (state_ptr->has_started())
         {
-            const auto& state_ptr = *draw_from;
-
-            // Do NOT draw states which are not yet started (they may need to
-            // set up menus etc in their start function, and expect the chance
-            // to do so before drawing is called)
-
-            if (state_ptr->has_started())
-            {
-                state_ptr->draw();
-            }
+            state_ptr->draw();
         }
     }
 }
 
 void update()
 {
-    if (!states_.empty())
+    if (states_.empty())
     {
-        states_.back()->update();
+        return;
     }
+
+    states_.back()->update();
 }
 
 void push(std::unique_ptr<State> state)
 {
+    // Pause the current state
     if (!states_.empty())
     {
         states_.back()->on_pause();
@@ -112,16 +117,18 @@ void push(std::unique_ptr<State> state)
 
 void pop()
 {
+    if (states_.empty())
+    {
+        return;
+    }
+
+    states_.back()->on_popped();
+
+    states_.pop_back();
+
     if (!states_.empty())
     {
-        states_.back()->on_popped();
-
-        states_.pop_back();
-
-        if (!states_.empty())
-        {
-            states_.back()->on_resume();
-        }
+        states_.back()->on_resume();
     }
 
     io::flush_input();
