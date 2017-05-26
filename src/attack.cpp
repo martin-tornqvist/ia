@@ -344,7 +344,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
         state_mod = 0;
 
         if (attacker->is_player() &&
-            static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0)
+            (static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0))
         {
             state_mod = 25;
         }
@@ -798,7 +798,8 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             break;
         }
 
-        Snd snd(snd_msg, hit_sfx,
+        Snd snd(snd_msg,
+                hit_sfx,
                 IgnoreMsgIfOriginSeen::yes,
                 att_data.defender->pos,
                 att_data.attacker,
@@ -912,6 +913,7 @@ void projectile_fire(Actor* const attacker,
                               wpn);
 
         p->set_att_data(att_data);
+
         projectiles.push_back(p);
     }
 
@@ -985,6 +987,10 @@ void projectile_fire(Actor* const attacker,
 
     const bool leave_trail = wpn.data().ranged.projectile_leaves_trail;
 
+    const SndVol vol = wpn.data().ranged.snd_vol;
+
+    const std::string snd_msg = wpn.data().ranged.snd_msg;
+
     // An "update" here means each time we update the positions of all
     // projectiles (from the player perspective, each update is done
     // simultaneously for all projectiles)
@@ -1015,28 +1021,35 @@ void projectile_fire(Actor* const attacker,
             // Emit sound
             if (path_element == 1)
             {
-                std::string snd_msg = wpn.data().ranged.snd_msg;
-
                 const SfxId sfx = wpn.data().ranged.att_sfx;
 
                 if (!snd_msg.empty())
                 {
+                    std::string snd_msg_used = snd_msg;
+
                     if (attacker == map::player)
                     {
-                        snd_msg = "";
+                        snd_msg_used = "";
                     }
 
-                    const SndVol vol = wpn.data().ranged.snd_vol;
-
-                    Snd snd(snd_msg,
+                    //
+                    // NOTE: The initial attack sound(s) must NOT alert monsters
+                    //       since this would immediately make them aware before
+                    //       any attack data is set. This would result in the
+                    //       player never geting a ranged attack bonus against
+                    //       unaware monsters (unless the monster is deaf).
+                    //       Instead, an extra sound is run after the attack
+                    //       (without message or sound effect).
+                    //
+                    Snd snd(snd_msg_used,
                             sfx,
                             IgnoreMsgIfOriginSeen::yes,
                             origin,
                             attacker,
                             vol,
-                            AlertsMon::yes);
+                            AlertsMon::no);
 
-                    snd_emit::run(snd);
+                    snd.run();
                 }
             }
 
@@ -1066,8 +1079,8 @@ void projectile_fire(Actor* const attacker,
                 auto atta_data =
                     new RangedAttData(attacker,
                                       origin,       // Attacker origin
-                                      aim_pos,      // Aim pos
-                                      proj->pos,    // Cur pos
+                                      aim_pos,      // Aim position
+                                      proj->pos,    // Current position
                                       wpn,
                                       aim_lvl);
 
@@ -1117,6 +1130,7 @@ void projectile_fire(Actor* const attacker,
 
                         // MESSAGES FOR ACTOR HIT
                         print_proj_at_actor_msgs(att_data, true, wpn);
+
                         // Need to draw again here to show log message
                         io::draw_projectiles(projectiles, !leave_trail);
                     }
@@ -1137,9 +1151,11 @@ void projectile_fire(Actor* const attacker,
                                                     wpn.data().ranged.dmg_type);
                     }
 
+                    //
                     // NOTE: This is run regardless of if defender died or not,
                     //       it is the hook implementors responsibility to check
                     //       this if it matters.
+                    //
                     wpn.on_ranged_hit(*proj->actor_hit);
 
                     if (died == ActorDied::no)
@@ -1361,6 +1377,20 @@ void projectile_fire(Actor* const attacker,
     {
         delete projectile;
     }
+
+    //
+    // See note above
+    //
+    if (!snd_msg.empty())
+    {
+        Snd snd("",
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::yes,
+                origin,
+                attacker,
+                vol,
+                AlertsMon::yes);
+    }
 }
 
 void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
@@ -1403,9 +1433,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         }
 
         const SndVol vol = wpn.data().ranged.snd_vol;
+
         const SfxId sfx = wpn.data().ranged.att_sfx;
 
-        Snd snd(snd_msg, sfx,
+        Snd snd(snd_msg,
+                sfx,
                 IgnoreMsgIfOriginSeen::yes,
                 attacker.pos,
                 &attacker,
@@ -1770,7 +1802,9 @@ bool ranged(Actor* const attacker,
 
         if (wpn.nr_ammo_loaded_ != 0 || has_inf_ammo)
         {
-            shotgun(*attacker, wpn, aim_pos);
+            shotgun(*attacker,
+                    wpn,
+                    aim_pos);
 
             did_attack = true;
 
@@ -1792,7 +1826,10 @@ bool ranged(Actor* const attacker,
         if ((wpn.nr_ammo_loaded_ >= nr_of_projectiles) ||
             has_inf_ammo)
         {
-            projectile_fire(attacker, origin, aim_pos, wpn);
+            projectile_fire(attacker,
+                            origin,
+                            aim_pos,
+                            wpn);
 
             if (map::player->is_alive())
             {

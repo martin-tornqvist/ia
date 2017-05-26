@@ -68,6 +68,7 @@ Interface
 
 Bug fixes
 * Fixed a bug where dropping the Staff of the Pharaohs would cause the spell to be permanently lost, even if the staff was picked up again
+* Fixed a bug that prevented hit chance bonus against unaware targets for ranged attacks
 
 
 --------------------------------------------------------------
