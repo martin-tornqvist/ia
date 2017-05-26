@@ -1390,6 +1390,8 @@ void projectile_fire(Actor* const attacker,
                 attacker,
                 vol,
                 AlertsMon::yes);
+
+        snd.run();
     }
 }
 
