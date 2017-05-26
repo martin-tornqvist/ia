@@ -147,6 +147,8 @@ void init()
     if (!config::is_audio_enabled())
     {
         TRACE_FUNC_END;
+
+        return;
     }
 
     audio_chunks_.resize(size_t(SfxId::END));
@@ -283,6 +285,8 @@ void cleanup()
         Mix_FreeMusic(chunk);
     }
 
+    mus_chunks_.clear();
+
     current_channel_ =  0;
     seconds_at_amb_played_ = -1;
 
@@ -334,7 +338,8 @@ void play(const SfxId sfx,
           const Dir dir,
           const int distance_pct)
 {
-    if (!audio_chunks_.empty() && dir != Dir::END)
+    if (!audio_chunks_.empty() &&
+        (dir != Dir::END))
     {
         // The distance value is scaled down to avoid too much volume reduction
         const int vol_pct_tot = 100 - ((distance_pct * 2) / 3);
@@ -418,7 +423,8 @@ void try_play_amb(const int one_in_n_chance_to_play)
 void play_music(const MusId mus)
 {
     // Only play if not already playing music
-    if (!Mix_PlayingMusic())
+    if (!mus_chunks_.empty() &&
+        !Mix_PlayingMusic())
     {
         auto* const chunk = mus_chunks_[(size_t)mus];
 
@@ -429,7 +435,10 @@ void play_music(const MusId mus)
 
 void fade_out_music()
 {
-    Mix_FadeOutMusic(2000);
+    if (!mus_chunks_.empty())
+    {
+        Mix_FadeOutMusic(2000);
+    }
 }
 
 } // audio
