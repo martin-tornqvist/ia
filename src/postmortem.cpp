@@ -45,7 +45,6 @@ void PostmortemMenu::on_start()
     const Clr clr_info = clr_white;
 
     const std::string offset = "   ";
-    const std::string bullet_point_str = offset + "* ";
 
     TRACE << "Finding number of killed monsters" << std::endl;
 
@@ -78,7 +77,7 @@ void PostmortemMenu::on_start()
     {
         info_lines_.push_back(
         {
-            bullet_point_str + "Died before entering the dungeon",
+            offset + "Died before entering the dungeon",
             clr_info
         });
     }
@@ -86,8 +85,7 @@ void PostmortemMenu::on_start()
     {
         info_lines_.push_back(
         {
-            bullet_point_str + "Explored to the depth of dungeon level " +
-                std::to_string(dlvl),
+            offset + "Explored to dungeon level " + std::to_string(dlvl),
             clr_info
         });
 
@@ -95,29 +93,25 @@ void PostmortemMenu::on_start()
 
     info_lines_.push_back(
     {
-        bullet_point_str + "Was " +
-            std::to_string(score->ins()) + "% insane",
+        offset + "Was " + std::to_string(score->ins()) + "% insane",
         clr_info
     });
 
     info_lines_.push_back(
     {
-        bullet_point_str + "Killed " +
-            std::to_string(nr_kills_tot_all_mon) +" monsters",
+        offset + "Killed " + std::to_string(nr_kills_tot_all_mon) +" monsters",
         clr_info
     });
 
     info_lines_.push_back(
     {
-        bullet_point_str + "Gained " +
-            std::to_string(score->xp()) + " experience points",
+        offset + "Gained " + std::to_string(score->xp()) + " experience points",
         clr_info
     });
 
     info_lines_.push_back(
     {
-        bullet_point_str + "Gained a score of " +
-            std::to_string(score->score()),
+        offset + "Gained a score of " + std::to_string(score->score()),
         clr_info
     });
 
@@ -134,8 +128,7 @@ void PostmortemMenu::on_start()
             {
                 info_lines_.push_back(
                 {
-                    bullet_point_str + sympt_descr,
-                    clr_info
+                    offset + sympt_descr, clr_info
                 });
             }
         }
@@ -150,7 +143,7 @@ void PostmortemMenu::on_start()
 
     if (traits_line.empty())
     {
-        info_lines_.push_back({bullet_point_str + "None", clr_info});
+        info_lines_.push_back({offset + "None", clr_info});
     }
     else
     {
@@ -176,7 +169,7 @@ void PostmortemMenu::on_start()
     {
         info_lines_.push_back(
         {
-            bullet_point_str + "None",
+            offset + "None",
             clr_info
         });
     }
@@ -186,7 +179,7 @@ void PostmortemMenu::on_start()
         {
             info_lines_.push_back(
             {
-                bullet_point_str + "" + monster_name,
+                offset + "" + monster_name,
                 clr_info
             });
         }
@@ -203,15 +196,24 @@ void PostmortemMenu::on_start()
     const std::vector<HistoryEvent>& events =
         game::history();
 
+    int longest_turn_w = 0;
+
+    for (const auto& event : events)
+    {
+        const int turn_w = std::to_string(event.turn).size();
+
+        longest_turn_w = std::max(turn_w, longest_turn_w);
+    }
+
     for (const auto& event : events)
     {
         std::string ev_str = std::to_string(event.turn);
 
-        const int turn_str_max_w = 10;
+        const int turn_w = ev_str.size();
 
-        text_format::pad_before_to(ev_str, turn_str_max_w);
+        ev_str.append(longest_turn_w - turn_w, ' ');
 
-        ev_str += ": " + event.msg;
+        ev_str += " " + event.msg;
 
         info_lines_.push_back(
         {

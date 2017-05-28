@@ -214,7 +214,7 @@ void CharacterDescr::on_start()
 
         ev_str.append(longest_turn_w - turn_w, ' ');
 
-        ev_str += " : " + event.msg;
+        ev_str += " " + event.msg;
 
         lines_.push_back(
             StrAndClr(offset + ev_str,

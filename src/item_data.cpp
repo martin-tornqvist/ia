@@ -2216,7 +2216,7 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "When blown, this sinister artifact emits a weird resonance, which "
+        "When blown, this sinister artifact emits a weird resonance which "
         "corrupts the psyche of all those within hearing range (excluding the "
         "horn blower) - causing them to consider all other creatures with "
         "intense hatred and distrust."
@@ -2243,7 +2243,7 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "When blown, this sinister artifact emits a weird resonance, which "
+        "When blown, this sinister artifact emits a weird resonance which "
         "causes all within hearing range (excluding the horn blower) to become "
         "temporarily deaf."
     };

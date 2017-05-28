@@ -2402,14 +2402,14 @@ Tomb::Tomb(const P& p) :
         }
     }
 
-    if (appearance_ == TombAppearance::marvelous &&
+    if ((appearance_ == TombAppearance::marvelous) &&
         !is_random_appearance_)
     {
-        trait_ = TombTrait::ghost; // NOTE: Wraith is always chosen
+        trait_ = TombTrait::ghost;
     }
     else // Randomized trait
     {
-        std::vector<int> weights(size_t(TombTrait::END) + 1, 0);
+        std::vector<int> weights((size_t)TombTrait::END + 1, 0);
 
         weights[(size_t)TombTrait::ghost]          = 5;
         weights[(size_t)TombTrait::other_undead]   = 3;
