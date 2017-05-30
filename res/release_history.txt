@@ -47,6 +47,7 @@ Gameplay
 * Added more monsters
 * Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed - can be thrown at living, non-undead monsters to paralyze them
 * Added property "Deaf", deafening traps, and a deafening spell (for monsters)
+* When attacking invisible monsters who are immune to the attack, a message is now printed to indicate this (previously it was only printed for seen monsters)
 
 Interface
 * The throwing slot has been removed - instead you change which item to use for throwing by pressing [T] (which can be a wielded item or an item in the backpack) - pressing [t] throws the currently selected item (this also has gameplay effects, since you don't have to spend turns to equip different items to throw them)

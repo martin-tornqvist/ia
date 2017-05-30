@@ -74,7 +74,8 @@ public:
     ActorDied hit(int dmg,
                   const DmgType dmg_type,
                   const DmgMethod method = DmgMethod::END,
-                  const AllowWound allow_wound = AllowWound::yes);
+                  const AllowWound allow_wound = AllowWound::yes,
+                  const Actor* const attacker = nullptr);
 
     ActorDied hit_spi(const int dmg,
                       const Verbosity verbosity = Verbosity::verbose);

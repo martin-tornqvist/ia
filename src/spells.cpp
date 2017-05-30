@@ -553,7 +553,7 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
     if (skill >= 20 &&
         target->state() == ActorState::alive)
     {
-        target->prop_handler().try_add(
+        target->prop_handler().apply(
             new PropParalyzed(PropTurns::specific, 2));
     }
 
@@ -709,7 +709,7 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
         if (skill >= 20 &&
             target->state() == ActorState::alive)
         {
-            target->prop_handler().try_add(
+            target->prop_handler().apply(
                 new PropParalyzed(PropTurns::specific, 2));
         }
 
@@ -950,7 +950,7 @@ void SpellPest::run_effect(Actor* const caster) const
 
     for (Mon* const mon : mon_summoned)
     {
-        mon->prop_handler().try_add(
+        mon->prop_handler().apply(
             new PropSummoned(PropTurns::indefinite));
 
         if (map::player->can_see_actor(*mon))
@@ -961,7 +961,7 @@ void SpellPest::run_effect(Actor* const caster) const
         // Haste the rats if 100% skill
         if (skill >= 100)
         {
-            mon->prop_handler().try_add(
+            mon->prop_handler().apply(
                 new PropHasted(PropTurns::indefinite),
                 PropSrc::intr,
                 true,
@@ -1085,7 +1085,7 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
 
                 if (skill >= 50)
                 {
-                    anim_wpn->prop_handler().try_add(
+                    anim_wpn->prop_handler().apply(
                         new PropSeeInvis(PropTurns::indefinite),
                         PropSrc::intr,
                         true,
@@ -1094,7 +1094,7 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
 
                 if (skill >= 100)
                 {
-                    anim_wpn->prop_handler().try_add(
+                    anim_wpn->prop_handler().apply(
                         new PropHasted(PropTurns::indefinite),
                         PropSrc::intr,
                         true,
@@ -1710,7 +1710,7 @@ void SpellFrenzy::run_effect(Actor* const caster) const
 
     PropFrenzied* frenzy = new PropFrenzied(PropTurns::specific, nr_turns);
 
-    caster->prop_handler().try_add(frenzy);
+    caster->prop_handler().apply(frenzy);
 }
 
 std::vector<std::string> SpellFrenzy::descr_specific() const
@@ -1731,7 +1731,7 @@ void SpellBless::run_effect(Actor* const caster) const
 
     const int nr_turns = 7 + (skill * 7);
 
-    caster->prop_handler().try_add(
+    caster->prop_handler().apply(
         new PropBlessed(PropTurns::specific, nr_turns));
 }
 
@@ -1758,7 +1758,7 @@ std::vector<std::string> SpellBless::descr_specific() const
 // -----------------------------------------------------------------------------
 void SpellLight::run_effect(Actor* const caster) const
 {
-    caster->prop_handler().try_add(new PropRadiant(PropTurns::std));
+    caster->prop_handler().apply(new PropRadiant(PropTurns::std));
 
     const int skill = caster->spell_skill(id());
 
@@ -1822,7 +1822,7 @@ void SpellTeleport::run_effect(Actor* const caster) const
             8 :
             3;
 
-        caster->prop_handler().try_add(
+        caster->prop_handler().apply(
             new PropInvisible(PropTurns::specific, nr_turns));
     }
 
@@ -1879,8 +1879,8 @@ void SpellRes::run_effect(Actor* const caster) const
 
     PropHandler& prop_hlr = caster->prop_handler();
 
-    prop_hlr.try_add(new PropRFire(PropTurns::specific, nr_turns));
-    prop_hlr.try_add(new PropRElec(PropTurns::specific, nr_turns));
+    prop_hlr.apply(new PropRFire(PropTurns::specific, nr_turns));
+    prop_hlr.apply(new PropRElec(PropTurns::specific, nr_turns));
 }
 
 std::vector<std::string> SpellRes::descr_specific() const
@@ -2089,7 +2089,7 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
             prop->set_nr_turns_left(prop->nr_turns_left() * 2);
         }
 
-        prop_handler.try_add(prop);
+        prop_handler.apply(prop);
     }
 }
 
@@ -2168,7 +2168,7 @@ void SpellDisease::run_effect(Actor* const caster) const
                      "!");
     }
 
-    target->prop_handler().try_add(new PropDiseased(PropTurns::std));
+    target->prop_handler().apply(new PropDiseased(PropTurns::std));
 }
 
 bool SpellDisease::allow_mon_cast_now(Mon& mon) const
@@ -2310,7 +2310,7 @@ void SpellSummonMon::run_effect(Actor* const caster) const
 
     Mon* const mon = mon_summoned[0];
 
-    mon->prop_handler().try_add(
+    mon->prop_handler().apply(
         new PropSummoned(PropTurns::indefinite));
 
     if (map::player->can_see_actor(*mon))
@@ -2415,7 +2415,7 @@ void SpellMiGoHypno::run_effect(Actor* const caster) const
         Prop* const prop = new PropFainted(PropTurns::specific,
                                            rnd::range(2, 10));
 
-        target->prop_handler().try_add(prop);
+        target->prop_handler().apply(prop);
     }
     else
     {
@@ -2484,7 +2484,7 @@ void SpellBurn::run_effect(Actor* const caster) const
 
     Prop* const prop = new PropBurning(PropTurns::specific, nr_turns);
 
-    target->prop_handler().try_add(prop);
+    target->prop_handler().apply(prop);
 }
 
 bool SpellBurn::allow_mon_cast_now(Mon& mon) const
@@ -2535,7 +2535,7 @@ void SpellDeafen::run_effect(Actor* const caster) const
 
     Prop* const prop = new PropDeaf(PropTurns::specific, nr_turns);
 
-    target->prop_handler().try_add(prop);
+    target->prop_handler().apply(prop);
 }
 
 bool SpellDeafen::allow_mon_cast_now(Mon& mon) const

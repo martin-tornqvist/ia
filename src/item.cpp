@@ -834,7 +834,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         {
             Prop* const poison = new PropPoisoned(PropTurns::std);
 
-            actor_hit.prop_handler().try_add(poison);
+            actor_hit.prop_handler().apply(poison);
         }
 
         // Terrify victim from Ghoul Indomitable Fury trait?
@@ -843,7 +843,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         {
             Prop* const fear = new PropTerrified(PropTurns::std);
 
-            actor_hit.prop_handler().try_add(fear);
+            actor_hit.prop_handler().apply(fear);
         }
     }
 }
@@ -879,7 +879,7 @@ void ZombieDust::on_ranged_hit(Actor& actor_hit)
     if (actor_hit.state() == ActorState::alive &&
         !actor_hit.data().is_undead)
     {
-        actor_hit.prop_handler().try_add(
+        actor_hit.prop_handler().apply(
             new PropParalyzed(PropTurns::std));
     }
 }
@@ -973,7 +973,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
 
     Prop* const prop = new PropBlind(PropTurns::specific, 3);
 
-    actor_hit.prop_handler().try_add(prop);
+    actor_hit.prop_handler().apply(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1015,7 +1015,7 @@ void DustVortexEngulf::on_melee_hit(Actor& actor_hit, const int dmg)
 
     Prop* const prop = new PropBlind(PropTurns::std);
 
-    actor_hit.prop_handler().try_add(prop);
+    actor_hit.prop_handler().apply(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1040,7 +1040,7 @@ void SpittingCobraSpit::on_ranged_hit(Actor& actor_hit)
 
     Prop* const prop = new PropBlind(PropTurns::specific, 7);
 
-    actor_hit.prop_handler().try_add(prop);
+    actor_hit.prop_handler().apply(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1353,7 +1353,7 @@ int MedicalBag::tot_turns_for_action(const MedBagAction action) const
 //            {
 //                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
-//                    actor->prop_handler().try_add(
+//                    actor->prop_handler().apply(
 //                        new PropTerrified(PropTurns::std));
 //                }
 //            }

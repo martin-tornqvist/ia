@@ -387,7 +387,7 @@ void Actor::teleport(const P& p)
     {
         msg_log::add("I suddenly find myself in a different location!");
 
-        prop_handler_->try_add(new PropConfused(PropTurns::specific, 8));
+        prop_handler_->apply(new PropConfused(PropTurns::specific, 8));
     }
 }
 
@@ -569,7 +569,8 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
 ActorDied Actor::hit(int dmg,
                      const DmgType dmg_type,
                      const DmgMethod method,
-                     const AllowWound allow_wound)
+                     const AllowWound allow_wound,
+                     const Actor* const attacker)
 {
     const int hp_pct_before = (hp() * 100) / hp_max(true);
 
@@ -672,18 +673,25 @@ ActorDied Actor::hit(int dmg,
         return hit_spi(dmg);
     }
 
-    // Property resists?
+    // Property resists damage?
     const auto verbosity =
         is_alive() ?
         Verbosity::verbose :
         Verbosity::silent;
 
-    if (prop_handler_->try_resist_dmg(dmg_type, verbosity))
+    const bool is_dmg_resisted =
+        prop_handler_->is_resisting_dmg(dmg_type,
+                                        attacker,
+                                        verbosity);
+
+    if (is_dmg_resisted)
     {
         return ActorDied::no;
     }
 
+    //
     // TODO: Perhaps allow zero damage?
+    //
     dmg = std::max(1, dmg);
 
     if (dmg_type == DmgType::physical)
@@ -691,7 +699,9 @@ ActorDied Actor::hit(int dmg,
         dmg = hit_armor(dmg);
     }
 
+    //
     // TODO: Perhaps allow zero damage?
+    //
     dmg = std::max(1, dmg);
 
     on_hit(dmg,
@@ -701,7 +711,9 @@ ActorDied Actor::hit(int dmg,
 
     prop_handler_->on_hit();
 
+    //
     // TODO: Perhaps allow zero damage?
+    //
     dmg = std::max(1, dmg);
 
     if (!(is_player() && config::is_bot_playing()))
@@ -752,8 +764,8 @@ ActorDied Actor::hit(int dmg,
     const int hp_warn_lvl = 25;
 
     if (is_player() &&
-        hp_pct_before > hp_warn_lvl &&
-        hp_pct_after <= hp_warn_lvl)
+        (hp_pct_before > hp_warn_lvl) &&
+        (hp_pct_after <= hp_warn_lvl))
     {
         msg_log::add("-LOW HP WARNING!-",
                      clr_msg_bad,

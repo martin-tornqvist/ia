@@ -292,7 +292,7 @@ void RodBless::run_effect()
 
     Prop* const prop = new PropBlessed(PropTurns::specific, nr_turns);
 
-    map::player->prop_handler().try_add(prop);
+    map::player->prop_handler().apply(prop);
 
     identify(Verbosity::verbose);
 }

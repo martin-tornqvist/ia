@@ -303,7 +303,7 @@ void run(const P& origin,
                                          PropTurns::specific,
                                          prop->nr_turns_left());
 
-                    prop_hlr.try_add(prop_cpy);
+                    prop_hlr.apply(prop_cpy);
                 }
 
                 // If property is burning, also apply it to corpses and the
@@ -326,7 +326,7 @@ void run(const P& origin,
                                              PropTurns::specific,
                                              prop->nr_turns_left());
 
-                        prop_hlr.try_add(prop_cpy);
+                        prop_hlr.apply(prop_cpy);
                     }
                 }
             }

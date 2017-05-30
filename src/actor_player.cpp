@@ -497,7 +497,7 @@ void Player::on_hit(int& dmg,
 
         const int nr_wounds_before = nr_wounds();
 
-        prop_handler_->try_add(prop);
+        prop_handler_->apply(prop);
 
         const int nr_wounds_after = nr_wounds();
 
@@ -1370,7 +1370,7 @@ void Player::on_std_turn()
             if (nr_turns_until_rspell_ == 0)
             {
                 // Cooldown has finished
-                prop_handler_->try_add(new PropRSpell(PropTurns::indefinite));
+                prop_handler_->apply(new PropRSpell(PropTurns::indefinite));
 
                 msg_log::more_prompt();
             }
@@ -1760,7 +1760,7 @@ void Player::move(Dir dir)
             {
                 msg_log::add("I stagger.", clr_msg_note);
 
-                prop_handler_->try_add(new PropWaiting(PropTurns::std));
+                prop_handler_->apply(new PropWaiting(PropTurns::std));
             }
 
             // Displace allied monster

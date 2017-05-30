@@ -1073,9 +1073,9 @@ TEST_FIXTURE(BasicFixture, saving_game)
 
     // Applied properties
     PropHandler& props = map::player->prop_handler();
-    props.try_add(new PropRSleep(PropTurns::specific, 3));
-    props.try_add(new PropDiseased(PropTurns::indefinite));
-    props.try_add(new PropBlessed(PropTurns::std));
+    props.apply(new PropRSleep(PropTurns::specific, 3));
+    props.apply(new PropDiseased(PropTurns::indefinite));
+    props.apply(new PropBlessed(PropTurns::std));
 
     // Check a a few of the props applied
     Prop* prop = props.prop(PropId::diseased);

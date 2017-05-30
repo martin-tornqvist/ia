@@ -1071,13 +1071,13 @@ void pick_bg(const Bg bg)
     {
     case Bg::ghoul:
         map::player->prop_handler()
-            .try_add(new PropRDisease(PropTurns::indefinite),
+            .apply(new PropRDisease(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);
 
         map::player->prop_handler()
-            .try_add(new PropInfravis(PropTurns::indefinite),
+            .apply(new PropInfravis(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);
@@ -1166,7 +1166,7 @@ void pick_trait(const Trait id)
                                  false, // Not allowed above max
                                  Verbosity::silent);
 
-        map::player->prop_handler().try_add(
+        map::player->prop_handler().apply(
             new PropRSpell(PropTurns::indefinite),
             PropSrc::intr,
             true,
@@ -1190,7 +1190,7 @@ void pick_trait(const Trait id)
     case Trait::self_aware:
     {
         map::player->prop_handler()
-            .try_add(new PropRConf(PropTurns::indefinite),
+            .apply(new PropRConf(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);
@@ -1200,7 +1200,7 @@ void pick_trait(const Trait id)
     case Trait::survivalist:
     {
         map::player->prop_handler()
-            .try_add(new PropRDisease(PropTurns::indefinite),
+            .apply(new PropRDisease(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);
@@ -1210,7 +1210,7 @@ void pick_trait(const Trait id)
     case Trait::fearless:
     {
         map::player->prop_handler()
-            .try_add(new PropRFear(PropTurns::indefinite),
+            .apply(new PropRFear(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);
@@ -1220,7 +1220,7 @@ void pick_trait(const Trait id)
     case Trait::toxic:
     {
         map::player->prop_handler()
-            .try_add(new PropRPoison(PropTurns::indefinite),
+            .apply(new PropRPoison(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);

@@ -853,7 +853,7 @@ bool Mon::try_attack(Actor& defender)
         PropDisabledRanged* ranged_cooldown_prop =
             new PropDisabledRanged(PropTurns::specific, nr_turns_no_ranged);
 
-        prop_handler_->try_add(ranged_cooldown_prop);
+        prop_handler_->apply(ranged_cooldown_prop);
 
         const bool did_attack = attack::ranged(this,
                                                pos,
@@ -1296,7 +1296,7 @@ void Zuul::place_hook()
 
         auto* poss_by_zuul_prop = new PropPossByZuul(PropTurns::indefinite);
 
-        priest_prop_handler.try_add(poss_by_zuul_prop,
+        priest_prop_handler.apply(poss_by_zuul_prop,
                                     PropSrc::intr,
                                     true,
                                     Verbosity::silent);
@@ -1440,7 +1440,7 @@ DidAction Ghost::on_act()
 
         msg_log::add(name + " reaches for me...");
 
-        map::player->prop_handler().try_add(
+        map::player->prop_handler().apply(
             new PropSlowed(PropTurns::std));
 
         game_time::tick();
@@ -1569,16 +1569,16 @@ DidAction MindEater::on_act()
 
         if (is_alive())
         {
-            prop_handler_->try_add(new PropConfused(PropTurns::std));
+            prop_handler_->apply(new PropConfused(PropTurns::std));
 
-            prop_handler_->try_add(new PropTerrified(PropTurns::std));
+            prop_handler_->apply(new PropTerrified(PropTurns::std));
         }
     }
     else // Player is not confused
     {
         msg_log::add(name + " probes my brain!!!");
 
-        map::player->prop_handler().try_add(
+        map::player->prop_handler().apply(
             new PropTerrified(PropTurns::std));
 
         map::player->incr_shock(ShockLvl::mind_shattering,
@@ -1797,7 +1797,7 @@ DidAction Ape::on_act()
 
         const int nr_frenzy_turns = rnd::range(4, 6);
 
-        prop_handler_->try_add(
+        prop_handler_->apply(
             new PropFrenzied(PropTurns::specific, nr_frenzy_turns));
     }
 
@@ -1889,7 +1889,7 @@ DidAction KeziahMason::on_act()
     {
         auto* mon = summoned[0];
 
-        mon->prop_handler().try_add(
+        mon->prop_handler().apply(
             new PropSummoned(PropTurns::indefinite));
 
         // Do not print a separate "feeling" for spawning this monster
@@ -2069,7 +2069,7 @@ void StrangeColor::on_std_turn_hook()
 
         const int nr_turns_confused = rnd::range(8, 12);
 
-        map::player->prop_handler().try_add(
+        map::player->prop_handler().apply(
             new PropConfused(PropTurns::specific, nr_turns_confused));
     }
 }
@@ -2167,7 +2167,7 @@ void WormMass::on_death()
         static_cast<WormMass*>(mon)->allow_split_ = false;
 
         // Do not allow summoned worms to attack immediately
-        mon->prop_handler().try_add(
+        mon->prop_handler().apply(
             new PropDisabledAttack(PropTurns::specific, 1));
     }
 }
@@ -2626,7 +2626,7 @@ DidAction FloatingSkull::on_act()
 
             Prop* const prop = new PropCursed(PropTurns::std);
 
-            map::player->prop_handler().try_add(prop, PropSrc::intr);
+            map::player->prop_handler().apply(prop, PropSrc::intr);
 
             return DidAction::yes;
         }

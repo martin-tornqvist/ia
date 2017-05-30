@@ -315,7 +315,7 @@ void handle_player_input(const InputData& input)
             {
                 aiming = new PropAiming(PropTurns::specific, 1);
 
-                prop_hlr.try_add(aiming);
+                prop_hlr.apply(aiming);
             }
         }
 
@@ -911,7 +911,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F8:
     {
-        map::player->prop_handler().try_add(
+        map::player->prop_handler().apply(
             new PropTeleControl(PropTurns::std));
     }
     break;

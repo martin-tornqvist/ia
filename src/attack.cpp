@@ -1148,7 +1148,10 @@ void projectile_fire(Actor* const attacker,
                     if (att_data.dmg > 0)
                     {
                         died = proj->actor_hit->hit(att_data.dmg,
-                                                    wpn.data().ranged.dmg_type);
+                                                    wpn.data().ranged.dmg_type,
+                                                    DmgMethod::END,
+                                                    AllowWound::yes,
+                                                    attacker);
                     }
 
                     //
@@ -1164,7 +1167,7 @@ void projectile_fire(Actor* const attacker,
                         PropHandler& defender_prop_handler =
                             proj->actor_hit->prop_handler();
 
-                        defender_prop_handler.try_add_from_att(wpn, false);
+                        defender_prop_handler.apply_from_att(wpn, false);
 
                         // Knock-back?
                         if (wpn.data().ranged.knocks_back)
@@ -1513,6 +1516,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                         }
 
                         io::update_screen();
+
                         sdl_base::sleep(config::delay_shotgun());
                     }
 
@@ -1523,7 +1527,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     if (data.dmg > 0)
                     {
                         data.defender->hit(data.dmg,
-                                           wpn.data().ranged.dmg_type);
+                                           wpn.data().ranged.dmg_type,
+                                           DmgMethod::END,
+                                           AllowWound::yes,
+                                           &attacker);
                     }
 
                     ++nr_actors_hit;
@@ -1680,7 +1687,8 @@ void melee(Actor* const attacker,
         defender.hit(att_data.dmg,
                      dmg_type,
                      DmgMethod::END,
-                     allow_wound);
+                     allow_wound,
+                     attacker);
 
         if (defender.data().can_bleed &&
             (dmg_type == DmgType::physical ||
@@ -1696,7 +1704,7 @@ void melee(Actor* const attacker,
 
         if (defender.is_alive())
         {
-            defender.prop_handler().try_add_from_att(wpn, true);
+            defender.prop_handler().apply_from_att(wpn, true);
 
             if (wpn.data().melee.knocks_back)
             {

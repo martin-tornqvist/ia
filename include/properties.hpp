@@ -130,7 +130,7 @@ struct PropDataT
         allow_test_on_bot               (false),
         alignment                       (PropAlignment::bad)
     {
-        for (int i = 0; i < (int)PropMsg::END; ++i)
+        for (size_t i = 0; i < (size_t)PropMsg::END; ++i)
         {
             msg[i] = "";
         }
@@ -148,6 +148,19 @@ struct PropDataT
     bool update_vision_when_start_or_end;
     bool allow_test_on_bot;
     PropAlignment alignment;
+};
+
+struct DmgResistData
+{
+    DmgResistData() :
+        is_resisted         (false),
+        resist_msg_player   (),
+        resist_msg_mon      () {}
+
+    bool is_resisted;
+    std::string resist_msg_player;
+    // Not including monster name, e.g. " seems unaffected"
+    std::string resist_msg_mon;
 };
 
 namespace prop_data
@@ -180,13 +193,13 @@ public:
     void load();
 
     // All properties must be added through this function (can also be done via
-    // the other "add" methods, which will then call "try_add()")
-    void try_add(Prop* const prop,
-                 PropSrc src = PropSrc::intr,
-                 const bool force_effect = false,
-                 const Verbosity verbosity = Verbosity::verbose);
+    // the other "apply" methods, which will then call "apply")
+    void apply(Prop* const prop,
+               PropSrc src = PropSrc::intr,
+               const bool force_effect = false,
+               const Verbosity verbosity = Verbosity::verbose);
 
-    void try_add_from_att(const Wpn& wpn, const bool is_melee);
+    void apply_from_att(const Wpn& wpn, const bool is_melee);
 
     // The following two methods are supposed to be called by items
     void add_prop_from_equipped_item(const Item* const item,
@@ -247,11 +260,12 @@ public:
     // Called when the actors turn ends
     void on_turn_end();
 
-    bool try_resist_dmg(const DmgType dmg_type,
-                        const Verbosity verbosity) const;
+    bool is_resisting_dmg(const DmgType dmg_type,
+                          const Actor* const attacker,
+                          const Verbosity verbosity) const;
 
 private:
-    bool try_resist_prop(const PropId id) const;
+    bool is_resisting_prop(const PropId id) const;
 
     // This prints messages, updates FOV, etc, and also calls the on_end()
     // property hook. It does NOT remove the property from the vector or
@@ -448,12 +462,11 @@ public:
         return false;
     }
 
-    virtual bool try_resist_dmg(const DmgType dmg_type,
-                                const Verbosity verbosity) const
+    virtual DmgResistData is_resisting_dmg(const DmgType dmg_type) const
     {
         (void)dmg_type;
-        (void)verbosity;
-        return false;
+
+        return DmgResistData();
     }
 
     PropTurns turns_init_type() const
@@ -1100,8 +1113,7 @@ public:
     PropRAcid(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::r_acid, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const DmgType dmg_type,
-                        const Verbosity verbosity) const override;
+    DmgResistData is_resisting_dmg(const DmgType dmg_type) const override;
 };
 
 class PropRConf: public Prop
@@ -1121,8 +1133,7 @@ public:
     PropRElec(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::r_elec, turns_init, nr_turns) {}
 
-    bool try_resist_dmg(const DmgType dmg_type,
-                        const Verbosity verbosity) const override;
+    DmgResistData is_resisting_dmg(const DmgType dmg_type) const override;
 };
 
 class PropRFear: public Prop
@@ -1157,8 +1168,7 @@ public:
 
     bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const DmgType dmg_type,
-                        const Verbosity verbosity) const override;
+    DmgResistData is_resisting_dmg(const DmgType dmg_type) const override;
 };
 
 class PropRFire: public Prop
@@ -1171,8 +1181,7 @@ public:
 
     bool is_resisting_other_prop(const PropId prop_id) const override;
 
-    bool try_resist_dmg(const DmgType dmg_type,
-                        const Verbosity verbosity) const override;
+    DmgResistData is_resisting_dmg(const DmgType dmg_type) const override;
 };
 
 class PropRPoison: public Prop

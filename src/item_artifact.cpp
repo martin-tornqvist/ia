@@ -61,7 +61,7 @@ void HornOfMaliceHeard::run(Actor& actor) const
 {
     if (!actor.is_player())
     {
-        actor.prop_handler().try_add(
+        actor.prop_handler().apply(
             new PropConflict(PropTurns::std));
     }
 }
@@ -128,7 +128,7 @@ void HornOfDeafeningHeard::run(Actor& actor) const
 {
     if (!actor.is_player())
     {
-        actor.prop_handler().try_add(
+        actor.prop_handler().apply(
             new PropDeaf(PropTurns::std));
     }
 }
@@ -314,7 +314,7 @@ ConsumeItem Clockwork::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    props.try_add(new PropClockworkHasted(PropTurns::std));
+    props.apply(new PropClockworkHasted(PropTurns::std));
 
     --charges_;
 

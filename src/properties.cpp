@@ -945,7 +945,7 @@ void PropHandler::init_natural_props()
         {
             Prop* const prop = mk_prop(PropId(i), PropTurns::indefinite);
 
-            try_add(prop,
+            apply(prop,
                     PropSrc::intr,
                     true,
                     Verbosity::silent);
@@ -1018,14 +1018,18 @@ void PropHandler::load()
 
     for (int i = 0; i < nr_props; ++i)
     {
-        const auto prop_id = PropId(saving::get_int());
+        const auto prop_id = (PropId)saving::get_int();
 
         const int nr_turns = saving::get_int();
 
-        const auto turns_init = nr_turns == -1 ?
-                                PropTurns::indefinite : PropTurns::specific;
+        const auto turns_init =
+            (nr_turns == -1) ?
+            PropTurns::indefinite :
+            PropTurns::specific;
 
-        Prop* const prop = mk_prop(prop_id, turns_init, nr_turns);
+        Prop* const prop = mk_prop(prop_id,
+                                   turns_init,
+                                   nr_turns);
 
         prop->owning_actor_ = owning_actor_;
 
@@ -1049,8 +1053,8 @@ Prop* PropHandler::mk_prop(const PropId id,
     // * "specific", and number of turns specified (> 0), OR
     // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT
     //   specified (-1)
-    ASSERT((turns_init == PropTurns::specific && nr_turns > 0) ||
-           (turns_init != PropTurns::specific && nr_turns == -1));
+    ASSERT(((turns_init == PropTurns::specific) && (nr_turns > 0)) ||
+           ((turns_init != PropTurns::specific) && (nr_turns == -1)));
 
     switch (id)
     {
@@ -1226,23 +1230,25 @@ Prop* PropHandler::mk_prop(const PropId id,
     return nullptr;
 }
 
-void PropHandler::try_add(Prop* const prop,
-                          PropSrc src,
-                          const bool force_effect,
-                          const Verbosity verbosity)
+void PropHandler::apply(Prop* const prop,
+                        PropSrc src,
+                        const bool force_effect,
+                        const Verbosity verbosity)
 {
     ASSERT(prop);
 
     prop->owning_actor_ = owning_actor_;
-    prop->src_          = src;
 
-    const bool is_player        = owning_actor_->is_player();
+    prop->src_ = src;
+
+    const bool is_player = owning_actor_->is_player();
+
     const bool player_see_owner = map::player->can_see_actor(*owning_actor_);
 
     // Check if property is resisted
     if (!force_effect)
     {
-        if (try_resist_prop(prop->id()))
+        if (is_resisting_prop(prop->id()))
         {
             // Resist message
             if (verbosity == Verbosity::verbose &&
@@ -1407,7 +1413,7 @@ void PropHandler::add_prop_from_equipped_item(const Item* const item,
 {
     prop->item_applying_ = item;
 
-    try_add(prop, PropSrc::inv, true, verbosity);
+    apply(prop, PropSrc::inv, true, verbosity);
 }
 
 Prop* PropHandler::prop(const PropId id) const
@@ -1451,7 +1457,8 @@ void PropHandler::remove_props_for_item(const Item* const item)
     }
 }
 
-void PropHandler::try_add_from_att(const Wpn& wpn, const bool is_melee)
+void PropHandler::apply_from_att(const Wpn& wpn,
+                                 const bool is_melee)
 {
     const auto& d = wpn.data();
 
@@ -1469,7 +1476,12 @@ void PropHandler::try_add_from_att(const Wpn& wpn, const bool is_melee)
             d.melee.dmg_type :
             d.ranged.dmg_type;
 
-        if (!try_resist_dmg(dmg_type, Verbosity::silent))
+        const bool is_dmg_resisted =
+            is_resisting_dmg(dmg_type,
+                             nullptr,
+                             Verbosity::silent);
+
+        if (!is_dmg_resisted)
         {
             const auto turns_init_type = origin_prop->turns_init_type();
 
@@ -1482,7 +1494,7 @@ void PropHandler::try_add_from_att(const Wpn& wpn, const bool is_melee)
                                            origin_prop->turns_init_type_,
                                            nr_turns);
 
-            try_add(prop_cpy);
+            apply(prop_cpy);
         }
     }
 }
@@ -1809,7 +1821,7 @@ std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
     return list;
 }
 
-bool PropHandler::try_resist_prop(const PropId id) const
+bool PropHandler::is_resisting_prop(const PropId id) const
 {
     for (Prop* p : props_)
     {
@@ -1822,18 +1834,56 @@ bool PropHandler::try_resist_prop(const PropId id) const
     return false;
 }
 
-bool PropHandler::try_resist_dmg(const DmgType dmg_type,
-                                 const Verbosity verbosity) const
+bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
+                                   const Actor* const attacker,
+                                   const Verbosity verbosity) const
 {
+    DmgResistData res_data;
+
     for (Prop* p : props_)
     {
-        if (p->try_resist_dmg(dmg_type, verbosity))
+        res_data = p->is_resisting_dmg(dmg_type);
+
+        if (res_data.is_resisted)
         {
-            return true;
+            break;
         }
     }
 
-    return false;
+    if (res_data.is_resisted &&
+        (verbosity == Verbosity::verbose))
+    {
+        if (owning_actor_->is_player())
+        {
+            msg_log::add(res_data.resist_msg_player);
+        }
+        else // Is monster
+        {
+            // Print message if attacker is player, and player is aware of
+            // the monster
+            const auto* const mon =
+                static_cast<const Mon*>(owning_actor_);
+
+            const bool is_player_aware_of_mon =
+                mon->player_aware_of_me_counter_ > 0;
+
+            if ((attacker == map::player) &&
+                is_player_aware_of_mon)
+            {
+                const bool can_player_see_mon =
+                    map::player->can_see_actor(*owning_actor_);
+
+                const std::string mon_name =
+                    can_player_see_mon ?
+                    owning_actor_->name_the() :
+                    "It";
+
+                msg_log::add(mon_name + " " + res_data.resist_msg_mon);
+            }
+        }
+    }
+
+    return res_data.is_resisted;
 }
 
 bool PropHandler::allow_see() const
@@ -2225,7 +2275,7 @@ Prop* PropInfected::on_tick()
     {
         PropHandler& prop_hlr = owning_actor_->prop_handler();
 
-        prop_hlr.try_add(new PropDiseased(PropTurns::indefinite));
+        prop_hlr.apply(new PropDiseased(PropTurns::indefinite));
 
         // NOTE: Disease ends infection, this property object is now deleted!
 
@@ -2587,39 +2637,40 @@ bool PropConfused::allow_attack_ranged(const Verbosity verbosity) const
 
 void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
 {
-    if (dir != Dir::center)
+    if (dir == Dir::center)
     {
-        bool blocked[map_w][map_h];
+        return;
+    }
 
-         const R area_check_blocked(actor_pos - P(1, 1), actor_pos + P(1, 1));
+    bool blocked[map_w][map_h];
 
-         map_parsers::BlocksActor(*owning_actor_, ParseActors::yes)
-             .run(blocked,
-                  MapParseMode::overwrite,
-                  area_check_blocked);
+    const R area_check_blocked(actor_pos - P(1, 1),
+                               actor_pos + P(1, 1));
 
-        if (rnd::one_in(8))
+    map_parsers::BlocksActor(*owning_actor_, ParseActors::yes)
+        .run(blocked,
+             MapParseMode::overwrite,
+             area_check_blocked);
+
+    if (rnd::one_in(8))
+    {
+        std::vector<P> d_bucket;
+
+        for (const P& d : dir_utils::dir_list)
         {
-            std::vector<P> d_bucket;
+            const P tgt_p(actor_pos + d);
 
-            for (const P& d : dir_utils::dir_list)
+            if (!blocked[tgt_p.x][tgt_p.y])
             {
-                const P tgt_p(actor_pos + d);
-
-                if (!blocked[tgt_p.x][tgt_p.y])
-                {
-                    d_bucket.push_back(d);
-                }
+                d_bucket.push_back(d);
             }
+        }
 
-            if (!d_bucket.empty())
-            {
-                const size_t idx = rnd::range(0, d_bucket.size() - 1);
+        if (!d_bucket.empty())
+        {
+            const P& d = rnd::element(d_bucket);
 
-                const P& d = d_bucket[idx];
-
-                dir = dir_utils::dir(d);
-            }
+            dir = dir_utils::dir(d);
         }
     }
 }
@@ -2733,7 +2784,7 @@ void PropFrenzied::on_end()
     if (owning_actor_->is_player() &&
         player_bon::bg() != Bg::ghoul)
     {
-        owning_actor_->prop_handler().try_add(new PropWeakened(PropTurns::std));
+        owning_actor_->prop_handler().apply(new PropWeakened(PropTurns::std));
     }
 }
 
@@ -2830,7 +2881,7 @@ Prop* PropFlared::on_tick()
 
     if (nr_turns_left_ <= 1)
     {
-        owning_actor_->prop_handler().try_add(new PropBurning(PropTurns::std));
+        owning_actor_->prop_handler().apply(new PropBurning(PropTurns::std));
         owning_actor_->prop_handler().end_prop(id());
 
         return nullptr;
@@ -2839,50 +2890,30 @@ Prop* PropFlared::on_tick()
     return this;
 }
 
-bool PropRAcid::try_resist_dmg(const DmgType dmg_type,
-                               const Verbosity verbosity) const
+DmgResistData PropRAcid::is_resisting_dmg(const DmgType dmg_type) const
 {
-    if (dmg_type == DmgType::acid)
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I feel a faint burning sensation.");
-            }
-            else if (map::player->can_see_actor(*owning_actor_))
-            {
-                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
-            }
-        }
+    DmgResistData d;
 
-        return true;
-    }
+    d.is_resisted = dmg_type == DmgType::acid;
 
-    return false;
+    d.resist_msg_player = "I feel a faint burning sensation.";
+
+    d.resist_msg_mon = "seems unaffected.";
+
+    return d;
 }
 
-bool PropRElec::try_resist_dmg(const DmgType dmg_type,
-                               const Verbosity verbosity) const
+DmgResistData PropRElec::is_resisting_dmg(const DmgType dmg_type) const
 {
-    if (dmg_type == DmgType::electric)
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I feel a faint tingle.");
-            }
-            else if (map::player->can_see_actor(*owning_actor_))
-            {
-                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
-            }
-        }
+    DmgResistData d;
 
-        return true;
-    }
+    d.is_resisted = dmg_type == DmgType::electric;
 
-    return false;
+    d.resist_msg_player = "I feel a faint tingle.";
+
+    d.resist_msg_mon = "seems unaffected.";
+
+    return d;
 }
 
 bool PropRConf::is_resisting_other_prop(const PropId prop_id) const
@@ -2932,27 +2963,17 @@ void PropRPhys::on_start()
 
 }
 
-bool PropRPhys::try_resist_dmg(const DmgType dmg_type,
-                               const Verbosity verbosity) const
+DmgResistData PropRPhys::is_resisting_dmg(const DmgType dmg_type) const
 {
-    if (dmg_type == DmgType::physical)
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I resist harm.");
-            }
-            else if (map::player->can_see_actor(*owning_actor_))
-            {
-                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
-            }
-        }
+    DmgResistData d;
 
-        return true;
-    }
+    d.is_resisted = dmg_type == DmgType::physical;
 
-    return false;
+    d.resist_msg_player = "I resist harm.";
+
+    d.resist_msg_mon = "seems unaffected.";
+
+    return d;
 }
 
 bool PropRFire::is_resisting_other_prop(const PropId prop_id) const
@@ -2965,27 +2986,17 @@ void PropRFire::on_start()
     owning_actor_->prop_handler().end_prop(PropId::burning);
 }
 
-bool PropRFire::try_resist_dmg(const DmgType dmg_type,
-                               const Verbosity verbosity) const
+DmgResistData PropRFire::is_resisting_dmg(const DmgType dmg_type) const
 {
-    if (dmg_type == DmgType::fire)
-    {
-        if (verbosity == Verbosity::verbose)
-        {
-            if (owning_actor_->is_player())
-            {
-                msg_log::add("I feel hot.");
-            }
-            else if (map::player->can_see_actor(*owning_actor_))
-            {
-                msg_log::add(owning_actor_->name_the() + " seems unaffected.");
-            }
-        }
+    DmgResistData d;
 
-        return true;
-    }
+    d.is_resisted = dmg_type == DmgType::fire;
 
-    return false;
+    d.resist_msg_player = "I feel warm.";
+
+    d.resist_msg_mon = "seems unaffected.";
+
+    return d;
 }
 
 bool PropRPoison::is_resisting_other_prop(const PropId prop_id) const

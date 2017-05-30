@@ -130,7 +130,7 @@ bool InsFaint::is_allowed() const
 
 void InsFaint::on_start_hook()
 {
-    map::player->prop_handler().try_add(new PropFainted(PropTurns::std));
+    map::player->prop_handler().apply(new PropFainted(PropTurns::std));
 }
 
 void InsLaugh::on_start_hook()
@@ -164,7 +164,7 @@ void InsPhobiaRat::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of rats!");
 
-                map::player->prop_handler().try_add(
+                map::player->prop_handler().apply(
                     new PropTerrified(PropTurns::std));
 
                 break;
@@ -196,7 +196,7 @@ void InsPhobiaSpider::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of spiders!");
 
-                map::player->prop_handler().try_add(
+                map::player->prop_handler().apply(
                     new PropTerrified(PropTurns::std));
 
                 break;
@@ -245,7 +245,7 @@ void InsPhobiaReptileAndAmph::on_new_player_turn(
 
     if (is_triggered)
     {
-        map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+        map::player->prop_handler().apply(new PropTerrified(PropTurns::std));
     }
 }
 
@@ -272,7 +272,7 @@ void InsPhobiaCanine::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of canines!");
 
-                map::player->prop_handler().try_add(
+                map::player->prop_handler().apply(
                     new PropTerrified(PropTurns::std));
 
                 break;
@@ -304,7 +304,7 @@ void InsPhobiaDead::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of the dead!");
 
-                map::player->prop_handler().try_add(
+                map::player->prop_handler().apply(
                     new PropTerrified(PropTurns::std));
 
                 break;
@@ -334,7 +334,7 @@ void InsPhobiaOpen::on_new_player_turn(const std::vector<Actor*>& seen_foes)
     {
         msg_log::add("I am plagued by my phobia of open places!");
 
-        map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+        map::player->prop_handler().apply(new PropTerrified(PropTurns::std));
     }
 }
 
@@ -360,7 +360,7 @@ void InsPhobiaConfined::on_new_player_turn(const std::vector<Actor*>& seen_foes)
     {
         msg_log::add("I am plagued by my phobia of confined places!");
 
-        map::player->prop_handler().try_add(new PropTerrified(PropTurns::std));
+        map::player->prop_handler().apply(new PropTerrified(PropTurns::std));
     }
 }
 
@@ -392,7 +392,7 @@ void InsPhobiaDeep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
             {
                 msg_log::add("I am plagued by my phobia of deep places!");
 
-                map::player->prop_handler().try_add(
+                map::player->prop_handler().apply(
                     new PropTerrified(PropTurns::std));
 
                 break;
@@ -428,7 +428,7 @@ void InsPhobiaDark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
         {
             msg_log::add("I am plagued by my phobia of the dark!");
 
-            map::player->prop_handler().try_add(
+            map::player->prop_handler().apply(
                 new PropTerrified(PropTurns::std));
         }
     }
@@ -483,7 +483,7 @@ void InsShadows::on_start_hook()
         auto* const disabled_att =
             new PropDisabledAttack(PropTurns::specific, 1);
 
-        mon->prop_handler().try_add(disabled_att);
+        mon->prop_handler().apply(disabled_att);
     }
 
     map::update_vision();
@@ -520,7 +520,7 @@ void InsParanoia::on_start_hook()
         auto* const disabled_att =
             new PropDisabledAttack(PropTurns::specific, 2);
 
-        mon->prop_handler().try_add(disabled_att);
+        mon->prop_handler().apply(disabled_att);
     }
 }
 
@@ -531,7 +531,7 @@ bool InsConfusion::is_allowed() const
 
 void InsConfusion::on_start_hook()
 {
-    map::player->prop_handler().try_add(
+    map::player->prop_handler().apply(
         new PropConfused(PropTurns::std));
 }
 
@@ -542,7 +542,7 @@ bool InsFrenzy::is_allowed() const
 
 void InsFrenzy::on_start_hook()
 {
-    map::player->prop_handler().try_add(new PropFrenzied(PropTurns::std));
+    map::player->prop_handler().apply(new PropFrenzied(PropTurns::std));
 }
 
 
