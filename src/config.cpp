@@ -43,6 +43,7 @@ int scr_px_h_ = -1;
 int delay_projectile_draw_ = -1;
 int delay_shotgun_ = -1;
 int delay_explosion_ = -1;
+std::string default_player_name_ = "";
 bool is_bot_playing_ = false;
 bool is_audio_enabled_ = false;
 bool is_tiles_mode_ = false;
@@ -133,6 +134,7 @@ void set_default_variables()
     delay_projectile_draw_ = 25;
     delay_shotgun_ = 75;
     delay_explosion_ = 225;
+    default_player_name_ = "";
     TRACE_FUNC_END;
 }
 
@@ -265,12 +267,13 @@ void player_sets_option(const MenuBrowser& browser)
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
-        const int nr = query::number(p,
-                                     clr_menu_highlight,
-                                     1,
-                                     3,
-                                     delay_projectile_draw_,
-                                     true);
+        const int nr = query::number(
+            p,
+            clr_menu_highlight,
+            1,
+            3,
+            delay_projectile_draw_,
+            true);
 
         if (nr != -1)
         {
@@ -283,12 +286,13 @@ void player_sets_option(const MenuBrowser& browser)
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
-        const int nr = query::number(p,
-                                     clr_menu_highlight,
-                                     1,
-                                     3,
-                                     delay_shotgun_,
-                                     true);
+        const int nr = query::number(
+            p,
+            clr_menu_highlight,
+            1,
+            3,
+            delay_shotgun_,
+            true);
 
         if (nr != -1)
         {
@@ -301,12 +305,13 @@ void player_sets_option(const MenuBrowser& browser)
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
-        const int nr = query::number(p,
-                                     clr_menu_highlight,
-                                     1,
-                                     3,
-                                     delay_explosion_,
-                                     true);
+        const int nr = query::number(
+            p,
+            clr_menu_highlight,
+            1,
+            3,
+            delay_explosion_,
+            true);
 
         if (nr != -1)
         {
@@ -353,13 +358,10 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 {
     TRACE_FUNC_BEGIN;
 
-    std::string current_line = lines.front();
-    is_audio_enabled_ = current_line == "1";
+    is_audio_enabled_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-
-    if (current_line == "0")
+    if (lines.front() == "0")
     {
         is_tiles_mode_ = false;
     }
@@ -377,63 +379,62 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    font_name_ = current_line;
+    font_name_ = lines.front();
     set_cell_px_dims_from_font_name();
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    use_light_fade_effect_ = current_line == "1";
+    use_light_fade_effect_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_fullscr_ = current_line == "1";
+    is_fullscr_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_tiles_wall_full_square_ = current_line == "1";
+    is_tiles_wall_full_square_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_text_mode_wall_full_square_ = current_line == "1";
+    is_text_mode_wall_full_square_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_intro_lvl_skipped_ = current_line == "1";
+    is_intro_lvl_skipped_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_any_key_confirm_more_ = current_line == "1";
+    is_any_key_confirm_more_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_light_explosive_prompt_ = current_line == "1";
+    is_light_explosive_prompt_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_ranged_wpn_meleee_prompt_ = current_line == "1";
+    is_ranged_wpn_meleee_prompt_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    is_ranged_wpn_auto_reload_ = current_line == "1";
+    is_ranged_wpn_auto_reload_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    delay_projectile_draw_ = to_int(current_line);
+    delay_projectile_draw_ = to_int(lines.front());
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    delay_shotgun_ = to_int(current_line);
+    delay_shotgun_ = to_int(lines.front());
     lines.erase(begin(lines));
 
-    current_line = lines.front();
-    delay_explosion_ = to_int(current_line);
+    delay_explosion_ = to_int(lines.front());
     lines.erase(begin(lines));
+
+    default_player_name_ = "";
+
+    if (lines.front() == "1")
+    {
+        lines.erase(begin(lines));
+
+        default_player_name_ = lines.front();
+    }
+    lines.erase(begin(lines));
+
+    ASSERT(lines.empty());
 
     TRACE_FUNC_END;
 }
 
-void write_lines_to_file(std::vector<std::string>& lines)
+void write_lines_to_file(const std::vector<std::string>& lines)
 {
     std::ofstream file;
     file.open("res/data/config", std::ios::trunc);
@@ -442,7 +443,7 @@ void write_lines_to_file(std::vector<std::string>& lines)
     {
         file << lines[i];
 
-        if (i != lines.size() - 1)
+        if (i != (lines.size() - 1))
         {
             file << std::endl;
         }
@@ -451,9 +452,12 @@ void write_lines_to_file(std::vector<std::string>& lines)
     file.close();
 }
 
-void set_lines_from_variables(std::vector<std::string>& lines)
+std::vector<std::string> lines_from_variables()
 {
     TRACE_FUNC_BEGIN;
+
+    std::vector<std::string> lines;
+
     lines.clear();
     lines.push_back(is_audio_enabled_ ? "1" : "0");
     lines.push_back(is_tiles_mode_ ? "1" : "0");
@@ -470,7 +474,21 @@ void set_lines_from_variables(std::vector<std::string>& lines)
     lines.push_back(std::to_string(delay_projectile_draw_));
     lines.push_back(std::to_string(delay_shotgun_));
     lines.push_back(std::to_string(delay_explosion_));
+
+    if (default_player_name_.empty())
+    {
+        lines.push_back("0");
+    }
+    else // Default player name has been set
+    {
+        lines.push_back("1");
+
+        lines.push_back(default_player_name_);
+    }
+
     TRACE_FUNC_END;
+
+    return lines;
 }
 
 } //namespace
@@ -499,16 +517,9 @@ void init()
     // Load config file, if it exists
     read_file(lines);
 
-    if (lines.empty())
+    if (!lines.empty())
     {
-        // No config file, just keep the default values
-
-        // Store the default values to strings, to create a new config file
-        set_lines_from_variables(lines);
-    }
-    else // A configuration did exist
-    {
-        // Set values from parsed config lines
+        // A config file exists, set values from parsed config lines
         set_variables_from_lines(lines);
     }
 
@@ -643,6 +654,20 @@ int delay_explosion()
     return delay_explosion_;
 }
 
+void set_default_player_name(const std::string& name)
+{
+    default_player_name_ = name;
+
+    const auto lines = lines_from_variables();
+
+    write_lines_to_file(lines);
+}
+
+std::string default_player_name()
+{
+    return default_player_name_;
+}
+
 void toggle_fullscreen()
 {
     is_fullscr_ = !is_fullscr_;
@@ -662,9 +687,7 @@ void toggle_fullscreen()
 
     io::update_screen();
 
-    std::vector<std::string> lines;
-
-    set_lines_from_variables(lines);
+    const auto lines = lines_from_variables();
 
     write_lines_to_file(lines);
 }
@@ -706,9 +729,7 @@ void ConfigState::update()
     {
         config::player_sets_option(browser_);
 
-        std::vector<std::string> lines;
-
-        config::set_lines_from_variables(lines);
+        const auto lines = config::lines_from_variables();
 
         config::write_lines_to_file(lines);
     }

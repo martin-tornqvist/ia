@@ -66,6 +66,7 @@ Interface
 * Removed the "Combat skills" section of the character description page
 * Messages are now printed when stepping on corpses
 * Sound effects are played when browsing menus
+* When entering player name, the previously used name is now filled in as a default name
 
 Bug fixes
 * Fixed a bug where dropping the Staff of the Pharaohs would cause the spell to be permanently lost, even if the staff was picked up again

@@ -525,13 +525,20 @@ EnterNameState::EnterNameState() :
 
 }
 
+void EnterNameState::on_start()
+{
+    const std::string default_name = config::default_player_name();
+
+    current_str_ = default_name;
+}
+
 void EnterNameState::update()
 {
     if (config::is_bot_playing())
     {
         ActorDataT& d = map::player->data();
 
-        d.name_a = d.name_the = "AZATHOTH";
+        d.name_a = d.name_the = "Bot";
 
         states::pop();
 
@@ -545,6 +552,10 @@ void EnterNameState::update()
         if (current_str_.empty())
         {
             current_str_ = "Player";
+        }
+        else // Player has entered a string
+        {
+            config::set_default_player_name(current_str_);
         }
 
         ActorDataT& d = map::player->data();

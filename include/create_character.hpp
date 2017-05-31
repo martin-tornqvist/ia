@@ -84,6 +84,8 @@ public:
 
     ~EnterNameState() {}
 
+    void on_start() override;
+
     void update() override;
 
     void draw() override;
