@@ -6,7 +6,9 @@
 #include "item.hpp"
 #include "item_potion.hpp"
 #include "actor_data.hpp"
+#include "actor.hpp"
 #include "actor_player.hpp"
+#include "actor_mon.hpp"
 #include "io.hpp"
 #include "map.hpp"
 #include "msg_log.hpp"
@@ -99,7 +101,7 @@ void player_throw_lit_explosive(const P& aim_cell)
 }
 
 void throw_item(Actor& actor_throwing,
-                const P& tgt_cell,
+                const P& tgt_pos,
                 Item& item_thrown)
 {
     int speed_pct_diff = 0;
@@ -123,7 +125,7 @@ void throw_item(Actor& actor_throwing,
     }
 
     ThrowAttData att_data(&actor_throwing,
-                          tgt_cell,
+                          tgt_pos,
                           actor_throwing.pos,
                           item_thrown);
 
@@ -132,7 +134,7 @@ void throw_item(Actor& actor_throwing,
     std::vector<P> path;
 
     line_calc::calc_new_line(actor_throwing.pos,
-                             tgt_cell,
+                             tgt_pos,
                              false,
                              999,
                              false,
@@ -194,47 +196,52 @@ void throw_item(Actor& actor_throwing,
         Actor* const actor_here = map::actor_at_pos(pos);
 
         if (actor_here &&
-            (pos == tgt_cell ||
+            (pos == tgt_pos ||
              (actor_here->data().actor_size >= ActorSize::humanoid)))
         {
             att_data = ThrowAttData(&actor_throwing,
-                                    tgt_cell,
+                                    tgt_pos,
                                     pos,
                                     item_thrown,
                                     aim_lvl);
 
             if (att_data.att_result >= ActionResult::success)
             {
-                const bool is_pot =
+                const bool is_potion =
                     item_thrown_data.type == ItemType::potion;
 
-                if (map::player->can_see_actor(*actor_here))
+                const bool player_see_cell =
+                    map::cells[pos.x][pos.y].is_seen_by_player;
+
+                if (player_see_cell)
                 {
                     const Clr hit_clr =
-                        is_pot ?
+                        is_potion ?
                         item_clr :
                         clr_red_lgt;
 
                     io::draw_blast_at_cells({pos}, hit_clr);
                 }
 
-                const Clr hit_message_clr =
-                    (actor_here == map::player) ?
-                    clr_msg_bad :
-                    clr_msg_good;
+                if (player_see_cell)
+                {
+                    static_cast<Mon*>(actor_here)->set_player_aware_of_me();
 
-                const bool can_see_actor =
-                    map::player->can_see_actor(*actor_here);
+                    const std::string defender_name =
+                        map::player->can_see_actor(*actor_here) ?
+                        actor_here->name_the() :
+                        "It";
 
-                const std::string defender_name =
-                    can_see_actor ?
-                    actor_here->name_the() : "It";
-
-                msg_log::add(defender_name + " is hit.", hit_message_clr);
+                    msg_log::add(defender_name + " is hit.", clr_msg_good);
+                }
 
                 if (att_data.dmg > 0)
                 {
-                    actor_here->hit(att_data.dmg, DmgType::physical);
+                    actor_here->hit(att_data.dmg,
+                                    DmgType::physical,
+                                    DmgMethod::END,
+                                    AllowWound::yes,
+                                    &actor_throwing);
                 }
 
                 item_thrown.on_ranged_hit(*actor_here);
@@ -242,7 +249,14 @@ void throw_item(Actor& actor_throwing,
                 is_actor_hit = true;
 
                 // If throwing a potion on an actor, let it make stuff happen
-                if (is_pot)
+
+                //
+                // TODO: Couldn't the potion handle this itself via
+                //       "on_ranged_hit" called above? It would be good to make
+                //       the throwing code more generic - it should not know
+                //       about potions!
+                //
+                if (is_potion)
                 {
                     Potion* const potion = static_cast<Potion*>(&item_thrown);
 
@@ -297,8 +311,8 @@ void throw_item(Actor& actor_throwing,
             sdl_base::sleep(config::delay_projectile_draw());
         }
 
-        if (pos == tgt_cell &&
-            att_data.intended_aim_lvl == ActorSize::floor)
+        if ((pos == tgt_pos) &&
+            (att_data.intended_aim_lvl == ActorSize::floor))
         {
             break;
         }

@@ -96,7 +96,7 @@ std::vector<std::string> Potion::descr() const
             descr_identified()
         };
     }
-    else //Not identified
+    else // Not identified
     {
         return data_->base_descr;
     }
@@ -104,30 +104,31 @@ std::vector<std::string> Potion::descr() const
 
 void Potion::on_collide(const P& pos, Actor* const actor)
 {
-    if (!map::cells[pos.x][pos.y].rigid->is_bottomless() || actor)
+    const auto& cell = map::cells[pos.x][pos.y];
+
+    if (!cell.rigid->is_bottomless() || actor)
     {
-        //Render and print message
-        const bool player_see_cell = map::cells[pos.x][pos.y].is_seen_by_player;
+        // Render and print message
+        const bool player_see_cell = cell.is_seen_by_player;
 
         if (player_see_cell)
         {
-            //TODO: Use standard animation
-            io::draw_glyph('*', Panel::map, pos, data_->clr);
-
             if (actor)
             {
                 if (actor->is_alive())
                 {
-                    msg_log::add("The potion shatters on " +
-                                 actor->name_the() + ".");
+                    const std::string actor_name =
+                        map::player->can_see_actor(*actor) ?
+                        actor->name_the() :
+                        "it";
+
+                    msg_log::add("The potion shatters on " + actor_name + ".");
                 }
             }
-            else //No actor here
+            else // No actor here
             {
-                Feature* const f = map::cells[pos.x][pos.y].rigid;
-
                 msg_log::add("The potion shatters on " +
-                             f->name(Article::the) + ".");
+                             cell.rigid->name(Article::the) + ".");
             }
         }
 
@@ -139,9 +140,10 @@ void Potion::on_collide(const P& pos, Actor* const actor)
                 collide_hook(pos, actor);
 
                 if (actor->is_alive() &&
-                    !data_->is_identified && player_see_cell)
+                    !data_->is_identified &&
+                    player_see_cell)
                 {
-                    //This did not identify the potion
+                    // This did not identify the potion
                     msg_log::add("It had no apparent effect...");
                 }
             }
@@ -196,7 +198,7 @@ void PotionVitality::collide_hook(const P& pos, Actor* const actor)
 
 void PotionSpirit::quaff_impl(Actor& actor)
 {
-    //SPI is always restored at least up to maximum spi, but can go beyond
+    // SPI is always restored at least up to maximum spi, but can go beyond
     const int spi = actor.spi();
     const int spi_max = actor.spi_max();
     const int spi_restored = std::max(10, spi_max - spi);
@@ -631,7 +633,7 @@ namespace
 
 std::vector<PotionLook> potion_looks_;
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -669,7 +671,7 @@ void init()
     {
         if (d.type == ItemType::potion)
         {
-            //Color and false name
+            // Color and false name
             const size_t idx = rnd::range(0, potion_looks_.size() - 1);
 
             PotionLook& look = potion_looks_[idx];
@@ -687,7 +689,7 @@ void init()
 
             potion_looks_.erase(potion_looks_.begin() + idx);
 
-            //True name
+            // True name
             const Potion* const potion =
                 static_cast<const Potion*>(item_factory::mk(d.id, 1));
 
@@ -751,4 +753,4 @@ void load()
     }
 }
 
-} //potion_handling
+} // potion_handling
