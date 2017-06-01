@@ -338,7 +338,14 @@ void draw()
 
         p.x += 2;
 
-        str = thr_item->name(ItemRefType::plural,
+        // Non-stackable thrown items should be printed the same way as wielded
+        // items, i.e. "Hammer", and not "A Hammer"
+        const auto item_ref_type =
+            thr_item->data().is_stackable ?
+            ItemRefType::plural :
+            ItemRefType::plain;
+
+        str = thr_item->name(item_ref_type,
                              ItemRefInf::yes,
                              ItemRefAttInf::thrown);
 

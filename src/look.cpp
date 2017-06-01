@@ -141,6 +141,18 @@ void ViewActorDescr::on_start()
                               *player_wpn));
     }
 
+    std::unique_ptr<const ThrowAttData> player_throwing;
+
+    if (map::player->thrown_item)
+    {
+        player_throwing.reset(
+            new ThrowAttData(map::player,
+                             actor_.pos,    // Aim position
+                             actor_.pos,    // Current position
+                             *map::player->thrown_item));
+
+    }
+
     //
     // TODO: This would not make sense if the monster has multiple intrinsic
     //       melee weapons (currently, no monster has this however). Perhaps
@@ -266,6 +278,18 @@ void ViewActorDescr::on_start()
         player_ranged_vals.push_back(player_ranged->hit_chance_tot);
     }
 
+    std::vector<int> player_throwing_vals;
+
+    if (player_throwing)
+    {
+        player_throwing_vals.push_back(player_throwing->skill_mod);
+        player_throwing_vals.push_back(player_throwing->wpn_mod);
+        player_throwing_vals.push_back(player_throwing->dodging_mod);
+        player_throwing_vals.push_back(player_throwing->dist_mod);
+        player_throwing_vals.push_back(player_throwing->state_mod);
+        player_throwing_vals.push_back(player_throwing->hit_chance_tot);
+    }
+
     std::vector<int> mon_ranged_vals;
 
     if (mon_ranged)
@@ -374,6 +398,18 @@ void ViewActorDescr::on_start()
         if (player_ranged)
         {
             print_val(player_ranged_vals[i],
+                      p,
+                      is_sum);
+        }
+
+        ++p.y;
+
+        //
+        // Player throwing
+        //
+        if (player_throwing)
+        {
+            print_val(player_throwing_vals[i],
                       p,
                       is_sum);
         }
