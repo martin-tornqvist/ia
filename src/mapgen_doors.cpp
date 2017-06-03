@@ -1,5 +1,7 @@
 #include "mapgen.hpp"
 
+#include <cstring>
+
 #include "feature_door.hpp"
 #include "map_parsing.hpp"
 

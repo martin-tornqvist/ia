@@ -1,6 +1,7 @@
 #include "marker.hpp"
 
 #include <vector>
+#include <cstring>
 
 #include "io.hpp"
 #include "inventory_handling.hpp"
