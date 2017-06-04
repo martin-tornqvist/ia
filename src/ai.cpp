@@ -20,53 +20,54 @@ namespace action
 bool try_cast_random_spell(Mon& mon)
 {
     if (!mon.is_alive() ||
-        mon.spell_cooldown_current_ > 0 ||
         mon.spells_known_.empty() ||
-        !mon.prop_handler().allow_cast_spell(Verbosity::silent))
+        !mon.prop_handler().allow_cast_spell(Verbosity::silent) ||
+        !rnd::fraction(1, 3))
     {
         return false;
     }
 
-    std::random_shuffle(begin(mon.spells_known_),
-                        end(mon.spells_known_));
+    rnd::shuffle(mon.spells_known_);
 
     for (Spell* const spell : mon.spells_known_)
     {
-        if (spell->allow_mon_cast_now(mon))
+        int& current_cooldown =
+            mon.spell_cooldowns_[(size_t)spell->id()];
+
+        if ((current_cooldown <= 0) &&
+            spell->allow_mon_cast_now(mon))
         {
             const int current_spi = mon.spi();
             const int spell_max_spi = spell->spi_cost(&mon).max;
 
-            // Cast spell if max spirit cost is lower than current spirit,
-            if (spell_max_spi < current_spi)
-            {
-                spell->cast(&mon, true);
-                return true;
-            }
-
-            //
-            // Spi was lower than the spells potential cost
-            //
-
             const int current_hp = mon.hp();
             const int max_hp = mon.hp_max(true);
 
-            // If monster is not allied to player, with a small chance, cast
-            // the spell anyway if hp is low.
-            if (!map::player->is_leader_of(&mon) &&
-                (current_hp < (max_hp / 3)) &&
-                rnd::one_in(20))
+            const bool has_spi = spell_max_spi < current_spi;
+
+            const bool is_hostile_player = !map::player->is_leader_of(&mon);
+
+            const bool is_low_hp = current_hp < (max_hp / 3);
+
+            // Only cast the spell if monster has enough spirit - or sometimes
+            // try anyway if the monster has low HP and is hostile to the player
+            if (has_spi ||
+                (is_hostile_player &&
+                 is_low_hp &&
+                 rnd::one_in(20)))
             {
-                if (map::player->can_see_actor(mon))
+                if (!has_spi &&
+                    map::player->can_see_actor(mon))
                 {
                     msg_log::add(mon.name_the() + " looks desperate.");
                 }
 
+                current_cooldown = spell->mon_cooldown();
+
                 spell->cast(&mon, true);
+
                 return true;
             }
-
-            return false;
         }
     }
 

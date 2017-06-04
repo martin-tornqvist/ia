@@ -95,6 +95,11 @@ public:
         return false;
     }
 
+    virtual int mon_cooldown() const
+    {
+        return 3;
+    }
+
     virtual bool mon_can_learn() const = 0;
 
     virtual bool player_can_learn() const = 0;
@@ -150,6 +155,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
@@ -192,6 +202,11 @@ public:
     SpellAzaWrath() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
 
     bool mon_can_learn() const override
     {
@@ -278,6 +293,11 @@ public:
     SpellPest() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 8;
+    }
 
     bool mon_can_learn() const override
     {
@@ -785,10 +805,16 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
     }
+
     bool player_can_learn() const override
     {
         return false;
@@ -829,6 +855,11 @@ public:
     SpellTeleport() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 30;
+    }
 
     bool mon_can_learn() const override
     {
@@ -873,6 +904,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 20;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
@@ -916,6 +952,11 @@ public:
 
     virtual bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
+
     std::string name() const override
     {
         return "Enfeeble Enemies";
@@ -958,6 +999,11 @@ public:
     SpellDisease() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 10;
+    }
 
     bool mon_can_learn() const override
     {
@@ -1005,6 +1051,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 8;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
@@ -1047,6 +1098,11 @@ public:
     SpellHealSelf() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
 
     bool mon_can_learn() const override
     {
@@ -1094,6 +1150,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
@@ -1140,6 +1201,11 @@ public:
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
+    int mon_cooldown() const override
+    {
+        return 7;
+    }
+
     bool mon_can_learn() const override
     {
         return true;
@@ -1185,6 +1251,11 @@ public:
     SpellDeafen() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 5;
+    }
 
     bool mon_can_learn() const override
     {

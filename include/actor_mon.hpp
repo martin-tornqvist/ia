@@ -115,7 +115,7 @@ public:
     bool is_player_feeling_msg_allowed_;
     Dir last_dir_moved_;
     std::vector<Spell*> spells_known_;
-    int spell_cooldown_current_;
+    int spell_cooldowns_[(size_t)SpellId::END];
     bool is_roaming_allowed_;
     Actor* leader_;
     Actor* tgt_;

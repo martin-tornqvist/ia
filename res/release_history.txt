@@ -25,7 +25,8 @@ Gameplay
 * "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
 * Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
 * All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
-* Different monsters have different spell skill levels (so spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc)
+* Different monsters have different spell skill levels - spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc
+* Monster spells now have individual cooldown counters (instead of random chances to be cast) - so a monster cannot for example spam Darkbolt several turns in a row
 * The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
 * Added trait "Electrically Inclined" - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
 * Added trait "Silent" - all melee attacks are silent, opening and closing doors does not alert monsters

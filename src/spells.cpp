@@ -358,8 +358,6 @@ void Spell::cast(Actor* const caster,
                 AlertsMon::no);
 
         snd_emit::run(snd);
-
-        mon->spell_cooldown_current_ = mon->data().spell_cooldown_turns;
     }
 
     if (is_intrinsic)
@@ -605,7 +603,7 @@ std::vector<std::string> SpellDarkbolt::descr_specific() const
 
 bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(3);
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -756,7 +754,7 @@ std::vector<std::string> SpellAzaWrath::descr_specific() const
 
 bool SpellAzaWrath::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(3);
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -902,8 +900,7 @@ std::vector<std::string> SpellMayhem::descr_specific() const
 bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 {
     return
-        mon.aware_of_player_counter_ > 0 &&
-        rnd::coin_toss() &&
+        (mon.aware_of_player_counter_) > 0 &&
         (mon.tgt_ || rnd::one_in(20));
 }
 
@@ -1023,7 +1020,6 @@ std::vector<std::string> SpellPest::descr_specific() const
 bool SpellPest::allow_mon_cast_now(Mon& mon) const
 {
     return mon.tgt_ &&
-           rnd::one_in(3) &&
            (mon.tgt_ || rnd::one_in(30));
 }
 
@@ -1225,9 +1221,7 @@ std::vector<std::string> SpellPharaohStaff::descr_specific() const
 
 bool SpellPharaohStaff::allow_mon_cast_now(Mon& mon) const
 {
-    return
-        mon.tgt_ &&
-        rnd::one_in(4);
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -1975,7 +1969,7 @@ void SpellKnockBack::run_effect(Actor* const caster) const
 
 bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::coin_toss();
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2117,7 +2111,7 @@ std::vector<std::string> SpellEnfeebleMon::descr_specific() const
 
 bool SpellEnfeebleMon::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(4);
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2173,7 +2167,7 @@ void SpellDisease::run_effect(Actor* const caster) const
 
 bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::coin_toss();
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2348,9 +2342,9 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 {
     // NOTE: Checking awareness instead of target, to allow summoning even with
     //       broken LOS
-    return (mon.aware_of_player_counter_ > 0) &&
-           rnd::coin_toss() &&
-           (mon.tgt_ || rnd::one_in(23));
+    return
+        (mon.aware_of_player_counter_ > 0) &&
+        (mon.tgt_ || rnd::one_in(23));
 }
 
 // -----------------------------------------------------------------------------
@@ -2364,9 +2358,7 @@ void SpellHealSelf::run_effect(Actor* const caster) const
 
 bool SpellHealSelf::allow_mon_cast_now(Mon& mon) const
 {
-    return
-        (mon.hp() < mon.hp_max(true)) &&
-        rnd::coin_toss();
+    return mon.hp() < mon.hp_max(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -2425,9 +2417,9 @@ void SpellMiGoHypno::run_effect(Actor* const caster) const
 
 bool SpellMiGoHypno::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ &&
-           mon.tgt_->is_player() &&
-           rnd::one_in(3);
+    return
+        mon.tgt_ &&
+        mon.tgt_->is_player();
 }
 
 // -----------------------------------------------------------------------------
@@ -2489,7 +2481,7 @@ void SpellBurn::run_effect(Actor* const caster) const
 
 bool SpellBurn::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(4);
+    return mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2540,5 +2532,5 @@ void SpellDeafen::run_effect(Actor* const caster) const
 
 bool SpellDeafen::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ && rnd::one_in(4);
+    return mon.tgt_;
 }

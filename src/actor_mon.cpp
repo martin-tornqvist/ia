@@ -1,6 +1,7 @@
 #include "actor_mon.hpp"
 
 #include <vector>
+#include <cstring>
 
 #include "init.hpp"
 #include "rl_utils.hpp"
@@ -37,11 +38,16 @@ Mon::Mon() :
     is_msg_mon_in_view_printed_     (false),
     is_player_feeling_msg_allowed_  (true),
     last_dir_moved_                 (Dir::center),
-    spell_cooldown_current_         (0),
     is_roaming_allowed_             (true),
     leader_                         (nullptr),
     tgt_                            (nullptr),
-    waiting_                        (false) {}
+    waiting_                        (false)
+{
+    for (size_t i = 0; i < (size_t)SpellId::END; ++i)
+    {
+        spell_cooldowns_[i] = -1;
+    }
+}
 
 Mon::~Mon()
 {
@@ -150,11 +156,6 @@ void Mon::act()
     }
 
     tgt_ = map::random_closest_actor(pos, tgt_bucket);
-
-    if (spell_cooldown_current_ != 0)
-    {
-        --spell_cooldown_current_;
-    }
 
     if (wary_of_player_counter_ > 0 ||
         aware_of_player_counter_ > 0)
@@ -525,6 +526,17 @@ bool Mon::is_sneaking() const
 
 void Mon::on_std_turn()
 {
+    // Countdown all spell cooldowns
+    for (size_t i = 0; i < (size_t)SpellId::END; ++i)
+    {
+        int& cd = spell_cooldowns_[i];
+
+        if (cd > 0)
+        {
+            --cd;
+        }
+    }
+
     on_std_turn_hook();
 }
 
