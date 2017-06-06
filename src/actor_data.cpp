@@ -2919,6 +2919,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2975,6 +2976,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -3030,6 +3032,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -3087,6 +3090,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -3146,6 +3150,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
@@ -3273,6 +3278,13 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.speed_pct = (int)ActorSpeed::sluggish;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::attacks] = true;
@@ -3319,8 +3331,12 @@ void init_data_list()
     d.hp = 1;
     d.spi = 1;
     d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
     d.group_sizes.assign(
