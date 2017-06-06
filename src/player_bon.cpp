@@ -452,7 +452,7 @@ std::vector<std::string> bg_descr(const Bg id)
     case Bg::war_vet:
         return
         {
-            "Switches to prepared weapon twice as fast",
+            "Switches to prepared weapon instantly",
             "",
             "Maintains armor twice as long before it breaks",
             "",

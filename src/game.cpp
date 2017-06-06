@@ -552,42 +552,57 @@ void handle_player_input(const InputData& input)
 
         Item* const alt = inv.item_in_slot(SlotId::wpn_alt);
 
-        const std::string alt_name =
-            alt ?
-            alt->name(ItemRefType::a) :
-            "";
-
         if (wielded || alt)
         {
+            const std::string alt_name_a =
+                alt ?
+                alt->name(ItemRefType::a) :
+                "";
+
+            // War veteran swaps instantly
+            const bool is_instant = player_bon::bg() == Bg::war_vet;
+
+            const std::string swift_str =
+                is_instant ?
+                "swiftly " :
+                "";
+
             if (wielded)
             {
                 if (alt)
                 {
-                    msg_log::add("I swap to my prepared weapon (" +
-                                 alt_name + ").");
+                    msg_log::add("I " +
+                                 swift_str +
+                                 "swap to " +
+                                 alt_name_a +
+                                 ".");
                 }
                 else // No current alt weapon
                 {
-                    const std::string name = wielded->name(ItemRefType::a);
+                    const std::string name = wielded->name(ItemRefType::plain);
 
-                    msg_log::add("I put away my weapon (" +
-                                 name + ").");
+                    msg_log::add("I " +
+                                 swift_str +
+                                 "put away my " +
+                                 name +
+                                 ".");
                 }
             }
             else // No current wielded item
             {
-                msg_log::add("I wield my prepared weapon ("
-                             + alt_name + ").");
+                msg_log::add("I " +
+                             swift_str +
+                             "wield " +
+                             alt_name_a +
+                             ".");
             }
 
             inv.swap_wielded_and_prepared();
 
-            const int speed_pct_diff =
-                (player_bon::bg() == Bg::war_vet) ?
-                100 :
-                0;
-
-            game_time::tick(speed_pct_diff);
+            if (!is_instant)
+            {
+                game_time::tick();
+            }
         }
         else // No wielded weapon and no alt weapon
         {
