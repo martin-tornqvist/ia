@@ -284,16 +284,14 @@ Range Spell::spi_cost(Actor* const caster) const
 }
 
 void Spell::cast(Actor* const caster,
-                 const bool is_intrinsic) const
+                 const int skill,
+                 const IsIntrinsic intrinsic) const
 {
     TRACE_FUNC_BEGIN;
 
     ASSERT(caster);
 
-    const bool allow_cast =
-        caster->prop_handler().allow_cast_spell(Verbosity::verbose);
-
-    if (!allow_cast)
+    if (!caster->prop_handler().allow_cast_spell(Verbosity::verbose))
     {
         return;
     }
@@ -303,11 +301,14 @@ void Spell::cast(Actor* const caster,
         TRACE << "Player casting spell" << std::endl;
 
         const ShockSrc shock_src =
-            is_intrinsic ?
+            (intrinsic == IsIntrinsic::yes) ?
             ShockSrc::cast_intr_spell :
             ShockSrc::use_strange_item;
 
-        const int shock_value = is_intrinsic ? shock_lvl_intr_cast() : 10;
+        const int shock_value =
+            (intrinsic == IsIntrinsic::yes) ?
+            shock_lvl_intr_cast() :
+            10;
 
         map::player->incr_shock(shock_value, shock_src);
 
@@ -324,6 +325,7 @@ void Spell::cast(Actor* const caster,
     else // Caster is monster
     {
         TRACE << "Monster casting spell" << std::endl;
+
         Mon* const mon = static_cast<Mon*>(caster);
 
         const bool is_mon_seen = map::player->can_see_actor(*mon);
@@ -360,7 +362,7 @@ void Spell::cast(Actor* const caster,
         snd_emit::run(snd);
     }
 
-    if (is_intrinsic)
+    if (intrinsic == IsIntrinsic::yes)
     {
         const Range cost = spi_cost(caster);
 
@@ -369,7 +371,7 @@ void Spell::cast(Actor* const caster,
 
     if (caster->is_alive())
     {
-        run_effect(caster);
+        run_effect(caster, skill);
     }
 
     game_time::tick();
@@ -401,11 +403,9 @@ void Spell::on_resist(Actor& target) const
     }
 }
 
-std::vector<std::string> Spell::descr() const
+std::vector<std::string> Spell::descr(const int skill) const
 {
-    auto ret = descr_specific();
-
-    const int skill = map::player->spell_skill(id());
+    auto ret = descr_specific(skill);
 
     if (can_be_improved_with_skill())
     {
@@ -418,13 +418,13 @@ std::vector<std::string> Spell::descr() const
 // -----------------------------------------------------------------------------
 // Darkbolt
 // -----------------------------------------------------------------------------
-void SpellDarkbolt::run_effect(Actor* const caster) const
+void SpellDarkbolt::run_effect(Actor* const caster, const int skill) const
 {
     if (caster == map::player &&
         player_bon::traits[(size_t)Trait::warlock] &&
         rnd::percent(warlock_multi_cast_chance_pct))
     {
-        run_effect(caster);
+        run_effect(caster, skill);
 
         if (!caster->is_alive())
         {
@@ -466,7 +466,7 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
             }
 
             // Run effect with the target as caster instead
-            run_effect(target);
+            run_effect(target, skill);
         }
 
         return;
@@ -528,8 +528,6 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
         msg_log::add(str_begin + " struck by a blast!", msg_clr);
     }
 
-    int skill = caster->spell_skill(id());
-
     const int dmg = (skill / 10) + 1;
 
     target->hit(dmg,
@@ -566,7 +564,7 @@ void SpellDarkbolt::run_effect(Actor* const caster) const
     snd_emit::run(snd);
 }
 
-std::vector<std::string> SpellDarkbolt::descr_specific() const
+std::vector<std::string> SpellDarkbolt::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
@@ -575,10 +573,8 @@ std::vector<std::string> SpellDarkbolt::descr_specific() const
         "into a bolt hurled towards a target with great force.");
 
     descr.push_back(
-        "The conjured bolt has some will on its own - the caster determine "
+        "The conjured bolt has some will on its own - the caster cannot "
         "determine exactly which creature will be struck.");
-
-    const int skill = map::player->spell_skill(id());
 
     const int dmg = (skill / 10) + 1;
 
@@ -609,13 +605,13 @@ bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Azathoths wrath
 // -----------------------------------------------------------------------------
-void SpellAzaWrath::run_effect(Actor* const caster) const
+void SpellAzaWrath::run_effect(Actor* const caster, const int skill) const
 {
     if (caster == map::player &&
         player_bon::traits[(size_t)Trait::warlock] &&
         rnd::percent(warlock_multi_cast_chance_pct))
     {
-        run_effect(caster);
+        run_effect(caster, skill);
 
         if (!caster->is_alive())
         {
@@ -655,7 +651,7 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
                 }
 
                 // Run effect with the target as caster
-                run_effect(target);
+                run_effect(target, skill);
             }
 
             continue;
@@ -683,8 +679,6 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
         {
             msg_log::add(str_begin + " struck by a roaring blast!", msg_clr);
         }
-
-        int skill = caster->spell_skill(id());
 
         int dmg = (skill / 12) + 1;
 
@@ -722,14 +716,12 @@ void SpellAzaWrath::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellAzaWrath::descr_specific() const
+std::vector<std::string> SpellAzaWrath::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
         "Channels the destructive force of Azathoth unto all visible enemies.");
-
-    const int skill = map::player->spell_skill(id());
 
     int dmg = (skill / 12) + 1;
 
@@ -760,13 +752,13 @@ bool SpellAzaWrath::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Mayhem
 // -----------------------------------------------------------------------------
-void SpellMayhem::run_effect(Actor* const caster) const
+void SpellMayhem::run_effect(Actor* const caster, const int skill) const
 {
     if (caster == map::player &&
         player_bon::traits[(size_t)Trait::warlock] &&
         rnd::percent(warlock_multi_cast_chance_pct))
     {
-        run_effect(caster);
+        run_effect(caster, skill);
 
         if (!caster->is_alive())
         {
@@ -812,8 +804,6 @@ void SpellMayhem::run_effect(Actor* const caster) const
             }
         }
     }
-
-    const int skill = caster->spell_skill(id());
 
     int nr_expl = (skill / 10) + 3;
 
@@ -877,13 +867,11 @@ void SpellMayhem::run_effect(Actor* const caster) const
     snd_emit::run(snd);
 }
 
-std::vector<std::string> SpellMayhem::descr_specific() const
+std::vector<std::string> SpellMayhem::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("Blasts the surrounding area with explosions.");
-
-    const int skill = map::player->spell_skill(id());
 
     int nr_expl = (skill / 10) + 3;
 
@@ -907,10 +895,8 @@ bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Pestilence
 // -----------------------------------------------------------------------------
-void SpellPest::run_effect(Actor* const caster) const
+void SpellPest::run_effect(Actor* const caster, const int skill) const
 {
-    const int skill = caster->spell_skill(id());
-
     size_t nr_mon = (skill / 10) + 2;
 
     Actor* leader = nullptr;
@@ -995,13 +981,11 @@ void SpellPest::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellPest::descr_specific() const
+std::vector<std::string> SpellPest::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("A pack of rats appear around the caster.");
-
-    const int skill = map::player->spell_skill(id());
 
     size_t nr_mon = (skill / 10) + 2;
 
@@ -1026,7 +1010,7 @@ bool SpellPest::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Animate weapons
 // -----------------------------------------------------------------------------
-void SpellAnimWpns::run_effect(Actor* const caster) const
+void SpellAnimWpns::run_effect(Actor* const caster, const int skill) const
 {
     bool is_any_animated = false;
 
@@ -1034,8 +1018,6 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
     {
         return;
     }
-
-    const int skill = caster->spell_skill(id());
 
     for (int x = 0; x < map_w; ++x)
     {
@@ -1109,7 +1091,7 @@ void SpellAnimWpns::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellAnimWpns::descr_specific() const
+std::vector<std::string> SpellAnimWpns::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
@@ -1119,8 +1101,6 @@ std::vector<std::string> SpellAnimWpns::descr_specific() const
         "while). It is only possible to animate basic melee weapons "
         "however - \"modern\" mechanisms such as pistols or machine guns "
         "are far too complex.");
-
-    const int skill = map::player->spell_skill(id());
 
     if (skill >= 50)
     {
@@ -1138,8 +1118,10 @@ std::vector<std::string> SpellAnimWpns::descr_specific() const
 // -----------------------------------------------------------------------------
 // Pharaoh staff
 // -----------------------------------------------------------------------------
-void SpellPharaohStaff::run_effect(Actor* const caster) const
+void SpellPharaohStaff::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     // First try to heal a friendly mummy (as per the spell description)
     for (Actor* const actor : game_time::actors)
     {
@@ -1163,8 +1145,9 @@ void SpellPharaohStaff::run_effect(Actor* const caster) const
 
     if (caster->is_player())
     {
-        const int n = summon_hostile_one_in_n *
-                      (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
+        const int n =
+            summon_hostile_one_in_n *
+            (player_bon::traits[(size_t)Trait::summoner] ? 2 : 1);
 
         did_player_summon_hostile = rnd::one_in(n);
         leader = did_player_summon_hostile ? nullptr : caster;
@@ -1172,7 +1155,11 @@ void SpellPharaohStaff::run_effect(Actor* const caster) const
     else // Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
-        leader = caster_leader ? caster_leader : caster;
+
+        leader =
+            caster_leader ?
+            caster_leader :
+            caster;
     }
 
     const auto actor_id =
@@ -1206,8 +1193,10 @@ void SpellPharaohStaff::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellPharaohStaff::descr_specific() const
+std::vector<std::string> SpellPharaohStaff::descr_specific(const int skill) const
 {
+    (void)skill;
+
     return
     {
         "Summons a loyal Mummy servant which will fight for the caster.",
@@ -1227,11 +1216,9 @@ bool SpellPharaohStaff::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Detect items
 // -----------------------------------------------------------------------------
-void SpellDetItems::run_effect(Actor* const caster) const
+void SpellDetItems::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
-
-    const int skill = caster->spell_skill(id());
 
     const int range =
         (skill >= 100) ?
@@ -1291,14 +1278,12 @@ void SpellDetItems::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellDetItems::descr_specific() const
+std::vector<std::string> SpellDetItems::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
         "Reveals the presence of items in the surrounding area.");
-
-    const int skill = map::player->spell_skill(id());
 
     int range;
 
@@ -1321,11 +1306,9 @@ std::vector<std::string> SpellDetItems::descr_specific() const
 // -----------------------------------------------------------------------------
 // Detect traps
 // -----------------------------------------------------------------------------
-void SpellDetTraps::run_effect(Actor* const caster) const
+void SpellDetTraps::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
-
-    const int skill = caster->spell_skill(id());
 
     const int range =
         (skill >= 100) ?
@@ -1386,14 +1369,12 @@ void SpellDetTraps::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellDetTraps::descr_specific() const
+std::vector<std::string> SpellDetTraps::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
         "Reveals the presence of traps in the surrounding area.");
-
-    const int skill = map::player->spell_skill(id());
 
     int range;
 
@@ -1416,11 +1397,9 @@ std::vector<std::string> SpellDetTraps::descr_specific() const
 // -----------------------------------------------------------------------------
 // Detect monsters
 // -----------------------------------------------------------------------------
-void SpellDetMon::run_effect(Actor* const caster) const
+void SpellDetMon::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
-
-    const int skill = caster->spell_skill(id());
 
     const int range =
         (skill >= 100) ?
@@ -1450,14 +1429,12 @@ void SpellDetMon::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellDetMon::descr_specific() const
+std::vector<std::string> SpellDetMon::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
         "Reveals the presence of creatures in the surrounding area.");
-
-    const int skill = map::player->spell_skill(id());
 
     int range;
 
@@ -1480,11 +1457,9 @@ std::vector<std::string> SpellDetMon::descr_specific() const
 // -----------------------------------------------------------------------------
 // Opening
 // -----------------------------------------------------------------------------
-void SpellOpening::run_effect(Actor* const caster) const
+void SpellOpening::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
-
-    const int skill = caster->spell_skill(id());
 
     const int range = (1 + (skill / 20));
 
@@ -1523,13 +1498,11 @@ void SpellOpening::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellOpening::descr_specific() const
+std::vector<std::string> SpellOpening::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("Opens all locks, lids and doors.");
-
-    const int skill = map::player->spell_skill(id());
 
     const int range = (1 + (skill / 20));
 
@@ -1550,7 +1523,7 @@ std::vector<std::string> SpellOpening::descr_specific() const
 // -----------------------------------------------------------------------------
 // Sacrifice life
 // -----------------------------------------------------------------------------
-void SpellSacrLife::run_effect(Actor* const caster) const
+void SpellSacrLife::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
 
@@ -1566,20 +1539,18 @@ void SpellSacrLife::run_effect(Actor* const caster) const
 
         map::player->restore_spi(hp_drained, true);
 
-        const int skill = caster->spell_skill(id());
-
         if (skill >= 50)
         {
             SpellAzaWrath spell;
 
-            spell.run_effect(caster);
+            spell.run_effect(caster, skill);
         }
 
         if (skill >= 100)
         {
             SpellMayhem  spell;
 
-            spell.run_effect(caster);
+            spell.run_effect(caster, skill);
         }
     }
     else // Not enough HP
@@ -1588,7 +1559,7 @@ void SpellSacrLife::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellSacrLife::descr_specific() const
+std::vector<std::string> SpellSacrLife::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
@@ -1597,17 +1568,15 @@ std::vector<std::string> SpellSacrLife::descr_specific() const
         "spirit. The amount restored is proportional to the life "
         "sacrificed.");
 
-    const int skill = map::player->spell_skill(id());
-
     if (skill >= 50)
     {
         SpellAzaWrath spell;
 
-        const std::string name = spell.name();
+        const std::string wrath_name = spell.name();
 
         descr.push_back(
-            "If any health was sacrificed, the spell \"" + name + "\""
-            "is also cast (at the casters skill level for that spell).");
+            "If any health was sacrificed, the spell \"" + wrath_name + "\""
+            "is also cast.");
     }
 
     if (skill >= 100)
@@ -1625,7 +1594,7 @@ std::vector<std::string> SpellSacrLife::descr_specific() const
 // -----------------------------------------------------------------------------
 // Sacrifice spirit
 // -----------------------------------------------------------------------------
-void SpellSacrSpi::run_effect(Actor* const caster) const
+void SpellSacrSpi::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
 
@@ -1642,8 +1611,6 @@ void SpellSacrSpi::run_effect(Actor* const caster) const
         map::player->restore_hp(hp_drained);
 
         std::vector<PropId> props_can_heal;
-
-        const int skill = caster->spell_skill(id());
 
         if (skill >= 50)
         {
@@ -1669,7 +1636,7 @@ void SpellSacrSpi::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellSacrSpi::descr_specific() const
+std::vector<std::string> SpellSacrSpi::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
@@ -1677,8 +1644,6 @@ std::vector<std::string> SpellSacrSpi::descr_specific() const
         "Brings the caster to the brink of spiritual death in order to "
         "restore health. The amount restored is proportional to the "
         "spirit sacrificed.");
-
-    const int skill = map::player->spell_skill(id());
 
     if (skill >= 100)
     {
@@ -1698,8 +1663,10 @@ std::vector<std::string> SpellSacrSpi::descr_specific() const
 // -----------------------------------------------------------------------------
 // Ghoul frenzy
 // -----------------------------------------------------------------------------
-void SpellFrenzy::run_effect(Actor* const caster) const
+void SpellFrenzy::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     const int nr_turns = rnd::range(12, 18);
 
     PropFrenzied* frenzy = new PropFrenzied(PropTurns::specific, nr_turns);
@@ -1707,8 +1674,10 @@ void SpellFrenzy::run_effect(Actor* const caster) const
     caster->prop_handler().apply(frenzy);
 }
 
-std::vector<std::string> SpellFrenzy::descr_specific() const
+std::vector<std::string> SpellFrenzy::descr_specific(const int skill) const
 {
+    (void)skill;
+
     return
     {
         "Incites a great rage in the caster, which will charge their "
@@ -1719,23 +1688,19 @@ std::vector<std::string> SpellFrenzy::descr_specific() const
 // -----------------------------------------------------------------------------
 // Bless
 // -----------------------------------------------------------------------------
-void SpellBless::run_effect(Actor* const caster) const
+void SpellBless::run_effect(Actor* const caster, const int skill) const
 {
-    const int skill = caster->spell_skill(id());
-
     const int nr_turns = 7 + (skill * 7);
 
     caster->prop_handler().apply(
         new PropBlessed(PropTurns::specific, nr_turns));
 }
 
-std::vector<std::string> SpellBless::descr_specific() const
+std::vector<std::string> SpellBless::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("Bends reality in favor of the caster.");
-
-    const int skill = map::player->spell_skill(id());
 
     const int nr_turns = 7 + (skill * 7);
 
@@ -1750,11 +1715,9 @@ std::vector<std::string> SpellBless::descr_specific() const
 // -----------------------------------------------------------------------------
 // Light
 // -----------------------------------------------------------------------------
-void SpellLight::run_effect(Actor* const caster) const
+void SpellLight::run_effect(Actor* const caster, const int skill) const
 {
     caster->prop_handler().apply(new PropRadiant(PropTurns::std));
-
-    const int skill = caster->spell_skill(id());
 
     if (skill >= 50)
     {
@@ -1778,13 +1741,11 @@ void SpellLight::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellLight::descr_specific() const
+std::vector<std::string> SpellLight::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("Illuminates the area around the caster.");
-
-    const int skill = map::player->spell_skill(id());
 
     if (skill >= 50)
     {
@@ -1805,11 +1766,9 @@ std::vector<std::string> SpellLight::descr_specific() const
 // -----------------------------------------------------------------------------
 // Teleport
 // -----------------------------------------------------------------------------
-void SpellTeleport::run_effect(Actor* const caster) const
+void SpellTeleport::run_effect(Actor* const caster, const int skill) const
 {
-    const int skill = caster->spell_skill(id());
-
-    if (skill >= 50)
+    if (skill >= 75)
     {
         const int nr_turns =
             skill >= 100 ?
@@ -1833,15 +1792,13 @@ bool SpellTeleport::allow_mon_cast_now(Mon& mon) const
         rnd::fraction(3, 4);
 }
 
-std::vector<std::string> SpellTeleport::descr_specific() const
+std::vector<std::string> SpellTeleport::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back("Instantly moves the caster to a different position.");
 
-    const int skill = map::player->spell_skill(id());
-
-    if (skill >= 50)
+    if (skill >= 75)
     {
         const int nr_turns =
             skill >= 100 ?
@@ -1860,10 +1817,8 @@ std::vector<std::string> SpellTeleport::descr_specific() const
 // -----------------------------------------------------------------------------
 // Resistance
 // -----------------------------------------------------------------------------
-void SpellRes::run_effect(Actor* const caster) const
+void SpellRes::run_effect(Actor* const caster, const int skill) const
 {
-    const int skill = caster->spell_skill(id());
-
     int nr_turns = 10 + (skill / 4);
 
     if (skill >= 100)
@@ -1877,11 +1832,9 @@ void SpellRes::run_effect(Actor* const caster) const
     prop_hlr.apply(new PropRElec(PropTurns::specific, nr_turns));
 }
 
-std::vector<std::string> SpellRes::descr_specific() const
+std::vector<std::string> SpellRes::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
-
-    const int skill = map::player->spell_skill(id());
 
     int nr_turns = 10 + (skill / 4);
 
@@ -1914,8 +1867,10 @@ bool SpellRes::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Knockback
 // -----------------------------------------------------------------------------
-void SpellKnockBack::run_effect(Actor* const caster) const
+void SpellKnockBack::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     ASSERT(!caster->is_player());
 
     Clr msg_clr = clr_msg_good;
@@ -1975,7 +1930,7 @@ bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Enfeeble
 // -----------------------------------------------------------------------------
-void SpellEnfeebleMon::run_effect(Actor* const caster) const
+void SpellEnfeebleMon::run_effect(Actor* const caster, const int skill) const
 {
     PropId prop_id = PropId::END;
 
@@ -2034,8 +1989,6 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
     // There are targets available
     //
 
-    const int skill = caster->spell_skill(id());
-
     // If low skill, only target one monster
     if (skill < 50)
     {
@@ -2069,7 +2022,7 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
                 }
 
                 // Run effect with target as caster
-                run_effect(target);
+                run_effect(target, skill);
             }
 
             continue;
@@ -2087,14 +2040,12 @@ void SpellEnfeebleMon::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellEnfeebleMon::descr_specific() const
+std::vector<std::string> SpellEnfeebleMon::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
         "Attempts to physically or mentally enfeeble others.");
-
-    const int skill = map::player->spell_skill(id());
 
     if (skill >= 50)
     {
@@ -2117,8 +2068,10 @@ bool SpellEnfeebleMon::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Disease
 // -----------------------------------------------------------------------------
-void SpellDisease::run_effect(Actor* const caster) const
+void SpellDisease::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
@@ -2173,7 +2126,7 @@ bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Summon monster
 // -----------------------------------------------------------------------------
-void SpellSummonMon::run_effect(Actor* const caster) const
+void SpellSummonMon::run_effect(Actor* const caster, const int skill) const
 {
     // Try to summon a creature inside the player's FOV (inside the standard
     // range), in a free visible cell. If no such cell is available, instead
@@ -2229,8 +2182,6 @@ void SpellSummonMon::run_effect(Actor* const caster) const
     }
 
     std::vector<ActorId> summon_bucket;
-
-    const int skill = caster->spell_skill(id());
 
     //
     // NOTE: There are summonable monsters spawning from dlvl 0 (wolves), so
@@ -2327,8 +2278,10 @@ void SpellSummonMon::run_effect(Actor* const caster) const
     }
 }
 
-std::vector<std::string> SpellSummonMon::descr_specific() const
+std::vector<std::string> SpellSummonMon::descr_specific(const int skill) const
 {
+    (void)skill;
+
     return
     {
         "Summons a creature to do the caster's bidding. A more skilled "
@@ -2350,8 +2303,10 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Heal self
 // -----------------------------------------------------------------------------
-void SpellHealSelf::run_effect(Actor* const caster) const
+void SpellHealSelf::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     // The spell effect is noticed if any hit points were restored
     caster->restore_hp(999);
 }
@@ -2364,8 +2319,10 @@ bool SpellHealSelf::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Mi-go hypnosis
 // -----------------------------------------------------------------------------
-void SpellMiGoHypno::run_effect(Actor* const caster) const
+void SpellMiGoHypno::run_effect(Actor* const caster, const int skill) const
 {
+    (void)skill;
+
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
@@ -2425,7 +2382,7 @@ bool SpellMiGoHypno::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Immolation
 // -----------------------------------------------------------------------------
-void SpellBurn::run_effect(Actor* const caster) const
+void SpellBurn::run_effect(Actor* const caster, const int skill) const
 {
     ASSERT(!caster->is_player());
 
@@ -2470,8 +2427,6 @@ void SpellBurn::run_effect(Actor* const caster) const
         msg_log::add("Flames are rising around " + target_str + "!");
     }
 
-    const int skill = caster->spell_skill(id());
-
     const int nr_turns = 1 + (skill / 20);
 
     Prop* const prop = new PropBurning(PropTurns::specific, nr_turns);
@@ -2487,7 +2442,7 @@ bool SpellBurn::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Deafening
 // -----------------------------------------------------------------------------
-void SpellDeafen::run_effect(Actor* const caster) const
+void SpellDeafen::run_effect(Actor* const caster, const int skill) const
 {
     ASSERT(!caster->is_player());
 
@@ -2520,8 +2475,6 @@ void SpellDeafen::run_effect(Actor* const caster) const
             return;
         }
     }
-
-    const int skill = caster->spell_skill(id());
 
     const int nr_turns = 100 + skill;
 

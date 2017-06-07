@@ -284,7 +284,9 @@ ConsumeItem DeviceBlaster::trigger_effect()
         Spell* const spell =
             spell_handling::mk_spell_from_id(SpellId::aza_wrath);
 
-        spell->cast(map::player, false);
+        spell->cast(map::player,
+                    scroll_spell_skill_level, // Reusing scroll skill
+                    IsIntrinsic::no);
 
         delete spell;
     }

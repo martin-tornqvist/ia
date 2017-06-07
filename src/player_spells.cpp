@@ -132,7 +132,11 @@ void try_cast(const SpellOpt& spell_opt)
 
         if (map::player->is_alive())
         {
-            spell->cast(map::player, true);
+            const int skill = map::player->spell_skill(spell->id());
+
+            spell->cast(map::player,
+                        skill,
+                        IsIntrinsic::yes);
         }
     }
 }
@@ -406,7 +410,10 @@ void BrowseSpell::draw()
         const std::string lower_str = std::to_string(spi_cost.min);
         const std::string upper_str = std::to_string(spi_cost.max);
 
-        str = spi_cost.max == 1 ? "1" : (lower_str +  "-" + upper_str);
+        str =
+            (spi_cost.max == 1) ?
+            "1" :
+            (lower_str +  "-" + upper_str);
 
         io::draw_text(str,
                           Panel::screen,
@@ -442,7 +449,9 @@ void BrowseSpell::draw()
 
         if (is_idx_marked)
         {
-            const auto descr = spell->descr();
+            const int skill = map::player->spell_skill(id);
+
+            const auto descr = spell->descr(skill);
 
             std::vector<StrAndClr> lines;
 

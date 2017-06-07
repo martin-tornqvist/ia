@@ -33,13 +33,13 @@ std::vector<std::string> Scroll::descr() const
     {
         const auto* const spell = mk_spell();
 
-        const auto descr = spell->descr();
+        const auto descr = spell->descr(scroll_spell_skill_level);
 
         delete spell;
 
         return descr;
     }
-    else //Not identified
+    else // Not identified
     {
         return data_->base_descr;
     }
@@ -49,78 +49,84 @@ ConsumeItem Scroll::activate(Actor* const actor)
 {
     auto& prop_handler = actor->prop_handler();
 
-    if (prop_handler.allow_cast_spell(Verbosity::verbose) &&
-        prop_handler.allow_read(Verbosity::verbose) &&
-        prop_handler.allow_speak(Verbosity::verbose))
+    if (!prop_handler.allow_cast_spell(Verbosity::verbose) ||
+        !prop_handler.allow_read(Verbosity::verbose) ||
+        !prop_handler.allow_speak(Verbosity::verbose))
     {
-        if (!map::player->prop_handler().allow_see())
-        {
-            msg_log::add("I cannot read while blind.");
-            return ConsumeItem::no;
-        }
-
-        const P& player_pos(map::player->pos);
-
-        const Cell& cell = map::cells[player_pos.x][player_pos.y];
-
-        if (cell.is_dark && !cell.is_lit)
-        {
-            msg_log::add("It's too dark to read here.");
-            return ConsumeItem::no;
-        }
-
-        auto* const spell = mk_spell();
-
-        const std::string crumble_str = "The Manuscript crumbles to dust.";
-
-        const bool is_identified_before = data_->is_identified;
-
-        if (is_identified_before)
-        {
-            const std::string scroll_name =
-                name(ItemRefType::a, ItemRefInf::none);
-
-            msg_log::add("I read " + scroll_name + "...");
-        }
-        else //Not already identified
-        {
-            msg_log::add(
-                "I recite the forbidden incantations on the manuscript...");
-
-            data_->is_tried = true;
-        }
-
-        spell->cast(map::player, false);
-
-        msg_log::add(crumble_str);
-
-        identify(Verbosity::verbose);
-
-        // Learn spell, increase skill level
-        if (spell->player_can_learn())
-        {
-            const SpellId id = spell->id();
-
-            const bool is_learned_before = player_spells::is_spell_learned(id);
-
-            if (!is_learned_before)
-            {
-                player_spells::learn_spell(id, Verbosity::verbose);
-            }
-
-            const auto skill_incr_verbosity =
-                is_learned_before ?
-                Verbosity::verbose : Verbosity::silent;
-
-            player_spells::incr_spell_skill(id, skill_incr_verbosity);
-        }
-
-        delete spell;
-
-        return ConsumeItem::yes;
+        return ConsumeItem::no;
     }
 
-    return ConsumeItem::no;
+    if (!map::player->prop_handler().allow_see())
+    {
+        msg_log::add("I cannot read while blind.");
+
+        return ConsumeItem::no;
+    }
+
+    // OK, we can cast spells, read, speak, and see
+
+    const P& player_pos(map::player->pos);
+
+    const Cell& cell = map::cells[player_pos.x][player_pos.y];
+
+    if (cell.is_dark && !cell.is_lit)
+    {
+        msg_log::add("It's too dark to read here.");
+
+        return ConsumeItem::no;
+    }
+
+    auto* const spell = mk_spell();
+
+    const std::string crumble_str = "The Manuscript crumbles to dust.";
+
+    const bool is_identified_before = data_->is_identified;
+
+    if (is_identified_before)
+    {
+        const std::string scroll_name =
+            name(ItemRefType::a, ItemRefInf::none);
+
+        msg_log::add("I read " + scroll_name + "...");
+    }
+    else // Not already identified
+    {
+        msg_log::add(
+            "I recite the forbidden incantations on the manuscript...");
+
+        data_->is_tried = true;
+    }
+
+    spell->cast(map::player,
+                scroll_spell_skill_level,
+                IsIntrinsic::no);
+
+    msg_log::add(crumble_str);
+
+    identify(Verbosity::verbose);
+
+    // Learn spell, increase skill level
+    if (spell->player_can_learn())
+    {
+        const SpellId id = spell->id();
+
+        const bool is_learned_before = player_spells::is_spell_learned(id);
+
+        if (!is_learned_before)
+        {
+            player_spells::learn_spell(id, Verbosity::verbose);
+        }
+
+        const auto skill_incr_verbosity =
+            is_learned_before ?
+            Verbosity::verbose : Verbosity::silent;
+
+        player_spells::incr_spell_skill(id, skill_incr_verbosity);
+    }
+
+    delete spell;
+
+    return ConsumeItem::yes;
 }
 
 Spell* Scroll::mk_spell() const
@@ -164,13 +170,13 @@ namespace
 
 std::vector<std::string> false_names_;
 
-} //namespace
+} // namespace
 
 void init()
 {
     TRACE_FUNC_BEGIN;
 
-    //Init possible fake names
+    // Init possible fake names
     false_names_.clear();
     false_names_.push_back("Cruensseasrjit");
     false_names_.push_back("Rudsceleratus");
