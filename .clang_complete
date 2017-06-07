@@ -1,4 +1,9 @@
--std=c++11
+-std=c++14
+-fno-rtti
+-Wall
+-Wextra
+-Werror
+-Wno-unused-value
 -I/usr/include/SDL2
 -I/home/martin/dev/ia/include
 -I/home/martin/dev/ia/rl_utils/include
