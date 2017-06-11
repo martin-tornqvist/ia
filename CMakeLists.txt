@@ -1,12 +1,13 @@
 # ------------------------------------------------------------------------------
-#  Project
+# Project
 # ------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.0)
 
 project(ia)
 
+
 # ------------------------------------------------------------------------------
-#  Source files
+# Source files
 # ------------------------------------------------------------------------------
 set(SRC
   include/ability_values.hpp
@@ -210,16 +211,29 @@ set(SRC
   rl_utils/src/time.cpp
   )
 
+
 # ------------------------------------------------------------------------------
-#  Target definitions
+# Icon (on Windows)
 # ------------------------------------------------------------------------------
-add_executable(ia       ${SRC})
-add_executable(ia-debug ${SRC})
+set(RC_FILE "")
+
+if(WIN32)
+ set(RC_FILE ${CMAKE_SOURCE_DIR}/icon/icon.rc)
+endif()
+
+
+# ------------------------------------------------------------------------------
+# Target definitions
+# ------------------------------------------------------------------------------
+add_executable(ia       ${SRC} ${RC_FILE})
+add_executable(ia-debug ${SRC} ${RC_FILE})
 
 set_target_properties(ia        PROPERTIES OUTPUT_NAME ia)
 set_target_properties(ia-debug  PROPERTIES OUTPUT_NAME ia-debug)
 
+#
 # NOTE: The test target must use exceptions (used by the test framework)
+#
 
 #
 # TODO: Enable this flag:
@@ -257,7 +271,7 @@ endif()
 
 set(RELEASE_COMPILE_FLAGS
     ${RELEASE_COMPILE_FLAGS}
-    -D NDEBUG
+    -DNDEBUG
     )
 
 target_compile_options(ia PUBLIC
@@ -283,11 +297,12 @@ target_include_directories(ia-debug PUBLIC
     ${COMMON_INCLUDE_DIRS}
     )
 
-# Copy all resource files in the build directory.
+# Copy all resource files to the build directory.
 file(COPY res DESTINATION .)
 
+
 # ------------------------------------------------------------------------------
-#  Dependencies
+# Dependencies
 # ------------------------------------------------------------------------------
 if(WIN32)
 
@@ -451,31 +466,21 @@ endif()
 
 
 # ------------------------------------------------------------------------------
-#  Testing
+# Testing
 # ------------------------------------------------------------------------------
 
 #
 # TODO
 #
 
+
 # ------------------------------------------------------------------------------
-#  Packaging
+# Packaging
 # ------------------------------------------------------------------------------
 set(CMAKE_INSTALL_PREFIX target)
 
-install(TARGETS ia DESTINATION ia)
-
+install(TARGETS ia       DESTINATION ia)
 install(TARGETS ia-debug DESTINATION ia-debug)
 
 install(DIRECTORY res DESTINATION ia)
-
 install(DIRECTORY res DESTINATION ia-debug)
-
-set(CPACK_PACKAGE_NAME "ia")
-
-set(CPACK_PACKAGE_VERSION "ia-debug")
-
-set(CPACK_MONOLITHIC_INSTALL 1)
-
-# This must be last
-include(CPack)
