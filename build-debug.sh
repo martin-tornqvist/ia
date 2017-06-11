@@ -1,11 +1,15 @@
 #!/bin/bash
 
-#
-# NOTE: This assumes that CMake has already been run
-#
+set -xue
 
 root_dir=$PWD
 
-cd build && make -j 4 ia-debug
+mkdir -p build
+
+cd build
+
+cmake ../
+
+make -j 4 ia-debug
 
 cd $root_dir
