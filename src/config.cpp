@@ -8,6 +8,7 @@
 #include "browser.hpp"
 #include "query.hpp"
 #include "io.hpp"
+#include "sdl_base.hpp"
 #include "audio.hpp"
 #include "text_format.hpp"
 
@@ -19,6 +20,20 @@ namespace config
 
 namespace
 {
+
+const std::vector<std::string> font_image_names
+{
+    "8x12_DOS.png",
+    "11x19.png",
+    "11x22.png",
+    "12x24.png",
+    "16x24_v1.png",
+    "16x24_v2.png",
+    "16x24_v3.png",
+    "16x24_DOS.png",
+    "16x24_typewriter_v1.png",
+    "16x24_typewriter_v2.png",
+};
 
 const int opt_y0_ = 1;
 const int opt_values_x_pos_ = 40;
@@ -50,23 +65,13 @@ bool is_tiles_mode_ = false;
 int cell_px_w_ = -1;
 int cell_px_h_ = -1;
 
-std::vector<std::string> font_image_names;
-
-void set_cell_px_dim_dependent_variables()
-{
-    map_px_h_ = cell_px_h_ * map_h;
-    map_px_offset_h_ = cell_px_h_ * map_offset_h;
-    log_px_h_ = cell_px_h_ * log_h;
-    stat_lines_px_h_ = cell_px_h_ * stat_lines_h;
-    stat_lines_px_offset_h_ = cell_px_h_ * stat_lines_offset_h;
-    scr_px_w_ = cell_px_w_ * screen_w;
-    scr_px_h_ = cell_px_h_ * screen_h;
-}
-
-void set_cell_px_dims_from_font_name()
+void update_render_dims()
 {
     TRACE_FUNC_BEGIN;
 
+    //
+    // Parse cell dimensions from the font name
+    //
     std::string font_name = font_name_;
 
     char ch = font_name.front();
@@ -110,17 +115,32 @@ void set_cell_px_dims_from_font_name()
     cell_px_w_ = to_int(w_str);
     cell_px_h_ = to_int(h_str);
 
+    map_px_h_ = cell_px_h_ * map_h;
+
+    map_px_offset_h_ = cell_px_h_ * map_offset_h;
+
+    log_px_h_ = cell_px_h_ * log_h;
+
+    stat_lines_px_h_ = cell_px_h_ * stat_lines_h;
+
+    stat_lines_px_offset_h_ = cell_px_h_ * stat_lines_offset_h;
+
+    scr_px_w_ = cell_px_w_ * screen_w;
+
+    scr_px_h_ = cell_px_h_ * screen_h;
+
     TRACE_FUNC_END;
 }
 
 void set_default_variables()
 {
     TRACE_FUNC_BEGIN;
+
     is_audio_enabled_ = true;
     is_tiles_mode_ = true;
     font_name_ = "16x24_v1.png";
 
-    set_cell_px_dims_from_font_name();
+    update_render_dims();
 
     use_light_fade_effect_ = false;
     is_fullscr_ = false;
@@ -135,6 +155,7 @@ void set_default_variables()
     delay_shotgun_ = 75;
     delay_explosion_ = 225;
     default_player_name_ = "";
+
     TRACE_FUNC_END;
 }
 
@@ -145,6 +166,7 @@ void player_sets_option(const MenuBrowser& browser)
     case 0: // Audio
     {
         is_audio_enabled_ = !is_audio_enabled_;
+
         audio::init();
     }
     break;
@@ -153,14 +175,16 @@ void player_sets_option(const MenuBrowser& browser)
     {
         is_tiles_mode_ = !is_tiles_mode_;
 
-        if (is_tiles_mode_ && (cell_px_w_ != 16 || cell_px_h_ != 24))
+        if (is_tiles_mode_ &&
+            ((cell_px_w_ != 16) ||
+             (cell_px_h_ != 24)))
         {
             font_name_ = "16x24_v1.png";
         }
 
-        set_cell_px_dims_from_font_name();
+        update_render_dims();
 
-        set_cell_px_dim_dependent_variables();
+        sdl_base::init();
 
         io::init();
     }
@@ -168,20 +192,22 @@ void player_sets_option(const MenuBrowser& browser)
 
     case 2: // Font
     {
+        // Set next font
         for (size_t i = 0; i < font_image_names.size(); ++i)
         {
             if (font_name_ == font_image_names[i])
             {
                 font_name_ =
-                    (i == font_image_names.size() - 1) ?
+                    (i == (font_image_names.size() - 1)) ?
                     font_image_names.front() :
                     font_image_names[i + 1];
                 break;
             }
         }
 
-        set_cell_px_dims_from_font_name();
+        update_render_dims();
 
+        // If this is tiles mode - skip fonts until we find one with 16x24 size
         if (is_tiles_mode_)
         {
             while ((cell_px_w_ != 16) ||
@@ -199,11 +225,11 @@ void player_sets_option(const MenuBrowser& browser)
                     }
                 }
 
-                set_cell_px_dims_from_font_name();
+                update_render_dims();
             }
         }
 
-        set_cell_px_dim_dependent_variables();
+        sdl_base::init();
 
         io::init();
     }
@@ -323,9 +349,13 @@ void player_sets_option(const MenuBrowser& browser)
     case 15: // Reset to defaults
     {
         set_default_variables();
-        set_cell_px_dims_from_font_name();
-        set_cell_px_dim_dependent_variables();
+
+        update_render_dims();
+
+        sdl_base::init();
+
         io::init();
+
         audio::init();
     }
     break;
@@ -361,27 +391,13 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     is_audio_enabled_ = lines.front() == "1";
     lines.erase(begin(lines));
 
-    if (lines.front() == "0")
-    {
-        is_tiles_mode_ = false;
-    }
-    else
-    {
-        is_tiles_mode_ = true;
-
-        if (cell_px_w_ != 16 || cell_px_h_ != 24)
-        {
-            font_name_ = "16x24_v1.png";
-
-            set_cell_px_dims_from_font_name();
-        }
-    }
-
+    is_tiles_mode_ = lines.front() == "1";
     lines.erase(begin(lines));
 
     font_name_ = lines.front();
-    set_cell_px_dims_from_font_name();
     lines.erase(begin(lines));
+
+    update_render_dims();
 
     use_light_fade_effect_ = lines.front() == "1";
     lines.erase(begin(lines));
@@ -498,18 +514,6 @@ void init()
     font_name_ = "";
     is_bot_playing_ = false;
 
-    font_image_names.clear();
-    font_image_names.push_back("8x12_DOS.png");
-    font_image_names.push_back("11x19.png");
-    font_image_names.push_back("11x22.png");
-    font_image_names.push_back("12x24.png");
-    font_image_names.push_back("16x24_v1.png");
-    font_image_names.push_back("16x24_v2.png");
-    font_image_names.push_back("16x24_v3.png");
-    font_image_names.push_back("16x24_DOS.png");
-    font_image_names.push_back("16x24_typewriter_v1.png");
-    font_image_names.push_back("16x24_typewriter_v2.png");
-
     set_default_variables();
 
     std::vector<std::string> lines;
@@ -523,7 +527,7 @@ void init()
         set_variables_from_lines(lines);
     }
 
-    set_cell_px_dim_dependent_variables();
+    update_render_dims();
 }
 
 bool is_tiles_mode()
@@ -672,15 +676,14 @@ void toggle_fullscreen()
 {
     is_fullscr_ = !is_fullscr_;
 
-    set_cell_px_dims_from_font_name();
-
-    set_cell_px_dim_dependent_variables();
+    update_render_dims();
 
     io::clear_screen();
 
     io::update_screen();
 
-    // Reinitialize io in fullscreen mode
+    sdl_base::init();
+
     io::init();
 
     states::draw();
@@ -721,6 +724,7 @@ void ConfigState::update()
         feature_data::init();
 
         states::pop();
+
         return;
     }
     break;
@@ -732,6 +736,8 @@ void ConfigState::update()
         const auto lines = config::lines_from_variables();
 
         config::write_lines_to_file(lines);
+
+        io::flush_input();
     }
     break;
 
@@ -887,7 +893,7 @@ void ConfigState::draw()
     str =
         "NOTE: Tile set requires a resolution 1280x720 or higher. Using "
         "Text mode for smaller resolutions is recommended (fonts of different "
-        "sizes are available)";
+        "sizes are available).";
 
     std::vector<std::string> lines;
 
@@ -898,9 +904,9 @@ void ConfigState::draw()
     for (const std::string& line : lines)
     {
         io::draw_text(line,
-                          Panel::screen,
-                          P(0, y),
-                          clr_gray);
+                      Panel::screen,
+                      P(0, y),
+                      clr_gray);
 
         ++y;
     }

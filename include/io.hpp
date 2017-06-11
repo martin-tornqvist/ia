@@ -139,13 +139,17 @@ void draw_info_scr_interface(const std::string& title,
 P px_pos_for_cell_in_panel(const Panel panel, const P& pos);
 
 // ---
+//
 // TODO: WTF is the difference between these two functions?
+//
 void flush_input();
 
 void clear_events();
 // ---
 
+//
 // TODO: "is_o_return" is very hacky...
+//
 InputData get(const bool is_o_return);
 
 } // io

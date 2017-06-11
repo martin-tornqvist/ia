@@ -473,6 +473,7 @@ void draw_glyph_at_px(const char glyph,
 void init()
 {
     TRACE_FUNC_BEGIN;
+
     cleanup();
 
     TRACE << "Setting up rendering window" << std::endl;
@@ -583,11 +584,9 @@ void init()
     if (config::is_tiles_mode())
     {
         load_tiles();
-        load_pictures();
-    }
 
-    if (config::is_tiles_mode())
-    {
+        load_pictures();
+
         load_contours(
             reinterpret_cast<const std::vector<P>*>(tile_px_data_),
             tiles_nr_x_,

@@ -23,6 +23,8 @@ void init()
 {
     TRACE_FUNC_BEGIN;
 
+    cleanup();
+
     is_inited = true;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
@@ -38,14 +40,15 @@ void init()
     }
 
     const int     audio_freq      = 44100;
-    const Uint16  AUDIO_FORMAT    = MIX_DEFAULT_FORMAT;
+    const Uint16  audio_format    = MIX_DEFAULT_FORMAT;
     const int     audio_channels  = 2;
     const int     audio_buffers   = 1024;
 
-    const int result = Mix_OpenAudio(audio_freq,
-                                     AUDIO_FORMAT,
-                                     audio_channels,
-                                     audio_buffers);
+    const int result =
+        Mix_OpenAudio(audio_freq,
+                      audio_format,
+                      audio_channels,
+                      audio_buffers);
 
     if (result == -1)
     {
@@ -60,6 +63,11 @@ void init()
 
 void cleanup()
 {
+    if (!is_inited)
+    {
+        return;
+    }
+
     is_inited = false;
 
     IMG_Quit();
@@ -73,13 +81,14 @@ void cleanup()
 
 void sleep(const Uint32 duration)
 {
-    if (is_inited && !config::is_bot_playing())
+    if (is_inited &&
+        !config::is_bot_playing())
     {
         if (duration == 1)
         {
             SDL_Delay(duration);
         }
-        else //Duration longer than 1 ms
+        else // Duration longer than 1 ms
         {
             const Uint32 wait_until = SDL_GetTicks() + duration;
 
