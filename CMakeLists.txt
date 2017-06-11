@@ -241,9 +241,6 @@ set_target_properties(ia-debug  PROPERTIES OUTPUT_NAME ia-debug)
 # -Wfloat-conversion
 #
 
-# set(CMAKE_CXX_FLAGS_DEBUG )
-
-# set(CMAKE_CXX_FLAGS_RELEASE )
 # GNU gcc and Clang specific compiler flags
 if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
   
@@ -296,6 +293,16 @@ target_include_directories(ia PUBLIC
 target_include_directories(ia-debug PUBLIC
     ${COMMON_INCLUDE_DIRS}
     )
+
+# On Windows releases, remove the console window
+if(WIN32)
+  #
+  # TODO: This solution only works with gcc/clang - not with MSVC
+  #
+  if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+    target_link_libraries(ia -mwindows)
+  endif()
+endif()
 
 # Copy all resource files to the build directory.
 file(COPY res DESTINATION .)
