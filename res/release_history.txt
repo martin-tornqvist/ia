@@ -3,7 +3,7 @@ v19.0 (***WORK IN PROGRESS***)
 --------------------------------------------------------------
 Gameplay
 * You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of fountains, reading inscriptions on "monoliths", or seeing a new type of monster for the first time
-* Fewer monsters are now spawned on the map overall, and many monster types now tend to spawn in smaller groups, but are individually stronger - they also generally follow and remember you for a shorter time than before
+* Fewer monsters are spawned on the map overall, and many monster types now tend to spawn in smaller groups, but are individually stronger - they also generally follow and remember you for a shorter time than before
 * Monsters may become "suspicious" (typically with a message about them looking "wary" or "disturbed"), which gives them an increased chance of detecting you - they may still detect you immediately, but the chance for this is slightly lower than before
 * Added metal doors - can only be opened with levers
 * Added bookshelves - can contain Manuscripts
@@ -12,62 +12,63 @@ Gameplay
 * Added "pylons" - can be activated with a lever for various effects (most commonly burning the area around them)
 * Added hanging vines - can be walked through, but blocks line of sight
 * Added rusty chains - makes a noise when someone walks through them
-* Items are now more likely to spawn behind hidden/stuck/metal doors, and in areas away from the path to the stairs
+* Items are more likely to spawn behind hidden/stuck/metal doors, and in areas away from the path to the stairs
 * Added a bunch of unique artifacts, and removed the old (relatively bland) randomized amulets
 * If you are Observant, you now get "level feelings" when there are unique monsters or artifacts (when entering a new level, or when monsters appear on the map), such as "I feel like I should examine this place thoroughly"
 * Standing in lit cells (e.g. lit by the Electric Lantern) now temporarily reduces your shock
-* Some rooms are now generated from handmade templates (loaded from a text file)
+* Some rooms are generated from handmade templates (loaded from a text file)
 * The game now models creature speeds in a new (probably more common and intuitive) way - creature speeds are expressed as percentages, e.g. 50%, 100%, or 300%, and different actions can have different speeds
-* Many bonuses such as "you occasionally reload instantly" now instead give a speed bonus to that action - e.g. the War Veteran switches to the prepared weapon with +100% speed (i.e. it only takes half a standard turn), and the Dexterous traits simply grants a general speed percent bonus instead of "every Nth step is a free action"
-* Dodging now also applies to ranged attacks
+* Many bonuses such as "occasionally performing a certain action instantly", now simply gives a speed bonus instead (to a specific action, or to all actions)
+* Dodging also applies to ranged attacks
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
-* Burning features now only hurt creatures on the same cell (not adjacent to it)
-* "Cloud Minds" is now a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
-* Spells now have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
-* All backgrounds can now learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
+* Burning features only hurt creatures on the same cell (not adjacent to it)
+* "Cloud Minds" is a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
+* Spells have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts
+* All backgrounds can learn spells, but the Occultist gains proficiency much faster (and as before, starts with a few spells and has access to unique spell casting traits)
 * Different monsters have different spell skill levels - spells cast by more powerful monsters will typically hurt more, last longer, summon nastier monsters, etc
-* Monster spells now have individual cooldown counters (instead of random chances to be cast) - so a monster cannot for example spam Darkbolt several turns in a row
-* The Warlock trait now gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
+* Monster spells have individual cooldown counters (instead of random chances to be cast) - so a monster cannot for example spam Darkbolt several turns in a row
+* The Warlock trait gives a chance to cast damage dealing spell multiple times (instead of the old "Charged" mechanic)
 * Added trait "Electrically Inclined" - gives bonus to using Rods, Devices, Electric Lanterns, and electricity weapons
 * Added trait "Silent" - all melee attacks are silent, opening and closing doors does not alert monsters
 * Added trait "Magically Gifted" - +20% skill with all spells
-* The traits "Tough" and "Rugged" now also grant 1 armor point each
-* The War Veteran background now also starts with the "Healer" trait
+* The traits "Tough" and "Rugged" also grants 1 armor point each
+* The War Veteran background also starts with the "Healer" trait
 * The Occultist starts with fixed (non-random) items and spells
-* When quaffing Potion of Insight, you can now manually choose which item to identify
+* When quaffing Potion of Insight, you can manually choose which item to identify
 * Potion of Insight always gives some XP, in addition to identifying an item (to avoid making them worthless if all items are identified)
-* All Manuscripts are now guaranteed to be identified when read (previously this only applied to potions)
-* You now search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
+* All Manuscripts are guaranteed to be identified when read (previously this only applied to potions)
+* You search for secret doors and traps a bit further away, and your chance of finding them is affected by distance - for adjacent cells there is now a higher chance of detection than before (to avoid requiring hundreds of turns to detect an obvious hidden door)
 * Traps are always immediately revealed when triggered by the player
-* Some melee weapons can now be used for breaching doors or destroying corpses more effectively with [w] (check the item descriptions)
+* Some melee weapons can be used for breaching doors or destroying corpses more effectively with [w] (check the item descriptions)
 * Chests can no longer be trapped (it was awkward to deal with, and didn't really bring anything to the game) - chests are now interacted with merely by bumping them (if they are not locked), kicking them, or using an Opening spell
 * Rogues remain aware of monsters much longer than the other Backgrounds, and the other Backgrounds remain aware for a shorter duration than before
 * Removed the random "I have a bad feeling about this..." shock events
 * The Iron Suit and Asbestos Suit no longer gives penalties to aiming or spotting hidden monsters and objects
 * Removed all negative effects from critically failing melee attacks (such as "I am exhausted"), except for a small chance of the weapon breaking - which can only happen while cursed
 * Added more monsters
-* Zombie-type monsters now occasionally drop "Zombie Dust" when they are destroyed - can be thrown at living, non-undead monsters to paralyze them
+* Zombie-type monsters occasionally drop "Zombie Dust" when they are destroyed - can be thrown at living, non-undead monsters to paralyze them
 * Added property "Deaf", deafening traps, and a deafening spell (for monsters)
-* When attacking invisible monsters who are immune to the attack, a message is now printed to indicate this (previously it was only printed for seen monsters)
+* When attacking invisible monsters who are immune to the attack, a message is printed to indicate this (previously it was only printed for seen monsters)
 
 Interface
 * The throwing slot has been removed - instead you change which item to use for throwing by pressing [T] (which can be a wielded item or an item in the backpack) - pressing [t] throws the currently selected item (this also has gameplay effects, since you don't have to spend turns to equip different items to throw them)
-* All active properties are now printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
+* All active properties are printed with descriptions on the [@] character decsription page, and when [v]iewing monsters
 * When picking a trait, instead of showing all available and blocked traits in the same list, the trait selection screen now has two modes (toggled with [TAB]) - the first mode shows available traits, and the second shows traits for which the prerequisites are not yet fulfilled
 * Reduced "more" prompt message spam from traps (less interruption)
 * Addded option to enable/disable fading rendering brightness with distance from player
 * Added an option to ask for confirmation before lighting explosives
 * Added a low HP warning
 * Removed the "q" command - Ghoul characters now feed on corpses when "waiting" on them instead
-* The map shown on the postmortem info screen is now drawn with tiles (if that mode is enabled), and in color
+* The map shown on the postmortem info screen is drawn with tiles (if that mode is enabled), and in color
 * Added "New journey" option to postmortem menu, to immediately start a new game
-* When [v]iewing the map, the game now also prints messages for cells with detected unseen monsters ("There is a creature here")
-* When [v]iewing detailed monster descriptions, the game now prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with the calculations of the total hit chances shown
+* When [v]iewing the map, the game also prints messages for cells with detected unseen monsters ("There is a creature here")
+* When [v]iewing detailed monster descriptions, the game prints hit chances for melee, ranged, and throwing attacks for the player and the monster - with the calculations of the total hit chances shown
 * Weapons now merely display their own hit chance modifier (e.g. +5% or -10%), instead of your skill plus the weapon modifier (the old way was misleading, since more factors are involved when calculating actual hit chances during attacks)
 * Removed the "Combat skills" section of the character description page
-* Messages are now printed when stepping on corpses
+* Messages are printed when stepping on corpses
 * Sound effects are played when browsing menus
-* When entering player name, the previously used name is now filled in as a default name
+* When entering player name, the previously used name is filled in as a default name
+* The player symbol is colored yellow when carrying a lit Electric Lantern
 
 Bug fixes
 * Fixed a bug where dropping the Staff of the Pharaohs would cause the spell to be permanently lost, even if the staff was picked up again
