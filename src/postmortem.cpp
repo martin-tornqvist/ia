@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#include "audio.hpp"
 #include "init.hpp"
 #include "io.hpp"
 #include "actor_player.hpp"
@@ -403,6 +404,8 @@ void PostmortemMenu::update()
             std::unique_ptr<State> new_game_state(new NewGameState);
 
             states::push(std::move(new_game_state));
+
+            audio::fade_out_music();
 
             return;
         }
