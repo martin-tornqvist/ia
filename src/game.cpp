@@ -59,8 +59,8 @@ void query_quit()
 {
     const auto quit_choices = std::vector<std::string>
     {
-        "yes",
-        "no"
+        "Yes",
+        "No"
     };
 
     const int quit_choice =
