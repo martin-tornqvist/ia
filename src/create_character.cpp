@@ -109,6 +109,12 @@ void PickBgState::on_start()
     browser_.set_y((int)Bg::rogue);
 }
 
+void pop_states(const int number)
+{
+  for ( int i = 0; i < number; i++ )
+    states::pop();
+}
+
 void PickBgState::update()
 {
     if (config::is_bot_playing())
@@ -136,6 +142,12 @@ void PickBgState::update()
         player_bon::pick_bg(bg);
 
         states::pop();
+    }
+    break;
+
+    case MenuAction::esc:
+    {
+      pop_states(4);
     }
     break;
 
@@ -277,6 +289,12 @@ void PickTraitState::update()
 
     switch (action)
     {
+    case MenuAction::esc:
+    {
+      pop_states(3);
+    }
+    break;
+
     case MenuAction::selected:
     case MenuAction::selected_shift:
     {
@@ -546,6 +564,12 @@ void EnterNameState::update()
     }
 
     const auto input = io::get(false);
+
+    if (input.key == SDLK_ESCAPE)
+    {
+      pop_states(2);
+      return;
+    }
 
     if (input.key == SDLK_RETURN)
     {
