@@ -61,6 +61,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     MenuBrowser browser_;
 

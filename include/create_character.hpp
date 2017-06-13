@@ -14,25 +14,29 @@ enum class TraitScreenMode
 class NewGameState: public State
 {
 public:
-    NewGameState() {}
+    NewGameState();
 
-    ~NewGameState() {}
+    ~NewGameState();
 
     void on_pushed() override;
 
     void on_resume() override;
+
+    StateId id() override; 
 };
 
 class GainLvlState: public State
 {
 public:
-    GainLvlState() {}
+    GainLvlState();
 
-    ~GainLvlState() {}
+    ~GainLvlState();
 
     void on_start() override;
 
     void update() override;
+
+    StateId id() override;
 };
 
 class PickBgState: public State
@@ -40,13 +44,15 @@ class PickBgState: public State
 public:
     PickBgState();
 
-    ~PickBgState() {}
+    ~PickBgState();
 
     void on_start() override;
 
     void update() override;
 
     void draw() override;
+
+    StateId id() override;
 
 private:
     MenuBrowser browser_;
@@ -59,13 +65,15 @@ class PickTraitState: public State
 public:
     PickTraitState();
 
-    ~PickTraitState() {}
+    ~PickTraitState();
 
     void on_start() override;
 
     void update() override;
 
     void draw() override;
+
+    StateId id() override;
 
 private:
     MenuBrowser browser_traits_avail_;
@@ -82,13 +90,15 @@ class EnterNameState: public State
 public:
     EnterNameState();
 
-    ~EnterNameState() {}
+    ~EnterNameState();
 
     void on_start() override;
 
     void update() override;
 
     void draw() override;
+
+    StateId id() override;
 
 private:
     std::string current_str_;

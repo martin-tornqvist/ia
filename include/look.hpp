@@ -38,6 +38,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     void put_text(const std::string str,
                   const P& p,

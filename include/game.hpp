@@ -102,6 +102,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     void query_quit();
 

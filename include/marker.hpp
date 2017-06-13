@@ -36,6 +36,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 protected:
     virtual void on_start_hook() {}
 

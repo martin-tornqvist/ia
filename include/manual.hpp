@@ -21,6 +21,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     void read_file();
 

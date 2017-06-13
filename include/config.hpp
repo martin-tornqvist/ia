@@ -53,6 +53,8 @@ public:
 
     void draw() override;
 
+    StateId id() override;
+
 private:
     MenuBrowser browser_;
 };

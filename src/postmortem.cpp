@@ -38,6 +38,11 @@ PostmortemMenu::PostmortemMenu() :
     browser_.reset(7);
 }
 
+StateId PostmortemMenu::id()
+{
+    return StateId::postmortem_menu;
+}
+
 void PostmortemMenu::on_start()
 {
     info_lines_.clear();
@@ -486,6 +491,11 @@ void PostmortemMenu::update()
 // -----------------------------------------------------------------------------
 // Postmortem info
 // -----------------------------------------------------------------------------
+StateId PostmortemInfo::id()
+{
+    return StateId::postmortem_info;
+}
+
 void PostmortemInfo::draw()
 {
     io::clear_screen();

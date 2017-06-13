@@ -18,6 +18,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     void mk_memorial_file() const;
 
@@ -35,6 +37,8 @@ public:
     void draw() override;
 
     void update() override;
+
+    StateId id() override;
 
 private:
     const int max_nr_lines_on_scr_;

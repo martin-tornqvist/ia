@@ -34,6 +34,21 @@ const int descr_w_ = descr_x1_ - descr_y1_ + 1;
 // -----------------------------------------------------------------------------
 // New game state
 // -----------------------------------------------------------------------------
+NewGameState::NewGameState()
+{
+
+}
+
+NewGameState::~NewGameState()
+{
+
+}
+
+StateId NewGameState::id()
+{
+    return StateId::new_game;
+}
+
 void NewGameState::on_pushed()
 {
     std::unique_ptr<State> game_state(
@@ -59,6 +74,21 @@ void NewGameState::on_resume()
 // -----------------------------------------------------------------------------
 // Gain level state
 // -----------------------------------------------------------------------------
+GainLvlState::GainLvlState()
+{
+
+}
+
+GainLvlState::~GainLvlState()
+{
+
+}
+
+StateId GainLvlState::id()
+{
+    return StateId::new_level;
+}
+
 void GainLvlState::on_start()
 {
     game::incr_clvl();
@@ -99,6 +129,16 @@ PickBgState::PickBgState() :
 
 }
 
+PickBgState::~PickBgState()
+{
+
+}
+
+StateId PickBgState::id()
+{
+    return StateId::pick_background;
+}
+
 void PickBgState::on_start()
 {
     bgs_ = player_bon::pickable_bgs();
@@ -136,6 +176,12 @@ void PickBgState::update()
         player_bon::pick_bg(bg);
 
         states::pop();
+    }
+    break;
+
+    case MenuAction::esc:
+    {
+      states::pop_until(StateId::menu);
     }
     break;
 
@@ -226,6 +272,16 @@ PickTraitState::PickTraitState() :
 
 }
 
+PickTraitState::~PickTraitState()
+{
+
+}
+
+StateId PickTraitState::id()
+{
+    return StateId::pick_trait;
+}
+
 void PickTraitState::on_start()
 {
     const Bg player_bg = player_bon::bg();
@@ -274,6 +330,13 @@ void PickTraitState::update()
 
     switch (action)
     {
+    case MenuAction::esc:
+    {
+      if (states::contains_state(StateId::pick_name))
+          states::pop_until(StateId::menu);
+    }
+    break;
+
     case MenuAction::selected:
     case MenuAction::selected_shift:
     {
@@ -518,6 +581,16 @@ EnterNameState::EnterNameState() :
 
 }
 
+EnterNameState::~EnterNameState()
+{
+
+}
+
+StateId EnterNameState::id()
+{
+    return StateId::pick_name;
+}
+
 void EnterNameState::on_start()
 {
     const std::string default_name = config::default_player_name();
@@ -539,6 +612,12 @@ void EnterNameState::update()
     }
 
     const auto input = io::get(false);
+
+    if (input.key == SDLK_ESCAPE)
+    {
+      states::pop_until(StateId::menu);
+      return;
+    }
 
     if (input.key == SDLK_RETURN)
     {

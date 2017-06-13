@@ -1210,6 +1210,11 @@ const std::vector<HistoryEvent>& history()
 // -----------------------------------------------------------------------------
 // Game state
 // -----------------------------------------------------------------------------
+StateId GameState::id()
+{
+    return StateId::game;
+}
+
 void GameState::on_start()
 {
     // Some backgrounds and traits may have affected maximum hp and spi (either

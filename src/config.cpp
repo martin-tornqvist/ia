@@ -707,6 +707,11 @@ ConfigState::ConfigState() :
 
 }
 
+StateId ConfigState::id()
+{
+    return StateId::config;
+}
+
 void ConfigState::update()
 {
     const auto input = io::get(true);

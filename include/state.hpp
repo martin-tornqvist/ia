@@ -4,6 +4,28 @@
 #include <vector>
 #include <memory>
 
+enum class StateId 
+{
+    menu,
+    game,
+    pick_background,
+    pick_trait,
+    pick_name,
+    new_game,
+    new_level,
+    postmortem_menu,
+    postmortem_info,
+    browse_spells,
+    message,
+    marker,
+    manual,
+    view_actor,
+    inventory,
+    highscore,
+    config,
+    descript 
+};
+
 class State
 {
 public:
@@ -59,6 +81,8 @@ public:
         return has_started_;
     }
 
+    virtual StateId id() = 0;
+
 private:
     bool has_started_;
 };
@@ -85,6 +109,10 @@ void pop_all();
 bool is_empty();
 
 bool is_current_state(const State& state);
+
+void pop_until(const StateId);
+
+bool contains_state(const StateId);
 
 } // states
 

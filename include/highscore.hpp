@@ -19,7 +19,7 @@ public:
                    bool is_win_game,
                    Bg player_bg);
 
-    ~HighscoreEntry() {}
+    ~HighscoreEntry();
 
     int score() const;
 
@@ -103,6 +103,8 @@ public:
         // If there are no entries, we draw an overlayed popup
         return entries_.empty();
     }
+
+    StateId id() override;
 
 private:
     std::vector<HighscoreEntry> entries_;

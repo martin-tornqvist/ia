@@ -148,6 +148,28 @@ void pop_all()
     TRACE_FUNC_END;
 }
 
+bool contains_state(const StateId state)
+{
+    for( auto&& p : states_ ) {
+        if(p->id() == state)
+            return true;
+    }
+
+    return false;
+}
+
+void pop_until(const StateId state)
+{
+    if (is_empty())
+        return;
+
+    if (states_.back().get()->id() != state)
+    {
+        pop();
+        pop_until(state);
+    }
+}
+
 bool is_empty()
 {
     return states_.empty();

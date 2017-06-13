@@ -222,6 +222,11 @@ MainMenuState::~MainMenuState()
 
 }
 
+StateId MainMenuState::id()
+{
+    return StateId::menu;
+}
+
 void MainMenuState::draw()
 {
     P pos(map_w_half, 3);

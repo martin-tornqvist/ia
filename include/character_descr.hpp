@@ -17,6 +17,8 @@ public:
 
     void update() override;
 
+    StateId id() override;
+
 private:
     std::vector<StrAndClr> lines_;
 
