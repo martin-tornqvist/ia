@@ -198,13 +198,14 @@ void InvState::draw_slot(const SlotId id,
 
         p.x += 2;
 
-        std::string item_name = item->name(ItemRefType::plural,
-                                           ItemRefInf::yes,
-                                           att_info);
+        std::string item_name =
+            item->name(ItemRefType::plural,
+                       ItemRefInf::yes,
+                       att_info);
 
         ASSERT(!item_name.empty());
 
-        text_format::first_to_upper(item_name);
+        item_name = text_format::first_to_upper(item_name);
 
         const Clr clr_item =
             is_marked ?
@@ -216,11 +217,12 @@ void InvState::draw_slot(const SlotId id,
                       p,
                       clr_item);
 
-        draw_weight_pct_and_dots(p,
-                                 item_name.size(),
-                                 *item,
-                                 clr_item,
-                                 is_marked);
+        draw_weight_pct_and_dots(
+            p,
+            item_name.size(),
+            *item,
+            clr_item,
+            is_marked);
     }
     else // No item in this slot
     {
@@ -279,7 +281,7 @@ void InvState::draw_backpack_item(const size_t backpack_idx,
                                        ItemRefInf::yes,
                                        att_info);
 
-    text_format::first_to_upper(item_name);
+    item_name = text_format::first_to_upper(item_name);
 
     const Clr clr_item =
         is_marked ?
@@ -291,11 +293,12 @@ void InvState::draw_backpack_item(const size_t backpack_idx,
                   p,
                   clr_item);
 
-    draw_weight_pct_and_dots(p,
-                             item_name.size(),
-                             *item,
-                             clr_item,
-                             is_marked);
+    draw_weight_pct_and_dots(
+        p,
+        item_name.size(),
+        *item,
+        clr_item,
+        is_marked);
 
     if (is_marked)
     {

@@ -251,12 +251,10 @@ bool mk_intro_lvl()
                     }
 
                     const std::string name = entry.name();
-                    std::vector<std::string> date_str_vector;
 
-                    date_str_vector.clear();
-
-                    text_format::space_separated_list(entry.date_and_time(),
-                                                      date_str_vector);
+                    const auto date_str_vector =
+                        text_format::space_separated_list(
+                            entry.date_and_time());
 
                     const std::string date_str = date_str_vector[0];
 

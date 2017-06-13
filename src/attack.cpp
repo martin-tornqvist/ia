@@ -677,7 +677,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
 
                 if (!att_data.defender->data().is_unique)
                 {
-                    text_format::first_to_lower(other_name);
+                    other_name = text_format::first_to_lower(other_name);
                 }
             }
             else // Player cannot see defender

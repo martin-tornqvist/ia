@@ -320,9 +320,7 @@ void MainMenuState::draw()
     // string on the last line (looks very ugly),
     while (quote_w != 0)
     {
-        text_format::split(current_quote_,
-                           quote_w,
-                           quote_lines);
+        quote_lines = text_format::split(current_quote_, quote_w);
 
         const size_t min_str_w_last_line = 20;
 

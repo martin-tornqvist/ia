@@ -57,11 +57,9 @@ void CharacterDescr::on_start()
                 StrAndClr(offset + title.str,
                           title.clr));
 
-            std::vector<std::string> descr_formatted;
-
-            text_format::split(e.second,
-                               max_w_descr,
-                               descr_formatted);
+            const auto descr_formatted =
+                text_format::split(e.second,
+                                   max_w_descr);
 
             for (const auto& descr_line : descr_formatted)
             {
@@ -240,11 +238,11 @@ void CharacterDescr::on_start()
                 StrAndClr(offset + title,
                           clr_text));
 
-            std::vector<std::string> descr_lines;
+            const auto descr_lines =
+                text_format::split(descr,
+                                   max_w_descr);
 
-            text_format::split(descr, max_w_descr, descr_lines);
-
-            for (std::string& descr_line : descr_lines)
+            for (const std::string& descr_line : descr_lines)
             {
                 lines_.push_back(
                     StrAndClr(offset + descr_line,

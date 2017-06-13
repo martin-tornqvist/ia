@@ -129,8 +129,7 @@ void show_msg(const std::string& msg,
 {
     const int text_w = text_w_std + w_change;
 
-    std::vector<std::string> lines;
-    text_format::split(msg, text_w, lines);
+    const auto lines = text_format::split(msg, text_w);
 
     const int text_h_tot =  int(lines.size()) + 3;
 
@@ -152,7 +151,7 @@ void show_msg(const std::string& msg,
 
     const bool show_msg_centered = lines.size() == 1;
 
-    for (std::string& line : lines)
+    for (const std::string& line : lines)
     {
         y++;
 
@@ -200,9 +199,7 @@ int show_menu_msg(const std::string& msg,
         return 0;
     }
 
-    std::vector<std::string> lines;
-
-    text_format::split(msg, text_w_std, lines);
+    const auto lines = text_format::split(msg, text_w_std);
 
     const int title_h = title.empty() ? 0 : 1;
 

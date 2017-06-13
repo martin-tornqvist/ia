@@ -126,7 +126,7 @@ void BrowseManual::read_file()
 
             if (should_format_line)
             {
-                text_format::split(current_line, map_w, formatted);
+                formatted = text_format::split(current_line, map_w);
 
                 for (const auto& line : formatted)
                 {

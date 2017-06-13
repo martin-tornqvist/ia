@@ -160,7 +160,7 @@ void run()
             corpse->corpse_name_the() :
             "a corpse";
 
-        text_format::first_to_lower(corpse_name);
+        corpse_name = text_format::first_to_lower(corpse_name);
 
         // Decide if we should kick or use wielded weapon
         const bool can_wpn_att_corpse =
@@ -191,6 +191,33 @@ void run()
         if (wpn_used == kick_wpn.get())
         {
             try_sprain_player();
+        }
+
+        // Print message if corpse was destroyed, and there are more corpses
+        if (corpse->state() == ActorState::destroyed)
+        {
+            std::vector<Actor*> corpses_here;
+
+            for (auto* const actor : game_time::actors)
+            {
+                if ((actor->pos == att_pos) &&
+                    (actor->state() == ActorState::corpse))
+                {
+                    corpses_here.push_back(actor);
+                }
+            }
+
+            if (!corpses_here.empty())
+            {
+                msg_log::more_prompt();
+
+                for (auto* const corpse : corpses_here)
+                {
+                    const std::string name = corpse->corpse_name_a();
+
+                    msg_log::add(name + ".");
+                }
+            }
         }
 
         game_time::tick();

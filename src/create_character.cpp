@@ -195,14 +195,11 @@ void PickBgState::draw()
         if (descr_entry.empty())
         {
             ++y;
+
             continue;
         }
 
-        std::vector<std::string> formatted_lines;
-
-        text_format::split(descr_entry,
-                           descr_w_,
-                           formatted_lines);
+        const auto formatted_lines = text_format::split(descr_entry, descr_w_);
 
         for (const std::string& line : formatted_lines)
         {
@@ -423,11 +420,7 @@ void PickTraitState::draw()
 
     std::string descr = player_bon::trait_descr(trait_marked);
 
-    std::vector<std::string> formatted_descr;
-
-    text_format::split(descr,
-                       descr_w_,
-                       formatted_descr);
+    const auto formatted_descr = text_format::split(descr, descr_w_);
 
     for (const std::string& str : formatted_descr)
     {

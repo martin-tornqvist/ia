@@ -338,7 +338,7 @@ ConsumeItem DeviceShockwave::trigger_effect()
         {
             std::string msg = actor->name_the() + " is hit!";
 
-            text_format::first_to_upper(msg);
+            msg = text_format::first_to_upper(msg);
 
             msg_log::add(msg);
         }

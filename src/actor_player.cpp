@@ -1791,7 +1791,7 @@ void Player::move(Dir dir)
                                ItemRefInf::yes,
                                ItemRefAttInf::wpn_main_att_mode);
 
-                text_format::first_to_upper(item_name);
+                item_name = text_format::first_to_upper(item_name);
 
                 msg_log::add(item_name + ".");
 
@@ -1801,8 +1801,8 @@ void Player::move(Dir dir)
             // Print message if walking on corpses
             for (auto* const actor : game_time::actors)
             {
-                if (actor->pos == pos &&
-                    actor->state() == ActorState::corpse)
+                if ((actor->pos == pos) &&
+                    (actor->state() == ActorState::corpse))
                 {
                     const std::string name = actor->corpse_name_a();
 

@@ -8,9 +8,9 @@ namespace
 {
 
 // Reads and removes the first word of the string.
-void read_and_remove_word(std::string& line, std::string& word_ref)
+std::string read_and_remove_word(std::string& line)
 {
-    word_ref = "";
+    std::string str = "";
 
     for (auto it = begin(line); it != end(line); /* No increment */)
     {
@@ -23,8 +23,10 @@ void read_and_remove_word(std::string& line, std::string& word_ref)
             break;
         }
 
-        word_ref += current_char;
+        str += current_char;
     }
+
+    return str;
 }
 
 bool is_word_fit(const std::string& current_string,
@@ -40,65 +42,69 @@ bool is_word_fit(const std::string& current_string,
 namespace text_format
 {
 
-void split(std::string line,
-           const int max_w,
-           std::vector<std::string>& out)
+std::vector<std::string> split(std::string line, const int max_w)
 {
-    out.clear();
+    std::vector<std::string> result;
 
     if (line.empty())
     {
-        return;
+        return result;
     }
 
-    std::string current_word = "";
-
-    read_and_remove_word(line, current_word);
+    std::string current_word = read_and_remove_word(line);
 
     if (line.empty())
     {
-        out = {current_word};
-        return;
+        result = {current_word};
+
+        return result;
     }
 
-    out.resize(1);
-    out[0] = "";
+    result.resize(1);
+
+    result[0] = "";
 
     size_t current_row_idx = 0;
 
     while (!current_word.empty())
     {
-        if (!is_word_fit(out[current_row_idx], current_word, max_w))
+        if (!is_word_fit(result[current_row_idx], current_word, max_w))
         {
             // Current word did not fit on current line, make a new line
             ++current_row_idx;
-            out.resize(current_row_idx + 1);
-            out[current_row_idx] = "";
+
+            result.resize(current_row_idx + 1);
+
+            result[current_row_idx] = "";
         }
 
         // If this is not the first word on the current line, add a space before
         // the word
-        if (!out[current_row_idx].empty())
+        if (!result[current_row_idx].empty())
         {
-            out[current_row_idx] += " ";
+            result[current_row_idx] += " ";
         }
 
-        out[current_row_idx] += current_word;
+        result[current_row_idx] += current_word;
 
-        read_and_remove_word(line, current_word);
+        current_word = read_and_remove_word(line);
     }
+
+    return result;
 }
 
-void space_separated_list(const std::string& line,
-                          std::vector<std::string>& out)
+std::vector<std::string> space_separated_list(const std::string& line)
 {
+    std::vector<std::string> result;
+
     std::string current_line = "";
 
     for (char c : line)
     {
         if (c == ' ')
         {
-            out.push_back(current_line);
+            result.push_back(current_line);
+
             current_line = "";
         }
         else
@@ -106,69 +112,95 @@ void space_separated_list(const std::string& line,
             current_line += c;
         }
     }
+
+    return result;
 }
 
-void replace_all(const std::string& line,
-                 const std::string& from,
-                 const std::string& to,
-                 std::string& out)
+std::string replace_all(const std::string& line,
+                        const std::string& from,
+                        const std::string& to)
 {
+    std::string result;
+
     if (from.empty())
     {
-        return;
+        return result;
     }
 
-    out = line;
+    result = line;
 
     size_t start_pos = 0;
 
-    while ((start_pos = out.find(from, start_pos)) != std::string::npos)
+    while ((start_pos = result.find(from, start_pos)) != std::string::npos)
     {
-        out.replace(start_pos, from.length(), to);
+        result.replace(start_pos, from.length(), to);
+
         //In case 'to' contains 'from', like replacing 'x' with 'yx'
         start_pos += to.length();
     }
+
+    return result;
 }
 
-void pad_before_to(std::string& str,
-                   const size_t tot_w,
-                   const char c)
+std::string pad_before_to(const std::string& str,
+                          const size_t tot_w,
+                          const char c)
 {
+    std::string result = str;
+
     if (tot_w > str.size())
     {
-        str.insert(0, tot_w - str.size(), c);
+        result.insert(0, tot_w - result.size(), c);
     }
+
+    return result;
 }
 
-void pad_after_to(std::string& str,
-                  const size_t tot_w,
-                  const char c)
+std::string pad_after_to(const std::string& str,
+                         const size_t tot_w,
+                         const char c)
 {
-    if (tot_w > str.size())
+    std::string result = str;
+
+    if (tot_w > result.size())
     {
-        str.insert(str.size(), tot_w, c);
+        result.insert(result.size(), tot_w, c);
     }
+
+    return result;
 }
 
-void first_to_lower(std::string& str)
+std::string first_to_lower(const std::string& str)
 {
-    if (!str.empty())
+    std::string result = str;
+
+    if (!result.empty())
     {
-        str[0] = tolower(str[0]);
+        result[0] = tolower(result[0]);
     }
+
+    return result;
 }
 
-void first_to_upper(std::string& str)
+std::string first_to_upper(const std::string& str)
 {
-    if (!str.empty())
+    std::string result = str;
+
+    if (!result.empty())
     {
-        str[0] = toupper(str[0]);
+        result[0] = toupper(result[0]);
     }
+
+    return result;
 }
 
-void all_to_upper(std::string& str)
+std::string all_to_upper(const std::string& str)
 {
-    transform(begin(str), end(str), begin(str), ::toupper);
+    std::string result = str;
+
+    transform(begin(result), end(result), begin(result), ::toupper);
+
+    return result;
 }
 
 } // text_format

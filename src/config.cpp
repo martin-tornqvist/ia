@@ -759,16 +759,6 @@ void ConfigState::draw()
 
     std::string font_disp_name = config::font_name_;
 
-    // text_format::replace_all(font_disp_name,
-    //                          "_",
-    //                          " ",
-    //                          font_disp_name);
-
-    // text_format::replace_all(font_disp_name,
-    //                          ".png",
-    //                          "",
-    //                          font_disp_name);
-
     std::vector< std::pair< std::string, std::string > > labels =
     {
         {
@@ -895,9 +885,7 @@ void ConfigState::draw()
         "Text mode for smaller resolutions is recommended (fonts of different "
         "sizes are available).";
 
-    std::vector<std::string> lines;
-
-    text_format::split(str, screen_w, lines);
+    const auto lines = text_format::split(str, screen_w);
 
     int y = screen_h - lines.size();
 

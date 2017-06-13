@@ -1681,7 +1681,7 @@ std::vector<StrAndClr> PropHandler::props_line() const
             prop->src() == PropSrc::intr)
         {
             // Indefinite intrinsic properties are printed in upper case
-            text_format::all_to_upper(str);
+            str = text_format::all_to_upper(str);
         }
         else // Not indefinite
         {
@@ -1754,7 +1754,7 @@ std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
                 prop->src() == PropSrc::intr)
             {
                 // Indefinite intrinsic properties are printed in upper case
-                text_format::all_to_upper(name_short);
+                name_short = text_format::all_to_upper(name_short);
             }
             else // Not indefinite
             {
@@ -2181,7 +2181,7 @@ void PropBlessed::bless_adjacent() const
                 {
                     std::string name = fountain->name(Article::the);
 
-                    text_format::first_to_lower(name);
+                    name = text_format::first_to_lower(name);
 
                     msg_log::add("The water in " + name + " seems clearer.");
                 }
@@ -2245,7 +2245,7 @@ void PropCursed::curse_adjacent() const
                 {
                     std::string name = fountain->name(Article::the);
 
-                    text_format::first_to_lower(name);
+                    name = text_format::first_to_lower(name);
 
                     msg_log::add("The water in " + name + " seems murkier.");
                 }

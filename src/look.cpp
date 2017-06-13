@@ -42,11 +42,9 @@ void ViewActorDescr::on_start()
         descr += auto_descr;
     }
 
-    std::vector<std::string> descr_lines;
-
-    text_format::split(descr,
-                       map_w - 1,
-                       descr_lines);
+    const auto descr_lines =
+        text_format::split(descr,
+                           map_w - 1);
 
     const size_t nr_descr_lines = descr_lines.size();
 
@@ -57,7 +55,7 @@ void ViewActorDescr::on_start()
                    P(map_w, nr_descr_lines));
 
     // Add the description
-    for (std::string& s : descr_lines)
+    for (const std::string& s : descr_lines)
     {
         put_text(s,
                  p,
@@ -468,11 +466,9 @@ void ViewActorDescr::on_start()
 
             ++p.y;
 
-            std::vector<std::string> descr_formatted;
-
-            text_format::split(e.second,
-                               max_w_descr,
-                               descr_formatted);
+            const auto descr_formatted =
+                text_format::split(e.second,
+                                   max_w_descr);
 
             for (const auto& descr_line : descr_formatted)
             {
@@ -794,7 +790,7 @@ void print_location_info_msgs(const P& pos)
         // Describe rigid
         std::string str = cell.rigid->name(Article::a);
 
-        text_format::first_to_upper(str);
+        str = text_format::first_to_upper(str);
 
         msg_log::add(str + ".");
 
@@ -805,7 +801,7 @@ void print_location_info_msgs(const P& pos)
             {
                 str = mob->name(Article::a);
 
-                text_format::first_to_upper(str);
+                str = text_format::first_to_upper(str);
 
                 msg_log::add(str  + ".");
             }
@@ -819,7 +815,7 @@ void print_location_info_msgs(const P& pos)
             str = item->name(ItemRefType::plural, ItemRefInf::yes,
                              ItemRefAttInf::wpn_main_att_mode);
 
-            text_format::first_to_upper(str);
+            str = text_format::first_to_upper(str);
 
             msg_log::add(str + ".");
         }
@@ -831,7 +827,7 @@ void print_location_info_msgs(const P& pos)
             {
                 str = actor->corpse_name_a();
 
-                text_format::first_to_upper(str);
+                str = text_format::first_to_upper(str);
 
                 msg_log::add(str + ".");
             }
@@ -857,7 +853,7 @@ void print_location_info_msgs(const P& pos)
 
             std::string str = actor->name_a();
 
-            text_format::first_to_upper(str);
+            str = text_format::first_to_upper(str);
 
             msg_log::add(str + ".");
         }

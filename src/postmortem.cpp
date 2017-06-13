@@ -148,11 +148,9 @@ void PostmortemMenu::on_start()
     }
     else
     {
-        std::vector<std::string> abilities_lines;
+        const auto abilities_lines = text_format::split(traits_line, 60);
 
-        text_format::split(traits_line, 60, abilities_lines);
-
-        for (std::string& str : abilities_lines)
+        for (const std::string& str : abilities_lines)
         {
             info_lines_.push_back({offset + str, clr_info});
         }

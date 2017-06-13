@@ -151,7 +151,7 @@ void draw()
                     ItemRefInf::yes,
                     att_inf);
 
-    text_format::first_to_upper(str);
+    str = text_format::first_to_upper(str);
 
     io::draw_text(str, panel, p, clr_white);
 
@@ -364,7 +364,7 @@ void draw()
                              ItemRefInf::yes,
                              att_inf);
 
-        text_format::first_to_upper(str);
+        str = text_format::first_to_upper(str);
 
         io::draw_text(str,
                       panel,

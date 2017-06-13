@@ -2072,9 +2072,8 @@ void StrangeColor::on_std_turn_hook()
     {
         if (!map::player->prop_handler().has_prop(PropId::confused))
         {
-            std::string msg = name_the() + " bewilders me.";
-
-            text_format::first_to_upper(msg);
+            const std::string msg =
+                text_format::first_to_upper(name_the() + " bewilders me.");
 
             msg_log::add(msg);
         }
@@ -2826,10 +2825,10 @@ std::string AnimatedWpn::descr() const
     ASSERT(item);
 
     std::string str = item->name(ItemRefType::a,
-                                  ItemRefInf::yes,
-                                  ItemRefAttInf::none);
+                                 ItemRefInf::yes,
+                                 ItemRefAttInf::none);
 
-    text_format::first_to_upper(str);
+    str = text_format::first_to_upper(str);
 
     str += ", floating through the air as if wielded by some invisible hand.";
 

@@ -152,7 +152,7 @@ void add(const std::string& str,
         if (has_lower_case && is_ended_by_punctuation)
         {
             // Convert to upper case
-            text_format::all_to_upper(frenzied_str);
+            frenzied_str = text_format::all_to_upper(frenzied_str);
 
             // Do not put "!" if string contains "..."
             if (frenzied_str.find("...") == std::string::npos)

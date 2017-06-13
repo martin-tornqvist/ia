@@ -21,6 +21,7 @@
 #include "map_travel.hpp"
 #include "popup.hpp"
 #include "feature_door.hpp"
+#include "text_format.hpp"
 
 Actor::Actor() :
     pos             (),
@@ -1117,11 +1118,13 @@ DidAction Actor::try_eat_corpse()
     // which is prioritized for bashing (Zombies)
     for (Actor* const actor : game_time::actors)
     {
-        if (actor->pos == pos && actor->state() == ActorState::corpse)
+        if ((actor->pos == pos) &&
+            (actor->state() == ActorState::corpse))
         {
             corpse = actor;
 
-            if (actor_is_player && actor->data().prio_corpse_bash)
+            if (actor_is_player &&
+                actor->data().prio_corpse_bash)
             {
                 break;
             }
@@ -1136,7 +1139,12 @@ DidAction Actor::try_eat_corpse()
 
         const bool is_destroyed = rnd::one_in(destr_one_in_n);
 
-        const std::string corpse_name = corpse->corpse_name_the();
+        std::string corpse_name_the = corpse->corpse_name_the();
+
+        if (!corpse->data().is_unique)
+        {
+            corpse_name_the = text_format::first_to_lower(corpse_name_the);
+        }
 
         Snd snd("I hear ripping and chewing.",
                 SfxId::bite,
@@ -1151,12 +1159,7 @@ DidAction Actor::try_eat_corpse()
 
         if (actor_is_player)
         {
-            msg_log::add("I feed on " + corpse_name + ".");
-
-            if (is_destroyed)
-            {
-                msg_log::add("There is nothing left to eat.");
-            }
+            msg_log::add("I feed on " + corpse_name_the + ".");
         }
         else // Is monster
         {
@@ -1164,7 +1167,7 @@ DidAction Actor::try_eat_corpse()
             {
                 const std::string name = name_the();
 
-                msg_log::add(name + " feeds on " + corpse_name + ".");
+                msg_log::add(name + " feeds on " + corpse_name_the + ".");
             }
         }
 
@@ -1174,6 +1177,35 @@ DidAction Actor::try_eat_corpse()
 
             map::mk_gore(pos);
             map::mk_blood(pos);
+        }
+
+        if (actor_is_player && is_destroyed)
+        {
+            msg_log::add(text_format::first_to_upper(corpse_name_the) +
+                         " is completely devoured.");
+
+            std::vector<Actor*> corpses_here;
+
+            for (auto* const actor : game_time::actors)
+            {
+                if ((actor->pos == pos) &&
+                    (actor->state() == ActorState::corpse))
+                {
+                    corpses_here.push_back(actor);
+                }
+            }
+
+            if (!corpses_here.empty())
+            {
+                msg_log::more_prompt();
+
+                for (auto* const corpse : corpses_here)
+                {
+                    const std::string name = corpse->corpse_name_a();
+
+                    msg_log::add(name + ".");
+                }
+            }
         }
 
         // Heal
