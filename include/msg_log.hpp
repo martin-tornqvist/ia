@@ -100,7 +100,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     int top_line_nr_;

@@ -217,9 +217,9 @@ const int max_nr_lines_on_scr_ = screen_h - 3;
 
 } // namespace
 
-states::StateId BrowseHighscore::id()
+StateId BrowseHighscore::id()
 {
-    return states::StateId::HIGHSCORE_STATE;
+    return StateId::highscore;
 }
 
 void BrowseHighscore::on_start()

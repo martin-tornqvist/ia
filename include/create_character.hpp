@@ -22,7 +22,7 @@ public:
 
     void on_resume() override;
 
-    states::StateId id() override; 
+    StateId id() override; 
 };
 
 class GainLvlState: public State
@@ -36,7 +36,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 };
 
 class PickBgState: public State
@@ -52,7 +52,7 @@ public:
 
     void draw() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     MenuBrowser browser_;
@@ -73,7 +73,7 @@ public:
 
     void draw() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     MenuBrowser browser_traits_avail_;
@@ -98,7 +98,7 @@ public:
 
     void draw() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     std::string current_str_;

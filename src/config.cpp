@@ -707,9 +707,9 @@ ConfigState::ConfigState() :
 
 }
 
-states::StateId ConfigState::id()
+StateId ConfigState::id()
 {
-    return states::StateId::CONFIG_STATE;
+    return StateId::config;
 }
 
 void ConfigState::update()

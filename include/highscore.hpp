@@ -104,7 +104,7 @@ public:
         return entries_.empty();
     }
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     std::vector<HighscoreEntry> entries_;

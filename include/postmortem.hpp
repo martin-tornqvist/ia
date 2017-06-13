@@ -18,7 +18,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     void mk_memorial_file() const;
@@ -38,7 +38,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     const int max_nr_lines_on_scr_;

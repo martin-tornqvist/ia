@@ -1212,9 +1212,9 @@ const std::vector<HistoryEvent>& history()
 // -----------------------------------------------------------------------------
 // Game state
 // -----------------------------------------------------------------------------
-states::StateId GameState::id()
+StateId GameState::id()
 {
-    return states::StateId::GAME_STATE;
+    return StateId::game;
 }
 
 void GameState::on_start()

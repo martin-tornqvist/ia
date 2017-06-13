@@ -38,9 +38,9 @@ PostmortemMenu::PostmortemMenu() :
     browser_.reset(7);
 }
 
-states::StateId PostmortemMenu::id()
+StateId PostmortemMenu::id()
 {
-    return states::StateId::POSTMENU_STATE;
+    return StateId::postmortem_menu;
 }
 
 void PostmortemMenu::on_start()
@@ -493,9 +493,9 @@ void PostmortemMenu::update()
 // -----------------------------------------------------------------------------
 // Postmortem info
 // -----------------------------------------------------------------------------
-states::StateId PostmortemInfo::id()
+StateId PostmortemInfo::id()
 {
-    return states::StateId::POSTINFO_STATE;
+    return StateId::postmortem_info;
 }
 
 void PostmortemInfo::draw()

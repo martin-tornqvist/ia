@@ -297,9 +297,9 @@ const std::vector< std::vector<Msg> > history()
 // -----------------------------------------------------------------------------
 // Message history state
 // -----------------------------------------------------------------------------
-states::StateId MsgHistoryState::id()
+StateId MsgHistoryState::id()
 {
-    return states::StateId::MESSAGE_STATE;
+    return StateId::message;
 }
 
 void MsgHistoryState::on_start()

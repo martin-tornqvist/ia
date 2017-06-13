@@ -44,9 +44,9 @@ NewGameState::~NewGameState()
 
 }
 
-states::StateId NewGameState::id()
+StateId NewGameState::id()
 {
-    return states::StateId::NEWGAME_STATE;
+    return StateId::new_game;
 }
 
 void NewGameState::on_pushed()
@@ -84,9 +84,9 @@ GainLvlState::~GainLvlState()
 
 }
 
-states::StateId GainLvlState::id()
+StateId GainLvlState::id()
 {
-    return states::StateId::NEWLEVEL_STATE;
+    return StateId::new_level;
 }
 
 void GainLvlState::on_start()
@@ -134,9 +134,9 @@ PickBgState::~PickBgState()
 
 }
 
-states::StateId PickBgState::id()
+StateId PickBgState::id()
 {
-    return states::StateId::BACKGROUND_STATE;
+    return StateId::pick_background;
 }
 
 void PickBgState::on_start()
@@ -181,7 +181,7 @@ void PickBgState::update()
 
     case MenuAction::esc:
     {
-      pop_until(states::StateId::MENU_STATE);
+      states::pop_until(StateId::menu);
     }
     break;
 
@@ -280,9 +280,9 @@ PickTraitState::~PickTraitState()
 
 }
 
-states::StateId PickTraitState::id()
+StateId PickTraitState::id()
 {
-    return states::StateId::TRAIT_STATE;
+    return StateId::pick_trait;
 }
 
 void PickTraitState::on_start()
@@ -335,8 +335,8 @@ void PickTraitState::update()
     {
     case MenuAction::esc:
     {
-      if (contains_state(states::StateId::NAME_STATE))
-          pop_until(states::StateId::MENU_STATE);
+      if (states::contains_state(StateId::pick_name))
+          states::pop_until(StateId::menu);
     }
     break;
 
@@ -593,9 +593,9 @@ EnterNameState::~EnterNameState()
 
 }
 
-states::StateId EnterNameState::id()
+StateId EnterNameState::id()
 {
-    return states::StateId::NAME_STATE;
+    return StateId::pick_name;
 }
 
 void EnterNameState::on_start()
@@ -622,7 +622,7 @@ void EnterNameState::update()
 
     if (input.key == SDLK_ESCAPE)
     {
-      pop_until(states::StateId::MENU_STATE);
+      states::pop_until(StateId::menu);
       return;
     }
 

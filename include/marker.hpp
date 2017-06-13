@@ -36,7 +36,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 protected:
     virtual void on_start_hook() {}

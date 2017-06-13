@@ -222,9 +222,9 @@ MainMenuState::~MainMenuState()
 
 }
 
-states::StateId MainMenuState::id()
+StateId MainMenuState::id()
 {
-    return states::StateId::MENU_STATE;
+    return StateId::menu;
 }
 
 void MainMenuState::draw()

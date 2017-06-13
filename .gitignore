@@ -17,6 +17,9 @@ CppCheckResults.xml
 *.depend
 *.pyc
 
+# Vim temporary files
+*.swp
+
 # Emacs gtags
 GPATH
 GRTAGS

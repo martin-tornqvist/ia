@@ -38,7 +38,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     void put_text(const std::string str,

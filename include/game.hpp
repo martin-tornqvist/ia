@@ -102,7 +102,7 @@ public:
 
     void update() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     void query_quit();

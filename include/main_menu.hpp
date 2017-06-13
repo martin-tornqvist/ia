@@ -19,7 +19,7 @@ public:
 
     void on_resume() override;
 
-    states::StateId id() override;
+    StateId id() override;
 
 private:
     MenuBrowser browser_;

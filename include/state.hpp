@@ -4,33 +4,27 @@
 #include <vector>
 #include <memory>
 
-namespace states 
-{
-
 enum class StateId 
 {
-    DEFAULT_STATE,
-    MENU_STATE,
-    GAME_STATE,
-    BACKGROUND_STATE,
-    TRAIT_STATE,
-    NAME_STATE,
-    NEWGAME_STATE,
-    NEWLEVEL_STATE,
-    POSTMENU_STATE,
-    POSTINFO_STATE,
-    BROWSESPELLS_STATE,
-    MESSAGE_STATE,
-    MARKER_STATE,
-    MANUAL_STATE,
-    VIEWACTOR_STATE,
-    INV_STATE,
-    HIGHSCORE_STATE,
-    CONFIG_STATE,
-    DESCRIPT_STATE
+    menu,
+    game,
+    pick_background,
+    pick_trait,
+    pick_name,
+    new_game,
+    new_level,
+    postmortem_menu,
+    postmortem_info,
+    browse_spells,
+    message,
+    marker,
+    manual,
+    view_actor,
+    inventory,
+    highscore,
+    config,
+    descript 
 };
-
-} // states
 
 class State
 {
@@ -87,10 +81,7 @@ public:
         return has_started_;
     }
 
-    virtual states::StateId id()
-    {
-        return states::StateId::DEFAULT_STATE;
-    }
+    virtual StateId id() = 0;
 
 private:
     bool has_started_;
@@ -119,9 +110,9 @@ bool is_empty();
 
 bool is_current_state(const State& state);
 
-void pop_until(const states::StateId);
+void pop_until(const StateId);
 
-bool contains_state(const states::StateId);
+bool contains_state(const StateId);
 
 } // states
 

@@ -147,9 +147,9 @@ Spell* mk_spell_from_id(const SpellId spell_id)
 
 } // spell_handling
 
-states::StateId BrowseSpell::id()
+StateId BrowseSpell::id()
 {
-    return states::StateId::BROWSESPELLS_STATE;
+    return StateId::browse_spells;
 }
 
 Range Spell::spi_cost(Actor* const caster) const

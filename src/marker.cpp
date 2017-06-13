@@ -21,9 +21,9 @@
 // -----------------------------------------------------------------------------
 // Marker state
 // -----------------------------------------------------------------------------
-states::StateId MarkerState::id()
+StateId MarkerState::id()
 {
-    return states::StateId::MARKER_STATE;
+    return StateId::marker;
 }
 
 void MarkerState::on_start()
