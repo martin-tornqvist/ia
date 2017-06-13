@@ -100,6 +100,8 @@ public:
 
     void update() override;
 
+    states::StateId id() override;
+
 private:
     int top_line_nr_;
     int btm_line_nr_;

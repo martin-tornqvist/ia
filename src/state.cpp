@@ -148,6 +148,44 @@ void pop_all()
     TRACE_FUNC_END;
 }
 
+bool check_states(const states::StateId state_given, const states::StateId state_to_check)
+{                               //This is from the vector, and this is to check for.
+    if (state_to_check == states::StateId::DEFAULT_STATE)
+        return false;
+
+    //^If it should pop 'till default state, then stop without popping a single state.
+
+    if (state_given == state_to_check)
+        return false;
+
+    //^If the states are the same, just stop.
+    
+    return true;
+    //^Returning true as default.
+}
+
+bool contains_state(const states::StateId state)
+{
+    for( auto&& p : states_ ) {
+        if(p->id() == state)
+            return true;
+    }
+
+    return false;
+}
+
+void pop_until(const states::StateId state)
+{
+    if (is_empty())
+        return;
+
+    if (check_states(states_.back().get()->id(), state))
+    {
+        pop();
+        pop_until(state);
+    }
+}
+
 bool is_empty()
 {
     return states_.empty();

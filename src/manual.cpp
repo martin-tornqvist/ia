@@ -15,6 +15,11 @@ const int max_nr_lines_on_scr_ = screen_h - 2;
 
 } // namespace
 
+states::StateId BrowseManual::id()
+{
+    return states::StateId::MANUAL_STATE;
+}
+
 void BrowseManual::on_start()
 {
     read_file();

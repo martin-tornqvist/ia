@@ -29,6 +29,11 @@ const int max_nr_lines_on_scr_ = screen_h - 2;
 // -----------------------------------------------------------------------------
 // View actor description
 // -----------------------------------------------------------------------------
+states::StateId ViewActorDescr::id()
+{
+    return states::StateId::VIEWACTOR_STATE;
+}
+
 void ViewActorDescr::on_start()
 {
     // Fixed description.

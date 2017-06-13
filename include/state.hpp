@@ -4,6 +4,34 @@
 #include <vector>
 #include <memory>
 
+namespace states 
+{
+
+enum class StateId 
+{
+    DEFAULT_STATE,
+    MENU_STATE,
+    GAME_STATE,
+    BACKGROUND_STATE,
+    TRAIT_STATE,
+    NAME_STATE,
+    NEWGAME_STATE,
+    NEWLEVEL_STATE,
+    POSTMENU_STATE,
+    POSTINFO_STATE,
+    BROWSESPELLS_STATE,
+    MESSAGE_STATE,
+    MARKER_STATE,
+    MANUAL_STATE,
+    VIEWACTOR_STATE,
+    INV_STATE,
+    HIGHSCORE_STATE,
+    CONFIG_STATE,
+    DESCRIPT_STATE
+};
+
+} // states
+
 class State
 {
 public:
@@ -59,6 +87,11 @@ public:
         return has_started_;
     }
 
+    virtual states::StateId id()
+    {
+        return states::StateId::DEFAULT_STATE;
+    }
+
 private:
     bool has_started_;
 };
@@ -85,6 +118,10 @@ void pop_all();
 bool is_empty();
 
 bool is_current_state(const State& state);
+
+void pop_until(const states::StateId);
+
+bool contains_state(const states::StateId);
 
 } // states
 

@@ -34,6 +34,21 @@ const int descr_w_ = descr_x1_ - descr_y1_ + 1;
 // -----------------------------------------------------------------------------
 // New game state
 // -----------------------------------------------------------------------------
+NewGameState::NewGameState()
+{
+
+}
+
+NewGameState::~NewGameState()
+{
+
+}
+
+states::StateId NewGameState::id()
+{
+    return states::StateId::NEWGAME_STATE;
+}
+
 void NewGameState::on_pushed()
 {
     std::unique_ptr<State> game_state(
@@ -59,6 +74,21 @@ void NewGameState::on_resume()
 // -----------------------------------------------------------------------------
 // Gain level state
 // -----------------------------------------------------------------------------
+GainLvlState::GainLvlState()
+{
+
+}
+
+GainLvlState::~GainLvlState()
+{
+
+}
+
+states::StateId GainLvlState::id()
+{
+    return states::StateId::NEWLEVEL_STATE;
+}
+
 void GainLvlState::on_start()
 {
     game::incr_clvl();
@@ -99,6 +129,16 @@ PickBgState::PickBgState() :
 
 }
 
+PickBgState::~PickBgState()
+{
+
+}
+
+states::StateId PickBgState::id()
+{
+    return states::StateId::BACKGROUND_STATE;
+}
+
 void PickBgState::on_start()
 {
     bgs_ = player_bon::pickable_bgs();
@@ -107,12 +147,6 @@ void PickBgState::on_start()
 
     // Let the browser start at Rogue, to recommend it as the default choice
     browser_.set_y((int)Bg::rogue);
-}
-
-void pop_states(const int number)
-{
-  for ( int i = 0; i < number; i++ )
-    states::pop();
 }
 
 void PickBgState::update()
@@ -147,7 +181,7 @@ void PickBgState::update()
 
     case MenuAction::esc:
     {
-      pop_states(4);
+      pop_until(states::StateId::MENU_STATE);
     }
     break;
 
@@ -241,6 +275,16 @@ PickTraitState::PickTraitState() :
 
 }
 
+PickTraitState::~PickTraitState()
+{
+
+}
+
+states::StateId PickTraitState::id()
+{
+    return states::StateId::TRAIT_STATE;
+}
+
 void PickTraitState::on_start()
 {
     const Bg player_bg = player_bon::bg();
@@ -291,7 +335,8 @@ void PickTraitState::update()
     {
     case MenuAction::esc:
     {
-      pop_states(3);
+      if (contains_state(states::StateId::NAME_STATE))
+          pop_until(states::StateId::MENU_STATE);
     }
     break;
 
@@ -543,6 +588,16 @@ EnterNameState::EnterNameState() :
 
 }
 
+EnterNameState::~EnterNameState()
+{
+
+}
+
+states::StateId EnterNameState::id()
+{
+    return states::StateId::NAME_STATE;
+}
+
 void EnterNameState::on_start()
 {
     const std::string default_name = config::default_player_name();
@@ -567,7 +622,7 @@ void EnterNameState::update()
 
     if (input.key == SDLK_ESCAPE)
     {
-      pop_states(2);
+      pop_until(states::StateId::MENU_STATE);
       return;
     }
 

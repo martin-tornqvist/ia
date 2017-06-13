@@ -20,6 +20,11 @@ const int max_nr_lines_on_scr = screen_h - 2;
 
 } // namespace
 
+states::StateId CharacterDescr::id()
+{
+    return states::StateId::DESCRIPT_STATE;
+}
+
 void CharacterDescr::on_start()
 {
     lines_.clear();

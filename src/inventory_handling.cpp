@@ -144,6 +144,11 @@ InvState::InvState() :
 
 }
 
+states::StateId InvState::id()
+{
+    return states::StateId::INV_STATE;
+}
+
 void InvState::draw_slot(const SlotId id,
                          const int y,
                          const char key,

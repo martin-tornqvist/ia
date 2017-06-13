@@ -33,6 +33,8 @@ HighscoreEntry::HighscoreEntry(std::string entry_date_and_time,
     is_win_         (is_win_game),
     bg_             (player_bg) {}
 
+HighscoreEntry::~HighscoreEntry() {}
+
 int HighscoreEntry::score() const
 {
     const double dlvl_db = double(dlvl_);
@@ -214,6 +216,11 @@ namespace
 const int max_nr_lines_on_scr_ = screen_h - 3;
 
 } // namespace
+
+states::StateId BrowseHighscore::id()
+{
+    return states::StateId::HIGHSCORE_STATE;
+}
 
 void BrowseHighscore::on_start()
 {

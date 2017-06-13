@@ -21,6 +21,11 @@
 // -----------------------------------------------------------------------------
 // Marker state
 // -----------------------------------------------------------------------------
+states::StateId MarkerState::id()
+{
+    return states::StateId::MARKER_STATE;
+}
+
 void MarkerState::on_start()
 {
     pos_ = map::player->pos;

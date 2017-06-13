@@ -147,6 +147,11 @@ Spell* mk_spell_from_id(const SpellId spell_id)
 
 } // spell_handling
 
+states::StateId BrowseSpell::id()
+{
+    return states::StateId::BROWSESPELLS_STATE;
+}
+
 Range Spell::spi_cost(Actor* const caster) const
 {
     int cost_max = max_spi_cost();

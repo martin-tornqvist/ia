@@ -20,6 +20,8 @@ public:
 
     virtual ~InvState() {}
 
+    states::StateId id() override;
+
 protected:
     void draw_slot(const SlotId id,
                    const int y,
