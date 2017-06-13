@@ -126,6 +126,56 @@ void add(const std::string& str,
     }
 #endif
 
+    // If frenzied, change message
+    if (map::player->has_prop(PropId::frenzied))
+    {
+        std::string frenzied_str = str;
+
+        bool has_lower_case = false;
+
+        for (auto c : frenzied_str)
+        {
+            if ((c >= 'a') &&
+                (c <= 'z'))
+            {
+                has_lower_case = true;
+                break;
+            }
+        }
+
+        const char last_msg_char = frenzied_str.back();
+
+        bool is_ended_by_punctuation =
+            (last_msg_char == '.') ||
+            (last_msg_char == '!');
+
+        if (has_lower_case && is_ended_by_punctuation)
+        {
+            // Convert to upper case
+            text_format::all_to_upper(frenzied_str);
+
+            // Do not put "!" if string contains "..."
+            if (frenzied_str.find("...") == std::string::npos)
+            {
+                // Change "." to "!" at the end
+                if (frenzied_str.back() == '.')
+                {
+                    frenzied_str.back() = '!';
+                }
+
+                // Add some exclamation marks
+                frenzied_str += "!!";
+            }
+
+            add(frenzied_str,
+                clr,
+                interrupt_all_player_actions,
+                add_more_prompt_on_msg);
+
+            return;
+        }
+    }
+
     int current_line_nr = lines_[1].empty() ? 0 : 1;
 
     Msg* prev_msg = nullptr;

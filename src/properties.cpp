@@ -1368,6 +1368,8 @@ void PropHandler::apply(Prop* const prop,
 
     props_.push_back(prop);
 
+    incr_active_props_info(prop->id());
+
     prop->on_start();
 
     if (verbosity == Verbosity::verbose &&
@@ -1382,6 +1384,7 @@ void PropHandler::apply(Prop* const prop,
         if (is_player)
         {
             std::string msg = "";
+
             prop->msg(PropMsg::start_player, msg);
 
             if (!msg.empty())
@@ -1403,8 +1406,6 @@ void PropHandler::apply(Prop* const prop,
             }
         }
     }
-
-    incr_active_props_info(prop->id());
 }
 
 void PropHandler::add_prop_from_equipped_item(const Item* const item,
@@ -1413,7 +1414,10 @@ void PropHandler::add_prop_from_equipped_item(const Item* const item,
 {
     prop->item_applying_ = item;
 
-    apply(prop, PropSrc::inv, true, verbosity);
+    apply(prop,
+          PropSrc::inv,
+          true,
+          verbosity);
 }
 
 Prop* PropHandler::prop(const PropId id) const
@@ -1580,7 +1584,8 @@ bool PropHandler::end_prop(const PropId id, const bool run_prop_end_effects)
     {
         Prop* const prop = *it;
 
-        if (prop->id_ == id && prop->src_ == PropSrc::intr)
+        if ((prop->id_ == id) &&
+            (prop->src_ == PropSrc::intr))
         {
             props_.erase(it);
 
@@ -2773,6 +2778,7 @@ bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const
 void PropFrenzied::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::confused);
+    owning_actor_->prop_handler().end_prop(PropId::fainted);
     owning_actor_->prop_handler().end_prop(PropId::terrified);
     owning_actor_->prop_handler().end_prop(PropId::weakened);
 }
@@ -2782,7 +2788,7 @@ void PropFrenzied::on_end()
     // Only the player (except for Ghoul background) gets tired after a frenzy
     // (it looks weird for monsters)
     if (owning_actor_->is_player() &&
-        player_bon::bg() != Bg::ghoul)
+        (player_bon::bg() != Bg::ghoul))
     {
         owning_actor_->prop_handler().apply(new PropWeakened(PropTurns::std));
     }
