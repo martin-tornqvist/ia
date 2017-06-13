@@ -20,6 +20,7 @@
 #include "attack.hpp"
 #include "fov.hpp"
 #include "item.hpp"
+#include "item_device.hpp"
 #include "item_factory.hpp"
 #include "actor_factory.hpp"
 #include "player_bon.hpp"
@@ -1891,6 +1892,14 @@ Clr Player::clr() const
     if (prop_handler_->affect_actor_clr(tmp_clr))
     {
         return tmp_clr;
+    }
+
+    const auto* const lantern = inv_->item_in_backpack(ItemId::lantern);
+
+    if (lantern &&
+        static_cast<const DeviceLantern*>(lantern)->is_activated_)
+    {
+        return clr_yellow;
     }
 
     if (shock_tot() >= 75)

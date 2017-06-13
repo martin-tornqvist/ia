@@ -318,10 +318,13 @@ void draw()
         io::draw_text(str, panel, p, clr_white);
     }
 
-    // Thrown item
+    // Thrown item, or active explosive
     p.x = x_wielded;
 
-    auto* const thr_item = player.thrown_item;
+    auto* const thr_item =
+        player.active_explosive ?
+        player.active_explosive :
+        player.thrown_item;
 
     if (thr_item)
     {
@@ -338,8 +341,20 @@ void draw()
 
         p.x += 2;
 
+        auto att_inf = ItemRefAttInf::thrown;
+
+        Clr text_clr = clr_white;
+
+        // Explosives are drawn without attack info, and with warning color
+        if (player.active_explosive)
+        {
+            att_inf = ItemRefAttInf::none;
+
+            text_clr = clr_yellow;
+        }
+
         // Non-stackable thrown items should be printed the same way as wielded
-        // items, i.e. "Hammer", and not "A Hammer"
+        // tems, i.e. "Hammer", and not "A Hammer"
         const auto item_ref_type =
             thr_item->data().is_stackable ?
             ItemRefType::plural :
@@ -347,11 +362,14 @@ void draw()
 
         str = thr_item->name(item_ref_type,
                              ItemRefInf::yes,
-                             ItemRefAttInf::thrown);
+                             att_inf);
 
         text_format::first_to_upper(str);
 
-        io::draw_text(str, panel, p, clr_white);
+        io::draw_text(str,
+                      panel,
+                      p,
+                      text_clr);
     }
 
     // -------------------------------------------------------------------------
