@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-enum class StateId 
+enum class StateId
 {
     menu,
     game,
@@ -23,7 +23,7 @@ enum class StateId
     inventory,
     highscore,
     config,
-    descript 
+    descript
 };
 
 class State
@@ -110,9 +110,9 @@ bool is_empty();
 
 bool is_current_state(const State& state);
 
-void pop_until(const StateId);
+void pop_until(const StateId id);
 
-bool contains_state(const StateId);
+bool contains_state(const StateId id);
 
 } // states
 

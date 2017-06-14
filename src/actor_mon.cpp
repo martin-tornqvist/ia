@@ -1702,6 +1702,15 @@ DidAction VoidTraveler::on_act()
     return DidAction::no;
 }
 
+void ElderVoidTraveler::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::elder_void_traveler_rip));
+
+    spells_known_.push_back(new SpellDisease);
+    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellDeafen);
+}
+
 void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));

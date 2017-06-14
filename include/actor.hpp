@@ -200,7 +200,7 @@ public:
 
     void teleport();
 
-    void teleport(const P& p);
+    void teleport(P p, bool blocked[map_w][map_h]);
 
     bool is_alive() const
     {

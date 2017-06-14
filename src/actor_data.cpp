@@ -36,8 +36,6 @@ void ActorDataT::reset()
         natural_props[i] = false;
     }
 
-    ranged_cooldown_turns = spell_cooldown_turns = 0;
-
     ability_vals.reset();
 
     spell_skill = 0;
@@ -462,7 +460,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fastest;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 20;
     d.glyph = 'z';
     d.color = clr_magenta;
@@ -554,7 +551,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
     d.glyph = 'P';
     d.color = clr_gray;
@@ -599,7 +595,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 2;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 10;
     d.glyph = 'p';
     d.color = clr_brown_drk;
@@ -650,7 +645,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 30;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -704,7 +698,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 3;
     d.spell_skill = 10;
     d.glyph = 'r';
     d.color = clr_magenta;
@@ -756,7 +749,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 100;
     d.glyph = 'P';
     d.color = clr_yellow;
@@ -792,7 +784,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 20;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
@@ -834,7 +825,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 60;
     d.glyph = 'P';
     d.color = clr_yellow;
@@ -876,7 +866,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 90;
     d.glyph = 'P';
     d.color = clr_white;
@@ -1463,7 +1452,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.spell_cooldown_turns = 4;
     d.spell_skill = 50;
     d.glyph = 'G';
     d.color = clr_red;
@@ -1513,21 +1501,70 @@ void init_data_list()
     d.tile = TileId::void_traveler;
     d.hp = 50;
     d.spi = 30;
-    d.dmg_melee = min_dmg_to_wound + 4;
+    d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = dlvl_first_mid_game + 2;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 12;
     d.descr =
         "A nightmarish creature of humanoid shape. It has a hideous gangly "
         "physique and sickly pale skin. Its arms are as long as its body is "
-        "tall, and it attacks with ripping claws. It has the ability to "
-        "appear anywhere it desires at any time.";
+        "tall, and it attacks with ripping claws. It can appear anywhere it "
+        "desires at any time, and can also snatch teleporting creatures from "
+        "their voyage and draw them to it.";
     d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
+    d.is_infra_visible = false;
+    d.can_be_summoned = false;
+    d.can_bleed = false;
+    d.can_leave_corpse = false;
+    d.native_rooms.push_back(RoomType::cave);
+    d.native_rooms.push_back(RoomType::chasm);
+    d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::ritual);
+    d.native_rooms.push_back(RoomType::plain);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "An Elder Void Traveler";
+    d.name_the = "The Elder Void Traveler";
+    d.id = ActorId::elder_void_traveler;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.glyph = 'Y';
+    d.color = clr_orange;
+    d.tile = TileId::void_traveler;
+    d.hp = 70;
+    d.spi = 30;
+    d.spell_skill = 70;
+    d.dmg_melee = min_dmg_to_wound + 5;
+    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
+    d.spawn_max_dlvl = 999;
+    d.actor_size = ActorSize::humanoid;
+    d.nr_turns_aware = 12;
+    d.descr =
+        "A nightmarish creature of humanoid shape. It has a hideous gangly "
+        "physique and sickly pale skin. Its arms are as long as its body is "
+        "tall, and it attacks with ripping claws. It can appear anywhere it "
+        "desires at any time, and can also snatch teleporting creatures from "
+        "their voyage and draw them to it. This ancient individual has learned "
+        "the art of spellcasting.";
+    d.wary_msg = d.name_the + " looks wary.";
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.can_bash_doors = false;
     d.can_open_doors = false;
     d.is_infra_visible = false;
@@ -2021,7 +2058,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
-    d.spell_cooldown_turns = 3;
     d.spell_skill = 30;
     d.glyph = 'E';
     d.color = clr_brown_drk;
@@ -2088,7 +2124,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
-    d.spell_cooldown_turns = 3;
     d.spell_skill = 50;
     d.glyph = 'E';
     d.color = clr_red;
@@ -2447,7 +2482,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 50;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -2532,7 +2566,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 80;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -2575,7 +2608,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 80;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
@@ -3434,7 +3466,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_cooldown_turns = 3;
     d.spell_skill = 70;
     d.glyph = 'Y';
     d.color = clr_red;
@@ -3486,7 +3517,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.spell_cooldown_turns = 2;
     d.spell_skill = 100;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;

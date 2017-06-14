@@ -1505,6 +1505,13 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::elder_void_traveler_rip;
+    d.melee.att_msgs = {"", "rips me"};
+    set_dmg_from_mon_id(d, ActorId::elder_void_traveler);
+    d.melee.dmg_method = DmgMethod::slashing;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::shadow_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::shadow);
@@ -2295,8 +2302,8 @@ void init_data_list()
     {
         "A black dagger with elaborate ornaments. The blade appears blurry, as "
         "if perpetually covered in a dark haze. On a succesful attack, 1 "
-        "Spirit Point is drained from the victim, in addition to the normal "
-        "physical damage."
+        "Spirit Point is drained from the victim and transfered to the "
+        "attacker, in addition to doing normal physical damage."
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::dagger;

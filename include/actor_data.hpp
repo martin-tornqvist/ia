@@ -50,6 +50,7 @@ enum class ActorId
     phantasm,
     wraith,
     void_traveler,
+    elder_void_traveler,
     raven,
     giant_bat,
     vampire_bat,
@@ -177,7 +178,7 @@ struct ActorDataT
     AbilityVals ability_vals;
     int spell_skill;
     bool natural_props[(size_t)PropId::END];
-    int ranged_cooldown_turns, spell_cooldown_turns;
+    int ranged_cooldown_turns;
     bool ai[(size_t)AiId::END];
     int nr_turns_aware;
     int spawn_min_dlvl, spawn_max_dlvl;

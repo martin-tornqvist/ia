@@ -796,9 +796,9 @@ void CtrlTele::handle_input(const InputData& input)
 
             if (is_tele_success)
             {
-                map::player->teleport(pos_);
+                map::player->teleport(pos_, blocked_);
             }
-            else // Failed to teleport (blocked or roll failed
+            else // Failed to teleport (blocked or roll failed)
             {
                 msg_log::add("I failed to go there...",
                              clr_white,

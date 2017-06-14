@@ -148,41 +148,47 @@ void pop_all()
     TRACE_FUNC_END;
 }
 
-bool contains_state(const StateId state)
+bool contains_state(const StateId id)
 {
-    for( auto&& p : states_ ) {
-        if(p->id() == state)
+    for (auto& state : states_)
+    {
+        if (state->id() == id)
+        {
             return true;
+        }
     }
 
     return false;
 }
 
-void pop_until(const StateId state)
+void pop_until(const StateId id)
 {
-    if (is_empty())
-        return;
+    if (is_empty() || !contains_state(id))
+    {
+        ASSERT(false);
 
-    if (states_.back().get()->id() != state)
+        return;
+    }
+
+    while (states_.back().get()->id() != id)
     {
         pop();
-        pop_until(state);
     }
-}
-
-bool is_empty()
-{
-    return states_.empty();
 }
 
 bool is_current_state(const State& state)
 {
-    if (states_.empty())
+    if (is_empty())
     {
         return false;
     }
 
     return &state == states_.back().get();
+}
+
+bool is_empty()
+{
+    return states_.empty();
 }
 
 } // states

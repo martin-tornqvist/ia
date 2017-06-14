@@ -699,6 +699,15 @@ private:
     DidAction on_act() override;
 };
 
+class ElderVoidTraveler: public VoidTraveler
+{
+public:
+    ElderVoidTraveler() : VoidTraveler() {}
+    ~ElderVoidTraveler() {}
+
+    void mk_start_items() override;
+};
+
 class DeepOne: public Mon
 {
 public:

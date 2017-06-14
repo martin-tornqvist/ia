@@ -280,7 +280,10 @@ void Actor::teleport()
             {
                 const auto* const door = static_cast<const Door*>(r);
 
-                if (door->type() != DoorType::metal)
+                // - For the player, only metal doors block the flood
+                // - For monsters, no doors block the flood
+                if ((door->type() != DoorType::metal) ||
+                    !is_player())
                 {
                     blocks_flood[x][y] = false;
                 }
@@ -299,7 +302,6 @@ void Actor::teleport()
     map_parsers::BlocksActor(*this, ParseActors::yes)
         .run(blocked);
 
-    // Block cells behind metal doors
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -310,6 +312,9 @@ void Actor::teleport()
             }
         }
     }
+
+    // Make sure we do not teleport to the position we are standing in
+    blocked[pos.x][pos.y] = false;
 
     //
     // Teleport control?
@@ -338,10 +343,10 @@ void Actor::teleport()
 
     const P tgt_pos = rnd::element(pos_bucket);
 
-    teleport(tgt_pos);
+    teleport(tgt_pos, blocked);
 }
 
-void Actor::teleport(const P& p)
+void Actor::teleport(P p, bool blocked[map_w][map_h])
 {
     if (!is_player() && map::player->can_see_actor(*this))
     {
@@ -370,6 +375,51 @@ void Actor::teleport(const P& p)
         }
     }
 
+    // Hostile void travelers "intercepts" players teleporting, and calls the
+    // player to them
+    bool is_affected_by_void_traveler = false;
+
+    if (is_player())
+    {
+        for (Actor* const actor : game_time::actors)
+        {
+            if ((actor->id() == ActorId::void_traveler) &&
+                (actor->state() == ActorState::alive) &&
+                !actor->is_actor_my_leader(map::player))
+            {
+                std::vector<P> p_bucket;
+
+                for (const P& d : dir_utils::dir_list)
+                {
+                    const P adj_p(actor->pos + d);
+
+                    if (!blocked[adj_p.x][adj_p.y])
+                    {
+                        p_bucket.push_back(adj_p);
+                    }
+                }
+
+                if (!p_bucket.empty())
+                {
+                    // Set new teleport destination
+                    p = rnd::element(p_bucket);
+
+                    const std::string actor_name_a = actor->name_a();
+
+                    msg_log::add(text_format::first_to_upper(actor_name_a) +
+                                 " intercepts my teleportation!");
+
+                    static_cast<Mon*>(actor)->become_aware_player(false);
+
+                    is_affected_by_void_traveler = true;
+
+                    break;
+                }
+            }
+        }
+    }
+
+    // Update actor position to new position
     pos = p;
 
     map::update_vision();
@@ -384,7 +434,8 @@ void Actor::teleport(const P& p)
 
     if (is_player() &&
         (!prop_handler_->has_prop(PropId::tele_ctrl) ||
-         prop_handler_->has_prop(PropId::confused)))
+         prop_handler_->has_prop(PropId::confused) ||
+         is_affected_by_void_traveler))
     {
         msg_log::add("I suddenly find myself in a different location!");
 

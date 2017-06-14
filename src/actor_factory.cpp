@@ -157,6 +157,9 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::void_traveler:
         return new VoidTraveler();
 
+    case ActorId::elder_void_traveler:
+        return new ElderVoidTraveler();
+
     case ActorId::shadow:
         return new Shadow();
 
