@@ -1708,6 +1708,7 @@ void ElderVoidTraveler::mk_start_items()
 
     spells_known_.push_back(new SpellDisease);
     spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellDeafen);
 }
 

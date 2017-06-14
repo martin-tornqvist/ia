@@ -73,14 +73,4 @@ void Monolith::activate()
     game::incr_player_xp(20);
 
     is_activated_ = true;
-
-    for (Actor* const actor : game_time::actors)
-    {
-        if (!actor->is_player())
-        {
-            Mon* const mon = static_cast<Mon*>(actor);
-
-            mon->become_aware_player(false, 2);
-        }
-    }
 }
