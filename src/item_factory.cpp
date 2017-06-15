@@ -348,6 +348,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new ResurrectTalisman(d);
         break;
 
+    case ItemId::tele_ctrl_talisman:
+        r = new TeleCtrlTalisman(d);
+        break;
+
     case ItemId::horn_of_malice:
         r = new HornOfMalice(d);
         break;

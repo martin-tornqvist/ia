@@ -775,13 +775,6 @@ void CtrlTele::handle_input(const InputData& input)
 {
     switch (input.key)
     {
-    case SDLK_ESCAPE:
-    case SDLK_SPACE:
-    {
-        states::pop();
-    }
-    break;
-
     case SDLK_RETURN:
     {
         if (pos_ != map::player->pos)

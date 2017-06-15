@@ -2174,9 +2174,13 @@ void PropBlessed::bless_adjacent() const
         {
             Fountain* const fountain = static_cast<Fountain*>(rigid);
 
-            if (fountain->type() != FountainType::blessed &&
+            const auto effect = fountain->effect();
+
+            if (((int)effect > (int)FountainEffect::START_OF_BAD_EFFECTS) &&
                 fountain->has_drinks_left())
             {
+                fountain->set_effect(FountainEffect::refreshing);
+
                 if (cell.is_seen_by_player)
                 {
                     std::string name = fountain->name(Article::the);
@@ -2185,8 +2189,6 @@ void PropBlessed::bless_adjacent() const
 
                     msg_log::add("The water in " + name + " seems clearer.");
                 }
-
-                fountain->set_type(FountainType::blessed);
             }
         }
     }
@@ -2238,9 +2240,16 @@ void PropCursed::curse_adjacent() const
         {
             Fountain* const fountain = static_cast<Fountain*>(rigid);
 
-            if (fountain->type() != FountainType::cursed &&
+            const auto effect = fountain->effect();
+
+            if (((int)effect < (int)FountainEffect::START_OF_BAD_EFFECTS) &&
                 fountain->has_drinks_left())
             {
+                const int min = (int)FountainEffect::START_OF_BAD_EFFECTS + 1;
+                const int max = (int)FountainEffect::END - 1;
+
+                fountain->set_effect((FountainEffect)rnd::range(min, max));
+
                 if (cell.is_seen_by_player)
                 {
                     std::string name = fountain->name(Article::the);
@@ -2249,8 +2258,6 @@ void PropCursed::curse_adjacent() const
 
                     msg_log::add("The water in " + name + " seems murkier.");
                 }
-
-                fountain->set_type(FountainType::cursed);
             }
         }
     }

@@ -27,7 +27,6 @@ private:
     void on_removed_from_inv_hook() override;
 };
 
-
 // -----------------------------------------------------------------------------
 // Talisman of Resurrection
 // -----------------------------------------------------------------------------
@@ -37,6 +36,19 @@ public:
     ResurrectTalisman(ItemDataT* const item_data);
 };
 
+// -----------------------------------------------------------------------------
+// Talisman of Teleportation Control
+// -----------------------------------------------------------------------------
+class TeleCtrlTalisman: public Item
+{
+public:
+    TeleCtrlTalisman(ItemDataT* const item_data);
+
+private:
+    void on_pickup_hook() override;
+
+    void on_removed_from_inv_hook() override;
+};
 
 // -----------------------------------------------------------------------------
 // Horn of Malice

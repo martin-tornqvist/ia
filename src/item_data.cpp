@@ -2187,6 +2187,30 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::general);
+    d.id = ItemId::tele_ctrl_talisman;
+    d.base_name =
+    {
+        "Talisman of Teleportation Control",
+        "",
+        "the Talisman of Teleportation Control"
+    };
+    d.base_descr =
+    {
+        "Grants the owner the ability to control the destination when "
+        "teleporting. Also grants +40% skill level with the Teleport spell."
+    };
+    d.clr = clr_orange;
+    d.weight = ItemWeight::light;
+    d.tile = TileId::amulet;
+    d.glyph = '"';
+    d.is_unique = true;
+    d.value = ItemValue::major_treasure;
+    d.is_carry_shocking = true;
+    d.chance_to_incl_in_spawn_list = 3;
+    d.native_containers.push_back(FeatureId::tomb);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::general);
     d.id = ItemId::clockwork;
     d.base_name =
     {

@@ -3158,65 +3158,47 @@ Clr Chest::clr_default() const
 Fountain::Fountain(const P& p) :
     Rigid               (p),
     fountain_effect_    (FountainEffect::END),
-    fountain_type_      (FountainType::normal),
     has_drinks_left_    (true)
 {
     std::vector<int> weights =
     {
-        16, // Normal
-        4,  // Blessed
-        1,  // Cursed
+        32, // Refreshing
+        8,  // XP
+        1,  // Teleport control
+        4,  // Bad effect
     };
 
     const int choice = rnd::weighted_choice(weights);
 
-    FountainType type = FountainType::normal;
-
     switch (choice)
     {
     case 0:
-        type = FountainType::normal;
-        break;
-
-    case 1:
-        type = FountainType::blessed;
-        break;
-
-    case 2:
-        type = FountainType::cursed;
-        break;
-    }
-
-    set_type(type);
-}
-
-void Fountain::set_type(const FountainType type)
-{
-    fountain_type_ = type;
-
-    // Setup effect
-    switch (fountain_type_)
-    {
-    case FountainType::normal:
     {
         fountain_effect_ = FountainEffect::refreshing;
     }
     break;
 
-    case FountainType::blessed:
+    case 1:
+    {
+        fountain_effect_ = FountainEffect::tele_ctrl;
+    }
+    break;
+
+    case 2:
     {
         fountain_effect_ = FountainEffect::xp;
     }
     break;
 
-    case FountainType::cursed:
+    case 3:
     {
         const int min = (int)FountainEffect::START_OF_BAD_EFFECTS + 1;
         const int max = (int)FountainEffect::END - 1;
 
         fountain_effect_ = (FountainEffect)rnd::range(min, max);
     }
-    } // Fountain type switch
+    break;
+    }
 }
 
 void Fountain::on_hit(const int dmg,
@@ -3299,6 +3281,10 @@ void Fountain::bump(Actor& actor_bumping)
         case FountainEffect::xp:
             msg_log::add("I feel more powerful!");
             game::incr_player_xp(2);
+            break;
+
+        case FountainEffect::tele_ctrl:
+            prop_hlr.apply(new PropTeleControl(PropTurns::std));
             break;
 
         case FountainEffect::curse:

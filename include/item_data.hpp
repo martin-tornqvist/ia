@@ -189,6 +189,7 @@ enum class ItemId
     pharaoh_staff,
     refl_talisman,
     resurrect_talisman,
+    tele_ctrl_talisman,
     horn_of_malice,
     horn_of_deafening,
     horn_of_banishment,

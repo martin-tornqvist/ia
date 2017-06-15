@@ -1058,6 +1058,7 @@ enum class FountainEffect
 {
     refreshing,
     xp,
+    tele_ctrl,
 
     START_OF_BAD_EFFECTS,
     curse,
@@ -1068,13 +1069,6 @@ enum class FountainEffect
     blind,
     faint,
     END
-};
-
-enum class FountainType
-{
-    normal,
-    blessed,
-    cursed
 };
 
 class Fountain: public Rigid
@@ -1095,17 +1089,20 @@ public:
 
     void bump(Actor& actor_bumping) override;
 
-    FountainType type() const
-    {
-        return fountain_type_;
-    }
-
     bool has_drinks_left() const
     {
         return has_drinks_left_;
     }
 
-    void set_type(const FountainType type);
+    FountainEffect effect() const
+    {
+        return fountain_effect_;
+    }
+
+    void set_effect(const FountainEffect effect)
+    {
+        fountain_effect_ = effect;
+    }
 
 private:
     Clr clr_default() const override;
@@ -1116,7 +1113,6 @@ private:
                 Actor* const actor) override;
 
     FountainEffect fountain_effect_;
-    FountainType fountain_type_;
     bool has_drinks_left_;
 };
 

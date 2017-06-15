@@ -248,11 +248,11 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     if (player_bon::bg() == Bg::occultist)
     {
-        incr_dice = DiceParam(4, 4);
+        incr_dice = DiceParam(3, 6);
     }
     else // Not Occultist
     {
-        incr_dice = DiceParam(1, 4);
+        incr_dice = DiceParam(1, 6);
     }
 
     const int incr = incr_dice.roll();
@@ -289,6 +289,13 @@ int spell_skill_pct_tot(const SpellId id)
     if (map::player->inv().has_item_in_backpack(ItemId::orb_of_sorcery))
     {
         skill_tot += 10;
+    }
+
+    // Teleport skill bonus from Talisman of Teleportation Control?
+    if ((id == SpellId::teleport) &&
+        map::player->inv().has_item_in_backpack(ItemId::tele_ctrl_talisman))
+    {
+        skill_tot += 40;
     }
 
     skill_tot = std::min(100, skill_tot);

@@ -55,6 +55,27 @@ ResurrectTalisman::ResurrectTalisman(ItemDataT* const item_data) :
 }
 
 // -----------------------------------------------------------------------------
+// Talisman of Teleporation Control
+// -----------------------------------------------------------------------------
+TeleCtrlTalisman::TeleCtrlTalisman(ItemDataT* const item_data) :
+    Item(item_data)
+{
+
+}
+
+void TeleCtrlTalisman::on_pickup_hook()
+{
+    add_carrier_prop(
+        new PropTeleControl(PropTurns::indefinite),
+        Verbosity::silent);
+}
+
+void TeleCtrlTalisman::on_removed_from_inv_hook()
+{
+    clear_carrier_props();
+}
+
+// -----------------------------------------------------------------------------
 // Horn of Malice
 // -----------------------------------------------------------------------------
 void HornOfMaliceHeard::run(Actor& actor) const
