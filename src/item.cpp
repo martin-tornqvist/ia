@@ -247,7 +247,10 @@ void Item::on_pickup(Actor& actor)
 
     actor_carrying_ = &actor;
 
-    on_found();
+    if (actor_carrying_->is_player())
+    {
+        on_player_found();
+    }
 
     on_pickup_hook();
 }
@@ -273,7 +276,7 @@ void Item::on_removed_from_inv()
     actor_carrying_ = nullptr;
 }
 
-void Item::on_found()
+void Item::on_player_found()
 {
     if (data_->value == ItemValue::major_treasure &&
         data_->is_unique &&
@@ -1088,6 +1091,11 @@ void MedicalBag::load()
 void MedicalBag::on_pickup_hook()
 {
     ASSERT(actor_carrying_);
+
+    if (!actor_carrying_->is_player())
+    {
+        return;
+    }
 
     auto& inv = actor_carrying_->inv();
 

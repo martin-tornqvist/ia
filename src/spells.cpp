@@ -1032,60 +1032,64 @@ void SpellAnimWpns::run_effect(Actor* const caster, const int skill) const
 
             Item* const item = cell.item;
 
-            if (cell.is_seen_by_player &&
-                item &&
-                (item->data().type == ItemType::melee_wpn))
+            if (!cell.is_seen_by_player ||
+                !item ||
+                (item->data().type != ItemType::melee_wpn))
             {
-                cell.item = nullptr;
-
-                const P p(x, y);
-
-                const auto summoned =
-                    actor_factory::spawn(
-                        p,
-                        {1, ActorId::animated_wpn},
-                        MakeMonAware::no,
-                        map::player);
-
-                ASSERT(summoned.size() == 1);
-
-                Mon* const anim_wpn = summoned[0];
-
-                Inventory& inv = anim_wpn->inv();
-
-                ASSERT(!inv.item_in_slot(SlotId::wpn));
-
-                inv.put_in_slot(SlotId::wpn,
-                                item,
-                                Verbosity::silent);
-
-                const std::string item_name =
-                    item->name(ItemRefType::plain,
-                               ItemRefInf::yes,
-                               ItemRefAttInf::none);
-
-                msg_log::add("The " + item_name + " rises into thin air!");
-
-                if (skill >= 50)
-                {
-                    anim_wpn->prop_handler().apply(
-                        new PropSeeInvis(PropTurns::indefinite),
-                        PropSrc::intr,
-                        true,
-                        Verbosity::silent);
-                }
-
-                if (skill >= 100)
-                {
-                    anim_wpn->prop_handler().apply(
-                        new PropHasted(PropTurns::indefinite),
-                        PropSrc::intr,
-                        true,
-                        Verbosity::silent);
-                }
-
-                is_any_animated = true;
+                continue;
             }
+
+            // OK, we have an item here that we can animate
+
+            cell.item = nullptr;
+
+            const P p(x, y);
+
+            const auto summoned =
+                actor_factory::spawn(
+                    p,
+                    {1, ActorId::animated_wpn},
+                    MakeMonAware::no,
+                    map::player);
+
+            ASSERT(summoned.size() == 1);
+
+            Mon* const anim_wpn = summoned[0];
+
+            Inventory& inv = anim_wpn->inv();
+
+            ASSERT(!inv.item_in_slot(SlotId::wpn));
+
+            inv.put_in_slot(SlotId::wpn,
+                            item,
+                            Verbosity::silent);
+
+            const std::string item_name =
+                item->name(ItemRefType::plain,
+                           ItemRefInf::yes,
+                           ItemRefAttInf::none);
+
+            msg_log::add("The " + item_name + " rises into thin air!");
+
+            if (skill >= 50)
+            {
+                anim_wpn->prop_handler().apply(
+                    new PropSeeInvis(PropTurns::indefinite),
+                    PropSrc::intr,
+                    true,
+                    Verbosity::silent);
+            }
+
+            if (skill >= 100)
+            {
+                anim_wpn->prop_handler().apply(
+                    new PropHasted(PropTurns::indefinite),
+                    PropSrc::intr,
+                    true,
+                    Verbosity::silent);
+            }
+
+            is_any_animated = true;
         }
     }
 

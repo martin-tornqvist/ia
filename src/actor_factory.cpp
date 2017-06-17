@@ -260,7 +260,7 @@ Actor* mk(const ActorId id, const P& pos)
 
     Actor* const actor = mk_actor_from_id(id);
 
-    actor->place(pos, actor_data::data[size_t(id)]);
+    actor->place(pos, actor_data::data[(size_t)id]);
 
     auto& data = actor->data();
 

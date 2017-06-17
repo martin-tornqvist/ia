@@ -97,7 +97,7 @@ public:
     // * The item is dropped into the same cell as the player,
     // * The item is picked up,
     // * The item is found in an item container, but not picked up
-    void on_found();
+    void on_player_found();
 
     virtual void on_projectile_blocked(const P& pos, Actor* actor)
     {

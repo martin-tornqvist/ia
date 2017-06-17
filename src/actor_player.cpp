@@ -1795,7 +1795,7 @@ void Player::move(Dir dir)
 
                 msg_log::add(item_name + ".");
 
-                item->on_found();
+                item->on_player_found();
             }
 
             // Print message if walking on corpses

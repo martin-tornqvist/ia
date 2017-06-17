@@ -231,7 +231,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
 
                         if (map::player->pos == stack_p)
                         {
-                            item.on_found();
+                            item.on_player_found();
                         }
 
                         TRACE_FUNC_END_VERBOSE;
@@ -252,7 +252,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
 
             if (map::player->pos == p)
             {
-                item.on_found();
+                item.on_player_found();
             }
 
             return &item;
