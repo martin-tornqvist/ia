@@ -47,6 +47,11 @@ public:
 
     void add_light_hook(bool light[map_w][map_h]) const override;
 
+    int nr_turns_active() const
+    {
+        return nr_turns_active_;
+    }
+
 private:
     PylonImpl* mk_pylon_impl_from_id(const PylonId id);
 
@@ -57,6 +62,8 @@ private:
     std::unique_ptr<PylonImpl> pylon_impl_;
 
     bool is_activated_;
+
+    int nr_turns_active_;
 };
 
 // -----------------------------------------------------------------------------

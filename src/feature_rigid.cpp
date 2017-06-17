@@ -1515,6 +1515,15 @@ void Lever::bump(Actor& actor_bumping)
 
     msg_log::add("I pull the lever.");
 
+    toggle();
+
+    game_time::tick();
+
+    TRACE_FUNC_END;
+}
+
+void Lever::toggle()
+{
     is_left_pos_ = !is_left_pos_;
 
     // Signal that the lever has been pulled to any linked feature
@@ -1523,15 +1532,11 @@ void Lever::bump(Actor& actor_bumping)
         linked_feature_->on_lever_pulled(this);
     }
 
-    // Set all sibblings to same status as me
+    // Set all sibblings to same status as this lever
     for (auto* const sibbling : sibblings_)
     {
         sibbling->is_left_pos_ = is_left_pos_;
     }
-
-    game_time::tick();
-
-    TRACE_FUNC_END;
 }
 
 // -----------------------------------------------------------------------------

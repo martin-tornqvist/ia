@@ -138,7 +138,10 @@ Door::~Door()
                 {
                     auto* const lever = static_cast<Lever*>(rigid);
 
-                    lever->unlink();
+                    if (lever->is_linked_to(*this))
+                    {
+                        lever->unlink();
+                    }
                 }
             }
         }

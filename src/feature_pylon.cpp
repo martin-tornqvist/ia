@@ -15,12 +15,13 @@
 Pylon::Pylon(const P& p, PylonId id) :
     Rigid(p),
     pylon_impl_(nullptr),
-    is_activated_(false)
+    is_activated_(false),
+    nr_turns_active_(0)
 {
     if (id == PylonId::any)
     {
         // Make most pylons of the burning type
-        if (rnd::coin_toss())
+        if (rnd::fraction(3, 4))
         {
             id = PylonId::burning;
         }
@@ -112,6 +113,38 @@ void Pylon::on_new_turn_hook()
     if (is_activated_)
     {
         pylon_impl_->on_new_turn_activated();
+
+        ++nr_turns_active_;
+
+        // After a being active for a while, deactivate the pylon by toggling
+        // the linked lever
+        const int max_nr_turns_active = 500;
+
+        if (nr_turns_active_ >= max_nr_turns_active)
+        {
+            TRACE << "Pylon timed out, deactivating by toggling lever"
+                  << std::endl;
+
+            for (int x = 0; x < map_w; ++x)
+            {
+                for (int y = 0; y < map_h; ++y)
+                {
+                    auto* const rigid = map::cells[x][y].rigid;
+
+                    if (rigid && (rigid->id() == FeatureId::lever))
+                    {
+                        auto* const lever = static_cast<Lever*>(rigid);
+
+                        if (lever->is_linked_to(*this))
+                        {
+                            lever->toggle();
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -120,6 +153,8 @@ void Pylon::on_lever_pulled(Lever* const lever)
     (void)lever;
 
     is_activated_ = !is_activated_;
+
+    nr_turns_active_ = 0;
 
     const bool is_seen_by_player =
         map::cells[pos_.x][pos_.y].is_seen_by_player;
@@ -231,16 +266,65 @@ Actor* PylonImpl::rnd_reached_living_actor() const
 // -----------------------------------------------------------------------------
 void PylonBurning::on_new_turn_activated()
 {
-    for (P d : dir_utils::dir_list_w_center)
-    {
-        const P p_adj(pos_ + d);
+    //
+    // Do a floodfill from the pylon, and apply burning on each feature reached.
+    // The flood distance is increased every N turn.
+    //
+    bool blocks_flood[map_w][map_h];
 
-        map::cells[p_adj.x][p_adj.y].rigid->hit(
-            1, // Doesn't matter
-            DmgType::fire,
-            DmgMethod::elemental);
+    map_parsers::BlocksProjectiles()
+        .run(blocks_flood);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->is_bottomless())
+            {
+                blocks_flood[x][y] = true;
+            }
+        }
     }
 
+    int flood[map_w][map_h];
+
+    const int nr_turns_active = pylon_->nr_turns_active();
+
+    const int nr_turns_per_flood_step = 10;
+
+    //
+    // NOTE: The distance may also be limited by the number of turns which the
+    //       Pylon remains active (it shuts itself down after a while)
+    //
+    const int flood_max_dist = 25;
+
+    const int flood_dist =
+        std::min(
+            flood_max_dist,
+            (nr_turns_active / nr_turns_per_flood_step) + 1);
+
+    floodfill(pos_,
+              blocks_flood,
+              flood,
+              flood_dist);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (flood[x][y] > 0)
+            {
+                map::cells[x][y].rigid->hit(
+                    1, // Doesn't matter
+                    DmgType::fire,
+                    DmgMethod::elemental);
+            }
+        }
+    }
+
+    //
+    // Occasionally also directly burn adjacent actors
+    //
     if (!rnd::fraction(2, 3))
     {
         return;

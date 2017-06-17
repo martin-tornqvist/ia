@@ -795,6 +795,8 @@ public:
 
     TileId tile() const override;
 
+    void toggle();
+
     void bump(Actor& actor_bumping) override;
 
     bool is_left_pos() const
@@ -802,9 +804,14 @@ public:
         return is_left_pos_;
     }
 
-    void set_linked_feature(Rigid* feature)
+    bool is_linked_to(const Rigid& feature) const
     {
-        linked_feature_ = feature;
+        return linked_feature_ == &feature;
+    }
+
+    void set_linked_feature(Rigid& feature)
+    {
+        linked_feature_ = &feature;
     }
 
     void unlink()

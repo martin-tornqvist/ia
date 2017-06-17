@@ -377,7 +377,7 @@ void mk_metal_doors_and_levers()
 
                 Lever* lever = new Lever(lever_1_p);
 
-                lever->set_linked_feature(door);
+                lever->set_linked_feature(*door);
 
                 map::put(lever);
 

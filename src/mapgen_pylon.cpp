@@ -20,7 +20,7 @@ void mk_pylons_and_levers()
     std::vector<int> nr_weights =
     {
         10, // 0 pylon(s)
-        2,  // 1 -
+        4,  // 1 -
         2,  // 2 -
         1,  // 3 -
     };
@@ -37,7 +37,7 @@ void mk_pylons_and_levers()
 
         map_parsers::expand(blocked_tmp,
                             blocked,
-                            3);
+                            2);
     }
 
     for (Actor* const actor : game_time::actors)
@@ -115,7 +115,7 @@ void mk_pylons_and_levers()
 
         auto* const lever = new Lever(lever_p);
 
-        lever->set_linked_feature(pylon);
+        lever->set_linked_feature(*pylon);
 
         map::cells[pylon_p.x][pylon_p.y].rigid = pylon;
 
