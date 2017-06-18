@@ -312,6 +312,16 @@ protected:
     ItemDataT* ammo_data_;
 };
 
+class SpikedMace : public Wpn
+{
+public:
+    SpikedMace(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+private:
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
+};
+
 class PlayerGhoulClaw : public Wpn
 {
 public:

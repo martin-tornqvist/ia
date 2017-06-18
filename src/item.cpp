@@ -780,6 +780,28 @@ std::string Wpn::name_inf() const
 }
 
 // -----------------------------------------------------------------------------
+// Spiked Mace
+// -----------------------------------------------------------------------------
+void SpikedMace::on_melee_hit(Actor& actor_hit, const int dmg)
+{
+    (void)dmg;
+
+    if (!actor_hit.is_alive())
+    {
+        return;
+    }
+
+    const int stun_pct = 50;
+
+    if (rnd::percent(stun_pct))
+    {
+        Prop* const prop = new PropParalyzed(PropTurns::specific, 2);
+
+        actor_hit.prop_handler().apply(prop);
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Player ghoul claw
 // -----------------------------------------------------------------------------
 void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)

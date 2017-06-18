@@ -500,7 +500,7 @@ void init_data_list()
         "This hellish, experimental weapon launches an explosive fireball. "
         "Best used with extreme caution."
     };
-    d.weight = ItemWeight((ItemWeight::medium + ItemWeight::heavy) / 2);
+    d.weight = (ItemWeight::medium + ItemWeight::heavy) / 2;
     d.tile = TileId::incinerator;
     d.melee.att_msgs = {"strike", "strikes me with an Incinerator"};
     d.ranged.max_ammo = 5;
@@ -592,7 +592,7 @@ void init_data_list()
         "A semi-automatic, magazine-fed pistol chambered for the .45 ACP "
         "cartridge."
     };
-    d.weight = ItemWeight((ItemWeight::light + ItemWeight::medium) / 2);
+    d.weight = (ItemWeight::light + ItemWeight::medium) / 2;
     d.tile = TileId::pistol;
     d.ranged.max_ammo = 7;
     d.ranged.dmg = DiceParam(1, 8, 4);
@@ -684,7 +684,7 @@ void init_data_list()
     {
         "Launches flares. Not designed to function as a weapon."
     };
-    d.weight = ItemWeight((ItemWeight::light + ItemWeight::medium) / 2);
+    d.weight = (ItemWeight::light + ItemWeight::medium) / 2;
     d.tile = TileId::flare_gun;
     d.ranged.max_ammo = 1;
     d.ranged.dmg = DiceParam(1, 3, 0);
@@ -1040,6 +1040,35 @@ void init_data_list()
     d.melee.att_rigid = true;
     d.melee.dmg_method = DmgMethod::slashing;
     d.melee.miss_sfx = SfxId::miss_medium;
+    d.melee.is_noisy = true;
+    d.ranged.throw_hit_chance_mod = -5;
+    d.ranged.effective_range = 4;
+    d.native_containers.push_back(FeatureId::cabinet);
+    d.native_containers.push_back(FeatureId::tomb);
+    d.native_containers.push_back(FeatureId::cocoon);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn);
+    d.id = ItemId::spiked_mace;
+    d.base_name = {"Spiked Mace", "Spiked Maces", "a Spiked Mace"};
+    d.base_descr =
+    {
+        "A brutal weapon, utilizing a combination of blunt-force and puncture.",
+
+        "Attacks with this weapon have a 50% chance to stun the victim, "
+        "rendering them unable to act for a brief time.",
+
+        "Melee attacks with spiked maces are noisy."
+    };
+    d.weight = (ItemWeight::medium + ItemWeight::heavy) / 2;
+    d.tile = TileId::spiked_mace;
+    d.melee.att_msgs = {"strike", "strikes me with a spiked mace"};
+    d.melee.dmg = DiceParam(2, 7);
+    d.melee.hit_chance_mod = -10;
+    d.melee.att_corpse = true;
+    d.melee.att_rigid = false;
+    d.melee.dmg_method = DmgMethod::piercing;
+    d.melee.miss_sfx = SfxId::miss_heavy;
     d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;

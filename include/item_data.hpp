@@ -41,6 +41,7 @@ enum class ItemId
     hammer,
     machete,
     axe,
+    spiked_mace,
     pitch_fork,
     sledge_hammer,
 
@@ -229,7 +230,7 @@ public:
     bool                        has_std_activate; // E.g. potions and scrolls
     bool                        is_prio_in_backpack_list; // E.g. Medical Bag
     ItemValue                   value;
-    ItemWeight                  weight;
+    int                         weight;
     bool                        is_unique;
     bool                        allow_spawn;
     Range                       spawn_std_range;

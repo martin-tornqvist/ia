@@ -92,6 +92,7 @@ enum class TileId
     rock,
     iron_spike,
     pharaoh_staff,
+    spiked_mace,
     lockpick,
     hunting_horror,
     giant_spider,

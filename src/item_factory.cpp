@@ -106,6 +106,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new Wpn(d);
         break;
 
+    case ItemId::spiked_mace:
+        r = new SpikedMace(d);
+        break;
+
     case ItemId::player_ghoul_claw:
         r = new PlayerGhoulClaw(d);
         break;

@@ -207,6 +207,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::rock:                          return P(15, 4);
     case TileId::iron_spike:                    return P(16, 4);
     case TileId::pharaoh_staff:                 return P(17, 4);
+    case TileId::spiked_mace:                  return P(18, 4);
     case TileId::lockpick:                      return P(17, 4);
     case TileId::hunting_horror:                return P(4, 5);
     case TileId::giant_spider:                  return P(10, 5);
