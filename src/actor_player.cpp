@@ -277,13 +277,6 @@ void Player::mk_start_items()
                           item_factory::mk(ItemId::armor_leather_jacket),
                           Verbosity::silent);
     }
-
-    // =========================================================================
-    // TODO: TEST CODE -- REMOVE!!!
-    // =========================================================================
-    inv_->put_in_backpack(
-        item_factory::mk(ItemId::spiked_mace));
-    // =========================================================================
 }
 
 void Player::save() const
