@@ -1265,24 +1265,30 @@ void LiquidShallow::on_hit(const int dmg,
 
 void LiquidShallow::bump(Actor& actor_bumping)
 {
-    if (
-        !actor_bumping.has_prop(PropId::ethereal) &&
-        !actor_bumping.has_prop(PropId::flying))
+    if (actor_bumping.has_prop(PropId::ethereal) ||
+        actor_bumping.has_prop(PropId::flying))
     {
-        actor_bumping.prop_handler().apply(new PropWaiting(PropTurns::std));
+        return;
+    }
 
-        if (actor_bumping.is_player())
-        {
-            Snd snd("*Glop*",
-                    SfxId::END,
-                    IgnoreMsgIfOriginSeen::no,
-                    actor_bumping.pos,
-                    &actor_bumping,
-                    SndVol::low,
-                    AlertsMon::yes);
+    actor_bumping.prop_handler().apply(new PropWaiting(PropTurns::std));
 
-            snd_emit::run(snd);
-        }
+    if (actor_bumping.is_player())
+    {
+        const std::string msg =
+            (type_ == LiquidType::water) ?
+            "*Splash*" :
+            "*Glop*";
+
+        Snd snd(msg,
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::no,
+                actor_bumping.pos,
+                &actor_bumping,
+                SndVol::low,
+                AlertsMon::yes);
+
+        snd_emit::run(snd);
     }
 }
 
