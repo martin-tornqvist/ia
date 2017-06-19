@@ -2583,7 +2583,7 @@ void init_data_list()
     d.nr_turns_aware = 9999;
     d.descr =
         "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came "
-        "to dwell here is beyond anyones guess.";
+        "to dwell here is beyond anyone's guess.";
     d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -2625,10 +2625,10 @@ void init_data_list()
     d.nr_turns_aware = 9999;
     d.descr =
         "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
-        "came to dwell here is beyond anyones guess. Her name is found in the "
+        "came to dwell here is beyond anyone's guess. Her name is found in the "
         "histories of Herodotus and writings of Manetho. According to the "
         "writings of the former, she took the throne by inviting her "
-        "brothers murderers to a banquet. Then killed them by flooding the "
+        "brother's murderers to a banquet. Then killed them by flooding the "
         "sealed room with the Nile.";
     d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
@@ -2682,7 +2682,7 @@ void init_data_list()
         "appears as an abominable crossbreed of a human and amphibian. Its "
         "fins are merged with twisted arms and legs; its bent back is "
         "crowned with a long, spiny frill. They can breathe both air and "
-        "water. In the timeless depths of the sea, the deep one's alien, "
+        "water. In the timeless depths of the sea, the deep ones' alien, "
         "arrogant lives are coldly beautiful, unbelievably cruel, and "
         "effectively immortal. Deep ones may be worshipped by humans with "
         "whom they regularly interbreed.";
