@@ -1521,6 +1521,16 @@ void Lever::bump(Actor& actor_bumping)
 
     msg_log::add("I pull the lever.");
 
+    Snd snd("",
+            SfxId::lever_pull,
+            IgnoreMsgIfOriginSeen::yes,
+            pos_,
+            map::player,
+            SndVol::low,
+            AlertsMon::yes);
+
+    snd.run();
+
     toggle();
 
     game_time::tick();

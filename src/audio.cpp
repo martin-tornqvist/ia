@@ -203,6 +203,9 @@ void init()
     load(SfxId::fountain_drink, "sfx_fountain_drink.ogg");
     load(SfxId::boss_voice1, "sfx_boss_voice1.ogg");
     load(SfxId::boss_voice2, "sfx_boss_voice2.ogg");
+    load(SfxId::chains, "sfx_chains.ogg");
+    load(SfxId::glop, "sfx_glop.ogg");
+    load(SfxId::lever_pull, "sfx_lever_pull.ogg");
 
     //
     // User interface sounds
@@ -214,8 +217,6 @@ void init()
     load(SfxId::spell_generic, "sfx_spell_generic.ogg");
     load(SfxId::spell_shield_break, "sfx_spell_shield_break.ogg");
     load(SfxId::insanity_rise, "sfx_insanity_rising.ogg");
-    load(SfxId::glop, "sfx_glop.ogg");
-    load(SfxId::chains, "sfx_chains.ogg");
     load(SfxId::death, "sfx_death.ogg");
     load(SfxId::menu_browse, "sfx_menu_browse.ogg");
     load(SfxId::menu_select, "sfx_menu_select.ogg");
