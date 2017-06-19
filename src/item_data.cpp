@@ -1055,7 +1055,7 @@ void init_data_list()
     {
         "A brutal weapon, utilizing a combination of blunt-force and puncture.",
 
-        "Attacks with this weapon have a 50% chance to stun the victim, "
+        "Attacks with this weapon have a 25% chance to stun the victim, "
         "rendering them unable to act for a brief time.",
 
         "Melee attacks with spiked maces are noisy."

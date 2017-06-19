@@ -791,7 +791,7 @@ void SpikedMace::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    const int stun_pct = 50;
+    const int stun_pct = 25;
 
     if (rnd::percent(stun_pct))
     {
