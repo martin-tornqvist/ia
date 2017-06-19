@@ -300,7 +300,7 @@ void Trap::bump(Actor& actor_bumping)
 
     const bool actor_can_see = actor_bumping.prop_handler().allow_see();
 
-    const std::string trap_name = trap_impl_->name();
+    const std::string trap_name_a = trap_impl_->name(Article::a);
 
     //
     // TODO: Reimplement something affecting chance of success, e.g.
@@ -330,8 +330,8 @@ void Trap::bump(Actor& actor_bumping)
 
                 states::draw();
 
-                msg_log::add("I avoid a " +
-                             trap_name +
+                msg_log::add("I avoid " +
+                             trap_name_a +
                              ".",
                              clr_msg_good);
             }
@@ -367,11 +367,12 @@ void Trap::bump(Actor& actor_bumping)
                 {
                     if (!is_hidden_ && is_actor_seen_by_player)
                     {
-                        const std::string actor_name = actor_bumping.name_the();
+                        const std::string actor_name_the =
+                            actor_bumping.name_the();
 
-                        msg_log::add(actor_name +
-                                     " avoids a " +
-                                     trap_name +
+                        msg_log::add(actor_name_the +
+                                     " avoids " +
+                                     trap_name_a +
                                      ".");
                     }
                 }
@@ -497,7 +498,7 @@ DidTriggerTrap Trap::trigger_trap(Actor* const actor)
     (void)actor;
 
     TRACE_VERBOSE << "Name of trap triggering: "
-                  << trap_impl_->name()
+                  << trap_impl_->name(Article::a)
                   << std::endl;
 
     nr_turns_until_trigger_ = -1;
@@ -533,15 +534,15 @@ void Trap::reveal(const Verbosity verbosity)
         {
             std::string msg = "";
 
-            const std::string trap_name = trap_impl_->name();
+            const std::string trap_name_a = trap_impl_->name(Article::a);
 
             if (pos_ == map::player->pos)
             {
-                msg += "There is a " + trap_name + " here!";
+                msg += "There is " + trap_name_a + " here!";
             }
             else // Trap is not at player position
             {
-                msg = "I spot a " + trap_name + ".";
+                msg = "I spot " + trap_name_a + ".";
             }
 
             msg_log::add(msg);
@@ -559,9 +560,7 @@ std::string Trap::name(const Article article) const
     }
     else // Not hidden
     {
-        return
-            (article == Article::a ? "a " : "the ") +
-            trap_impl_->name();
+        return trap_impl_->name(article);
     }
 }
 

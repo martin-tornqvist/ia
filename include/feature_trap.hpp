@@ -171,7 +171,7 @@ protected:
 
     virtual Range nr_turns_range_to_trigger() const = 0;
 
-    virtual std::string name() const = 0;
+    virtual std::string name(const Article article) const = 0;
 
     virtual Clr clr() const = 0;
 
@@ -244,9 +244,16 @@ private:
 
     TrapDart(P pos, Trap* const base_trap);
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "dart trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " dart trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -277,9 +284,16 @@ private:
 
     TrapSpear(P pos, Trap* const base_trap);
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "spear trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " spear trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -311,9 +325,16 @@ protected:
     GasTrapImpl(P pos, TrapId type, Trap* const base_trap) :
         MechTrapImpl(pos, type, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "gas trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " gas trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -368,9 +389,16 @@ private:
     TrapBlindingFlash(P pos, Trap* const base_trap) :
         MechTrapImpl(pos, TrapId::blinding, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "blinding trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " blinding trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -394,9 +422,16 @@ private:
     TrapDeafening(P pos, Trap* const base_trap) :
         MechTrapImpl(pos, TrapId::deafening, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "deafening trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " deafening trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -420,9 +455,16 @@ private:
     TrapSmoke(P pos, Trap* const base_trap) :
         MechTrapImpl(pos, TrapId::smoke, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "smoke trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " smoke trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -446,9 +488,16 @@ private:
     TrapFire(P pos, Trap* const base_trap) :
         MechTrapImpl(pos, TrapId::smoke, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "fire trap";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " fire trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -472,9 +521,16 @@ private:
     TrapAlarm(P pos, Trap* const base_trap) :
         MechTrapImpl(pos, TrapId::alarm, base_trap) {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "alarm trap";
+        std::string name =
+            (article == Article::a) ?
+            "an" :
+            "the";
+
+        name += " alarm trap";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -500,9 +556,16 @@ protected:
 
     virtual ~MagicTrapImpl() {}
 
-    virtual std::string name() const override
+    virtual std::string name(const Article article) const override
     {
-        return "strange shape";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " strange shape";
+
+        return name;
     }
 
     virtual Clr clr() const override
@@ -593,9 +656,16 @@ private:
         return clr_white_lgt;
     }
 
-    std::string name() const override
+    std::string name(const Article article) const override
     {
-        return "spider web";
+        std::string name =
+            (article == Article::a) ?
+            "a" :
+            "the";
+
+        name += " spider web";
+
+        return name;
     }
 
     char glyph() const override
