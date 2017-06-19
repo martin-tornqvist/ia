@@ -64,7 +64,8 @@ void load();
 void handle_player_input(const InputData& input);
 
 int clvl();
-int xp();
+int xp_pct();
+int xp_accumulated();
 TimeData start_time();
 
 void on_mon_seen(Actor& actor);

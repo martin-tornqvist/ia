@@ -51,6 +51,7 @@ namespace
 
 int clvl_ = 0;
 int xp_pct_ = 0;
+int xp_accum_ = 0;
 TimeData start_time_;
 
 std::vector<HistoryEvent> history_events_;
@@ -137,6 +138,7 @@ void init()
 {
     clvl_ = 1;
     xp_pct_ = 0;
+    xp_accum_ = 0;
 
     history_events_.clear();
 
@@ -154,6 +156,7 @@ void save()
 {
     saving::put_int(clvl_);
     saving::put_int(xp_pct_);
+    saving::put_int(xp_accum_);
     saving::put_int(start_time_.year_);
     saving::put_int(start_time_.month_);
     saving::put_int(start_time_.day_);
@@ -174,6 +177,7 @@ void load()
 {
     clvl_ = saving::get_int();
     xp_pct_ = saving::get_int();
+    xp_accum_ = saving::get_int();
     start_time_.year_ = saving::get_int();
     start_time_.month_ = saving::get_int();
     start_time_.day_ = saving::get_int();
@@ -977,9 +981,14 @@ int clvl()
     return clvl_;
 }
 
-int xp()
+int xp_pct()
 {
     return xp_pct_;
+}
+
+int xp_accumulated()
+{
+    return xp_accum_;
 }
 
 TimeData start_time()
@@ -1001,6 +1010,8 @@ void incr_player_xp(const int xp_gained,
     }
 
     xp_pct_ += xp_gained;
+
+    xp_accum_ += xp_gained;
 
     while (xp_pct_ >= 100)
     {

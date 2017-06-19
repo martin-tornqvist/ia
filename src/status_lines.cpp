@@ -108,7 +108,7 @@ void draw()
     if (game::clvl() < player_max_clvl)
     {
         // Not at maximum character level
-        str += "(" + std::to_string(game::xp()) + "%)";
+        str += "(" + std::to_string(game::xp_pct()) + "%)";
     }
 
     io::draw_text(str, panel, p, clr_white);

@@ -177,7 +177,7 @@ void on_game_over(const bool is_win)
 
     final_score_ = new HighscoreEntry(time,
                                       map::player->name_a(),
-                                      game::xp(),
+                                      game::xp_accumulated(),
                                       game::clvl(),
                                       map::dlvl,
                                       map::player->ins(),
