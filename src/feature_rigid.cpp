@@ -23,15 +23,6 @@
 #include "feature_door.hpp"
 #include "wham.hpp"
 
-
-namespace
-{
-
-const Clr std_wall_clr = clr_gray;
-
-} // namespace
-
-
 // -----------------------------------------------------------------------------
 // Rigid
 // -----------------------------------------------------------------------------
@@ -678,7 +669,8 @@ Clr Wall::clr_default() const
 
     case WallType::common:
     case WallType::common_alt:
-        return std_wall_clr;
+        // Return the wall color of the current map
+        return map::wall_clr;
 
     case WallType::leng_monestary:
         return clr_red;
@@ -832,7 +824,8 @@ std::string RubbleHigh::name(const Article article) const
 
 Clr RubbleHigh::clr_default() const
 {
-    return std_wall_clr;
+    // Return the wall color of the current map
+    return map::wall_clr;
 }
 
 // -----------------------------------------------------------------------------
@@ -874,7 +867,8 @@ std::string RubbleLow::name(const Article article) const
 
 Clr RubbleLow::clr_default() const
 {
-    return std_wall_clr;
+    // Return the wall color of the current map
+    return map::wall_clr;
 }
 
 // -----------------------------------------------------------------------------

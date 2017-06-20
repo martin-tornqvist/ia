@@ -62,6 +62,8 @@ Player* player = nullptr;
 
 int dlvl = 0;
 
+Clr wall_clr;
+
 Cell cells[map_w][map_h];
 
 std::vector<Room*> room_list;
@@ -157,6 +159,26 @@ void reset_map()
 
     game_time::erase_all_mobs();
     game_time::reset_turn_type_and_actor_counters();
+
+    // Occasionally set wall color to something unusual
+    if (rnd::one_in(3))
+    {
+        std::vector<Clr> wall_clr_bucket =
+        {
+            clr_gray_drk,
+            clr_red,
+            clr_nosf_sepia,
+            clr_nosf_sepia_drk,
+            clr_brown_drk,
+            clr_brown_gray,
+        };
+
+        wall_clr = rnd::element(wall_clr_bucket);
+    }
+    else // Standard wall color
+    {
+        wall_clr = clr_gray;
+    }
 }
 
 Rigid* put(Rigid* const f)
