@@ -118,14 +118,14 @@ void connect_rooms()
         const P c0(room0->r_.center());
         const P c1(room1->r_.center());
 
-        const int X0 = std::min(c0.x, c1.x);
-        const int Y0 = std::min(c0.y, c1.y);
-        const int X1 = std::max(c0.x, c1.x);
-        const int Y1 = std::max(c0.y, c1.y);
+        const int x0 = std::min(c0.x, c1.x);
+        const int y0 = std::min(c0.y, c1.y);
+        const int x1 = std::max(c0.x, c1.x);
+        const int y1 = std::max(c0.y, c1.y);
 
-        for (int x = X0; x <= X1; ++x)
+        for (int x = x0; x <= x1; ++x)
         {
-            for (int y = Y0; y <= Y1; ++y)
+            for (int y = y0; y <= y1; ++y)
             {
                 const Room* const room_here = map::room_map[x][y];
 
@@ -677,7 +677,7 @@ bool mk_std_lvl()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            if (door_proposals[x][y])
+            if (!blocked[x][y] && door_proposals[x][y])
             {
                 ChokePointData d;
 
@@ -685,6 +685,12 @@ bool mk_std_lvl()
                     is_choke_point(P(x, y),
                                    blocked,
                                    d);
+
+                // 'is_choke_point' called above may invalidate the map
+                if (!is_map_valid)
+                {
+                    return false;
+                }
 
                 if (is_choke)
                 {

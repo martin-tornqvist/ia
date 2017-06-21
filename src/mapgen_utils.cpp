@@ -486,6 +486,9 @@ bool is_choke_point(const P& p,
     // Robustness for release mode
     if (blocked[p.x][p.y])
     {
+        // This is weird, invalidate the map
+        is_map_valid = false;
+
         return false;
     }
 
