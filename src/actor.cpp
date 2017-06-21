@@ -383,7 +383,13 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
     {
         for (Actor* const actor : game_time::actors)
         {
-            if ((actor->id() == ActorId::void_traveler) &&
+            const auto actor_id = actor->id();
+
+            const bool is_void_traveler =
+                (actor_id == ActorId::void_traveler) ||
+                (actor_id == ActorId::elder_void_traveler);
+
+            if (is_void_traveler &&
                 (actor->state() == ActorState::alive) &&
                 !actor->is_actor_my_leader(map::player))
             {
