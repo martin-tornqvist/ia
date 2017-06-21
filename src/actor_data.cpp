@@ -3175,6 +3175,7 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_phys] = true;
@@ -3421,6 +3422,7 @@ void init_data_list()
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 7;
     d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -3523,7 +3525,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = TileId::the_high_priest;
-    d.hp = 160;
+    d.hp = 180;
     d.spi = 99999;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
@@ -3532,6 +3534,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::invis] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;

@@ -95,8 +95,6 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         -defender.ability(AbilityId::dodging, true) :
         0;
 
-    bool is_attacker_aware = true;
-
     // Attacker gets a penalty against unseen targets
     //
     // NOTE: The AI never attacks unseen targets, so in the case of a
@@ -104,22 +102,9 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     //       need to check if target is seen when player is attacking.
     bool can_attacker_see_tgt = true;
 
-    if (attacker)
+    if (attacker == map::player)
     {
-        if (attacker->is_player())
-        {
-            Mon& mon = static_cast<Mon&>(defender);
-
-            is_attacker_aware = mon.player_aware_of_me_counter_ > 0;
-
-            can_attacker_see_tgt = map::player->can_see_actor(defender);
-        }
-        else // Attacker is monster
-        {
-            Mon* const mon = static_cast<Mon*>(attacker);
-
-            is_attacker_aware = mon->aware_of_player_counter_ > 0;
-        }
+        can_attacker_see_tgt = map::player->can_see_actor(defender);
     }
 
     // Check for extra attack bonuses, such as defender being immobilized.
@@ -242,9 +227,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
             dmg = std::max(1, dmg_dice.roll());
         }
 
-        if (attacker &&
-            is_attacker_aware &&
-            !is_defender_aware)
+        if (attacker && !is_defender_aware)
         {
             // Backstab (extra damage)
 
@@ -343,10 +326,41 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         state_mod = 0;
 
+        bool can_attacker_see_tgt = true;
+
+        if (attacker == map::player)
+        {
+            can_attacker_see_tgt = map::player->can_see_actor(*defender);
+        }
+        else // Attacker is monster
+        {
+            Mon* const mon = static_cast<Mon*>(attacker);
+
+            bool hard_blocked_los[map_w][map_h];
+
+            const R fov_rect = fov::get_fov_rect(attacker->pos);
+
+            map_parsers::BlocksLos()
+                .run(hard_blocked_los,
+                     MapParseMode::overwrite,
+                     fov_rect);
+
+            can_attacker_see_tgt =
+                mon->can_see_actor(*defender, hard_blocked_los);
+        }
+
+        // Lower hit chance if attacker cannot see target (e.g. attacking
+        // invisible creature)
+        if (!can_attacker_see_tgt)
+        {
+            state_mod -= 25;
+        }
+
+        // Player gets attack bonus for attacking unaware monster
         if (attacker->is_player() &&
             (static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0))
         {
-            state_mod = 25;
+            state_mod += 25;
         }
 
         const bool apply_undead_bane_bon =
@@ -489,10 +503,25 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
         state_mod = 0;
 
-        if (attacker->is_player() &&
-            static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0)
+        bool can_attacker_see_tgt = true;
+
+        if (attacker == map::player)
         {
-            state_mod = 25;
+            can_attacker_see_tgt = map::player->can_see_actor(*defender);
+        }
+
+        // Lower hit chance if attacker cannot see target (e.g. attacking
+        // invisible creature)
+        if (!can_attacker_see_tgt)
+        {
+            state_mod -= 25;
+        }
+
+        // Player gets attack bonus for attacking unaware monster
+        if (attacker->is_player() &&
+            (static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0))
+        {
+            state_mod += 25;
         }
 
         const bool apply_undead_bane_bon =
@@ -855,8 +884,10 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
 
     const P& defender_pos = data.defender->pos;
 
-    if (is_hit &&
-        map::cells[defender_pos.x][defender_pos.y].is_seen_by_player)
+    const bool is_cell_seen =
+        map::cells[defender_pos.x][defender_pos.y].is_seen_by_player;
+
+    if (is_hit && is_cell_seen)
     {
         // Punctuation depends on attack strength
         const DiceParam dmg_dice = wpn.dmg(AttMode::ranged, data.attacker);
@@ -1047,7 +1078,7 @@ void projectile_fire(Actor* const attacker,
                             origin,
                             attacker,
                             vol,
-                            AlertsMon::no);
+                            AlertsMon::no); // We do not yet alert monsters
 
                     snd.run();
                 }
@@ -1086,8 +1117,6 @@ void projectile_fire(Actor* const attacker,
 
                 proj->set_att_data(atta_data);
 
-                const P draw_pos(proj->pos);
-
                 // Hit actor?
                 const bool is_actor_aimed_for = proj->pos == aim_pos;
 
@@ -1099,9 +1128,25 @@ void projectile_fire(Actor* const attacker,
 
                 if (att_data.defender &&
                     !proj->is_dead &&
-                    att_data.att_result >= ActionResult::success &&
+                    (att_data.att_result >= ActionResult::success) &&
                     can_hit_height)
                 {
+                    if (attacker == map::player)
+                    {
+                        static_cast<Mon*>(att_data.defender)->
+                            set_player_aware_of_me();
+                    }
+
+                    Snd snd("A creature is hit.",
+                            SfxId::hit_small,
+                            IgnoreMsgIfOriginSeen::yes,
+                            proj->pos,
+                            nullptr,
+                            SndVol::low,
+                            AlertsMon::no);
+
+                    snd.run();
+
                     // Render actor hit
                     if (proj->is_seen_by_player)
                     {
@@ -1392,7 +1437,7 @@ void projectile_fire(Actor* const attacker,
                 origin,
                 attacker,
                 vol,
-                AlertsMon::yes);
+                AlertsMon::yes); // Now we alert monsters
 
         snd.run();
     }
@@ -1400,15 +1445,16 @@ void projectile_fire(Actor* const attacker,
 
 void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 {
-    RangedAttData data = RangedAttData(&attacker,
-                                       attacker.pos,
-                                       aim_pos,
-                                       attacker.pos,
-                                       wpn);
+    RangedAttData att_data = RangedAttData(
+        &attacker,
+        attacker.pos,
+        aim_pos,
+        attacker.pos,
+        wpn);
 
-    print_ranged_init_msgs(data);
+    print_ranged_init_msgs(att_data);
 
-    const ActorSize intended_aim_lvl = data.intended_aim_lvl;
+    const ActorSize intended_aim_lvl = att_data.intended_aim_lvl;
 
     bool feature_blockers[map_w][map_h];
 
@@ -1428,6 +1474,9 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
     // Emit sound
     const bool is_attacker_player = &attacker == map::player;
+
+    const SndVol vol = wpn.data().ranged.snd_vol;
+
     std::string snd_msg = wpn.data().ranged.snd_msg;
 
     if (!snd_msg.empty())
@@ -1437,17 +1486,23 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
             snd_msg = "";
         }
 
-        const SndVol vol = wpn.data().ranged.snd_vol;
-
         const SfxId sfx = wpn.data().ranged.att_sfx;
 
+        //
+        // NOTE: The initial attack sound(s) must NOT alert monsters since
+        //       this would immediately make them aware before any attack data
+        //       is set. This would result in the player never geting a ranged
+        //       attack bonus against unaware monsters (unless the monster is
+        //       deaf). Instead, an extra sound is run after the attack (without
+        //       message or sound effect).
+        //
         Snd snd(snd_msg,
                 sfx,
                 IgnoreMsgIfOriginSeen::yes,
                 attacker.pos,
                 &attacker,
                 vol,
-                AlertsMon::yes);
+                AlertsMon::no); // We do not yet alert monsters
 
         snd_emit::run(snd);
     }
@@ -1478,18 +1533,36 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
             const ActorSize size_of_actor =
                 actor_array[current_pos.x][current_pos.y]->data().actor_size;
 
-            if (size_of_actor >= ActorSize::humanoid || current_pos == aim_pos)
+            if ((size_of_actor >= ActorSize::humanoid) ||
+                (current_pos == aim_pos))
             {
                 // Actor hit?
-                data = RangedAttData(&attacker,
-                                     attacker.pos,
-                                     aim_pos,
-                                     current_pos,
-                                     wpn,
-                                     intended_aim_lvl);
+                att_data = RangedAttData(
+                    &attacker,
+                    attacker.pos,
+                    aim_pos,
+                    current_pos,
+                    wpn,
+                    intended_aim_lvl);
 
-                if (data.att_result >= ActionResult::success)
+                if (att_data.att_result >= ActionResult::success)
                 {
+                    if (&attacker == map::player)
+                    {
+                        static_cast<Mon*>(att_data.defender)->
+                            set_player_aware_of_me();
+                    }
+
+                    Snd snd("A creature is hit.",
+                            SfxId::hit_small,
+                            IgnoreMsgIfOriginSeen::yes,
+                            current_pos,
+                            nullptr,
+                            SndVol::low,
+                            AlertsMon::no);
+
+                    snd.run();
+
                     const auto& cell = map::cells[current_pos.x][current_pos.y];
 
                     const bool is_seen = cell.is_seen_by_player;
@@ -1521,16 +1594,17 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     }
 
                     // Messages
-                    print_proj_at_actor_msgs(data, true, wpn);
+                    print_proj_at_actor_msgs(att_data, true, wpn);
 
                     // Damage
-                    if (data.dmg > 0)
+                    if (att_data.dmg > 0)
                     {
-                        data.defender->hit(data.dmg,
-                                           wpn.data().ranged.dmg_type,
-                                           DmgMethod::END,
-                                           AllowWound::yes,
-                                           &attacker);
+                        att_data.defender->hit(
+                            att_data.dmg,
+                            wpn.data().ranged.dmg_type,
+                            DmgMethod::END,
+                            AllowWound::yes,
+                            &attacker);
                     }
 
                     ++nr_actors_hit;
@@ -1541,7 +1615,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     // If current defender was killed, and player aimed at
                     // humanoid level or at floor level but beyond the current
                     // position, the shot will continue one cell.
-                    const bool is_tgt_killed = !data.defender->is_alive();
+                    const bool is_tgt_killed = !att_data.defender->is_alive();
 
                     if (is_tgt_killed && killed_mon_idx == -1)
                     {
@@ -1585,9 +1659,9 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 if (config::is_tiles_mode())
                 {
                     io::draw_tile(TileId::blast2,
-                                      Panel::map,
-                                      current_pos,
-                                      clr_yellow);
+                                  Panel::map,
+                                  current_pos,
+                                  clr_yellow);
                 }
                 else // Text mode
                 {
@@ -1601,7 +1675,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 states::draw();
             }
 
-            cell.rigid->hit(data.dmg,
+            cell.rigid->hit(att_data.dmg,
                             DmgType::physical,
                             DmgMethod::shotgun,
                             nullptr);
@@ -1656,6 +1730,22 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
         } // if floor hit
 
     } // path loop
+
+    //
+    // See note above
+    //
+    if (!snd_msg.empty())
+    {
+        Snd snd("",
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::yes,
+                origin,
+                &attacker,
+                vol,
+                AlertsMon::yes); // Now we alert monsters
+
+        snd.run();
+    }
 }
 
 } // namespace
@@ -1684,11 +1774,12 @@ void melee(Actor* const attacker,
 
         const auto dmg_type = wpn.data().melee.dmg_type;
 
-        defender.hit(att_data.dmg,
-                     dmg_type,
-                     DmgMethod::END,
-                     allow_wound,
-                     attacker);
+        defender.hit(
+            att_data.dmg,
+            dmg_type,
+            DmgMethod::END,
+            allow_wound,
+            attacker);
 
         if (defender.data().can_bleed &&
             (dmg_type == DmgType::physical ||

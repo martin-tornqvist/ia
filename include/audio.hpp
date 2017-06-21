@@ -16,9 +16,8 @@ enum class SfxId
     ape,
 
     // Weapon and attack sounds
-    hit_small, hit_medium, hit_hard, hit_corpse_break,
+    hit_small, hit_medium, hit_hard, hit_sharp, hit_corpse_break,
     miss_light, miss_medium, miss_heavy,
-    hit_sharp,
     pistol_fire,
     pistol_reload,
     shotgun_sawed_off_fire,

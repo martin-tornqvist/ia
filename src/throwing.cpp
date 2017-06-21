@@ -196,7 +196,7 @@ void throw_item(Actor& actor_throwing,
         Actor* const actor_here = map::actor_at_pos(pos);
 
         if (actor_here &&
-            (pos == tgt_pos ||
+            ((pos == tgt_pos) ||
              (actor_here->data().actor_size >= ActorSize::humanoid)))
         {
             att_data = ThrowAttData(&actor_throwing,
@@ -223,10 +223,20 @@ void throw_item(Actor& actor_throwing,
                     io::draw_blast_at_cells({pos}, hit_clr);
                 }
 
+                static_cast<Mon*>(actor_here)->set_player_aware_of_me();
+
+                Snd snd("A creature is hit.",
+                        SfxId::hit_small,
+                        IgnoreMsgIfOriginSeen::yes,
+                        pos,
+                        nullptr,
+                        SndVol::low,
+                        AlertsMon::no);
+
+                snd.run();
+
                 if (player_see_cell)
                 {
-                    static_cast<Mon*>(actor_here)->set_player_aware_of_me();
-
                     const std::string defender_name =
                         map::player->can_see_actor(*actor_here) ?
                         actor_here->name_the() :
