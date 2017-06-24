@@ -231,28 +231,28 @@ void PickBgState::draw()
     //
     y = descr_y0_;
 
-    const std::vector<std::string> descr =
-        player_bon::bg_descr(bg_marked);
+    const auto descr = player_bon::bg_descr(bg_marked);
 
     ASSERT(!descr.empty());
 
-    for (const std::string& descr_entry : descr)
+    for (const auto& descr_entry : descr)
     {
-        if (descr_entry.empty())
+        if (descr_entry.str.empty())
         {
             ++y;
 
             continue;
         }
 
-        const auto formatted_lines = text_format::split(descr_entry, descr_w_);
+        const auto formatted_lines =
+            text_format::split(descr_entry.str, descr_w_);
 
         for (const std::string& line : formatted_lines)
         {
             io::draw_text(line,
                           Panel::screen,
                           P(descr_x0_, y),
-                          clr_text);
+                          descr_entry.clr);
             ++y;
         }
     }

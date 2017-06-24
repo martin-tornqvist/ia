@@ -126,29 +126,29 @@ int Actor::hp_max(const bool with_modifiers) const
 
 int Actor::speed_pct() const
 {
-    int ret = data_->speed_pct;
+    int speed = data_->speed_pct;
 
     //
     // Speed modifications due to properties
     //
     if (prop_handler_->has_prop(PropId::slowed))
     {
-        ret -= 50;
+        speed -= 50;
     }
 
     if (prop_handler_->has_prop(PropId::hasted))
     {
-        ret += 100;
+        speed += 100;
     }
 
     if (prop_handler_->has_prop(PropId::frenzied))
     {
-        ret += 100;
+        speed += 100;
     }
 
     if (prop_handler_->has_prop(PropId::clockwork_hasted))
     {
-        ret += 2000;
+        speed += 2000;
     }
 
     //
@@ -158,20 +158,30 @@ int Actor::speed_pct() const
     {
         if (player_bon::traits[(size_t)Trait::dexterous])
         {
-            ret += 10;
+            speed += 10;
         }
 
         if (player_bon::traits[(size_t)Trait::lithe])
         {
-            ret += 10;
+            speed += 10;
+        }
+
+        const int hp_pct = (hp() * 100) / hp_max(true);
+
+        const int perseverant_bon_hp_pct = 50;
+
+        if (player_bon::traits[(size_t)Trait::perseverant] &&
+            (hp_pct < perseverant_bon_hp_pct))
+        {
+            speed += 20;
         }
     }
 
     const int min_speed = 10;
 
-    ret = std::max(min_speed, ret);
+    speed = std::max(min_speed, speed);
 
-    return ret;
+    return speed;
 }
 
 void Actor::place(const P& pos_, ActorDataT& actor_data)

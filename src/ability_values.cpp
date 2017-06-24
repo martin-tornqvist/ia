@@ -34,7 +34,7 @@ int AbilityVals::val(const AbilityId id,
 
         const int hp_pct = (actor.hp() * 100) / actor.hp_max(true);
 
-        const int perseverant_bon_hp_pct = 30;
+        const int perseverant_bon_hp_pct = 50;
 
         switch (id)
         {
@@ -69,7 +69,7 @@ int AbilityVals::val(const AbilityId id,
             }
 
             if (player_bon::traits[(size_t)Trait::perseverant] &&
-                hp_pct <= perseverant_bon_hp_pct)
+                (hp_pct < perseverant_bon_hp_pct))
             {
                 ret += 30;
             }
@@ -96,7 +96,7 @@ int AbilityVals::val(const AbilityId id,
             }
 
             if (player_bon::traits[(size_t)Trait::perseverant] &&
-                hp_pct <= perseverant_bon_hp_pct)
+                (hp_pct < perseverant_bon_hp_pct))
             {
                 ret += 30;
             }
@@ -121,9 +121,9 @@ int AbilityVals::val(const AbilityId id,
             }
 
             if (player_bon::traits[(size_t)Trait::perseverant] &&
-                hp_pct <= perseverant_bon_hp_pct)
+                (hp_pct < perseverant_bon_hp_pct))
             {
-                ret += 50;
+                ret += 30;
             }
         }
         break;

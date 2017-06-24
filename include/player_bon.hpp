@@ -4,10 +4,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-#include "ability_values.hpp"
-
 #include <math.h>
+
+#include "global.hpp"
 
 struct ActorDataT;
 
@@ -111,7 +110,7 @@ std::string bg_title(const Bg id);
 // NOTE: The string vector returned is not formatted. Each line still needs to
 //       be formatted by the caller. The reason for using a vector instead of a
 //       string is to separate the text into paragraphs.
-std::vector<std::string> bg_descr(const Bg id);
+std::vector<StrAndClr> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();
 

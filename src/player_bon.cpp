@@ -372,113 +372,98 @@ std::string trait_title(const Trait id)
     return "[TRAIT TITLE MISSING]";
 }
 
-std::vector<std::string> bg_descr(const Bg id)
+std::vector<StrAndClr> bg_descr(const Bg id)
 {
+    std::vector<StrAndClr> descr;
+
+    auto put = [&descr](const std::string& str)
+    {
+        descr.push_back({str, clr_white});
+    };
+
+    auto put_trait = [&descr](const Trait id)
+    {
+        descr.push_back({trait_title(id), clr_white});
+        descr.push_back({trait_descr(id), clr_gray});
+    };
+
     switch (id)
     {
     case Bg::ghoul:
-    {
-        return
-        {
-            "Does not regenerate Hit Points and cannot use medical equipment - "
-            "must instead heal by feeding on corpses (stand still to feed)",
-            "",
-            "Has an arcane ability to incite Frenzy at will (increased speed, "
+        put("Does not regenerate Hit Points and cannot use medical equipment - "
+            "must instead heal by feeding on corpses (stand still to feed)");
+        put("");
+        put("Has an arcane ability to incite Frenzy at will (increased speed, "
             "+10% melee hit chance, +1 melee damage, must move towards "
-            "enemies).",
-            "",
-            "Does not become Weakened when Frenzy ends",
-            "",
-            "Has powerful claws to attack with",
-            "",
-            "-15% hit chance with firearms and thrown weapons",
-            "",
-            "+10 Hit Points",
-            "",
-            "Is immune to Disease and Infections",
-            "",
-            "Has Infravision",
-            "",
-            "-50% shock taken from seeing monsters",
-            "",
-            "All Ghouls are allied"
-        };
-    }
-    break;
+            "enemies)");
+        put("");
+        put("Does not become Weakened when Frenzy ends");
+        put("");
+        put("Has powerful claws to attack with");
+        put("");
+        put("-15% hit chance with firearms and thrown weapons");
+        put("");
+        put("+10 Hit Points");
+        put("");
+        put("Is immune to Disease and Infections");
+        put("");
+        put("Has Infravision");
+        put("");
+        put("-50% shock taken from seeing monsters");
+        put("");
+        put("All Ghouls are allied");
+        break;
 
     case Bg::occultist:
-        return
-        {
-            "Gains spell proficiency at a much quicker rate",
-            "",
-            "Starts with a few known spells",
-            "",
-            "-50% shock taken from carrying, using and identifying strange "
-            "items (e.g. drinking a potion or carrying a disturbing artifact)",
-            "",
-            "Can dispel magic traps",
-            "",
-            "+2 Spirit Points (in addition to \"Strong Spirit\")",
-            "",
-            "-2 Hit Points",
-            "",
-            "Starts with the following trait(s):",
-            "",
-            "* " + trait_title(Trait::strong_spirit),
-            trait_descr(Trait::strong_spirit)
-        };
+        put("Gains spell proficiency at a much quicker rate");
+        put("");
+        put("Starts with a few known spells");
+        put("");
+        put("-50% shock taken from carrying, using and identifying strange "
+            "items (e.g. drinking a potion or carrying a disturbing artifact)");
+        put("");
+        put("Can dispel magic traps");
+        put("");
+        put("+2 Spirit Points (in addition to \"Strong Spirit\")");
+        put("");
+        put("-2 Hit Points");
+        put("");
+        put_trait(Trait::strong_spirit);
         break;
 
     case Bg::rogue:
-        return
-        {
-            "The rate of shock received passively over time is halved",
-            "",
-            "Has acquired an artifact which can cloud the minds of all "
-            "enemies, causing them to forget the presence of the user",
-            "",
-            "Remains aware of the presence of other creatures much longer",
-            "",
-            "Starts with the following trait(s):",
-            "",
-            "* " + trait_title(Trait::observant),
-            trait_descr(Trait::observant),
-            "",
-            "* " + trait_title(Trait::stealthy),
-            trait_descr(Trait::stealthy)
-        };
+        put("The rate of shock received passively over time is halved");
+        put("");
+        put("Has acquired an artifact which can cloud the minds of all "
+            "enemies, causing them to forget the presence of the user");
+        put("");
+        put("Remains aware of the presence of other creatures much longer");
+        put("");
+        put_trait(Trait::observant);
+        put("");
+        put_trait(Trait::stealthy);
         break;
 
     case Bg::war_vet:
-        return
-        {
-            "Switches to prepared weapon instantly",
-            "",
-            "Maintains armor twice as long before it breaks",
-            "",
-            "Starts with the following trait(s):",
-            "",
-            "* " + trait_title(Trait::adept_marksman),
-            trait_descr(Trait::adept_marksman),
-            "",
-            "* " + trait_title(Trait::adept_melee_fighter),
-            trait_descr(Trait::adept_melee_fighter),
-            "",
-            "* " + trait_title(Trait::tough),
-            trait_descr(Trait::tough),
-            "",
-            "* " + trait_title(Trait::healer),
-            trait_descr(Trait::healer)
-        };
+        put("Switches to prepared weapon instantly");
+        put("");
+        put("Maintains armor twice as long before it breaks");
+        put("");
+        put_trait(Trait::adept_marksman);
+        put("");
+        put_trait(Trait::adept_melee_fighter);
+        put("");
+        put_trait(Trait::tough);
+        put("");
+        put_trait(Trait::healer);
         break;
 
     case Bg::END:
+        ASSERT(false);
         break;
     }
 
-    ASSERT(false);
-
-    return {};
+    return descr;
 }
 
 std::string trait_descr(const Trait id)
@@ -567,15 +552,17 @@ std::string trait_descr(const Trait id)
 
     case Trait::tough:
         return
-            "+1 Armor Point, +4 Hit Points, +10% carry weight limit, less "
-            "likely to sprain when kicking, more likely to succeed with "
-            "object interactions requiring strength (e.g. bashing things open)";
+            "+1 Armor Point (physical damage taken reduced by 1 point), "
+            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
+            "when kicking, more likely to succeed with object interactions "
+            "requiring strength (e.g. bashing things open)";
 
     case Trait::rugged:
         return
-            "+1 Armor Point, +4 Hit Points, +10% carry weight limit, less "
-            "likely to sprain when kicking, more likely to succeed with "
-            "object interactions requiring strength (e.g. bashing things open)";
+            "+1 Armor Point (physical damage taken reduced by 1 point), "
+            "+4 Hit Points, +10% carry weight limit, less likely to sprain "
+            "when kicking, more likely to succeed with object interactions "
+            "requiring strength (e.g. bashing things open)";
 
     case Trait::strong_backed:
         return
@@ -583,13 +570,11 @@ std::string trait_descr(const Trait id)
 
     case Trait::dexterous:
         return
-            "+10% speed for all actions, +15% chance to evade melee and "
-            "ranged attacks.";
+            "+10% speed for all actions, +15% chance to dodge attacks";
 
     case Trait::lithe:
         return
-            "+10% speed for all actions, +15% chance to evade melee and "
-            "ranged attacks.";
+            "+10% speed for all actions, +15% chance to dodge attacks";
 
     case Trait::mobile:
         return
@@ -627,9 +612,9 @@ std::string trait_descr(const Trait id)
 
     case Trait::perseverant:
         return
-            "When your Hit Points are reduced to 30% or less, you gain +50% "
-            "chance to dodge melee and ranged attacks, and +30% hit chance "
-            "with melee and ranged attacks";
+            "While your Hit Points are reduced below 50%, you gain +20% speed "
+            "for all actions, +20% hit chance with melee and ranged attacks "
+            "+30% chance to dodge attacks";
 
     case Trait::self_aware:
         return
@@ -683,28 +668,28 @@ std::string trait_descr(const Trait id)
         return
             "Rods recharge twice as fast, Strange Devices are less likely to "
             "malfunction or break, Electric Lanterns last twice as long, and "
-            "are less likely to flicker, +1 damage with electricity weapons.";
+            "are less likely to flicker, +1 damage with electricity weapons";
 
     case Trait::ravenous:
         return
             "You occasionally feed on living victims when attacking with your "
-            "claws.";
+            "claws";
 
     case Trait::foul:
         return
             "You have particularly filthy and verminous claws - vicious worms "
             "occasionally burst out from the corpses of your victims to attack "
-            "your enemies.";
+            "your enemies";
 
     case Trait::toxic:
         return
             "Attacks with your claws occasionally poisons your victims. "
-            "You are immune to Poison.";
+            "You are immune to Poison";
 
     case Trait::indomitable_fury:
         return
             "While Frenzied, you are immune to Wounds, and your attacks causes "
-            "fear.";
+            "fear";
 
     case Trait::END:
         break;
