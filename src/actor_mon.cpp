@@ -1509,11 +1509,6 @@ void MiGo::mk_start_items()
         }
     }
 
-    if (rnd::one_in(9))
-    {
-        inv_->put_in_backpack(item_factory::mk(ItemId::mi_go_gun_ammo));
-    }
-
     spells_known_.push_back(new SpellTeleport);
     spells_known_.push_back(new SpellMiGoHypno);
     spells_known_.push_back(new SpellHealSelf);

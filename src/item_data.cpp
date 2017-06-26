@@ -637,21 +637,19 @@ void init_data_list()
         "A weapon created by the Mi-go. It fires devastating bolts of "
         "electricity.",
 
-        "If there is no ammunition to fuel the weapon, it can draw power from "
-        "the essence of the wielder (press [f] while no ammo loaded)."
+        "The weapon does not use ammunition, instead it draws power from the "
+        "spirit of the wielder."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
     d.tile = TileId::mi_go_gun;
     d.clr = clr_yellow;
-    d.ranged.max_ammo = 16;
     d.ranged.dmg = DiceParam(3, 6, 0);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
     d.ranged.prop_applied = new PropParalyzed(PropTurns::specific, 2);
     d.ranged.dmg_type = DmgType::electric;
-    d.ranged.ammo_item_id = ItemId::mi_go_gun_ammo;
-    d.ranged.has_infinite_ammo = false;
+    d.ranged.has_infinite_ammo = true;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.projectile_clr = clr_yellow;
     d.melee.att_msgs = {"strike", "strikes me with a Mi-go Electric Gun"};
@@ -660,21 +658,6 @@ void init_data_list()
     d.ranged.att_sfx = SfxId::mi_go_gun_fire;
     d.ranged.reload_sfx = SfxId::machine_gun_reload;
     d.ranged.makes_ricochet_snd = false;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::ammo_mag);
-    d.id = ItemId::mi_go_gun_ammo;
-    d.base_name =
-    {
-        "Mi-go Electric Cell", "Mi-go Electric Cells", "a Mi-go Electric Cell"
-    };
-    d.base_descr =
-    {
-        "Ammunition for the Mi-go Electric gun."
-    };
-    d.ranged.max_ammo = data[(size_t)ItemId::mi_go_gun].ranged.max_ammo;
-    d.clr = clr_yellow;
-    d.spawn_std_range = Range(-1, -1);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn);

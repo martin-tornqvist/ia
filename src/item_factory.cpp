@@ -153,7 +153,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::drum_of_bullets:
     case ItemId::pistol_mag:
     case ItemId::incinerator_ammo:
-    case ItemId::mi_go_gun_ammo:
         r = new AmmoMag(d);
         break;
 

@@ -838,7 +838,7 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 14;
     d.descr =
         "A fanatic cultist of the Wizard rank, madly gibbering in some "
         "half-lost language.";
@@ -879,7 +879,7 @@ void init_data_list()
     d.is_humanoid = true;
     d.can_open_doors = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 12;
+    d.nr_turns_aware = 16;
     d.descr =
         "A fanatic cultist of the Grand Wizard rank, madly gibbering in some "
         "half-lost language.";

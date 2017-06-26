@@ -447,37 +447,31 @@ void handle_player_input(const InputData& input)
                 {
                     auto* wpn = static_cast<Wpn*>(item);
 
-                    //
-                    // TODO: A hack for the Mi-go gun - refactor
-                    //
-                    if (wpn->data().id == ItemId::mi_go_gun &&
-                        wpn->nr_ammo_loaded_ == 0 &&
-                        map::player->hp() > 1)
-                    {
-                        const std::string wpn_name =
-                            wpn->name(ItemRefType::plain,
-                                      ItemRefInf::none);
-
-                        msg_log::add("The " + wpn_name +
-                                     " draws power from my essence!",
-                                     clr_msg_bad);
-
-                        ++wpn->nr_ammo_loaded_;
-
-                        map::player->hit(1, DmgType::pure);
-
-                        return;
-                    }
-
-                    if (wpn->nr_ammo_loaded_ >= 1 ||
+                    if ((wpn->nr_ammo_loaded_ >= 1) ||
                         item_data.ranged.has_infinite_ammo)
                     {
+                        // Not enough spirit for Mi-go gun?
+
+                        //
+                        // TODO: This doesn't belong here - refactor
+                        //
+                        if (wpn->data().id == ItemId::mi_go_gun)
+                        {
+                            if (map::player->spi() <= mi_go_gun_spi_drained)
+                            {
+                                msg_log::add(
+                                    "I don't have enough spirit to fire it.");
+
+                                return;
+                            }
+                        }
+
                         std::unique_ptr<State> aim_state(
                             new Aiming(map::player->pos, *wpn));
 
                         states::push(std::move(aim_state));
                     }
-                    // Not enough ammo loaded
+                    // Not enough ammo loaded - auto reload?
                     else if (config::is_ranged_wpn_auto_reload())
                     {
                         reload::try_reload(*map::player, item);

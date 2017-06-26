@@ -383,8 +383,9 @@ class Incinerator: public Wpn
 {
 public:
     Incinerator(ItemDataT* const item_data);
-    void on_projectile_blocked(const P& pos, Actor* actor_hit);
     ~Incinerator() {}
+
+    void on_projectile_blocked(const P& pos, Actor* actor_hit);
 };
 
 class MiGoGun: public Wpn

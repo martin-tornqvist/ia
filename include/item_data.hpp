@@ -107,7 +107,6 @@ enum class ItemId
     phantasm_sickle,
     wraith_claw,
     mi_go_gun,
-    mi_go_gun_ammo,
     polyp_tentacle,
     greater_polyp_tentacle,
     mind_eater_tentacle,

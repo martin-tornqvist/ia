@@ -94,7 +94,8 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     const int wpn_max_ammo = wpn->data().ranged.max_ammo;
 
-    if (wpn_max_ammo == 0)
+    if (wpn->data().ranged.has_infinite_ammo ||
+        (wpn_max_ammo == 0))
     {
         msg_log::add("This weapon does not use ammo.");
         return;

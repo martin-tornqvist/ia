@@ -921,10 +921,10 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
     }
 }
 
-void projectile_fire(Actor* const attacker,
-                     const P& origin,
-                     const P& aim_pos,
-                     Wpn& wpn)
+void fire_projectiles(Actor* const attacker,
+                      const P& origin,
+                      const P& aim_pos,
+                      Wpn& wpn)
 {
     std::vector<Projectile*> projectiles;
 
@@ -1192,11 +1192,12 @@ void projectile_fire(Actor* const attacker,
 
                     if (att_data.dmg > 0)
                     {
-                        died = proj->actor_hit->hit(att_data.dmg,
-                                                    wpn.data().ranged.dmg_type,
-                                                    DmgMethod::END,
-                                                    AllowWound::yes,
-                                                    attacker);
+                        died = proj->actor_hit->hit(
+                            att_data.dmg,
+                            wpn.data().ranged.dmg_type,
+                            DmgMethod::END,
+                            AllowWound::yes,
+                            attacker);
                     }
 
                     //
@@ -1675,10 +1676,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                 states::draw();
             }
 
-            cell.rigid->hit(att_data.dmg,
-                            DmgType::physical,
-                            DmgMethod::shotgun,
-                            nullptr);
+            cell.rigid->hit(
+                att_data.dmg,
+                DmgType::physical,
+                DmgMethod::shotgun,
+                nullptr);
 
             break;
         }
@@ -1770,7 +1772,8 @@ void melee(Actor* const attacker,
 
         const AllowWound allow_wound =
             is_ranged_wpn ?
-            AllowWound::no : AllowWound::yes;
+            AllowWound::no :
+            AllowWound::yes;
 
         const auto dmg_type = wpn.data().melee.dmg_type;
 
@@ -1781,6 +1784,9 @@ void melee(Actor* const attacker,
             allow_wound,
             attacker);
 
+        //
+        // TODO: Why is light damage included here?
+        //
         if (defender.data().can_bleed &&
             (dmg_type == DmgType::physical ||
              dmg_type == DmgType::pure ||
@@ -1789,8 +1795,10 @@ void melee(Actor* const attacker,
             map::mk_blood(defender.pos);
         }
 
+        //
         // NOTE: This is run regardless of if defender died or not, it is the
-        // hook implementors responsibility to check this if it matters.
+        //       hook implementors responsibility to check this, if it matters
+        //
         wpn.on_melee_hit(defender, att_data.dmg);
 
         if (defender.is_alive())
@@ -1804,9 +1812,11 @@ void melee(Actor* const attacker,
         }
         else // Defender was killed
         {
+            //
             // NOTE: Destroyed actors are purged on standard turns, so it's no
             //       problem calling this function even if defender was
             //       destroyed (we haven't "ticked" game time yet)
+            //
             wpn.on_melee_kill(defender);
         }
     }
@@ -1901,7 +1911,8 @@ bool ranged(Actor* const attacker,
     {
         ASSERT(attacker);
 
-        if (wpn.nr_ammo_loaded_ != 0 || has_inf_ammo)
+        if ((wpn.nr_ammo_loaded_ != 0) ||
+            has_inf_ammo)
         {
             shotgun(*attacker,
                     wpn,
@@ -1927,67 +1938,81 @@ bool ranged(Actor* const attacker,
         if ((wpn.nr_ammo_loaded_ >= nr_of_projectiles) ||
             has_inf_ammo)
         {
-            projectile_fire(attacker,
-                            origin,
-                            aim_pos,
-                            wpn);
-
-            if (map::player->is_alive())
+            //
+            // TODO: A hack for the Mi-go gun - refactor
+            //
+            if ((attacker == map::player) &&
+                (wpn.data().id == ItemId::mi_go_gun))
             {
-                did_attack = true;
+                const std::string wpn_name =
+                    wpn.name(ItemRefType::plain,
+                             ItemRefInf::none);
 
-                if (!has_inf_ammo)
-                {
-                    wpn.nr_ammo_loaded_ -= nr_of_projectiles;
-                }
+                msg_log::add("The " +
+                             wpn_name +
+                             " draws power from my spirit!",
+                             clr_msg_bad);
+
+                attacker->hit_spi(mi_go_gun_spi_drained,
+                                  Verbosity::silent);
             }
-            else // Player is dead
+
+            fire_projectiles(attacker,
+                             origin,
+                             aim_pos,
+                             wpn);
+
+            did_attack = true;
+
+            if (!has_inf_ammo)
             {
-                return true;
+                wpn.nr_ammo_loaded_ -= nr_of_projectiles;
             }
         }
+    }
+
+    // Player could have for example fired an explosive weapon into a wall and
+    // killed themselves - if so, abort early
+    if (!map::player->is_alive())
+    {
+        return true;
     }
 
     states::draw();
 
-    if (did_attack)
+    // Only pass time if an actor is attacking (not if it's e.g. a trap)
+    if (did_attack && attacker)
     {
-        // Only pass time if an actor is attacking (not if it's e.g. a trap)
-        if (attacker)
+        int speed_pct_diff = 0;
+
+        if (attacker == map::player &&
+            wpn.data().type == ItemType::ranged_wpn)
         {
-            int speed_pct_diff = 0;
-
-            if (attacker == map::player &&
-                wpn.data().type == ItemType::ranged_wpn)
+            if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
-                if (player_bon::traits[(size_t)Trait::adept_marksman])
-                {
-                    speed_pct_diff += 25;
-                }
-
-                if (player_bon::traits[(size_t)Trait::expert_marksman])
-                {
-                    speed_pct_diff += 25;
-                }
-
-                if (player_bon::traits[(size_t)Trait::master_marksman])
-                {
-                    speed_pct_diff += 25;
-                }
-
-                if (player_bon::traits[(size_t)Trait::fast_shooter])
-                {
-                    speed_pct_diff += 100;
-                }
+                speed_pct_diff += 25;
             }
 
-            game_time::tick(speed_pct_diff);
+            if (player_bon::traits[(size_t)Trait::expert_marksman])
+            {
+                speed_pct_diff += 25;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_marksman])
+            {
+                speed_pct_diff += 25;
+            }
+
+            if (player_bon::traits[(size_t)Trait::fast_shooter])
+            {
+                speed_pct_diff += 100;
+            }
         }
 
-        return true;
+        game_time::tick(speed_pct_diff);
     }
 
-    return false;
+    return did_attack;
 }
 
 } // attack

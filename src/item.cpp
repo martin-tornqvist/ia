@@ -948,7 +948,7 @@ MiGoGun::MiGoGun(ItemDataT* const item_data) :
 void MiGoGun::specific_dmg_mod(DiceParam& dice,
                                const Actor* const actor) const
 {
-    if (actor == map::player &&
+    if ((actor == map::player) &&
         player_bon::traits[(size_t)Trait::elec_incl])
     {
         ++dice.plus;
