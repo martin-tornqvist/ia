@@ -647,17 +647,20 @@ TrapPlacementValid TrapDart::on_place()
             p += d;
 
             const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+
             const bool is_wall = rigid->id() == FeatureId::wall;
+
             const bool is_passable = rigid->is_projectile_passable();
 
-            if (!is_passable && (i < nr_steps_min || !is_wall))
+            if (!is_passable &&
+                ((i < nr_steps_min) || !is_wall))
             {
                 // We are blocked too early - OR - blocked by a rigid feature
                 // other than a wall. Give up on this direction.
                 break;
             }
 
-            if (i >= nr_steps_min && is_wall)
+            if ((i >= nr_steps_min) && is_wall)
             {
                 // This is a good origin!
                 dart_origin_ = p;

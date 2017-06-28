@@ -55,7 +55,7 @@ class RangedAttData: public AttData
 {
 public:
     RangedAttData(Actor* const attacker,
-                  const P& attacker_orign,
+                  const P& attacker_origin,
                   const P& aim_pos,
                   const P& current_pos,
                   const Wpn& wpn,

@@ -254,7 +254,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 }
 
 RangedAttData::RangedAttData(Actor* const attacker,
-                             const P& attacker_orign,
+                             const P& attacker_origin,
                              const P& aim_pos,
                              const P& current_pos,
                              const Wpn& wpn,
@@ -295,7 +295,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
     defender = map::actor_at_pos(current_pos);
 
-    if (defender && defender != attacker)
+    if (defender && (defender != attacker))
     {
         TRACE_VERBOSE << "Defender found" << std::endl;
 
@@ -318,7 +318,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
             -defender->ability(AbilityId::dodging, true) :
             0;
 
-        const int dist_to_tgt = king_dist(attacker_orign, def_pos);
+        const int dist_to_tgt = king_dist(attacker_origin, def_pos);
 
         dist_mod = 15 - (dist_to_tgt * 5);
 
@@ -326,38 +326,41 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         state_mod = 0;
 
-        bool can_attacker_see_tgt = true;
-
-        if (attacker == map::player)
-        {
-            can_attacker_see_tgt = map::player->can_see_actor(*defender);
-        }
-        else // Attacker is monster
-        {
-            Mon* const mon = static_cast<Mon*>(attacker);
-
-            bool hard_blocked_los[map_w][map_h];
-
-            const R fov_rect = fov::get_fov_rect(attacker->pos);
-
-            map_parsers::BlocksLos()
-                .run(hard_blocked_los,
-                     MapParseMode::overwrite,
-                     fov_rect);
-
-            can_attacker_see_tgt =
-                mon->can_see_actor(*defender, hard_blocked_los);
-        }
-
         // Lower hit chance if attacker cannot see target (e.g. attacking
         // invisible creature)
-        if (!can_attacker_see_tgt)
+        if (attacker)
         {
-            state_mod -= 25;
+            bool can_attacker_see_tgt = true;
+
+            if (attacker->is_player())
+            {
+                can_attacker_see_tgt = map::player->can_see_actor(*defender);
+            }
+            else // Attacker is monster
+            {
+                Mon* const mon = static_cast<Mon*>(attacker);
+
+                bool hard_blocked_los[map_w][map_h];
+
+                const R fov_rect = fov::get_fov_rect(attacker->pos);
+
+                map_parsers::BlocksLos()
+                    .run(hard_blocked_los,
+                         MapParseMode::overwrite,
+                         fov_rect);
+
+                can_attacker_see_tgt =
+                    mon->can_see_actor(*defender, hard_blocked_los);
+            }
+
+            if (!can_attacker_see_tgt)
+            {
+                state_mod -= 25;
+            }
         }
 
         // Player gets attack bonus for attacking unaware monster
-        if (attacker->is_player() &&
+        if ((attacker == map::player) &&
             (static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0))
         {
             state_mod += 25;
@@ -420,7 +423,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
                 dmg_dice.roll();
 
             // Outside effective range limit?
-            if (!wpn.is_in_effective_range_lmt(attacker_orign, defender->pos))
+            if (!wpn.is_in_effective_range_lmt(attacker_origin, defender->pos))
             {
                 TRACE_VERBOSE << "Outside effetive range limit" << std::endl;
                 dmg = std::max(1, dmg / 2);
@@ -467,7 +470,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
     defender = map::actor_at_pos(current_pos);
 
-    if (defender && defender != attacker)
+    if (defender && (defender != attacker))
     {
         TRACE_VERBOSE << "Defender found" << std::endl;
 
@@ -518,7 +521,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         }
 
         // Player gets attack bonus for attacking unaware monster
-        if (attacker->is_player() &&
+        if ((attacker == map::player) &&
             (static_cast<Mon*>(defender)->aware_of_player_counter_ <= 0))
         {
             state_mod += 25;
@@ -1216,11 +1219,13 @@ void fire_projectiles(Actor* const attacker,
                         defender_prop_handler.apply_from_att(wpn, false);
 
                         // Knock-back?
-                        if (wpn.data().ranged.knocks_back)
+                        if (wpn.data().ranged.knocks_back &&
+                            attacker)
                         {
                             const AttData* const current_data = proj->att_data;
 
-                            if (current_data->att_result >= ActionResult::success)
+                            if (current_data->att_result >=
+                                ActionResult::success)
                             {
                                 const bool is_spike_gun =
                                     wpn.data().id == ItemId::spike_gun;
