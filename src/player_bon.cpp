@@ -613,8 +613,8 @@ std::string trait_descr(const Trait id)
     case Trait::perseverant:
         return
             "While your Hit Points are reduced below 50%, you gain +20% speed "
-            "for all actions, +20% hit chance with melee and ranged attacks "
-            "+30% chance to dodge attacks";
+            "for all actions, +20% hit chance with melee and ranged attacks, "
+            "and +30% chance to dodge attacks";
 
     case Trait::self_aware:
         return

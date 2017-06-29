@@ -1727,8 +1727,8 @@ void Player::move(Dir dir)
                 }
 
                 // NOTE: The target is blocked by map features. Do NOT reveal
-                // the monster - just act like the monster isn't there, and
-                // let the code below handle the situation.
+                //       the monster - just act like the monster isn't there,
+                //       and let the code below handle the situation.
             }
         }
 

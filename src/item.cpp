@@ -278,7 +278,7 @@ void Item::on_removed_from_inv()
 
 void Item::on_player_found()
 {
-    if (data_->value == ItemValue::major_treasure &&
+    if ((data_->value == ItemValue::major_treasure) &&
         data_->is_unique &&
         !data_->is_found)
     {

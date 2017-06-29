@@ -2275,9 +2275,10 @@ void ItemContainer::open(const P& feature_pos,
         {
             msg_log::clear();
 
-            const std::string name = item->name(ItemRefType::plural,
-                                                ItemRefInf::yes,
-                                                ItemRefAttInf::wpn_main_att_mode);
+            const std::string name =
+                item->name(ItemRefType::plural,
+                           ItemRefInf::yes,
+                           ItemRefAttInf::wpn_main_att_mode);
 
             msg_log::add("Pick up " + name + "? [y/n]");
 
@@ -2330,7 +2331,8 @@ void ItemContainer::open(const P& feature_pos,
             }
         }
 
-        msg_log::clear();
+        msg_log::more_prompt();
+
         msg_log::add("There are no more items of interest.");
     }
     else // Not opened by an actor (probably opened by a spell of opening)

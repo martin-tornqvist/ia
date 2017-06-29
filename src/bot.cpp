@@ -234,7 +234,7 @@ void act()
         prop_handler.apply(new PropRFear(PropTurns::specific, 4));
     }
 
-    // Occasionally apply Burning to a random actor helps to avoid getting stuck
+    // Occasionally apply Burning to a random actor (to avoid getting stuck)
     if (rnd::one_in(10))
     {
         const int element = rnd::range(0, game_time::actors.size() - 1);
@@ -266,7 +266,7 @@ void act()
         return;
     }
 
-    // Occasionally apply a random property to exercise the prop code
+    // Occasionally apply a random property (to exercise the prop code)
     if (rnd::one_in(20))
     {
         std::vector<PropId> prop_bucket;
@@ -295,14 +295,15 @@ void act()
         return;
     }
 
-    // Occasionally cause shock spikes
+    // Occasionally cause shock spikes (code exercise)
     if (rnd::one_in(100))
     {
         map::player->incr_shock(200, ShockSrc::misc);
         return;
     }
 
-    // Occasionally run an explosion around the player
+    // Occasionally run an explosion around the player (code exercise, and to
+    // avoid getting stuck)
     if (rnd::one_in(50))
     {
         explosion::run(map::player->pos, ExplType::expl);
