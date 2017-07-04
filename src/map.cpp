@@ -165,7 +165,6 @@ void reset_map()
     {
         std::vector<Clr> wall_clr_bucket =
         {
-            clr_gray_drk,
             clr_red,
             clr_nosf_sepia,
             clr_nosf_sepia_drk,

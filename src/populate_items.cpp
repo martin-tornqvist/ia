@@ -22,12 +22,6 @@ int nr_items()
 {
     int nr = rnd::range(4, 6);
 
-    // Spawn extra items on the earliest levels, to kickstart the player
-    if (map::dlvl <= 3)
-    {
-        nr += 2;
-    }
-
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
         nr += 2;
