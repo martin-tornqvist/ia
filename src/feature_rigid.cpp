@@ -2302,6 +2302,8 @@ void ItemContainer::open(const P& feature_pos,
             const BinaryAnswer answer =
                 query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
 
+            msg_log::clear();
+
             if (answer == BinaryAnswer::yes)
             {
                 audio::play(SfxId::pickup);
@@ -2892,7 +2894,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         if (mon_spawned)
         {
             mon_spawned->prop_handler().apply(
-                new PropWaiting(PropTurns::specific, 1));
+                new PropWaiting(PropTurns::specific, 2));
         }
     }
 
