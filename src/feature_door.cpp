@@ -1220,6 +1220,22 @@ DidOpen Door::open(Actor* const actor_opening)
 
     is_stuck_ = false;
 
+    //
+    // TODO: This is kind of a hack...
+    //
+    if (type_ == DoorType::metal)
+    {
+        Snd snd("",
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::yes,
+                pos_,
+                nullptr,
+                SndVol::low,
+                AlertsMon::yes);
+
+        snd.run();
+    }
+
     return DidOpen::yes;
 }
 
@@ -1228,6 +1244,22 @@ DidClose Door::close(Actor* const actor_closing)
     (void)actor_closing;
 
     is_open_ = false;
+
+    //
+    // TODO: This is kind of a hack...
+    //
+    if (type_ == DoorType::metal)
+    {
+        Snd snd("",
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::yes,
+                pos_,
+                nullptr,
+                SndVol::low,
+                AlertsMon::yes);
+
+        snd.run();
+    }
 
     return DidClose::yes;
 }

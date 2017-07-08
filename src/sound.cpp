@@ -85,13 +85,19 @@ void run(Snd snd)
         for (int y = 0; y < map_h; ++y)
         {
             const auto f  = map::cells[x][y].rigid;
+
             blocked[x][y] = !f->is_sound_passable();
         }
     }
 
-    int flood[map_w][map_h];
-
     const P& origin = snd.origin();
+
+    // Never block the origin - we want to be able to run the sound from e.g. a
+    // closing door, after it was closed (and we don't want this to depend on
+    // the floodfill algorithm, so we explicitly set the origin to free here)
+    blocked[origin.x][origin.y] = false;
+
+    int flood[map_w][map_h];
 
     floodfill(origin,
               blocked,
