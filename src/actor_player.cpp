@@ -148,10 +148,11 @@ void Player::mk_start_items()
 
     case Bg::war_vet:
     {
-        // War Veteran starts with an extra cartridge, some smoke grenades and a
-        // gas mask
+        // War Veteran starts with an extra cartridge, some smoke grenades,
+        // flares, and a gas mask
         ++nr_cartridges;
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
+        inv_->put_in_backpack(item_factory::mk(ItemId::flare, 2));
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
     }
     break;
@@ -613,7 +614,7 @@ void Player::incr_shock(double shock, ShockSrc shock_src)
 
     perm_shock_taken_current_turn_ += shock;
 
-    set_constr_in_range(0.0, shock_, 100.0);
+    shock_ = std::max(0.0, shock_);
 }
 
 void Player::incr_shock(const ShockLvl shock, ShockSrc shock_src)

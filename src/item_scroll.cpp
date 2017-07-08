@@ -33,7 +33,11 @@ std::vector<std::string> Scroll::descr() const
     {
         const auto* const spell = mk_spell();
 
-        const auto descr = spell->descr(scroll_spell_skill_level);
+        const int player_spell_skill = map::player->spell_skill(spell->id());
+
+        const int skill = std::max(player_spell_skill, scroll_min_spell_skill);
+
+        const auto descr = spell->descr(skill);
 
         delete spell;
 
@@ -97,8 +101,14 @@ ConsumeItem Scroll::activate(Actor* const actor)
         data_->is_tried = true;
     }
 
+    const SpellId id = spell->id();
+
+    const int player_spell_skill = map::player->spell_skill(id);
+
+    const int skill = std::max(player_spell_skill, scroll_min_spell_skill);
+
     spell->cast(map::player,
-                scroll_spell_skill_level,
+                skill,
                 IsIntrinsic::no);
 
     msg_log::add(crumble_str);
@@ -108,8 +118,6 @@ ConsumeItem Scroll::activate(Actor* const actor)
     // Learn spell, increase skill level
     if (spell->player_can_learn())
     {
-        const SpellId id = spell->id();
-
         const bool is_learned_before = player_spells::is_spell_learned(id);
 
         if (!is_learned_before)

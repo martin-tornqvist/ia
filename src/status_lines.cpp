@@ -70,8 +70,9 @@ void draw()
 
     p.x += str.size();
 
-    const int shock = player.shock_tot();
-    const int ins   = player.ins();
+    const int shock = std::min(100, player.shock_tot());
+
+    const int ins = player.ins();
 
     const Clr short_san_clr =
         shock < 50  ? clr_green     :

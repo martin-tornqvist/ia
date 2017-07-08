@@ -102,7 +102,7 @@ const int shock_from_obsession = 30;
 const double shock_from_disturbing_items = 0.1;
 
 // Spell skill level used when casting from scrolls (manuscripts)
-const int scroll_spell_skill_level = 50;
+const int scroll_min_spell_skill = 50;
 
 // How many "units" of weight the player can carry, without trait modifiers etc
 const int player_carry_weight_base = 500;
