@@ -3199,13 +3199,13 @@ Fountain::Fountain(const P& p) :
 
     case 1:
     {
-        fountain_effect_ = FountainEffect::tele_ctrl;
+        fountain_effect_ = FountainEffect::xp;
     }
     break;
 
     case 2:
     {
-        fountain_effect_ = FountainEffect::xp;
+        fountain_effect_ = FountainEffect::tele_ctrl;
     }
     break;
 
