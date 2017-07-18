@@ -766,12 +766,12 @@ bool mk_std_lvl()
 
                 if ((door->type() != DoorType::gate) &&
                     (door->type() != DoorType::metal) &&
-                    rnd::one_in(3))
+                    rnd::one_in(6))
                 {
                     door->set_secret();
                 }
 
-                if (rnd::one_in(4))
+                if (rnd::one_in(6))
                 {
                     door->set_stuck();
                 }

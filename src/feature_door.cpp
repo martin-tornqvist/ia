@@ -40,15 +40,15 @@ Door::Door(const P& feature_pos,
         //       hide an optional branch of the map).
 
         const int pct_secret =
-            type_ == DoorType::gate ?
+            (type_ == DoorType::gate) ?
             0 :
-            std::min(80, (map::dlvl - 1) * 10);
+            (map::dlvl * 3);
 
-        const int stuck_one_in_n = 28;
+        const int pct_stuck = 5;
 
         if (rnd::percent(pct_secret))
         {
-            if (rnd::one_in(stuck_one_in_n))
+            if (rnd::percent(pct_stuck))
             {
                 spawn_state = DoorSpawnState::secret_and_stuck;
             }
@@ -67,7 +67,7 @@ Door::Door(const P& feature_pos,
             }
             else // Closed
             {
-                if (rnd::one_in(stuck_one_in_n))
+                if (rnd::percent(pct_stuck))
                 {
                     spawn_state = DoorSpawnState::stuck;
                 }
@@ -117,6 +117,7 @@ Door::Door(const P& feature_pos,
         is_open_ = false;
         is_stuck_ = false;
         is_secret_ = false;
+        break;
     }
 
 } // Door
