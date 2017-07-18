@@ -206,12 +206,12 @@ R EventSnakeEmerge::allowed_emerge_rect(const P& p) const
 {
     const int max_d = allowed_emerge_dist_range.max;
 
-    const int X0 = std::max(1,          p.x - max_d);
-    const int Y0 = std::max(1,          p.y - max_d);
-    const int X1 = std::min(map_w - 2,  p.x + max_d);
-    const int Y1 = std::min(map_h - 2,  p.y + max_d);
+    const int x0 = std::max(1,          p.x - max_d);
+    const int y0 = std::max(1,          p.y - max_d);
+    const int x1 = std::min(map_w - 2,  p.x + max_d);
+    const int y1 = std::min(map_h - 2,  p.y + max_d);
 
-    return R(X0, Y0, X1, Y1);
+    return R(x0, y0, x1, y1);
 }
 
 bool EventSnakeEmerge::is_ok_feature_at(const P& p) const
@@ -243,9 +243,8 @@ void EventSnakeEmerge::emerge_p_bucket(
 
             const int min_d = allowed_emerge_dist_range.min;
 
-            if (
-                !blocked[x][y]              &&
-                !fov[x][y].is_blocked_hard  &&
+            if (!blocked[x][y] &&
+                !fov[x][y].is_blocked_hard &&
                 king_dist(p, tgt_p) >= min_d)
             {
                 out.push_back(tgt_p);
@@ -300,9 +299,11 @@ void EventSnakeEmerge::on_new_turn()
     int max_nr_snakes = min_nr_snakes_ + (map::dlvl / 4);
 
     // Cap max number of snakes to the size of the target bucket
+
     //
     // NOTE: The target bucket is at least as big as the minimum required number
     //       of snakes
+    //
     max_nr_snakes = std::min(max_nr_snakes, int(tgt_bucket.size()));
 
     random_shuffle(begin(tgt_bucket), end(tgt_bucket));
@@ -317,8 +318,9 @@ void EventSnakeEmerge::on_new_turn()
         }
     }
 
-    const size_t    idx = rnd::range(0, id_bucket.size() - 1);
-    const ActorId   id  = id_bucket[idx];
+    const size_t idx = rnd::range(0, id_bucket.size() - 1);
+
+    const ActorId id = id_bucket[idx];
 
     const size_t nr_summoned = rnd::range(min_nr_snakes_, max_nr_snakes);
 
@@ -362,6 +364,9 @@ void EventSnakeEmerge::on_new_turn()
         const P& p(tgt_bucket[i]);
 
         Actor* const actor = actor_factory::mk(id, p);
+
+        actor->prop_handler().apply(
+            new PropWaiting(PropTurns::specific, 2));
 
         static_cast<Mon*>(actor)->become_aware_player(false);
     }
