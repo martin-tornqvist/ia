@@ -215,9 +215,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::scroll_telep:
     case ItemId::scroll_pest:
     case ItemId::scroll_enfeeble_mon:
-    case ItemId::scroll_det_items:
-    case ItemId::scroll_det_traps:
-    case ItemId::scroll_det_mon:
+    case ItemId::scroll_searching:
     case ItemId::scroll_bless:
     case ItemId::scroll_darkbolt:
     case ItemId::scroll_aza_wrath:

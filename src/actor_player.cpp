@@ -103,9 +103,9 @@ void Player::mk_start_items()
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
         player_spells::set_spell_skill_pct(SpellId::darkbolt, 40);
 
-        // Learn the Detect Monsters spell
-        player_spells::learn_spell(SpellId::det_mon, Verbosity::silent);
-        player_spells::set_spell_skill_pct(SpellId::det_mon, 40);
+        // Learn the Searching spell
+        player_spells::learn_spell(SpellId::searching, Verbosity::silent);
+        player_spells::set_spell_skill_pct(SpellId::searching, 40);
 
         // Identify the Darkbolt scroll
         std::unique_ptr<Item> scroll_darkbolt(
@@ -113,9 +113,9 @@ void Player::mk_start_items()
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
 
-        // Identify the Detect Monsters scroll
+        // Identify the Searching scroll
         std::unique_ptr<Item> scroll_det_mon(
-            item_factory::mk(ItemId::scroll_det_mon));
+            item_factory::mk(ItemId::scroll_searching));
         static_cast<Scroll*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
     }

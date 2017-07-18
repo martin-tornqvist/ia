@@ -547,8 +547,8 @@ std::string trait_descr(const Trait id)
 
     case Trait::seer:
         return
-            "Detection spells have lower Spirit costs, and the spell "
-            "\"Detect Monsters\" has triple duration";
+            "The spell \"Searching\" has lower Spirit cost, and monsters are "
+            "detected with tripled duration";
 
     case Trait::tough:
         return

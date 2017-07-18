@@ -27,9 +27,7 @@ enum class SpellId
 
     // Player only
     mayhem,
-    det_items,
-    det_traps,
-    det_mon,
+    searching,
     opening,
     sacr_life,
     sacr_spi,
@@ -432,10 +430,10 @@ protected:
     }
 };
 
-class SpellDetItems: public Spell
+class SpellSearching: public Spell
 {
 public:
-    SpellDetItems() : Spell() {}
+    SpellSearching() : Spell() {}
 
     bool mon_can_learn() const override
     {
@@ -449,12 +447,12 @@ public:
 
     std::string name() const override
     {
-        return "Detect Items";
+        return "Searching";
     }
 
     SpellId id() const override
     {
-        return SpellId::det_items;
+        return SpellId::searching;
     }
 
     IntrSpellShock shock_type_intr_cast() const override
@@ -469,89 +467,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 11;
-    }
-};
-
-class SpellDetTraps: public Spell
-{
-public:
-    SpellDetTraps() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Detect Traps";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::det_traps;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::disturbing;
-    }
-
-    std::vector<std::string> descr_specific(const int skill) const override;
-
-    void run_effect(Actor* const caster, const int skill) const override;
-
-private:
-    int max_spi_cost() const override
-    {
-        return 8;
-    }
-};
-
-class SpellDetMon: public Spell
-{
-public:
-    SpellDetMon() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Detect Creatures";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::det_mon;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::mild;
-    }
-
-    std::vector<std::string> descr_specific(const int skill) const override;
-
-    void run_effect(Actor* const caster, const int skill) const override;
-
-private:
-    int max_spi_cost() const override
-    {
-        return 4;
+        return 7;
     }
 };
 

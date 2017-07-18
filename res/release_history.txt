@@ -21,6 +21,7 @@ Gameplay
 * Many bonuses such as "occasionally performing a certain action instantly", now simply gives a speed bonus instead (to a specific action, or to all actions)
 * Dodging also applies to ranged attacks
 * The spells Slow, Paralyze, and Terrify Enemies have been merged into "Enfeeble Enemies"
+* The spells Detect Monsters, Detect Traps, and Detect Items  have been merged into "Searching" (which also detects doors)
 * Burning features only hurt creatures on the same cell (not adjacent to it)
 * "Cloud Minds" is a Rod instead of a spell (the Rogue starts with this item, intead of the spell)
 * Spells have "skill level" percentages, which determines the strength of the spell (and can also add additional spell effects) - the skill levels are primarily increased by casting from Manuscripts

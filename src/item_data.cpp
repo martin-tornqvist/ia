@@ -45,7 +45,7 @@ ItemDataT::ItemDataT() :
     ranged                              (ItemRangedData()),
     armor                               (ItemArmorData())
 {
-    for (size_t i = 0; i < size_t(AbilityId::END); ++i)
+    for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
     {
         ability_mods_while_equipped[i] = 0;
     }
@@ -1859,13 +1859,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_det_items;
-    d.spell_cast_from_scroll = SpellId::det_items;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_det_traps;
-    d.spell_cast_from_scroll = SpellId::det_traps;
+    d.id = ItemId::scroll_searching;
+    d.spell_cast_from_scroll = SpellId::searching;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);
@@ -1897,11 +1892,6 @@ void init_data_list()
     reset_data(d, ItemType::scroll);
     d.id = ItemId::scroll_sacr_spi;
     d.spell_cast_from_scroll = SpellId::sacr_spi;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_det_mon;
-    d.spell_cast_from_scroll = SpellId::det_mon;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);

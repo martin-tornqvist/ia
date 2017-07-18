@@ -13,6 +13,7 @@
 #include "map.hpp"
 #include "actor_factory.hpp"
 #include "feature_trap.hpp"
+#include "feature_door.hpp"
 #include "player_spells.hpp"
 #include "item_scroll.hpp"
 #include "inventory.hpp"
@@ -95,14 +96,8 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     case SpellId::anim_wpns:
         return new SpellAnimWpns;
 
-    case SpellId::det_items:
-        return new SpellDetItems;
-
-    case SpellId::det_traps:
-        return new SpellDetTraps;
-
-    case SpellId::det_mon:
-        return new SpellDetMon;
+    case SpellId::searching:
+        return new SpellSearching;
 
     case SpellId::opening:
         return new SpellOpening;
@@ -212,42 +207,28 @@ Range Spell::spi_cost(Actor* const caster) const
         case SpellId::mayhem:
             if (is_warlock)
             {
-                --cost_max;
+                cost_max -= 2;
             }
             break;
 
-        case SpellId::det_mon:
+        case SpellId::searching:
             if (is_seer)
             {
-                --cost_max;
-            }
-            break;
-
-        case SpellId::det_items:
-            if (is_seer)
-            {
-                cost_max -= 3;
-            }
-            break;
-
-        case SpellId::det_traps:
-            if (is_seer)
-            {
-                cost_max -= 3;
+                cost_max -= 2;
             }
             break;
 
         case SpellId::summon:
             if (is_summoner)
             {
-                --cost_max;
+                cost_max -= 2;
             }
             break;
 
         case SpellId::pest:
             if (is_summoner)
             {
-                --cost_max;
+                cost_max -= 2;
             }
             break;
 
@@ -1223,16 +1204,16 @@ bool SpellPharaohStaff::allow_mon_cast_now(Mon& mon) const
 }
 
 // -----------------------------------------------------------------------------
-// Detect items
+// Searching
 // -----------------------------------------------------------------------------
-void SpellDetItems::run_effect(Actor* const caster, const int skill) const
+void SpellSearching::run_effect(Actor* const caster, const int skill) const
 {
     (void)caster;
 
     const int range =
         (skill >= 100) ?
         100 :
-        (3 + (skill / 10));
+        (2 + (skill / 10));
 
     const int orig_x = map::player->pos.x;
     const int orig_y = map::player->pos.y;
@@ -1242,7 +1223,7 @@ void SpellDetItems::run_effect(Actor* const caster, const int skill) const
     const int x1 = std::min(map_w - 1, orig_x + range);
     const int y1 = std::min(map_h - 1, orig_y + range);
 
-    std::vector<P> items_revealed_cells;
+    std::vector<P> positions_detected;
 
     for (int y = y0; y <= y1; ++y)
     {
@@ -1250,20 +1231,70 @@ void SpellDetItems::run_effect(Actor* const caster, const int skill) const
         {
             auto& cell = map::cells[x][y];
 
+            // Detect item here?
             if (cell.item)
             {
                 cell.is_seen_by_player = true;
 
                 cell.is_explored = true;
 
-                items_revealed_cells.push_back(P(x, y));
+                positions_detected.push_back(P(x, y));
+            }
+
+            // Detect trap here?
+            auto* const f = cell.rigid;
+
+            if (f->id() == FeatureId::trap)
+            {
+                auto* const trap = static_cast<Trap*>(f);
+
+                trap->reveal(Verbosity::silent);
+
+                cell.is_seen_by_player = true;
+
+                cell.is_explored = true;
+
+                positions_detected.push_back(P(x, y));
+            }
+
+            // Detect door here?
+            if (f->id() == FeatureId::door)
+            {
+                auto* const door = static_cast<Door*>(f);
+
+                door->reveal(Verbosity::silent);
+
+                cell.is_seen_by_player = true;
+
+                cell.is_explored = true;
+
+                positions_detected.push_back(P(x, y));
             }
         }
     }
 
-    if (items_revealed_cells.empty())
+    bool is_seer = player_bon::traits[(size_t)Trait::seer];
+
+    const int det_mon_multiplier = 20 * (is_seer ? 2 : 1);
+
+    for (Actor* actor : game_time::actors)
     {
-        msg_log::add("I sense that there are no items nearby.");
+        const P& p = actor->pos;
+
+        if (!actor->is_player() &&
+            actor->is_alive() &&
+            (king_dist(caster->pos, p) <= range))
+        {
+            static_cast<Mon*>(actor)->set_player_aware_of_me(
+                det_mon_multiplier);
+
+            positions_detected.push_back(p);
+        }
+    }
+
+    if (positions_detected.empty())
+    {
+        msg_log::add("I find nothing.");
     }
     else // Items detected
     {
@@ -1274,31 +1305,23 @@ void SpellDetItems::run_effect(Actor* const caster, const int skill) const
 
         states::draw();
 
-        io::draw_blast_at_cells(items_revealed_cells, clr_white);
-
-        if (items_revealed_cells.size() == 1)
-        {
-            msg_log::add("An item is revealed to me.");
-        }
-        else // > 1 items detected
-        {
-            msg_log::add("Some items are revealed to me.");
-        }
+        io::draw_blast_at_cells(positions_detected, clr_white);
     }
 }
 
-std::vector<std::string> SpellDetItems::descr_specific(const int skill) const
+std::vector<std::string> SpellSearching::descr_specific(const int skill) const
 {
     std::vector<std::string> descr;
 
     descr.push_back(
-        "Reveals the presence of items in the surrounding area.");
+        "Reveals the presence of creatures, items, traps, and doors in the "
+        "surrounding area.");
 
     int range;
 
     if (skill < 100)
     {
-        range = (3 + (skill / 10));
+        range = (2 + (skill / 10));
 
         descr.push_back("The spell has a range of " +
                         std::to_string(range) +
@@ -1306,158 +1329,7 @@ std::vector<std::string> SpellDetItems::descr_specific(const int skill) const
     }
     else // Skill >= 100
     {
-        descr.push_back("Reveals all items on the map.");
-    }
-
-    return descr;
-}
-
-// -----------------------------------------------------------------------------
-// Detect traps
-// -----------------------------------------------------------------------------
-void SpellDetTraps::run_effect(Actor* const caster, const int skill) const
-{
-    (void)caster;
-
-    const int range =
-        (skill >= 100) ?
-        100 :
-        (3 + (skill / 10));
-
-    const int orig_x = map::player->pos.x;
-    const int orig_y = map::player->pos.y;
-
-    const int x0 = std::max(0, orig_x - range);
-    const int y0 = std::max(0, orig_y - range);
-    const int x1 = std::min(map_w - 1, orig_x + range);
-    const int y1 = std::min(map_h - 1, orig_y + range);
-
-    std::vector<P> traps_revealed_cells;
-
-    for (int x = x0; x <= x1; ++x)
-    {
-        for (int y = y0; y <= y1; ++y)
-        {
-            if (map::cells[x][y].is_seen_by_player)
-            {
-                auto* const f = map::cells[x][y].rigid;
-
-                if (f->id() == FeatureId::trap)
-                {
-                    auto* const trap = static_cast<Trap*>(f);
-
-                    trap->reveal(Verbosity::silent);
-
-                    traps_revealed_cells.push_back(P(x, y));
-                }
-            }
-        }
-    }
-
-    if (traps_revealed_cells.empty())
-    {
-        msg_log::add("I sense that there are no traps nearby.");
-    }
-    else // Traps detected
-    {
-        map::player->update_fov();
-
-        states::draw();
-
-        io::draw_blast_at_cells(traps_revealed_cells, clr_white);
-
-        if (traps_revealed_cells.size() == 1)
-        {
-            msg_log::add("A hidden trap is revealed to me.");
-        }
-
-        if (traps_revealed_cells.size() > 1)
-        {
-            msg_log::add("Some hidden traps are revealed to me.");
-        }
-    }
-}
-
-std::vector<std::string> SpellDetTraps::descr_specific(const int skill) const
-{
-    std::vector<std::string> descr;
-
-    descr.push_back(
-        "Reveals the presence of traps in the surrounding area.");
-
-    int range;
-
-    if (skill < 100)
-    {
-        range = (3 + (skill / 10));
-
-        descr.push_back("The spell has a range of " +
-                        std::to_string(range) +
-                        " cells.");
-    }
-    else // Skill >= 100
-    {
-        descr.push_back("Reveals all traps on the map.");
-    }
-
-    return descr;
-}
-
-// -----------------------------------------------------------------------------
-// Detect monsters
-// -----------------------------------------------------------------------------
-void SpellDetMon::run_effect(Actor* const caster, const int skill) const
-{
-    (void)caster;
-
-    const int range =
-        (skill >= 100) ?
-        100 :
-        (3 + (skill / 10));
-
-    bool is_seer = player_bon::traits[(size_t)Trait::seer];
-
-    const int multiplier = 20 * (is_seer ? 2 : 1);
-
-    bool did_detect = false;
-
-    for (Actor* actor : game_time::actors)
-    {
-        if (!actor->is_player() &&
-            king_dist(caster->pos, actor->pos) <= range)
-        {
-            static_cast<Mon*>(actor)->set_player_aware_of_me(multiplier);
-
-            did_detect = true;
-        }
-    }
-
-    if (!did_detect)
-    {
-        msg_log::add("I sense that there are no creatures nearby.");
-    }
-}
-
-std::vector<std::string> SpellDetMon::descr_specific(const int skill) const
-{
-    std::vector<std::string> descr;
-
-    descr.push_back(
-        "Reveals the presence of creatures in the surrounding area.");
-
-    int range;
-
-    if (skill < 100)
-    {
-        range = (3 + (skill / 10));
-
-        descr.push_back("The spell has a range of " +
-                        std::to_string(range) +
-                        " cells.");
-    }
-    else // Skill >= 100
-    {
-        descr.push_back("Reveals all creatures on the map.");
+        descr.push_back("Reveals across the whole map.");
     }
 
     return descr;
