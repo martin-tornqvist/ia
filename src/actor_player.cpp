@@ -94,30 +94,43 @@ void Player::mk_start_items()
         // Occultist starts with some spells and a potion
 
         // Spirit potion
-        Item* item = item_factory::mk(ItemId::potion_spirit);
-        static_cast<Potion*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
-        inv_->put_in_backpack(item);
+        Item* spi_pot = item_factory::mk(ItemId::potion_spirit);
+
+        spi_pot->identify(Verbosity::silent);
+
+        spi_pot->give_xp_for_identify(Verbosity::silent);
+
+        inv_->put_in_backpack(spi_pot);
 
         // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
+
         player_spells::set_spell_skill_pct(SpellId::darkbolt, 40);
 
         // Learn the Searching spell
         player_spells::learn_spell(SpellId::searching, Verbosity::silent);
+
         player_spells::set_spell_skill_pct(SpellId::searching, 40);
 
         // Identify the Darkbolt scroll
-        std::unique_ptr<Item> scroll_darkbolt(
-            item_factory::mk(ItemId::scroll_darkbolt));
-        static_cast<Scroll*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
+        {
+            std::unique_ptr<Item> darkbolt_scroll(
+                item_factory::mk(ItemId::scroll_darkbolt));
+
+            darkbolt_scroll->identify(Verbosity::silent);
+
+            darkbolt_scroll->give_xp_for_identify(Verbosity::silent);
+        }
 
         // Identify the Searching scroll
-        std::unique_ptr<Item> scroll_det_mon(
-            item_factory::mk(ItemId::scroll_searching));
-        static_cast<Scroll*>(item)->identify(Verbosity::silent);
-        item->give_xp_for_identify(Verbosity::silent);
+        {
+            std::unique_ptr<Item> searching_scroll(
+                item_factory::mk(ItemId::scroll_searching));
+
+            searching_scroll->identify(Verbosity::silent);
+
+            searching_scroll->give_xp_for_identify(Verbosity::silent);
+        }
     }
     break;
 
