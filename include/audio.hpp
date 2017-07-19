@@ -42,6 +42,7 @@ enum class SfxId
     chains,
     glop,
     lever_pull,
+    monolith,
 
     // User interface sounds
     backpack,
@@ -62,7 +63,7 @@ enum class SfxId
     amb019, amb020, amb021, amb022, amb023, amb024, amb025, amb026, amb027,
     amb028, amb029, amb030, amb031, amb032, amb033, amb034, amb035, amb036,
     amb037, amb038, amb039, amb040, amb041, amb042, amb043, amb044, amb045,
-    amb046, amb047, amb048,
+    amb046, amb047, amb048, amb049, amb050,
 
     END
 };

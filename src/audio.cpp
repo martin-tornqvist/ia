@@ -206,6 +206,7 @@ void init()
     load(SfxId::chains, "sfx_chains.ogg");
     load(SfxId::glop, "sfx_glop.ogg");
     load(SfxId::lever_pull, "sfx_lever_pull.ogg");
+    load(SfxId::monolith, "sfx_monolith.ogg");
 
     //
     // User interface sounds
@@ -269,7 +270,7 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    for (size_t i = 0; i < size_t(SfxId::END); ++i)
+    for (size_t i = 0; i < (size_t)SfxId::END; ++i)
     {
         ms_at_sfx_played_[i] = 0;
     }
