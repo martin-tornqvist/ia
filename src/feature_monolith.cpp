@@ -70,7 +70,7 @@ void Monolith::activate()
 {
     msg_log::add("I feel powerful!");
 
-    game::incr_player_xp(20);
+    game::incr_player_xp(15);
 
     is_activated_ = true;
 }

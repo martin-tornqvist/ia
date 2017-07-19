@@ -2134,7 +2134,9 @@ void Brazier::on_hit(const int dmg,
                 expl_d = -2;
             }
 
+            //
             // TODO: Emit sound from explosion center
+            //
 
             explosion::run(expl_pos,
                            ExplType::apply_prop,
@@ -3299,7 +3301,7 @@ void Fountain::bump(Actor& actor_bumping)
 
         case FountainEffect::xp:
             msg_log::add("I feel more powerful!");
-            game::incr_player_xp(2);
+            game::incr_player_xp(1);
             break;
 
         case FountainEffect::tele_ctrl:

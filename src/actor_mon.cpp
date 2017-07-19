@@ -2609,7 +2609,7 @@ DidAction FloatingSkull::on_act()
 {
     if (is_alive() &&
         (aware_of_player_counter_ > 0) &&
-        rnd::one_in(6))
+        rnd::one_in(4))
     {
         bool blocked_los[map_w][map_h];
 

@@ -224,7 +224,9 @@ void Inventory::put_in_backpack(Item* item)
         sort_backpack();
     }
 
+    //
     // NOTE: This may destroy the item (e.g. combining with another item)
+    //
     item->on_pickup(*owning_actor_);
 }
 
@@ -598,23 +600,6 @@ bool Inventory::has_item_in_slot(SlotId id) const
 {
     ASSERT(id != SlotId::END && "Illegal slot id");
     return slots_[int(id)].item;
-}
-
-void Inventory::remove_without_destroying(const InvType inv_type,
-                                          const size_t idx)
-{
-    if (inv_type == InvType::slots)
-    {
-        ASSERT(idx != (int)SlotId::END);
-
-        slots_[idx].item = nullptr;
-    }
-    else // Backpack
-    {
-        ASSERT(idx < backpack_.size());
-
-        backpack_.erase(begin(backpack_) + idx);
-    }
 }
 
 Item* Inventory::item_in_backpack(const ItemId id)

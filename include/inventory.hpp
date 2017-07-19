@@ -57,6 +57,7 @@ public:
     //
     // NOTE: The "put_in_*" functions should NEVER be called on items already in
     //       the inventory.
+    //
     void put_in_slot(const SlotId id,
                      Item* item,
                      Verbosity verbosity);
@@ -78,9 +79,6 @@ public:
     int backpack_idx(const ItemId item_id) const;
 
     Item* item_in_slot(const SlotId id) const;
-
-    void remove_without_destroying(const InvType inv_type,
-                                   const size_t idx);
 
     void decr_item_in_slot(SlotId slot_id);
 

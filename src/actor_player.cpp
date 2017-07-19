@@ -1705,7 +1705,7 @@ void Player::move(Dir dir)
             else // There is a monster here that player is unaware of
             {
                 // If player is unaware of the monster, it should never be seen
-                ASSERT(!can_see_mon);
+                // ASSERT(!can_see_mon);
 
                 if (is_features_allow_move)
                 {
@@ -1727,9 +1727,11 @@ void Player::move(Dir dir)
                     return;
                 }
 
+                //
                 // NOTE: The target is blocked by map features. Do NOT reveal
                 //       the monster - just act like the monster isn't there,
                 //       and let the code below handle the situation.
+                //
             }
         }
 

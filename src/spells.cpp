@@ -922,6 +922,9 @@ void SpellPest::run_effect(Actor* const caster, const int skill) const
         mon->prop_handler().apply(
             new PropSummoned(PropTurns::indefinite));
 
+        mon->prop_handler().apply(
+            new PropWaiting(PropTurns::specific, 1));
+
         if (map::player->can_see_actor(*mon))
         {
             is_any_seen_by_player = true;
@@ -1070,6 +1073,9 @@ void SpellAnimWpns::run_effect(Actor* const caster, const int skill) const
                     Verbosity::silent);
             }
 
+            anim_wpn->prop_handler().apply(
+                new PropWaiting(PropTurns::specific, 1));
+
             is_any_animated = true;
         }
     }
@@ -1163,7 +1169,10 @@ void SpellPharaohStaff::run_effect(Actor* const caster, const int skill) const
                               MakeMonAware::yes,
                               leader);
 
-    const Mon* const mon = summoned_mon[0];
+    Mon* const mon = summoned_mon[0];
+
+    mon->prop_handler().apply(
+        new PropWaiting(PropTurns::specific, 1));
 
     if (map::player->can_see_actor(*mon))
     {
@@ -1213,7 +1222,7 @@ void SpellSearching::run_effect(Actor* const caster, const int skill) const
     const int range =
         (skill >= 100) ?
         100 :
-        (2 + (skill / 10));
+        (2 + (skill / 12));
 
     const int orig_x = map::player->pos.x;
     const int orig_y = map::player->pos.y;
@@ -1321,7 +1330,7 @@ std::vector<std::string> SpellSearching::descr_specific(const int skill) const
 
     if (skill < 100)
     {
-        range = (2 + (skill / 10));
+        range = (2 + (skill / 12));
 
         descr.push_back("The spell has a range of " +
                         std::to_string(range) +
@@ -1926,7 +1935,7 @@ std::vector<std::string> SpellEnfeebleMon::descr_specific(const int skill) const
     std::vector<std::string> descr;
 
     descr.push_back(
-        "Attempts to physically or mentally enfeeble others.");
+        "Attempts to physically or mentally enfeeble another creature.");
 
     if (skill >= 50)
     {
@@ -2138,6 +2147,9 @@ void SpellSummonMon::run_effect(Actor* const caster, const int skill) const
 
     mon->prop_handler().apply(
         new PropSummoned(PropTurns::indefinite));
+
+    mon->prop_handler().apply(
+        new PropWaiting(PropTurns::specific, 1));
 
     if (map::player->can_see_actor(*mon))
     {

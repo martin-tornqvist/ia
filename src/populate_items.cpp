@@ -20,7 +20,7 @@ namespace
 
 int nr_items()
 {
-    int nr = rnd::range(4, 6);
+    int nr = rnd::range(3, 5);
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
@@ -92,8 +92,9 @@ void mk_items_on_floor()
     // NOTE: Each index in the position vector corresponds to the same index in
     //       the weights vector.
     //
-    std::vector<P>      positions;
-    std::vector<int>    position_weights;
+    std::vector<P> positions;
+
+    std::vector<int> position_weights;
 
     bool blocked[map_w][map_h];
 

@@ -45,86 +45,77 @@ void try_drop_item_from_inv(Actor& actor,
         item_to_drop = inv.backpack_[idx];
     }
 
-    if (item_to_drop)
+    if (!item_to_drop)
     {
-        const ItemDataT& data = item_to_drop->data();
+        return;
+    }
 
-        const bool is_stackable = data.is_stackable;
+    const ItemDataT& data = item_to_drop->data();
 
-        const int nr_items_before_drop = item_to_drop->nr_items_;
+    const bool is_stackable = data.is_stackable;
 
-        const bool is_whole_stack_dropped =
-            !is_stackable ||
-            (nr_items_to_drop == -1) ||
-            (nr_items_to_drop >= nr_items_before_drop);
+    const int nr_items_before_drop = item_to_drop->nr_items_;
 
-        std::string item_ref = "";
+    const bool is_whole_stack_dropped =
+        !is_stackable ||
+        (nr_items_to_drop == -1) ||
+        (nr_items_to_drop >= nr_items_before_drop);
 
-        // If this is an equiped item, we first need to signal that we are
-        // removing it from its slot (e.g. Asbestos suit resistances expiring)
-        if (inv_type == InvType::slots &&
-            is_whole_stack_dropped)
-        {
-            if (item_to_drop->on_unequip() == UnequipAllowed::no)
-            {
-                return;
-            }
-        }
+    std::string item_ref = "";
 
-        Item* item_to_keep = nullptr;
+    Item* item_to_keep = nullptr;
 
-        if (is_whole_stack_dropped)
-        {
-            item_ref = item_to_drop->name(ItemRefType::plural);
-        }
-        else // Only some items are dropped
-        {
-            // Drop a copy of the selected item
-            item_to_keep = item_to_drop;
+    if (is_whole_stack_dropped)
+    {
+        item_ref = item_to_drop->name(ItemRefType::plural);
 
-            item_to_drop = item_factory::copy_item(*item_to_keep);
-
-            item_to_drop->nr_items_ = nr_items_to_drop;
-
-            item_ref = item_to_drop->name(ItemRefType::plural);
-
-            item_to_keep->nr_items_ = nr_items_before_drop - nr_items_to_drop;
-        }
-
-        // Print messages
         //
-        // NOTE: We want the drop messages to be printed BEFORE actually
-        //       removing the item from the inventory - since property granting
-        //       items should print their message after the drop message, i.e.:
-        //       "I drop the Foo. I feel more Bar."
+        // NOTE: If the item cannot be unequiped (e.g. a stuck Mi-go Bio-armor),
+        //       then a null pointer is returned - the item should print its own
+        //       message in this case
         //
-        if (&actor == map::player)
-        {
-            msg_log::add("I drop " + item_ref + ".",
-                         clr_text,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
-        else // Monster is dropping item
-        {
-            if (map::player->can_see_actor(actor))
-            {
-                msg_log::add(actor.name_the() + " drops " + item_ref + ".");
-            }
-        }
+        item_to_drop = inv.remove_item(item_to_drop, false);
+    }
+    else // Only some items are dropped from a stack
+    {
+        // Drop a copy of the selected item
+        item_to_keep = item_to_drop;
 
-        if (is_whole_stack_dropped)
-        {
-            inv.remove_without_destroying(inv_type, idx);
-        }
+        item_to_drop = item_factory::copy_item(*item_to_keep);
 
-        drop_item_on_map(actor.pos, *item_to_drop);
+        item_to_drop->nr_items_ = nr_items_to_drop;
 
         item_to_drop->on_removed_from_inv();
 
-        // End turn
-        game_time::tick();
+        item_ref = item_to_drop->name(ItemRefType::plural);
+
+        item_to_keep->nr_items_ = nr_items_before_drop - nr_items_to_drop;
     }
+
+    if (!item_to_drop)
+    {
+        return;
+    }
+
+    // Print message
+    if (&actor == map::player)
+    {
+        msg_log::add("I drop " + item_ref + ".",
+                     clr_text,
+                     false,
+                     MorePromptOnMsg::yes);
+    }
+    else // Monster is dropping item
+    {
+        if (map::player->can_see_actor(actor))
+        {
+            msg_log::add(actor.name_the() + " drops " + item_ref + ".");
+        }
+    }
+
+    drop_item_on_map(actor.pos, *item_to_drop);
+
+    game_time::tick();
 }
 
 Item* drop_item_on_map(const P& intended_pos, Item& item)

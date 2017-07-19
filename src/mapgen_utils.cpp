@@ -1012,7 +1012,7 @@ void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
 
             // Increase weight for being in an optional map branch
             int weight_inc =
-                std::max(1, (200 / weight_div));
+                std::max(1, (250 / weight_div));
 
             Rigid* const rigid =
                 map::cells[choke_point.p.x][choke_point.p.y].rigid;
@@ -1024,17 +1024,17 @@ void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
 
                 if (door->is_secret())
                 {
-                    weight_inc += std::max(1, 100 / weight_div);
+                    weight_inc += std::max(1, 150 / weight_div);
                 }
 
                 if (door->is_stuck())
                 {
-                    weight_inc += std::max(1, 100 / weight_div);
+                    weight_inc += std::max(1, 150 / weight_div);
                 }
 
                 if (door->type() == DoorType::metal)
                 {
-                    weight_inc += std::max(1, 300 / weight_div);
+                    weight_inc += std::max(1, 400 / weight_div);
                 }
             }
 
