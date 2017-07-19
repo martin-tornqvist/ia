@@ -366,7 +366,7 @@ bool make_room_for_friend(Mon& mon)
 bool move_to_random_adj_cell(Mon& mon)
 {
     if (!mon.is_alive() ||
-        (!mon.is_roaming_allowed_ && mon.aware_of_player_counter_ <= 0))
+        (!mon.is_roaming_allowed_ && (mon.aware_of_player_counter_ <= 0)))
     {
         return false;
     }
@@ -764,8 +764,10 @@ void find_path_to_player(Mon& mon, std::vector<P>& path)
 
                 // Not a metal door
 
+                //
                 // TODO: What if there is a monster that can open
                 //       doors but not bash, and the door is stuck?
+                //
 
                 // Consider non-metal doors as free if monster can open or bash
                 const ActorDataT& d = mon.data();

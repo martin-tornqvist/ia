@@ -531,7 +531,7 @@ std::string trait_descr(const Trait id)
         return
             "-1 Spirit cost for damage dealing spells (not counting any spells "
             "which deals damage as a side effect of a high skill level), and "
-            "when cast, has a 25% chance of triggering the effect again "
+            "when cast, has a 20% chance of triggering the effect again "
             "(recursively, so an infinite number of casts is theoretically "
             "possible)";
 

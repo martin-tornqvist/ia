@@ -387,8 +387,11 @@ void EventRatsInTheWallsDiscovery::on_new_turn()
     // If it's the latter case, it means the player somehow bypassed it (e.g.
     // teleport or dynamite), it should not be possible to use this as a "cheat"
     // to avoid the shock.
-    if (map::player->pos == pos_ || map::player->pos.x > pos_.x)
+    if ((map::player->pos == pos_) ||
+        (map::player->pos.x > pos_.x))
     {
+        map::update_vision();
+
         const std::string str =
             "Before me lies a twilit grotto of enormous height. An insane "
             "tangle of human bones extends for yards like a foamy sea - "

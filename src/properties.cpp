@@ -1677,11 +1677,13 @@ std::vector<StrAndClr> PropHandler::props_line() const
 
         const int turns_left  = prop->nr_turns_left_;
 
-        if (prop->turns_init_type() == PropTurns::indefinite &&
-            prop->src() == PropSrc::intr)
+        if (prop->turns_init_type() == PropTurns::indefinite)
         {
             // Indefinite intrinsic properties are printed in upper case
-            str = text_format::all_to_upper(str);
+            if (prop->src() == PropSrc::intr)
+            {
+                str = text_format::all_to_upper(str);
+            }
         }
         else // Not indefinite
         {
@@ -1691,6 +1693,7 @@ std::vector<StrAndClr> PropHandler::props_line() const
                 player_bon::traits[(size_t)Trait::self_aware] &&
                 prop->allow_display_turns())
             {
+                //
                 // NOTE: Since turns left are decremented before the actors
                 //       turn, and checked after the turn - "turns_left"
                 //       practically represents how many more times the

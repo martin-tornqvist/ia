@@ -90,8 +90,8 @@ void Mon::act()
     }
 #endif // NDEBUG
 
-    if (wary_of_player_counter_ <= 0 &&
-        aware_of_player_counter_ <= 0 &&
+    if ((wary_of_player_counter_ <= 0) &&
+        (aware_of_player_counter_ <= 0) &&
         !is_actor_my_leader(map::player))
     {
         waiting_ = !waiting_;

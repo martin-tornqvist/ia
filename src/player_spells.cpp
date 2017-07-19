@@ -248,11 +248,11 @@ void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 
     if (player_bon::bg() == Bg::occultist)
     {
-        incr_dice = DiceParam(3, 6);
+        incr_dice = DiceParam(3, 5);
     }
     else // Not Occultist
     {
-        incr_dice = DiceParam(1, 6);
+        incr_dice = DiceParam(1, 5);
     }
 
     const int incr = incr_dice.roll();

@@ -29,7 +29,7 @@ namespace
 
 const int summon_hostile_one_in_n = 7;
 
-const int warlock_multi_cast_chance_pct = 25;
+const int warlock_multi_cast_chance_pct = 20;
 
 } // namespace
 

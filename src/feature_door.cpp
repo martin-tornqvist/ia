@@ -34,10 +34,12 @@ Door::Door(const P& feature_pos,
 
     if (spawn_state == DoorSpawnState::any)
     {
+        //
         // NOTE: The chances below are just generic default behavior for random
         //       doors placed wherever. Doors may be explicitly set to other
         //       states elsewhere during map generation (e.g. set to secret to
         //       hide an optional branch of the map).
+        //
 
         const int pct_secret =
             (type_ == DoorType::gate) ?

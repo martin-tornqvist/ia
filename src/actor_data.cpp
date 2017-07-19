@@ -829,7 +829,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::witch_or_warlock;
-    d.hp = 18;
+    d.hp = 22;
     d.spi = 40;
     d.ability_vals.set_val(AbilityId::melee, 45);
     d.spawn_min_dlvl = dlvl_first_mid_game;
@@ -2572,7 +2572,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = TileId::mummy;
-    d.hp = 70;
+    d.hp = 80;
     d.spi = 60;
     d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(AbilityId::melee, 70);
@@ -2614,7 +2614,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_red_lgt;
     d.tile = TileId::mummy;
-    d.hp = 70;
+    d.hp = 80;
     d.spi = 60;
     d.dmg_melee = min_dmg_to_wound + 2;
     d.ability_vals.set_val(AbilityId::melee, 70);
