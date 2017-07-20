@@ -11,7 +11,7 @@
 // -----------------------------------------------------------------------------
 const size_t player_name_max_len = 14;
 
-const std::string version_str = "develop version";
+const std::string version_str = "v19.0";
 
 const std::string date_str = __DATE__;
 
