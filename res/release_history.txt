@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-v19.0
+v19.0 (July 20, 2017)
 --------------------------------------------------------------
 Gameplay
 * You no longer gain XP from killing monsters - instead XP is raised by activities related to exploration and discovery, such as identifying items, drinking from some types of fountains, reading inscriptions on "monoliths", or seeing a new type of monster for the first time
