@@ -1222,13 +1222,13 @@ StateId GameState::id()
 
 void GameState::on_start()
 {
-    // Some backgrounds and traits may have affected maximum hp and spi (either
-    // positively or negatively), so here we need to (re)set the current hp and
-    // spi to the maximum values
-    map::player->set_hp_and_spi_to_max();
-
     if (entry_mode_ == GameEntryMode::new_game)
     {
+        // Some backgrounds and traits may have affected maximum hp and spi
+        // (either positively or negatively), so here we need to (re)set the
+        // current hp and spi to the maximum values
+        map::player->set_hp_and_spi_to_max();
+
         map::player->mk_start_items();
 
         game::add_history_event("Started journey");
@@ -1238,17 +1238,16 @@ void GameState::on_start()
             io::clear_screen();
 
             const std::string msg =
-                "I stand on a cobbled forest path, ahead lies a "
-                "shunned and decrepit old church. I know of the things "
-                "that dwell below, and of the Cult of Starry Wisdom "
-                "and the monstrous sacrifices dedicated to their "
-                "rulers. But now they are weak - only deranged "
-                "fanatics grasping at false promises. I will enter "
-                "these sprawling catacombs and rob them of treasures "
-                "and knowledge! At the depths of the abyss lies my "
-                "true destiny, an artifact of non-human origin called "
-                "\"The shining Trapezohedron\" - a window to all the "
-                "secrets of the universe.";
+                "I stand on a cobbled forest path, ahead lies a shunned and "
+                "decrepit old church. I know of the things that dwell below, "
+                "and of the Cult of Starry Wisdom and the monstrous sacrifices "
+                "dedicated to their overlords. But now they are only deranged "
+                "fanatics grasping at false promises. I will enter these "
+                "sprawling catacombs and rob them of treasures and knowledge! "
+                "At the depths of the abyss lies my true destiny, an artifact "
+                "of non-human origin called \"The shining Trapezohedron\" - "
+                "a window to all the secrets of the universe. I can feel it "
+                "calling me.";
 
             popup::show_msg(msg,
                             "The story so far...",
@@ -1258,7 +1257,7 @@ void GameState::on_start()
     }
 
     if (config::is_intro_lvl_skipped() ||
-        entry_mode_ == GameEntryMode::load_game)
+        (entry_mode_ == GameEntryMode::load_game))
     {
         // Build first/next dungeon level
         map_travel::go_to_nxt();
@@ -1316,8 +1315,14 @@ void GameState::update()
             game_time::tick();
         }
 
+        //
+        // NOTE: This state may have been popped at this point
+        //
+
         // We have quit the current game, or the player is dead?
-        if (!map::player || (map::player->state() != ActorState::alive))
+        if (!map::player ||
+            !states::contains_state(StateId::game) ||
+            (map::player->state() != ActorState::alive))
         {
             break;
         }

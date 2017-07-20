@@ -130,7 +130,7 @@ int AbilityVals::val(const AbilityId id,
 
         case AbilityId::stealth:
         {
-            ret += 20;
+            ret += 25;
 
             if (player_bon::traits[(size_t)Trait::stealthy])
             {
