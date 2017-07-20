@@ -296,7 +296,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::deaf;
-    d.std_rnd_turns = Range(100, 200);
+    d.std_rnd_turns = Range(200, 300);
     d.name = "Deaf";
     d.name_short = "Deaf";
     d.descr = "";

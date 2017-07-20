@@ -649,7 +649,7 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::witch_or_warlock;
-    d.hp = 18;
+    d.hp = 22;
     d.spi = 60;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::ranged, 40);
@@ -2940,7 +2940,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'o';
-    d.color = clr_gray_drk;
+    d.color = clr_gray;
     d.tile = TileId::ooze;
     d.hp = 20;
     d.spi = 12;

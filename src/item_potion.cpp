@@ -643,7 +643,6 @@ void init()
     potion_looks_.assign(
     {
         {"Golden",    "a Golden",     clr_yellow},
-        {"Golden",    "a Golden",     clr_yellow},
         {"Yellow",    "a Yellow",     clr_yellow},
         {"Dark",      "a Dark",       clr_gray},
         {"Black",     "a Black",      clr_gray},

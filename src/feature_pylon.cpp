@@ -118,7 +118,7 @@ void Pylon::on_new_turn_hook()
 
         // After a being active for a while, deactivate the pylon by toggling
         // the linked lever
-        const int max_nr_turns_active = 500;
+        const int max_nr_turns_active = 300;
 
         if (nr_turns_active_ >= max_nr_turns_active)
         {
@@ -279,9 +279,22 @@ void PylonBurning::on_new_turn_activated()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            if (map::cells[x][y].rigid->is_bottomless())
+            const auto r = map::cells[x][y].rigid;
+
+            if (r->is_bottomless())
             {
                 blocks_flood[x][y] = true;
+            }
+            // Doors must not block the floodfill, otherwise if a door is
+            // opened, the flood can suddenly reach much further and completely
+            // surround the player - which is very unfair.
+            // Note however that this could also happen if e.g. a piece of wall
+            // is destroyed, then it will seem like the fire is rushing in.
+            // It's questionable if this is a good behavior or not, but keeping
+            // it like this for now...
+            else if (r->id() == FeatureId::door)
+            {
+                blocks_flood[x][y] = false;
             }
         }
     }

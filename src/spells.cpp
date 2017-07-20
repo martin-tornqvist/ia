@@ -923,7 +923,7 @@ void SpellPest::run_effect(Actor* const caster, const int skill) const
             new PropSummoned(PropTurns::indefinite));
 
         mon->prop_handler().apply(
-            new PropWaiting(PropTurns::specific, 1));
+            new PropWaiting(PropTurns::specific, 2));
 
         if (map::player->can_see_actor(*mon))
         {
@@ -1001,89 +1001,110 @@ bool SpellPest::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 void SpellAnimWpns::run_effect(Actor* const caster, const int skill) const
 {
-    bool is_any_animated = false;
-
     if (!caster->is_player())
     {
         return;
     }
 
-    for (int x = 0; x < map_w; ++x)
+    std::vector<P> positions_to_anim;
+
     {
-        for (int y = 0; y < map_h; ++y)
+        std::vector<P> anim_pos_bucket;
+
+        for (int x = 0; x < map_w; ++x)
         {
-            Cell& cell = map::cells[x][y];
-
-            Item* const item = cell.item;
-
-            if (!cell.is_seen_by_player ||
-                !item ||
-                (item->data().type != ItemType::melee_wpn))
+            for (int y = 0; y < map_h; ++y)
             {
-                continue;
+                Cell& cell = map::cells[x][y];
+
+                Item* const item = cell.item;
+
+                if (!cell.is_seen_by_player ||
+                    !item ||
+                    (item->data().type != ItemType::melee_wpn))
+                {
+                    continue;
+                }
+
+                // OK, we have an item here that we can animate
+                anim_pos_bucket.push_back(P(x, y));
             }
+        }
 
-            // OK, we have an item here that we can animate
+        if (anim_pos_bucket.empty())
+        {
+            msg_log::add(
+                "The dust and gravel on the ground starts shooting everywhere.");
 
-            cell.item = nullptr;
+            return;
+        }
 
-            const P p(x, y);
-
-            const auto summoned =
-                actor_factory::spawn(
-                    p,
-                    {1, ActorId::animated_wpn},
-                    MakeMonAware::no,
-                    map::player);
-
-            ASSERT(summoned.size() == 1);
-
-            Mon* const anim_wpn = summoned[0];
-
-            Inventory& inv = anim_wpn->inv();
-
-            ASSERT(!inv.item_in_slot(SlotId::wpn));
-
-            inv.put_in_slot(SlotId::wpn,
-                            item,
-                            Verbosity::silent);
-
-            const std::string item_name =
-                item->name(ItemRefType::plain,
-                           ItemRefInf::yes,
-                           ItemRefAttInf::none);
-
-            msg_log::add("The " + item_name + " rises into thin air!");
-
-            if (skill >= 50)
-            {
-                anim_wpn->prop_handler().apply(
-                    new PropSeeInvis(PropTurns::indefinite),
-                    PropSrc::intr,
-                    true,
-                    Verbosity::silent);
-            }
-
-            if (skill >= 100)
-            {
-                anim_wpn->prop_handler().apply(
-                    new PropHasted(PropTurns::indefinite),
-                    PropSrc::intr,
-                    true,
-                    Verbosity::silent);
-            }
-
-            anim_wpn->prop_handler().apply(
-                new PropWaiting(PropTurns::specific, 1));
-
-            is_any_animated = true;
+        if (skill < 25)
+        {
+            // Animate one random weapon
+            positions_to_anim.push_back(rnd::element(anim_pos_bucket));
+        }
+        else // Skill >= 25
+        {
+            // Animate all possible weapons
+            positions_to_anim = anim_pos_bucket;
         }
     }
 
-    if (!is_any_animated)
+    for (const P& p : positions_to_anim)
     {
-        msg_log::add(
-            "The dust and gravel on the ground starts shooting everywhere.");
+        Cell& cell = map::cells[p.x][p.y];
+
+        Item* const item = cell.item;
+
+        cell.item = nullptr;
+
+        const auto summoned =
+            actor_factory::spawn(
+                p,
+                {1, ActorId::animated_wpn},
+                MakeMonAware::no,
+                map::player);
+
+        ASSERT(summoned.size() == 1);
+
+        Mon* const anim_wpn = summoned[0];
+
+        Inventory& inv = anim_wpn->inv();
+
+        ASSERT(!inv.item_in_slot(SlotId::wpn));
+
+        inv.put_in_slot(SlotId::wpn,
+                        item,
+                        Verbosity::silent);
+
+        const std::string item_name =
+            item->name(ItemRefType::plain,
+                       ItemRefInf::yes,
+                       ItemRefAttInf::none);
+
+        msg_log::add("The " + item_name + " rises into thin air!");
+
+        if (skill >= 50)
+        {
+            anim_wpn->prop_handler().apply(
+                new PropSeeInvis(PropTurns::indefinite),
+                PropSrc::intr,
+                true,
+                Verbosity::silent);
+        }
+
+        if (skill >= 100)
+        {
+            anim_wpn->prop_handler().apply(
+                new PropHasted(PropTurns::indefinite),
+                PropSrc::intr,
+                true,
+                Verbosity::silent);
+        }
+
+        anim_wpn->prop_handler().apply(
+            new PropWaiting(PropTurns::specific, 2));
     }
 }
 
@@ -1098,14 +1119,23 @@ std::vector<std::string> SpellAnimWpns::descr_specific(const int skill) const
         "however - \"modern\" mechanisms such as pistols or machine guns "
         "are far too complex.");
 
+    if (skill < 25)
+    {
+        descr.push_back("Animates one visible weapon.");
+    }
+    else // Skill >= 25
+    {
+        descr.push_back("Animates all visible weapons.");
+    }
+
     if (skill >= 50)
     {
-        descr.push_back("The weapon can see invisible creatures.");
+        descr.push_back("The weapons can see invisible creatures.");
     }
 
     if (skill >= 100)
     {
-        descr.push_back("The weapon is also Hasted (+100% speed).");
+        descr.push_back("The weapons are also Hasted (+100% speed).");
     }
 
     return descr;
@@ -1172,7 +1202,7 @@ void SpellPharaohStaff::run_effect(Actor* const caster, const int skill) const
     Mon* const mon = summoned_mon[0];
 
     mon->prop_handler().apply(
-        new PropWaiting(PropTurns::specific, 1));
+        new PropWaiting(PropTurns::specific, 2));
 
     if (map::player->can_see_actor(*mon))
     {
@@ -2149,7 +2179,7 @@ void SpellSummonMon::run_effect(Actor* const caster, const int skill) const
         new PropSummoned(PropTurns::indefinite));
 
     mon->prop_handler().apply(
-        new PropWaiting(PropTurns::specific, 1));
+        new PropWaiting(PropTurns::specific, 2));
 
     if (map::player->can_see_actor(*mon))
     {
