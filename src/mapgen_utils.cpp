@@ -1024,17 +1024,17 @@ void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
 
                 if (door->is_secret())
                 {
-                    weight_inc += std::max(1, 150 / weight_div);
+                    weight_inc += std::max(1, 200 / weight_div);
                 }
 
                 if (door->is_stuck())
                 {
-                    weight_inc += std::max(1, 150 / weight_div);
+                    weight_inc += std::max(1, 200 / weight_div);
                 }
 
                 if (door->type() == DoorType::metal)
                 {
-                    weight_inc += std::max(1, 400 / weight_div);
+                    weight_inc += std::max(1, 500 / weight_div);
                 }
             }
 
