@@ -16,6 +16,8 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
+    rnd::seed();
+
     init::init_io();
     init::init_game();
 
