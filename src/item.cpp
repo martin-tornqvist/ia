@@ -722,6 +722,11 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
 
 UnequipAllowed ArmorMiGo::on_unequip_hook()
 {
+    if (actor_carrying_ != map::player)
+    {
+        return UnequipAllowed::yes;
+    }
+
     msg_log::add("I attempt to tear off the armor, it rips my skin!",
                  clr_msg_bad,
                  false,
@@ -731,8 +736,10 @@ UnequipAllowed ArmorMiGo::on_unequip_hook()
 
     if (rnd::coin_toss())
     {
+        //
         // NOTE: There is no need to print a message here, a message is always
         //       printed when taking off armor.
+        //
         return UnequipAllowed::yes;
     }
     else // Armor is stuck
