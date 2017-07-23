@@ -62,13 +62,16 @@ void Mon::on_actor_turn()
     if (aware_of_player_counter_ > 0)
     {
         --wary_of_player_counter_;
+
         --aware_of_player_counter_;
     }
 }
 
+//
 // TODO: Some of the things done in this function should probably be moved to
 //       "on_actor_turn()" instead. The purpose of this function ("act()") is
 //       only to tell the actor to "do something".
+//
 void Mon::act()
 {
 #ifndef NDEBUG
@@ -210,9 +213,11 @@ void Mon::act()
     // Common actions (moving, attacking, casting spells, etc)
     // -------------------------------------------------------------------------
 
+    //
     // NOTE: Looking is as an action if monster was not aware before, and became
     //       aware from looking. (This is to give the monsters some reaction
     //       time, and not instantly attack)
+    //
     if (data_->ai[(size_t)AiId::looks] &&
         leader_ != map::player &&
         (tgt_ == nullptr || tgt_ == map::player))
@@ -1298,8 +1303,10 @@ void Zuul::place_hook()
 {
     if (actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn > 0)
     {
+        //
         // NOTE: Do not call die() here - that would have side effects. Instead,
         //       simply set the dead state to destroyed.
+        //
         state_ = ActorState::destroyed;
 
         Actor* actor = actor_factory::mk(ActorId::cultist_priest, pos);
@@ -1546,6 +1553,7 @@ DidAction MindEater::on_act()
 {
     if (!is_alive() ||
         !is_pos_adj(pos, map::player->pos, false) ||
+        has_prop(PropId::disabled_attack) ||
         has_prop(PropId::burning) ||
         has_prop(PropId::confused) ||
         has_prop(PropId::terrified) ||
@@ -1581,7 +1589,7 @@ DidAction MindEater::on_act()
             prop_handler_->apply(new PropTerrified(PropTurns::std));
         }
     }
-    else // Player is not confused
+    else // Player mind can be eaten
     {
         msg_log::add(name + " probes my brain!!!");
 
@@ -1590,6 +1598,9 @@ DidAction MindEater::on_act()
 
         map::player->incr_shock(ShockLvl::mind_shattering,
                                 ShockSrc::misc);
+
+        // Add an attack cooldown to avoid locking the player
+        prop_handler_->apply(new PropDisabledAttack(PropTurns::specific, 4));
     }
 
     game_time::tick();
@@ -2162,8 +2173,10 @@ void WormMass::on_death()
         return;
     }
 
+    //
     // NOTE: If dying worm has a leader, that actor is set as leader for the
     //       spawned worms
+    //
     const auto summoned =
         actor_factory::spawn(pos,
                              {2, id()},

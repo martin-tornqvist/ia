@@ -1,6 +1,9 @@
 --------------------------------------------------------------
 v19.1 *** WORK IN PROGRESS ***
 --------------------------------------------------------------
+Gameplay
+* Mind Eaters are not allowed to attack or feed for a few turns after feeding
+
 Interface
 * Weapon names show their average damage instead of dice rolls (e.g. "Machete 7.0 +0%") - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
 
