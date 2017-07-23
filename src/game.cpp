@@ -832,8 +832,9 @@ void handle_player_input(const InputData& input)
             //
             // Manual
             //
-            // TODO: Push manual state
-            // manual::run();
+            std::unique_ptr<State> browse_manual_state(new BrowseManual);
+
+            states::push(std::move(browse_manual_state));
         }
         else if (choice == 2)
         {
