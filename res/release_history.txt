@@ -1,6 +1,9 @@
 --------------------------------------------------------------
 v19.1 *** WORK IN PROGRESS ***
 --------------------------------------------------------------
+Interface
+* Weapon names show their average damage instead of dice rolls (e.g. "Machete 7.0 +0%") - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
+
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead
 

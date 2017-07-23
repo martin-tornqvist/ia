@@ -93,64 +93,76 @@ std::vector<std::string> Item::descr() const
     return data_->base_descr;
 }
 
-DiceParam Item::dmg(const AttMode att_mode,
-                    const Actor* const attacker) const
+Dice Item::dmg(const AttMode att_mode,
+               const Actor* const attacker) const
 {
-    DiceParam out;
+    Dice dice;
+
+    const Dice zero_dice(0, 0); // To compare against
 
     switch (att_mode)
     {
     case AttMode::melee:
     {
-        out = data_->melee.dmg;
+        dice = data_->melee.dmg;
 
-        out.plus = melee_dmg_plus_;
+        if (dice == zero_dice)
+        {
+            return dice;
+        }
+
+        dice.plus = melee_dmg_plus_;
 
         if (attacker == map::player)
         {
             if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::master_melee_fighter])
             {
-                ++out.plus;
+                ++dice.plus;
             }
         }
 
         // Bonus damage from being frenzied?
         if (attacker && attacker->has_prop(PropId::frenzied))
         {
-            ++out.plus;
+            ++dice.plus;
         }
     }
     break;
 
     case AttMode::ranged:
     {
-        out = data_->ranged.dmg;
+        dice = data_->ranged.dmg;
+
+        if (dice == zero_dice)
+        {
+            return dice;
+        }
 
         if (attacker == map::player)
         {
             if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::expert_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::master_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
         }
     }
@@ -163,30 +175,40 @@ DiceParam Item::dmg(const AttMode att_mode,
         // Melee weapons do throw damage based on their melee damage
         if (is_melee_wpn)
         {
-            out = data_->melee.dmg;
+            dice = data_->melee.dmg;
 
-            out.plus = melee_dmg_plus_;
+            if (dice == zero_dice)
+            {
+                return dice;
+            }
+
+            dice.plus = melee_dmg_plus_;
         }
         else // Not a melee weapon
         {
-            out = data_->ranged.throw_dmg;
+            dice = data_->ranged.throw_dmg;
+
+            if (dice == zero_dice)
+            {
+                return dice;
+            }
         }
 
         if (attacker == map::player)
         {
             if (player_bon::traits[(size_t)Trait::adept_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::expert_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
 
             if (player_bon::traits[(size_t)Trait::master_marksman])
             {
-                ++out.plus;
+                ++dice.plus;
             }
         }
     }
@@ -200,9 +222,9 @@ DiceParam Item::dmg(const AttMode att_mode,
     } // Attack mode switch
 
     // Apply item specific damage modifications
-    specific_dmg_mod(out, attacker);
+    specific_dmg_mod(dice, attacker);
 
-    return out;
+    return dice;
 }
 
 int Item::weight() const
@@ -349,35 +371,12 @@ std::string Item::name(const ItemRefType ref_type,
         }
     }
 
-    const DiceParam zero_dice(0, 0); // To compare against
+    dmg_str = this->dmg_str(att_inf, ItemRefDmgValue::average);
 
     switch (att_inf_used)
     {
     case ItemRefAttInf::melee:
     {
-        if (data_->melee.dmg != zero_dice)
-        {
-            const DiceParam dmg_dice = dmg(AttMode::melee, map::player);
-
-            const std::string rolls_str = std::to_string(dmg_dice.rolls);
-
-            const std::string sides_str = std::to_string(dmg_dice.sides);
-
-            const int plus = dmg_dice.plus;
-
-            const std::string plus_str =
-                (plus == 0) ? "" :
-                (plus > 0) ?
-                ("+" + std::to_string(plus)) :
-                ("-" + std::to_string(plus));
-
-            dmg_str =
-                rolls_str +
-                "d" +
-                sides_str +
-                plus_str;
-        }
-
         const int hit_int = data_->melee.hit_chance_mod;
 
         hit_str =
@@ -388,38 +387,6 @@ std::string Item::name(const ItemRefType ref_type,
 
     case ItemRefAttInf::ranged:
     {
-        dmg_str = data_->ranged.dmg_info_override;
-
-        // Add damage info if no damage string override specified, and the
-        // weapon does non-zero base ranged damage
-        if (dmg_str.empty() &&
-            (data_->ranged.dmg != zero_dice))
-        {
-            const DiceParam dmg_dice = dmg(AttMode::ranged, map::player);
-
-            const int mul =
-                data_->ranged.is_machine_gun ?
-                nr_mg_projectiles : 1;
-
-            const std::string rolls_str = std::to_string(dmg_dice.rolls * mul);
-
-            const std::string sides_str = std::to_string(dmg_dice.sides);
-
-            const int plus = dmg_dice.plus * mul;
-
-            const std::string plus_str =
-                (plus == 0) ? "" :
-                (plus > 0) ?
-                ("+" + std::to_string(plus)) :
-                ("-" + std::to_string(plus));
-
-            dmg_str =
-                rolls_str +
-                "d" +
-                sides_str +
-                plus_str;
-        }
-
         const int hit_int = data_->ranged.hit_chance_mod;
 
         hit_str =
@@ -430,36 +397,6 @@ std::string Item::name(const ItemRefType ref_type,
 
     case ItemRefAttInf::thrown:
     {
-        // Print damage if non-zero throwing damage, or melee weapon with non
-        // zero melee damage (melee weapons use melee damage when thrown)
-        if ((data_->ranged.throw_dmg != zero_dice) ||
-            ((data_->main_att_mode == AttMode::melee) &&
-             (data_->melee.dmg != zero_dice)))
-        {
-            //
-            // NOTE: "dmg" will return melee damage if this is a melee weapon
-            //
-            const DiceParam dmg_dice = dmg(AttMode::thrown, map::player);
-
-            const std::string rolls_str = std::to_string(dmg_dice.rolls);
-
-            const std::string sides_str = std::to_string(dmg_dice.sides);
-
-            const int plus = dmg_dice.plus;
-
-            const std::string plus_str =
-                (plus == 0) ? "" :
-                (plus  > 0) ?
-                ("+" + std::to_string(plus)) :
-                ("-" + std::to_string(plus));
-
-            dmg_str =
-                rolls_str +
-                "d" +
-                sides_str +
-                plus_str;
-        }
-
         const int hit_int = data_->ranged.throw_hit_chance_mod;
 
         hit_str =
@@ -501,6 +438,115 @@ std::string Item::name(const ItemRefType ref_type,
     ASSERT(!ret.empty());
 
     return ret;
+}
+
+std::string Item::dmg_str(const ItemRefAttInf att_inf,
+                          const ItemRefDmgValue dmg_value) const
+{
+    if (!data_->allow_display_dmg)
+    {
+        return "";
+    }
+
+    std::string dmg_str = "";
+
+    ItemRefAttInf att_inf_used = att_inf;
+
+    // If caller requested attack info depending on main attack mode,
+    // setup the attack info used to a specific type
+    if (att_inf == ItemRefAttInf::wpn_main_att_mode)
+    {
+        switch (data_->main_att_mode)
+        {
+        case AttMode::melee:
+            att_inf_used = ItemRefAttInf::melee;
+            break;
+
+        case AttMode::ranged:
+            att_inf_used = ItemRefAttInf::ranged;
+            break;
+
+        case AttMode::thrown:
+            att_inf_used = ItemRefAttInf::thrown;
+            break;
+
+        case AttMode::none:
+            att_inf_used = ItemRefAttInf::none;
+            break;
+        }
+    }
+
+    const Dice zero_dice(0, 0); // To compare against
+
+    switch (att_inf_used)
+    {
+    case ItemRefAttInf::melee:
+    {
+        if (data_->melee.dmg != zero_dice)
+        {
+            const Dice dmg_dice = dmg(AttMode::melee, map::player);
+
+            dmg_str =
+                (dmg_value == ItemRefDmgValue::average) ?
+                dmg_dice.str_avg() :
+                dmg_dice.str();
+        }
+    }
+    break;
+
+    case ItemRefAttInf::ranged:
+    {
+        if (data_->ranged.dmg != zero_dice)
+        {
+            Dice dmg_dice = dmg(AttMode::ranged, map::player);
+
+            if (data_->ranged.is_machine_gun)
+            {
+                dmg_dice.rolls *= nr_mg_projectiles;
+
+                dmg_dice.plus *= nr_mg_projectiles;
+            }
+
+            dmg_str =
+                (dmg_value == ItemRefDmgValue::average) ?
+                dmg_dice.str_avg() :
+                dmg_dice.str();
+        }
+    }
+    break;
+
+    case ItemRefAttInf::thrown:
+    {
+        // Print damage if non-zero throwing damage, or melee weapon with non
+        // zero melee damage (melee weapons use melee damage when thrown)
+        if ((data_->ranged.throw_dmg != zero_dice) ||
+            ((data_->main_att_mode == AttMode::melee) &&
+             (data_->melee.dmg != zero_dice)))
+        {
+            //
+            // NOTE: "dmg" will return melee damage if this is a melee weapon
+            //
+            const Dice dmg_dice = dmg(AttMode::thrown, map::player);
+
+            dmg_str =
+                (dmg_value == ItemRefDmgValue::average) ?
+                dmg_dice.str_avg() :
+                dmg_dice.str();
+        }
+    }
+    break;
+
+    case ItemRefAttInf::none:
+        break;
+
+    case ItemRefAttInf::wpn_main_att_mode:
+        TRACE << "Bad attack info type: " << (int)att_inf_used << std::endl;
+
+        ASSERT(false);
+        break;
+    }
+
+    return dmg_str;
 }
 
 bool Item::is_in_effective_range_lmt(const P& p0, const P& p1) const
@@ -945,7 +991,7 @@ MachineGun::MachineGun(ItemDataT* const item_data) :
 MiGoGun::MiGoGun(ItemDataT* const item_data) :
     Wpn(item_data) {}
 
-void MiGoGun::specific_dmg_mod(DiceParam& dice,
+void MiGoGun::specific_dmg_mod(Dice& dice,
                                const Actor* const actor) const
 {
     if ((actor == map::player) &&

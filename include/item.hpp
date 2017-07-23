@@ -46,6 +46,9 @@ public:
                      const ItemRefInf inf = ItemRefInf::yes,
                      const ItemRefAttInf att_inf = ItemRefAttInf::none) const;
 
+    std::string dmg_str(const ItemRefAttInf att_inf,
+                        const ItemRefDmgValue dmg_value) const;
+
     virtual std::vector<std::string> descr() const;
 
     virtual void identify(const Verbosity verbosity)
@@ -57,7 +60,7 @@ public:
 
     virtual void load() {}
 
-    DiceParam dmg(const AttMode att_mode,
+    Dice dmg(const AttMode att_mode,
                   const Actor* const attacker) const;
 
     virtual int weight() const;
@@ -185,7 +188,7 @@ protected:
 
     virtual void on_removed_from_inv_hook() {}
 
-    virtual void specific_dmg_mod(DiceParam& dice,
+    virtual void specific_dmg_mod(Dice& dice,
                                   const Actor* const actor) const
     {
         (void)dice;
@@ -395,7 +398,7 @@ public:
     ~MiGoGun() {}
 
 protected:
-    void specific_dmg_mod(DiceParam& dice,
+    void specific_dmg_mod(Dice& dice,
                           const Actor* const actor) const override;
 };
 

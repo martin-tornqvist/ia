@@ -430,6 +430,28 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         const ItemDataT& d = item->data();
 
         // ---------------------------------------------------------------------
+        // Damage dice?
+        // ---------------------------------------------------------------------
+        if (d.allow_display_dmg)
+        {
+            const std::string dmg_str =
+                item->dmg_str(ItemRefAttInf::wpn_main_att_mode,
+                              ItemRefDmgValue::dice);
+
+            const std::string dmg_str_avg =
+                item->dmg_str(ItemRefAttInf::wpn_main_att_mode,
+                              ItemRefDmgValue::average);
+
+            if (!dmg_str.empty() && !dmg_str_avg.empty())
+            {
+                lines.push_back(
+                    StrAndClr(
+                        "Damage: " + dmg_str + " (average " + dmg_str_avg + ")",
+                        clr_white_lgt));
+            }
+        }
+
+        // ---------------------------------------------------------------------
         // Can be used for breaking doors or destroying corpses?
         // ---------------------------------------------------------------------
         const bool can_att_rigid = d.melee.att_rigid;
@@ -1126,12 +1148,12 @@ void Equip::draw()
 
         ItemRefAttInf att_inf = ItemRefAttInf::none;
 
-        if (slot_to_equip_.id == SlotId::wpn ||
-            slot_to_equip_.id == SlotId::wpn_alt)
+        if ((slot_to_equip_.id == SlotId::wpn) ||
+            (slot_to_equip_.id == SlotId::wpn_alt))
         {
             // Thrown weapons are forced to show melee info instead
             att_inf =
-                d.main_att_mode == AttMode::thrown ?
+                (d.main_att_mode == AttMode::thrown) ?
                 ItemRefAttInf::melee :
                 ItemRefAttInf::wpn_main_att_mode;
         }

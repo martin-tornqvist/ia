@@ -244,15 +244,15 @@ void learn_spell(const SpellId id, const Verbosity verbosity)
 
 void incr_spell_skill(const SpellId id, const Verbosity verbosity)
 {
-    DiceParam incr_dice;
+    Dice incr_dice;
 
     if (player_bon::bg() == Bg::occultist)
     {
-        incr_dice = DiceParam(3, 5);
+        incr_dice = Dice(3, 5);
     }
     else // Not Occultist
     {
-        incr_dice = DiceParam(1, 5);
+        incr_dice = Dice(1, 5);
     }
 
     const int incr = incr_dice.roll();

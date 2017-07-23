@@ -179,7 +179,7 @@ void run()
 
         msg_log::add(msg);
 
-        const DiceParam dmg_dice =
+        const Dice dmg_dice =
             wpn_used->dmg(AttMode::melee, map::player);
 
         const int dmg = dmg_dice.roll();
@@ -289,7 +289,7 @@ void run()
             wielded_wpn :
             kick_wpn.get();
 
-        const DiceParam dmg_dice =
+        const Dice dmg_dice =
             wpn_used->dmg(AttMode::melee, map::player);
 
         const int dmg = dmg_dice.roll();

@@ -202,7 +202,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     //
     // Determine damage
     //
-    DiceParam dmg_dice = wpn.dmg(AttMode::melee, attacker);
+    Dice dmg_dice = wpn.dmg(AttMode::melee, attacker);
 
     if (apply_undead_bane_bon)
     {
@@ -409,7 +409,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
                 }
             }
 
-            DiceParam dmg_dice = wpn.dmg(AttMode::ranged, attacker);
+            Dice dmg_dice = wpn.dmg(AttMode::ranged, attacker);
 
             if ((attacker == map::player) &&
                 player_bon::gets_undead_bane_bon(defender_data))
@@ -570,7 +570,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                 }
             }
 
-            DiceParam dmg_dice = item.dmg(AttMode::thrown, attacker);
+            Dice dmg_dice = item.dmg(AttMode::thrown, attacker);
 
             if (apply_undead_bane_bon)
             {
@@ -663,7 +663,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
     else // Attack hits target
     {
         // Determine the relative "size" of the hit
-        const DiceParam dmg_dice =
+        const Dice dmg_dice =
             wpn.dmg(AttMode::melee, att_data.attacker);
 
         const int max_dmg = dmg_dice.max();
@@ -893,7 +893,7 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
     if (is_hit && is_cell_seen)
     {
         // Punctuation depends on attack strength
-        const DiceParam dmg_dice = wpn.dmg(AttMode::ranged, data.attacker);
+        const Dice dmg_dice = wpn.dmg(AttMode::ranged, data.attacker);
 
         const int max_dmg = dmg_dice.max();
 

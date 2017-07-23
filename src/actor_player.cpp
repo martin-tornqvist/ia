@@ -699,7 +699,7 @@ void Player::incr_insanity()
         return;
     }
 
-    // This point reached means sanity is below 100%
+    // This point reached means insanity is below 100%
     insanity::run_sympt();
 
     restore_shock(70, true);

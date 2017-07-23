@@ -215,6 +215,12 @@ enum class ItemRefAttInf
     thrown
 };
 
+enum class ItemRefDmgValue
+{
+    average,
+    dice,
+};
+
 enum class Article
 {
     a,

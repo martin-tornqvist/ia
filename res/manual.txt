@@ -78,8 +78,8 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 --------------------------------------------------------------------------------
 The following is an example of what the interface lines can look like:
 
-   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60)     } M1911 Colt 1d8+5 +0% 5/7
-   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 1d6+1 +0%
+   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60)     } M1911 Colt 9.5 +0% 5/7
+   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 4.5 +0%
    Blind Diseased                                                         T:264
 
 From left to right, the first line displays:
@@ -87,7 +87,7 @@ From left to right, the first line displays:
    * Spirit Points (see "Spirit and spell casting")
    * Shock and Insanity (see "Insanity")
    * Character Level and remaining Experience Points until next level
-   * Your wielded weapon (damage, accuracy modifier, and ammo)
+   * Your wielded weapon (average damage, accuracy modifier, ammo)
 
 The second line displays:
    * Dungeon level
@@ -96,7 +96,7 @@ The second line displays:
    * Armor Points (each point reduces physical damage taken by 1)
    * Electric Lantern status (Off or On, and how many turns it can be used for)
    * Medical Bag Supplies (see "Hit Points, Wounds and healing")
-   * Selected throwing weapon (stack size, damage, and accuracy modifier)
+   * Selected throwing weapon (stack size, average damage, accuracy modifier)
 
 The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties (printed in capital letters, e.g. "CURSED"), or properties granted by wearing or wielding items.
 

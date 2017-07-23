@@ -236,7 +236,7 @@ public:
     bool                        is_stackable;
     bool                        is_identified;
     bool                        is_tried;
-    bool                        is_found; // Seen on map or in inventory
+    bool                        is_found; // Was seen on map or in inventory
     int                         xp_on_identify;
     ItemName                    base_name;
     ItemName                    base_name_un_id;
@@ -256,16 +256,21 @@ public:
 
     int ability_mods_while_equipped[(size_t)AbilityId::END];
 
+    bool                        allow_display_dmg;
+
     struct ItemMeleeData
     {
         ItemMeleeData();
+
         ~ItemMeleeData();
 
         bool                    is_melee_wpn;
+        //
         // NOTE: The "plus" field is ignored in the melee damage data, since
         //       melee weapons have individual plus damages stored in the weapon
         //       objects.
-        DiceParam               dmg;
+        //
+        Dice                    dmg;
         int                     hit_chance_mod;
         bool                    is_noisy;
         ItemAttMsgs             att_msgs;
@@ -284,25 +289,29 @@ public:
     struct ItemRangedData
     {
         ItemRangedData();
+
         ~ItemRangedData();
 
         bool                    is_ranged_wpn;
         bool                    is_throwable_wpn;
         bool                    is_machine_gun;
         bool                    is_shotgun;
+        //
         // NOTE: This should be set on ranged weapons (using ammo) AND mags:
+        //
         int                     max_ammo;
-        DiceParam               dmg;
+        Dice                    dmg;
+        //
         // NOTE: "Pure" melee weapons do not have to (should not) set this value
         //       they do throw damage based on their melee damage instead.
-        DiceParam               throw_dmg;
+        //
+        Dice                    throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
         bool                    always_break_on_throw;
         int                     effective_range;
         int                     max_range;
         bool                    knocks_back;
-        std::string             dmg_info_override;
         ItemId                  ammo_item_id;
         DmgType                 dmg_type;
         bool                    has_infinite_ammo;
