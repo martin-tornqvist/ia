@@ -1881,35 +1881,19 @@ void HuntingHorror::mk_start_items()
 
 DidAction KeziahMason::on_act()
 {
-    // Summon Brown Jenkin
+    // Summon Brown Jenkin ASAP
     if (!is_alive() ||
-        (aware_of_player_counter_ <= 0) ||
         has_summoned_jenkin)
     {
         return DidAction::no;
     }
 
-    bool blocked_los[map_w][map_h];
-
-    const R fov_rect = fov::get_fov_rect(pos);
-
-    map_parsers::BlocksLos()
-        .run(blocked_los,
-             MapParseMode::overwrite,
-             fov_rect);
-
-    if (!can_see_actor(*(map::player), blocked_los))
-    {
-        return DidAction::no;
-    }
-
-    msg_log::add("Keziah summons Brown Jenkin!");
-
     auto summoned =
-        actor_factory::spawn(pos,
-                             {ActorId::brown_jenkin},
-                             MakeMonAware::yes,
-                             this);
+        actor_factory::spawn(
+            pos,
+            {ActorId::brown_jenkin},
+            MakeMonAware::yes,
+            this);
 
     ASSERT(summoned.size() == 1);
 
@@ -1926,9 +1910,7 @@ DidAction KeziahMason::on_act()
 
     has_summoned_jenkin = true;
 
-    game_time::tick();
-
-    return DidAction::yes;
+    return DidAction::no;
 }
 
 void KeziahMason::mk_start_items()
