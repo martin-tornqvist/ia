@@ -722,8 +722,10 @@ bool mk_std_lvl()
                     if ((d.player_side != 0 && d.player_side != 1) ||
                         (d.player_side != 0 && d.player_side != 1))
                     {
-                        // Go to next map position
-                        continue;
+                        // Invalidate the map
+                        is_map_valid = false;
+
+                        return false;
                     }
 
                     map::choke_point_data.emplace_back(d);

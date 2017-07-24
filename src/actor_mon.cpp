@@ -1075,7 +1075,11 @@ void Cultist::mk_start_items()
     const int sawn_shotgun = pump_shotgun + 3;
     const int mg = sawn_shotgun + 1;
     const int tot = mg;
-    const int rnd = map::dlvl == 0 ? pistol : rnd::range(1, tot);
+
+    const int rnd =
+        (map::dlvl == 0) ?
+        pistol :
+        rnd::range(1, tot);
 
     if (rnd <= pistol)
     {
@@ -1085,13 +1089,13 @@ void Cultist::mk_start_items()
 
         const int ammo_cap = wpn->data().ranged.max_ammo;
 
-        wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
+        wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
 
         inv_->put_in_slot(SlotId::wpn,
                           item,
                           Verbosity::silent);
 
-        if (rnd::one_in(6))
+        if (rnd::coin_toss())
         {
             inv_->put_in_backpack(item_factory::mk(ItemId::pistol_mag));
         }
@@ -1104,13 +1108,13 @@ void Cultist::mk_start_items()
 
         const int ammo_cap = wpn->data().ranged.max_ammo;
 
-        wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
+        wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
 
         inv_->put_in_slot(SlotId::wpn,
                           item,
                           Verbosity::silent);
 
-        if (rnd::one_in(4))
+        if (rnd::one_in(3))
         {
             item = item_factory::mk(ItemId::shotgun_shell);
 
@@ -1144,7 +1148,7 @@ void Cultist::mk_start_items()
 
         const int cap_scaled = wpn->data().ranged.max_ammo / nr_mg_projectiles;
 
-        const int min_scaled = cap_scaled / 4;
+        const int min_scaled = cap_scaled / 2;
 
         wpn->nr_ammo_loaded_ =
             rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
@@ -1179,7 +1183,7 @@ void BogTcher::mk_start_items()
 
     const int ammo_cap = wpn->data().ranged.max_ammo;
 
-    wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
+    wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
 
     inv_->put_in_slot(SlotId::wpn,
                       item,
@@ -1341,7 +1345,8 @@ DidAction Vortex::on_act()
         --pull_cooldown;
     }
 
-    if (aware_of_player_counter_ <= 0 || pull_cooldown > 0)
+    if ((aware_of_player_counter_ <= 0) ||
+        (pull_cooldown > 0))
     {
         return DidAction::no;
     }
@@ -1455,7 +1460,8 @@ DidAction Ghost::on_act()
 
         const std::string name =
             player_sees_me ?
-            name_the() : "It";
+            name_the() :
+            "It";
 
         msg_log::add(name + " reaches for me...");
 
@@ -2382,7 +2388,7 @@ void Zombie::on_death()
         map::mk_gore(pos);
     }
 
-    const int summon_one_in_n = 7;
+    const int summon_one_in_n = 5;
 
     // Are we destroyed now? (By a strong attack, or by getting killed twice)
     if (state_ == ActorState::destroyed)
@@ -2401,7 +2407,10 @@ void Zombie::on_death()
 
             // With a small chance, spawn a Floating Skull, otherwise spawn
             // Hands or Intestines
-            const int roll = rnd::one_in(50) ? 3 : rnd::range(1, 2);
+            const int roll =
+                rnd::one_in(50) ?
+                3 :
+                rnd::range(1, 2);
 
             const std::string my_name = name_the();
 

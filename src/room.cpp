@@ -121,6 +121,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::monster, 1);
         add_to_room_bucket(RoomType::flooded, rnd::range(1, 2));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::snake_pit, 1);
 
         const size_t nr_plain_rooms = room_bucket_.size() * 2;
 
@@ -132,7 +133,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
-        add_to_room_bucket(RoomType::snake_pit, 1);
+        add_to_room_bucket(RoomType::snake_pit, 2);
         add_to_room_bucket(RoomType::crypt, 4);
         add_to_room_bucket(RoomType::monster, 2);
         add_to_room_bucket(RoomType::flooded, rnd::range(1, 3));
@@ -149,9 +150,9 @@ void init_room_bucket()
     {
         add_to_room_bucket(RoomType::monster, 1);
         add_to_room_bucket(RoomType::spider, 1);
-        add_to_room_bucket(RoomType::snake_pit, 1);
+        add_to_room_bucket(RoomType::snake_pit, 2);
         add_to_room_bucket(RoomType::flooded, 1);
-        add_to_room_bucket(RoomType::muddy, 1);
+        add_to_room_bucket(RoomType::muddy, 2);
         add_to_room_bucket(RoomType::chasm, 2);
         add_to_room_bucket(RoomType::forest, 2);
 
@@ -855,7 +856,11 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     }
 
     // Hijacking snake pit rooms to make a worm room...
-    snake_bucket.push_back(ActorId::worm_mass);
+    if (map::dlvl <= dlvl_last_mid_game)
+    {
+        snake_bucket.push_back(ActorId::worm_mass);
+    }
+
     snake_bucket.push_back(ActorId::mind_worms);
 
     const size_t idx =
