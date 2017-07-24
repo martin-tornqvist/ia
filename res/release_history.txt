@@ -17,6 +17,7 @@ Interface
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead
 * When Mi-go commanders dropped their armor on death, this was treated as if the player tried to unequip the armor
+* The "wall collapse" event could crash the game in some situations
 * The descriptions of "fast" monsters said that they appear to move "slowly"
 * Fixed some typos
 

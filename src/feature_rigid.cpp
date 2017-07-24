@@ -566,9 +566,11 @@ void Wall::on_hit(const int dmg,
         const P p(pos_);
         map::put(new RubbleLow(p));
 
+        //
         // NOTE: object is now deleted!
+        //
 
-        if (rnd::coin_toss())
+        if (rnd::one_in(4))
         {
             item_factory::mk_item_on_floor(ItemId::rock, p);
         }

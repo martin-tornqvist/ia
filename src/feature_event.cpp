@@ -34,15 +34,21 @@ void EventWallCrumble::on_new_turn()
         return;
     }
 
-    // Check that it still makes sense to run the crumbling
-    auto check_cells_have_wall = [](const std::vector<P>& cells)
+    auto is_wall = [](const P& p)
     {
-        for (const P& p : cells)
-        {
-            const auto f_id = map::cells[p.x][p.y].rigid->id();
+        const auto id = map::cells[p.x][p.y].rigid->id();
 
-            if (f_id != FeatureId::wall &&
-                f_id != FeatureId::rubble_high)
+        return
+            (id == FeatureId::wall) ||
+            (id == FeatureId::rubble_high);
+    };
+
+    // Check that it still makes sense to run the crumbling
+    auto has_only_walls = [is_wall](const std::vector<P>& positions)
+    {
+        for (const P& p : positions)
+        {
+            if (!is_wall(p))
             {
                 return false;
             }
@@ -51,121 +57,162 @@ void EventWallCrumble::on_new_turn()
         return true;
     };
 
-    if (check_cells_have_wall(wall_cells_) &&
-        check_cells_have_wall(inner_cells_))
+    const bool edge_ok = has_only_walls(wall_cells_);
+    const bool inner_ok = has_only_walls(inner_cells_);
+
+    if (!edge_ok || !inner_ok)
     {
-        if (map::player->prop_handler().allow_see())
-        {
-            msg_log::add("Suddenly, the walls collapse!",
-                         clr_msg_note,
-                         false,
-                         MorePromptOnMsg::yes);
-        }
+        // This area is (no longer) covered by walls (perhaps walls have been
+        // destroyed by an explosion for example), remove this crumble event
+        game_time::erase_mob(this, true);
 
-        // Crumble
-        bool done = false;
-
-        while (!done)
-        {
-            for (const P& p : wall_cells_)
-            {
-                if (is_pos_inside(p, R(P(1, 1), P(map_w - 2, map_h - 2))))
-                {
-                    auto* const f = map::cells[p.x][p.y].rigid;
-
-                    f->hit(1, // Doesn't matter
-                           DmgType::physical,
-                           DmgMethod::forced,
-                           nullptr);
-                }
-            }
-
-            bool is_opening_made = true;
-
-            for (const P& p : wall_cells_)
-            {
-                if (is_pos_adj(map::player->pos, p, true))
-                {
-                    Rigid* const f = map::cells[p.x][p.y].rigid;
-
-                    if (!f->can_move_common())
-                    {
-                        is_opening_made = false;
-                    }
-                }
-            }
-
-            done = is_opening_made;
-        }
-
-        // Spawn things
-        int nr_mon_limit_except_adj_to_entry = 9999;
-
-        ActorId mon_type = ActorId::zombie;
-
-        const int rnd = rnd::range(1, 5);
-
-        switch (rnd)
-        {
-        case 1:
-            mon_type = ActorId::zombie;
-            nr_mon_limit_except_adj_to_entry = 4;
-            break;
-
-        case 2:
-            mon_type = ActorId::zombie_axe;
-            nr_mon_limit_except_adj_to_entry = 3;
-            break;
-
-        case 3:
-            mon_type = ActorId::bloated_zombie;
-            nr_mon_limit_except_adj_to_entry = 2;
-            break;
-
-        case 4:
-            mon_type = ActorId::rat;
-            nr_mon_limit_except_adj_to_entry = 30;
-            break;
-
-        case 5:
-            mon_type = ActorId::rat_thing;
-            nr_mon_limit_except_adj_to_entry = 20;
-            break;
-
-        default:
-            break;
-        }
-
-        int nr_mon_spawned = 0;
-
-        random_shuffle(begin(inner_cells_), end(inner_cells_));
-
-        for (const P& p : inner_cells_)
-        {
-            map::put(new Floor(p));
-
-            if (rnd::one_in(5))
-            {
-                map::mk_gore(p);
-                map::mk_blood(p);
-            }
-
-            if (nr_mon_spawned < nr_mon_limit_except_adj_to_entry ||
-                is_pos_adj(p, pos_, false))
-            {
-                Actor* const actor = actor_factory::mk(mon_type, p);
-
-                Mon* const mon = static_cast<Mon*>(actor);
-
-                mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
-
-                ++nr_mon_spawned;
-            }
-        }
-
-        map::player->incr_shock(ShockLvl::terrifying,
-                                ShockSrc::see_mon);
+        return;
     }
+
+    const bool event_is_on_wall = is_wall(pos_);
+
+    ASSERT(event_is_on_wall);
+
+    // Release mode robustness
+    if (!event_is_on_wall)
+    {
+        game_time::erase_mob(this, true);
+
+        return;
+    }
+
+    const bool event_is_on_edge =
+        std::find(begin(wall_cells_), end(wall_cells_), pos_) !=
+        end(wall_cells_);
+
+    ASSERT(event_is_on_edge);
+
+    // Release mode robustness
+    if (!event_is_on_edge)
+    {
+        game_time::erase_mob(this, true);
+
+        return;
+    }
+
+    // OK, everything seems to be in a good state, go!
+
+    if (map::player->prop_handler().allow_see())
+    {
+        msg_log::add("Suddenly, the walls collapse!",
+                     clr_msg_note,
+                     false,
+                     MorePromptOnMsg::yes);
+    }
+
+    // Destroy the outer walls
+    for (const P& p : wall_cells_)
+    {
+        if (!map::is_pos_inside_map(p, false))
+        {
+            continue;
+        }
+
+        auto& cell = map::cells[p.x][p.y];
+
+        cell.is_dark = true;
+
+        auto* const f = cell.rigid;
+
+        f->hit(1, // Doesn't matter
+               DmgType::physical,
+               DmgMethod::forced,
+               nullptr);
+    }
+
+    // Destroy the inner walls
+    for (const P& p : inner_cells_)
+    {
+        auto& cell = map::cells[p.x][p.y];
+
+        cell.is_dark = true;
+
+        Rigid* const f = cell.rigid;
+
+        f->hit(1, // Doesn't matter
+               DmgType::physical,
+               DmgMethod::forced,
+               nullptr);
+
+        if (rnd::one_in(8))
+        {
+            map::mk_gore(p);
+            map::mk_blood(p);
+        }
+    }
+
+    // Spawn monsters
+    size_t nr_mon_limit_except_adj_to_entry;
+
+    ActorId mon_type;
+
+    const int rnd = rnd::range(1, 5);
+
+    switch (rnd)
+    {
+    case 1:
+        mon_type = ActorId::zombie;
+        nr_mon_limit_except_adj_to_entry = 4;
+        break;
+
+    case 2:
+        mon_type = ActorId::zombie_axe;
+        nr_mon_limit_except_adj_to_entry = 3;
+        break;
+
+    case 3:
+        mon_type = ActorId::bloated_zombie;
+        nr_mon_limit_except_adj_to_entry = 2;
+        break;
+
+    case 4:
+        mon_type = ActorId::rat;
+        nr_mon_limit_except_adj_to_entry = 24;
+        break;
+
+    case 5:
+        mon_type = ActorId::rat_thing;
+        nr_mon_limit_except_adj_to_entry = 16;
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+
+    random_shuffle(begin(inner_cells_), end(inner_cells_));
+
+    std::vector<Mon*> mon_spawned;
+
+    for (const P& p : inner_cells_)
+    {
+        if ((mon_spawned.size() < nr_mon_limit_except_adj_to_entry) ||
+            is_pos_adj(p, pos_, false))
+        {
+            Actor* const actor = actor_factory::mk(mon_type, p);
+
+            Mon* const mon = static_cast<Mon*>(actor);
+
+            mon_spawned.push_back(mon);
+        }
+    }
+
+    map::update_vision();
+
+    // Make the monsters aware of the player
+    for (auto* const mon : mon_spawned)
+    {
+        mon->become_aware_player(false);
+
+    }
+
+    map::player->incr_shock(ShockLvl::terrifying,
+                            ShockSrc::see_mon);
 
     game_time::erase_mob(this, true);
 }

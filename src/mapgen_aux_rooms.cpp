@@ -42,14 +42,16 @@ void mk_crumble_room(const R& room_area_incl_walls,
         }
     }
 
-    game_time::add_mob(new EventWallCrumble(event_pos,
-                                            wall_cells,
-                                            inner_cells));
-
+    game_time::add_mob(
+        new EventWallCrumble(event_pos,
+                             wall_cells,
+                             inner_cells));
 } // mk_crumble_room
 
+//
 // NOTE: The positions and size can be outside map (e.g. negative positions).
 //       This function just returns false in that case.
+//
 bool try_mk_aux_room(const P& p,
                      const P& d,
                      bool blocked[map_w][map_h],

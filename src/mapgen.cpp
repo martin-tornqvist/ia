@@ -245,9 +245,9 @@ P mk_stairs()
         io::cover_panel(Panel::log);
         states::draw();
         io::draw_text("To few cells to place stairs",
-                          Panel::screen,
-                          P(0, 0),
-                          clr_red_lgt);
+                      Panel::screen,
+                      P(0, 0),
+                      clr_red_lgt);
         io::update_screen();
         sdl_base::sleep(8000);
 #endif // DEMO_MODE
