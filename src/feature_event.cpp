@@ -147,41 +147,35 @@ void EventWallCrumble::on_new_turn()
     }
 
     // Spawn monsters
-    size_t nr_mon_limit_except_adj_to_entry;
+    size_t nr_mon_limit_except_adj_to_entry = 4;
 
-    ActorId mon_type;
+    ActorId mon_type = ActorId::zombie;
 
     const int rnd = rnd::range(1, 5);
 
     switch (rnd)
     {
     case 1:
-        mon_type = ActorId::zombie;
-        nr_mon_limit_except_adj_to_entry = 4;
-        break;
-
-    case 2:
         mon_type = ActorId::zombie_axe;
         nr_mon_limit_except_adj_to_entry = 3;
         break;
 
-    case 3:
+    case 2:
         mon_type = ActorId::bloated_zombie;
         nr_mon_limit_except_adj_to_entry = 2;
         break;
 
-    case 4:
+    case 3:
         mon_type = ActorId::rat;
         nr_mon_limit_except_adj_to_entry = 24;
         break;
 
-    case 5:
+    case 4:
         mon_type = ActorId::rat_thing;
         nr_mon_limit_except_adj_to_entry = 16;
         break;
 
     default:
-        ASSERT(false);
         break;
     }
 
