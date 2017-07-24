@@ -124,7 +124,7 @@ The item currently used for throwing can be seen at the bottom right corner of t
 
 Note that explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive (don't hold on to it too long). Press "t", and aim somewhere (the game will mark the area around your aim position to indicate the explosion size - be careful though, there may be unseen objects blocking the throw path). Press "t" again (or enter) to throw the explosive toward the aim position.
 
-To drop an item, select them item while holding shift (i.e. shift + enter, or shift + letter). This can be done from any inventory screen. If you are dropping a stack of something (e.g. a number of Shotgun shells), the game will ask how many to drop, by letting you type in a number.
+To drop an item, select the item while holding shift (i.e. shift + enter, or shift + letter). This can be done from any inventory screen. If you are dropping a stack of something (e.g. a number of Shotgun shells), the game will ask how many to drop, by letting you type in a number.
 
 In any inventory screen, you can see percentage values to the far right of each item. This is how many percent of your total carried weight that each item takes (the numbers roughly adds up to 100%, but there will be rounding errors, since decimals are not shown). So if you are overburdened, an item with a high percentage value might be a good candidate to drop.
 
@@ -193,12 +193,12 @@ Some monsters have the ability to sneak as well. You automatically attempt to de
 
 The chances of one creature detecting another are affected by:
    * Search skill
-   * The hidden actors sneak skill
+   * The hidden actor's sneak skill
    * Light and darkness
    * Distance
 
 You can improve the search and sneak skills with traits (e.g. "Observant" and "Stealthy").
 
-When you stay out of an aware monsters vision for a certain number of turns (and nothing else alerts it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
+When you stay out of an aware monster's vision for a certain number of turns (and nothing else alerts it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
 
 Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence. Medium and heavy melee weapons will make noise on attacks, so a light weapon might be more ideal for a stealthy combat approach. Some sounds are louder than others, for example firing a gun or kicking down a door is likely to attract some attention.
