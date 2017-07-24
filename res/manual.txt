@@ -116,7 +116,7 @@ To wear or wield items, they are placed in different inventory slots:
    * Body     - item worn over your body (e.g. an armor or a jacket)
    * Head     - item worn on your head (e.g. a gas mask)
 
-   (2) Pressing "a" shows only items which wich you can "activate" or consume
+   (2) Pressing "a" shows only items which you can "activate" or consume
 This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
 
    (3) Pressing "T" opens a list to select an item for throwing attacks
