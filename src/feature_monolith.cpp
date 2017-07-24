@@ -72,7 +72,7 @@ void Monolith::activate()
 
     audio::play(SfxId::monolith);
 
-    game::incr_player_xp(15);
+    game::incr_player_xp(20);
 
     is_activated_ = true;
 }

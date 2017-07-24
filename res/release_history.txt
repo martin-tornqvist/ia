@@ -8,6 +8,7 @@ Gameplay
 * Ghoul characters have +20% speed
 * Adjusted Potion of Posion duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damge is slower, but poisoning generally lasts longer
+* XP gained from Monoliths increased from 15% to 20%
 
 Interface
 * Weapon names show their average damage instead of dice rolls (e.g. "Machete 7.0 +0%") - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
