@@ -1892,7 +1892,7 @@ DidAction KeziahMason::on_act()
         actor_factory::spawn(
             pos,
             {ActorId::brown_jenkin},
-            MakeMonAware::yes,
+            MakeMonAware::no,
             this);
 
     ASSERT(summoned.size() == 1);
