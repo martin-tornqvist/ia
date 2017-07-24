@@ -152,10 +152,18 @@ int Actor::speed_pct() const
     }
 
     //
-    // Speed bonus from traits?
+    // Speed bonus from background/traits?
     //
     if (is_player())
     {
+        if (player_bon::bg() == Bg::ghoul)
+        {
+            //
+            // NOTE: This should be the same as the Ghoul monster bonus
+            //
+            speed += 20;
+        }
+
         if (player_bon::traits[(size_t)Trait::dexterous])
         {
             speed += 10;

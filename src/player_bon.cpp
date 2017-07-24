@@ -391,17 +391,16 @@ std::vector<StrAndClr> bg_descr(const Bg id)
     {
     case Bg::ghoul:
         put("Does not regenerate Hit Points and cannot use medical equipment - "
-            "must instead heal by feeding on corpses (stand still to feed)");
+            "must instead heal by feeding on corpses (press '5' or '.' while "
+            "standing on a corpse to feed)");
         put("");
-        put("Has an arcane ability to incite Frenzy at will (increased speed, "
+        put("Has an arcane ability to incite Frenzy at will (+100% speed, "
             "+10% melee hit chance, +1 melee damage, must move towards "
             "enemies)");
         put("");
         put("Does not become Weakened when Frenzy ends");
         put("");
-        put("Has powerful claws to attack with");
-        put("");
-        put("-15% hit chance with firearms and thrown weapons");
+        put("+20% speed");
         put("");
         put("+10 Hit Points");
         put("");
@@ -410,6 +409,8 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("Has Infravision");
         put("");
         put("-50% shock taken from seeing monsters");
+        put("");
+        put("-15% hit chance with firearms and thrown weapons");
         put("");
         put("All Ghouls are allied");
         break;
@@ -570,11 +571,11 @@ std::string trait_descr(const Trait id)
 
     case Trait::dexterous:
         return
-            "+10% speed for all actions, +15% chance to dodge attacks";
+            "+10% speed, +15% chance to dodge attacks";
 
     case Trait::lithe:
         return
-            "+10% speed for all actions, +15% chance to dodge attacks";
+            "+10% speed, +15% chance to dodge attacks";
 
     case Trait::mobile:
         return
@@ -612,9 +613,9 @@ std::string trait_descr(const Trait id)
 
     case Trait::perseverant:
         return
-            "While your Hit Points are reduced below 50%, you gain +20% speed "
-            "for all actions, +20% hit chance with melee and ranged attacks, "
-            "and +30% chance to dodge attacks";
+            "While your Hit Points are reduced below 50%, you gain +20% speed, "
+            "+20% hit chance with melee and ranged attacks, and +30% chance "
+            "to dodge attacks";
 
     case Trait::self_aware:
         return

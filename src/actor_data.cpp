@@ -2339,6 +2339,9 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
+    //
+    // NOTE: This should be the same as the player Ghoul background bonus
+    //
     d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'M';
     d.color = clr_green;
@@ -2350,7 +2353,8 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 4;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    20),
