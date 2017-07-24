@@ -225,7 +225,7 @@ public:
 
     std::string name() const override
     {
-        return "Azathoths Wrath";
+        return "Azathoth's Wrath";
     }
 
     SpellId id() const override
