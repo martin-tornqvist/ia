@@ -66,11 +66,11 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
     if (!title.empty())
     {
         io::draw_text_center(title,
-                                   Panel::map,
-                                   P(map_w_half, y),
-                                   clr_title,
-                                   clr_black,
-                                   true);
+                             Panel::map,
+                             P(map_w_half, y),
+                             clr_title,
+                             clr_black,
+                             true);
     }
 
     const bool show_msg_centered = lines.size() == 1;
@@ -82,11 +82,11 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         if (show_msg_centered)
         {
             io::draw_text_center(line,
-                                     Panel::map,
-                                     P(map_w_half, y),
-                                     clr_white,
-                                     clr_black,
-                                     true);
+                                 Panel::map,
+                                 P(map_w_half, y),
+                                 clr_white,
+                                 clr_black,
+                                 true);
         }
         else // Draw the message with left alignment
         {
@@ -106,14 +106,18 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
     for (size_t i = 0; i < choices.size(); ++i)
     {
-        Clr clr = i == current_choice ? clr_menu_highlight : clr_menu_drk;
+        Clr clr =
+            (i == current_choice) ?
+            clr_menu_highlight :
+            clr_menu_drk;
 
         io::draw_text_center(choices[i],
-                                   Panel::map,
-                                   P(map_w_half, y),
-                                   clr,
-                                   clr_black,
-                                   true);
+                             Panel::map,
+                             P(map_w_half, y),
+                             clr,
+                             clr_black,
+                             true);
+
         ++y;
     }
 
@@ -142,11 +146,12 @@ void show_msg(const std::string& msg,
 
     if (!title.empty())
     {
-        io::draw_text_center(title, Panel::map,
-                                   P(map_w_half, y),
-                                   clr_title,
-                                   clr_black,
-                                   true);
+        io::draw_text_center(title,
+                             Panel::map,
+                             P(map_w_half, y),
+                             clr_title,
+                             clr_black,
+                             true);
     }
 
     const bool show_msg_centered = lines.size() == 1;
@@ -158,11 +163,11 @@ void show_msg(const std::string& msg,
         if (show_msg_centered)
         {
             io::draw_text_center(line,
-                                       Panel::map,
-                                       P(map_w_half, y),
-                                       clr_white,
-                                       clr_black,
-                                       true);
+                                 Panel::map,
+                                 P(map_w_half, y),
+                                 clr_white,
+                                 clr_black,
+                                 true);
         }
         else
         {
@@ -182,7 +187,7 @@ void show_msg(const std::string& msg,
     io::draw_text_center(confirm_info_str_no_space,
                          Panel::map,
                          P(map_w_half, y),
-                         clr_popup_label);
+                         clr_menu_drk);
 
     io::update_screen();
 

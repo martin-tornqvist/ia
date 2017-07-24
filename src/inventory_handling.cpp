@@ -160,7 +160,8 @@ void InvState::draw_slot(const SlotId id,
     //
     const Clr clr =
         is_marked ?
-        clr_white_lgt : clr_menu_drk;
+        clr_white_lgt :
+        clr_menu_drk;
 
     P p(0, y);
 
@@ -256,7 +257,8 @@ void InvState::draw_backpack_item(const size_t backpack_idx,
     //
     const Clr clr =
         is_marked ?
-        clr_white_lgt : clr_menu_drk;
+        clr_white_lgt :
+        clr_menu_drk;
 
     std::string key_str = "?) ";
 
@@ -352,7 +354,8 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
 
         const Clr weight_clr =
             is_marked ?
-            clr_white : clr_gray_drk;
+            clr_white_lgt :
+            clr_menu_drk;
 
         io::draw_text(weight_str,
                       Panel::screen,
@@ -387,7 +390,8 @@ void InvState::draw_weight_pct_and_dots(const P item_pos,
 
     Clr dots_clr =
         is_marked ?
-        clr_white : item_name_clr;
+        clr_white :
+        item_name_clr;
 
     if (!is_marked)
     {
@@ -642,7 +646,7 @@ void BrowseInv::draw()
     io::draw_text_center("Browsing inventory" + drop_info_str,
                          Panel::screen,
                          P(screen_w / 2, 0),
-                         clr_brown_gray);
+                         clr_title);
 
     const Range idx_range_shown = browser_.range_shown();
 
@@ -899,7 +903,7 @@ void Apply::draw()
     io::draw_text_center("Apply which item?" + drop_info_str,
                          panel,
                          P(screen_w / 2, 0),
-                         clr_brown_gray);
+                         clr_title);
 
     const Range idx_range_shown = browser_.range_shown();
 
@@ -1123,7 +1127,7 @@ void Equip::draw()
     io::draw_text_center(heading + drop_info_str,
                          panel,
                          P(screen_w / 2, 0),
-                         clr_brown_gray);
+                         clr_title);
 
     auto& inv = map::player->inv();
 
@@ -1329,7 +1333,7 @@ void SelectThrow::draw()
     io::draw_text_center("Throw which item?" + drop_info_str,
                          Panel::log,
                          P(screen_w / 2, 0),
-                         clr_brown_gray);
+                         clr_title);
 
     const int browser_y = browser_.y();
 
@@ -1554,7 +1558,7 @@ void SelectIdentify::draw()
     io::draw_text_center("Identify which item?",
                          Panel::screen,
                          P(screen_w / 2, 0),
-                         clr_brown_gray);
+                         clr_title);
 
     const Range idx_range_shown = browser_.range_shown();
 

@@ -215,7 +215,8 @@ void PickBgState::draw()
 
         const Clr& drw_clr =
             is_marked ?
-            clr_menu_highlight : clr_menu_drk;
+            clr_menu_highlight :
+            clr_menu_drk;
 
         io::draw_text(key_str + bg_name,
                       Panel::screen,
@@ -686,7 +687,7 @@ void EnterNameState::draw()
     io::draw_text(name_str,
                   Panel::screen,
                   P(name_x0, y_name),
-                  clr_brown_gray);
+                  clr_menu_highlight);
 
     R box_rect(P(name_x0 - 1, y_name - 1),
                P(name_x1 + 1, y_name + 1));

@@ -37,7 +37,7 @@ const Clr clr_cyan_lgt          = {  0, 255, 255, 0};
 const Clr clr_brown             = {153, 102,  61, 0};
 const Clr clr_brown_drk         = { 96,  64,  32, 0};
 const Clr clr_brown_gray        = { 83,  76,  66, 0};
-const Clr clr_brown_gray_drk    = { 34,  32,  26, 0};
+const Clr clr_brown_gray_drk    = { 43,  40,  32, 0};
 
 const Clr clr_violet            = {128,   0, 255, 0};
 const Clr clr_violet_drk        = { 64,   0, 128, 0};
@@ -60,12 +60,10 @@ const Clr clr_nosf_teal_drk     = { 20,  54,  51, 0};
 //-----------------------------------------------------------------------------
 const Clr clr_text              = clr_white;
 
-const Clr clr_menu_highlight    = clr_brown_gray;
-const Clr clr_menu_drk          = clr_brown_gray_drk;
+const Clr clr_menu_highlight    = clr_nosf_sepia_lgt;
+const Clr clr_menu_drk          = clr_nosf_sepia_drk;
 
-const Clr clr_popup_label       = clr_brown_gray_drk;
-
-const Clr clr_title             = clr_brown_gray;
+const Clr clr_title             = clr_nosf_sepia_drk;
 
 const Clr clr_msg_good          = clr_green_lgt;
 const Clr clr_msg_bad           = clr_red_lgt;

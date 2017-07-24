@@ -1111,9 +1111,9 @@ void win_game()
         "[space/esc/enter] to record high score and return to main menu";
 
     io::draw_text(cmd_label,
-                      Panel::screen,
-                      P(X0, screen_h - 2),
-                      clr_popup_label);
+                  Panel::screen,
+                  P(X0, screen_h - 2),
+                  clr_menu_drk);
 
     io::update_screen();
 
