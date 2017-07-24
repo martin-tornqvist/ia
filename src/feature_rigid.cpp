@@ -2755,9 +2755,11 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             {
                 if (map::dlvl < dlvl_harder_traps)
                 {
+                    const Range dmg_range(8, 11);
+
                     prop = new PropPoisoned(
                         PropTurns::specific,
-                        poison_dmg_n_turn * rnd::range(6, 10));
+                        poison_dmg_n_turn * dmg_range.roll());
                 }
                 else
                 {
@@ -3319,10 +3321,12 @@ void Fountain::bump(Actor& actor_bumping)
         case FountainEffect::poison:
             if (map::dlvl < dlvl_harder_traps)
             {
+                const Range dmg_range(8, 11);
+
                 prop_hlr.apply(
                     new PropPoisoned(
                         PropTurns::specific,
-                        poison_dmg_n_turn * rnd::range(6, 10)));
+                        poison_dmg_n_turn * dmg_range.roll()));
             }
             else
             {

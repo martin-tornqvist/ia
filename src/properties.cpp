@@ -351,7 +351,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::poisoned;
-    d.std_rnd_turns = Range(30, 60);
+    d.std_rnd_turns = Range(40, 80);
     d.name = "Poisoned";
     d.name_short = "Poisoned";
     d.descr = "Takes damage each turn";

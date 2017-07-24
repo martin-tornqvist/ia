@@ -351,7 +351,12 @@ void PotionFortitude::collide_hook(const P& pos, Actor* const actor)
 
 void PotionPoison::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropPoisoned(PropTurns::std));
+    const Range dmg_range(8, 11);
+
+    actor.prop_handler().apply(
+        new PropPoisoned(
+            PropTurns::specific,
+            poison_dmg_n_turn * dmg_range.roll()));
 
     if (map::player->can_see_actor(actor))
     {

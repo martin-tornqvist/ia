@@ -95,7 +95,7 @@ const int expl_dmg_sides = 6;
 const int expl_dmg_plus = 10;
 const int expl_max_dmg = (expl_dmg_rolls * expl_dmg_sides) + expl_dmg_plus;
 
-const int poison_dmg_n_turn = 3;
+const int poison_dmg_n_turn = 4;
 
 const int shock_from_obsession = 30;
 
