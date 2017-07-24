@@ -315,7 +315,7 @@ void MainMenuState::draw()
 
     Clr quote_clr = clr_brown_gray;
 
-    div_clr(quote_clr, 5);
+    div_clr(quote_clr, 4);
 
     std::vector<std::string> quote_lines;
 
