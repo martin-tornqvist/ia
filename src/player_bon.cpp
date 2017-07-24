@@ -647,7 +647,7 @@ std::string trait_descr(const Trait id)
 
     case Trait::silent:
         return
-            "All your melee attacks are silent, opening or closing doos does "
+            "All your melee attacks are silent, opening or closing doors does "
             "not alert other creatures";
 
     case Trait::vicious:
