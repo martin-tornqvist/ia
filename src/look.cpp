@@ -596,7 +596,7 @@ std::string ViewActorDescr::mon_speed_str() const
 
     if (def.speed_pct >= (int)ActorSpeed::fast)
     {
-        return "slowly";
+        return "fast";
     }
 
     if (def.speed_pct >= (int)ActorSpeed::normal)
