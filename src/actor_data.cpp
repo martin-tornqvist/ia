@@ -474,7 +474,7 @@ void init_data_list()
     d.is_unique = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
     d.descr =
@@ -677,7 +677,7 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a repulsive croaking voice.";
     d.nr_turns_aware = 999;
     d.erratic_move_pct = ActorErraticFreq::rare;
-    d.mon_shock_lvl = ShockLvl::frightening;
+    d.mon_shock_lvl = ShockLvl::terrifying;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::ritual);
     d.native_rooms.push_back(RoomType::forest);
@@ -1642,8 +1642,8 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_min_dlvl = 1;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 4;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    20),
