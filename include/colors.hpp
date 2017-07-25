@@ -49,7 +49,7 @@ const Clr clr_orange            = {255, 128,   0, 0};
 //-----------------------------------------------------------------------------
 const Clr clr_nosf_sepia        = {139, 114,  57, 0};
 const Clr clr_nosf_sepia_lgt    = {225, 205, 154, 0};
-const Clr clr_nosf_sepia_drk    = { 81,  72,  43, 0};
+const Clr clr_nosf_sepia_drk    = { 66,  60,  40, 0};
 
 const Clr clr_nosf_teal         = { 57, 157, 155, 0};
 const Clr clr_nosf_teal_lgt     = { 88, 226, 228, 0};
