@@ -473,8 +473,8 @@ void init_data_list()
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 6;
-    d.spawn_max_dlvl = dlvl_last;
+    d.spawn_min_dlvl = 8;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
     d.descr =
@@ -1498,7 +1498,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Y';
     d.color = clr_white_lgt;
     d.tile = TileId::void_traveler;
@@ -1544,7 +1544,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Y';
     d.color = clr_orange;
     d.tile = TileId::void_traveler;
@@ -2288,11 +2288,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'E';
     d.color = clr_yellow_drk;
     d.tile = TileId::mind_eater;
-    d.hp = 28;
+    d.hp = 22;
     d.spi = 40;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2309,10 +2309,10 @@ void init_data_list()
     d.can_open_doors = false;
     d.nr_turns_aware = 7;
     d.descr =
-        "A large tentacled alien creature, mysteriously floating through the "
-        "air in a ghostly manner. They somehow sustain themselves on the "
-        "brain activity of other beings. Their preferred strategy is to subdue "
-        "their victim with a paralyzing sting, and once immobilized, a second "
+        "A tentacled alien creature, mysteriously floating through the air "
+        "in a ghostly manner. They somehow sustain themselves on the brain "
+        "activity of other beings. Their preferred strategy is to subdue their "
+        "victim with a paralyzing sting, and once immobilized, a second "
         "appendage probes the brain. This will usually not kill the victim, "
         "but the experience is horrific beyond words. They only feed on "
         "sound minds however - a strange or chaotic mind will cause them "
@@ -2353,7 +2353,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 4;
+    d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
