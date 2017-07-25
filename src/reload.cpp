@@ -15,6 +15,7 @@
 #include "game_time.hpp"
 #include "audio.hpp"
 #include "io.hpp"
+#include "text_format.hpp"
 
 namespace reload
 {
@@ -34,7 +35,11 @@ void msg_reload_fumble(const Actor& actor, const Item& ammo)
     {
         if (map::player->can_see_actor(actor))
         {
-            msg_log::add(actor.name_the() + " fumbles with " + ammo_name + ".");
+            const std::string name_the =
+                text_format::first_to_upper(
+                    actor.name_the());
+
+            msg_log::add(name_the + " fumbles with " + ammo_name + ".");
         }
     }
 }
@@ -71,7 +76,11 @@ void msg_reloaded(const Actor& actor,
     {
         if (map::player->can_see_actor(actor))
         {
-            msg_log::add(actor.name_the() + " reloads.");
+            const std::string name_the =
+                text_format::first_to_upper(
+                    actor.name_the());
+
+            msg_log::add(name_the + " reloads.");
         }
     }
 }

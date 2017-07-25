@@ -10,6 +10,7 @@
 #include "map_parsing.hpp"
 #include "game_time.hpp"
 #include "fov.hpp"
+#include "text_format.hpp"
 
 namespace ai
 {
@@ -59,7 +60,10 @@ bool try_cast_random_spell(Mon& mon)
                 if (!has_spi &&
                     map::player->can_see_actor(mon))
                 {
-                    msg_log::add(mon.name_the() + " looks desperate.");
+                    const std::string mon_name_the =
+                        text_format::first_to_upper(mon.name_the());
+
+                    msg_log::add(mon_name_the + " looks desperate.");
                 }
 
                 current_cooldown = spell->mon_cooldown();
@@ -123,11 +127,13 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
 
                 if (map::player->can_see_actor(mon))
                 {
-                    const std::string mon_name = mon.name_the();
+                    const std::string mon_name_the =
+                        text_format::first_to_upper(
+                            mon.name_the());
 
                     const std::string door_name = door->base_name_short();
 
-                    msg_log::add(mon_name +
+                    msg_log::add(mon_name_the +
                                  " bashes at the " +
                                  door_name +
                                  "!");

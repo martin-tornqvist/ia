@@ -22,6 +22,7 @@
 #include "sdl_base.hpp"
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
+#include "text_format.hpp"
 
 namespace throwing
 {
@@ -155,7 +156,11 @@ void throw_item(Actor& actor_throwing,
 
         if (map::cells[p.x][p.y].is_seen_by_player)
         {
-            msg_log::add(actor_throwing.name_the() +
+            const std::string name_the =
+                text_format::first_to_upper(
+                    actor_throwing.name_the());
+
+            msg_log::add(name_the +
                          " throws " +
                          item_name_a + ".");
         }
@@ -239,7 +244,7 @@ void throw_item(Actor& actor_throwing,
                 {
                     const std::string defender_name =
                         map::player->can_see_actor(*actor_here) ?
-                        actor_here->name_the() :
+                        text_format::first_to_upper(actor_here->name_the()) :
                         "It";
 
                     msg_log::add(defender_name + " is hit.", clr_msg_good);

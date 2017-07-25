@@ -13,7 +13,7 @@
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
 #include "io.hpp"
-
+#include "text_format.hpp"
 
 namespace item_drop
 {
@@ -109,7 +109,11 @@ void try_drop_item_from_inv(Actor& actor,
     {
         if (map::player->can_see_actor(actor))
         {
-            msg_log::add(actor.name_the() + " drops " + item_ref + ".");
+            const std::string mon_name_the =
+                text_format::first_to_upper(
+                    actor.name_the());
+
+            msg_log::add(mon_name_the + " drops " + item_ref + ".");
         }
     }
 

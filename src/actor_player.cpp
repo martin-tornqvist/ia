@@ -1044,7 +1044,11 @@ void Player::on_actor_turn()
                     wait_turns_left > 0 ||
                     nr_quick_move_steps_left_ > 0)
                 {
-                    msg_log::add(actor->name_a() + " comes into my view.",
+                    const std::string name_a =
+                        text_format::first_to_upper(
+                            actor->name_a());
+
+                    msg_log::add(name_a + " comes into my view.",
                                  clr_white,
                                  true);
                 }
@@ -1683,7 +1687,8 @@ void Player::move(Dir dir)
 
                             const std::string mon_name =
                                 can_see_mon ?
-                                mon->name_the() : "it";
+                                mon->name_the() :
+                                "it";
 
                             msg_log::add("Attack " + mon_name +
                                          " with " + wpn_name +
@@ -1787,7 +1792,8 @@ void Player::move(Dir dir)
                 {
                     std::string mon_name =
                         can_see_actor(*mon) ?
-                        mon->name_a() : "it";
+                        mon->name_a() :
+                        "it";
 
                     msg_log::add("I displace " + mon_name + ".");
                 }
@@ -1820,14 +1826,18 @@ void Player::move(Dir dir)
                 if ((actor->pos == pos) &&
                     (actor->state() == ActorState::corpse))
                 {
-                    const std::string name = actor->corpse_name_a();
+                    const std::string name =
+                        text_format::first_to_upper(
+                            actor->corpse_name_a());
 
                     msg_log::add(name + ".");
                 }
             }
         }
 
+        //
         // NOTE: bump() prints block messages.
+        //
         for (auto* mob : mobs)
         {
             mob->bump(*this);

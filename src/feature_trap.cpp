@@ -20,6 +20,7 @@
 #include "player_bon.hpp"
 #include "item_factory.hpp"
 #include "attack.hpp"
+#include "text_format.hpp"
 
 // -----------------------------------------------------------------------------
 // Trap
@@ -368,7 +369,8 @@ void Trap::bump(Actor& actor_bumping)
                     if (!is_hidden_ && is_actor_seen_by_player)
                     {
                         const std::string actor_name_the =
-                            actor_bumping.name_the();
+                            text_format::first_to_upper(
+                                actor_bumping.name_the());
 
                         msg_log::add(actor_name_the +
                                      " avoids " +
@@ -1143,7 +1145,8 @@ void TrapSummonMon::trigger()
 
             states::draw();
 
-            msg_log::add(mon->name_a() + " appears!");
+            msg_log::add(text_format::first_to_upper(mon->name_a()) +
+                         " appears!");
         }
     }
 
@@ -1316,7 +1319,10 @@ void TrapWeb::trigger()
     const bool is_player = actor_here->is_player();
     const bool can_see = actor_here->prop_handler().allow_see();
     const bool can_player_see_actor = map::player->can_see_actor(*actor_here);
-    const std::string actor_name = actor_here->name_the();
+
+    const std::string actor_name =
+        text_format::first_to_upper(
+            actor_here->name_the());
 
     if (is_player)
     {
@@ -1381,7 +1387,10 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
 
     const bool player_can_see = map::player->prop_handler().allow_see();
     const bool player_can_see_actor = map::player->can_see_actor(actor);
-    const std::string actor_name = actor.name_the();
+
+    const std::string actor_name =
+        text_format::first_to_upper(
+            actor.name_the());
 
     TRACE_VERBOSE << "Name of actor held: " << actor_name << std::endl;
 

@@ -22,6 +22,7 @@
 #include "sound.hpp"
 #include "feature_door.hpp"
 #include "wham.hpp"
+#include "text_format.hpp"
 
 // -----------------------------------------------------------------------------
 // Rigid
@@ -56,7 +57,11 @@ void Rigid::on_new_turn()
             {
                 if (map::player->can_see_actor(actor))
                 {
-                    msg_log::add(actor.name_the() + " is scorched by flames.",
+                    const std::string name_the =
+                        text_format::first_to_upper(
+                            actor.name_the());
+
+                    msg_log::add(name_the + " is scorched by flames.",
                                  clr_msg_good);
                 }
             }
@@ -64,7 +69,9 @@ void Rigid::on_new_turn()
             actor.hit(1, DmgType::fire);
         };
 
+        //
         // TODO: Hit dead actors
+        //
 
         // Hit actor standing on feature
         auto* actor = map::actor_at_pos(pos_);

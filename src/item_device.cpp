@@ -336,7 +336,9 @@ ConsumeItem DeviceShockwave::trigger_effect()
 
         if (map::player->can_see_actor(*actor))
         {
-            std::string msg = actor->name_the() + " is hit!";
+            std::string msg =
+                text_format::first_to_upper(actor->name_the()) +
+                " is hit!";
 
             msg = text_format::first_to_upper(msg);
 
@@ -404,8 +406,11 @@ ConsumeItem DeviceTranslocator::trigger_effect()
     {
         for (Actor* actor : seen_foes)
         {
-            msg_log::add(actor->name_the() + " is teleported.");
+            msg_log::add(text_format::first_to_upper(actor->name_the()) +
+                         " is teleported.");
+
             io::draw_blast_at_cells(std::vector<P> {actor->pos}, clr_yellow);
+
             actor->teleport();
         }
     }

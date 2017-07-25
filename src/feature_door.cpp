@@ -9,6 +9,7 @@
 #include "postmortem.hpp"
 #include "player_bon.hpp"
 #include "map_parsing.hpp"
+#include "text_format.hpp"
 
 Door::Door(const P& feature_pos,
            const Rigid* const mimic_feature,
@@ -894,7 +895,11 @@ void Door::try_close(Actor* actor_trying)
 
                     if (player_see_tryer)
                     {
-                        msg_log::add(actor_trying->name_the() +
+                        const std::string actor_name_the =
+                            text_format::first_to_upper(
+                                actor_trying->name_the());
+
+                        msg_log::add(actor_name_the +
                                      "fumbles, but manages to close a " +
                                      base_name_short() +
                                      ".");
@@ -913,7 +918,11 @@ void Door::try_close(Actor* actor_trying)
                 {
                     if (player_see_tryer)
                     {
-                        msg_log::add(actor_trying->name_the() +
+                        const std::string actor_name_the =
+                            text_format::first_to_upper(
+                                actor_trying->name_the());
+
+                        msg_log::add(actor_name_the +
                                      " fumbles blindly, and fails to close a " +
                                      base_name_short() +
                                      ".");
@@ -960,7 +969,11 @@ void Door::try_close(Actor* actor_trying)
 
                 if (player_see_tryer)
                 {
-                    msg_log::add(actor_trying->name_the() +
+                    const std::string actor_name_the =
+                        text_format::first_to_upper(
+                            actor_trying->name_the());
+
+                    msg_log::add(actor_name_the +
                                  " closes a " +
                                  base_name_short() +
                                  ".");
@@ -969,8 +982,10 @@ void Door::try_close(Actor* actor_trying)
         }
     }
 
+    //
     // TODO: It doesn't seem like a turn is spent if player is blind and fails
     //       to close the door?
+    //
     if (!is_open_ && is_closable)
     {
         game_time::tick();
@@ -1068,7 +1083,11 @@ void Door::try_open(Actor* actor_trying)
 
                 if (player_see_tryer)
                 {
-                    msg_log::add(actor_trying->name_the() +
+                    const std::string actor_name_the =
+                        text_format::first_to_upper(
+                            actor_trying->name_the());
+
+                    msg_log::add(actor_name_the +
                                  " opens a " +
                                  base_name_short() +
                                  ".");
@@ -1120,7 +1139,11 @@ void Door::try_open(Actor* actor_trying)
 
                     if (player_see_tryer)
                     {
-                        msg_log::add(actor_trying->name_the() +
+                        const std::string actor_name_the =
+                            text_format::first_to_upper(
+                                actor_trying->name_the());
+
+                        msg_log::add(actor_name_the +
                                      "fumbles, but manages to open a " +
                                      base_name_short() +
                                      ".");
@@ -1170,7 +1193,11 @@ void Door::try_open(Actor* actor_trying)
 
                     if (player_see_tryer)
                     {
-                        msg_log::add(actor_trying->name_the() +
+                        const std::string actor_name_the =
+                            text_format::first_to_upper(
+                                actor_trying->name_the());
+
+                        msg_log::add(actor_name_the +
                                      " fumbles blindly, and fails to open a " +
                                      base_name_short() +
                                      ".");

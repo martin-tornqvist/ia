@@ -15,6 +15,7 @@
 #include "feature_rigid.hpp"
 #include "feature_trap.hpp"
 #include "feature_mob.hpp"
+#include "text_format.hpp"
 
 namespace knockback
 {
@@ -117,7 +118,11 @@ void run(Actor& defender,
             }
             else
             {
-                msg_log::add(defender.name_the() + " is knocked back!");
+                const std::string name_the =
+                    text_format::first_to_upper(
+                        defender.name_the());
+
+                msg_log::add(name_the + " is knocked back!");
             }
         }
 
@@ -139,7 +144,11 @@ void run(Actor& defender,
             }
             else
             {
-                msg_log::add(defender.name_the() + " plummets down the depths.",
+                const std::string name_the =
+                    text_format::first_to_upper(
+                        defender.name_the());
+
+                msg_log::add(name_the + " plummets down the depths.",
                              clr_msg_good);
             }
 

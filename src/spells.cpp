@@ -23,6 +23,7 @@
 #include "player_bon.hpp"
 #include "game.hpp"
 #include "explosion.hpp"
+#include "text_format.hpp"
 
 namespace
 {
@@ -324,7 +325,7 @@ void Spell::cast(Actor* const caster,
 
             if (is_mon_seen)
             {
-                mon_name = mon->name_the();
+                mon_name = text_format::first_to_upper(mon->name_the());
             }
             else // Cannot see monster
             {
@@ -501,7 +502,7 @@ void SpellDarkbolt::run_effect(Actor* const caster, const int skill) const
     }
     else // Target is monster
     {
-        str_begin = target->name_the() + " is";
+        str_begin = text_format::first_to_upper(target->name_the()) + " is";
 
         if (map::player->is_leader_of(target))
         {
@@ -653,7 +654,7 @@ void SpellAzaWrath::run_effect(Actor* const caster, const int skill) const
         }
         else // Target is monster
         {
-            str_begin = target->name_the() + " is";
+            str_begin = text_format::first_to_upper(target->name_the()) + " is";
 
             if (map::player->is_leader_of(target))
             {
@@ -756,7 +757,10 @@ void SpellMayhem::run_effect(Actor* const caster, const int skill) const
 
     if (map::player->can_see_actor(*caster))
     {
-        std::string caster_name = is_player ? "me" : caster->name_the();
+        std::string caster_name =
+            is_player ?
+            "me" :
+            caster->name_the();
 
         msg_log::add("Destruction rages around " + caster_name + "!");
     }
@@ -1206,7 +1210,7 @@ void SpellPharaohStaff::run_effect(Actor* const caster, const int skill) const
 
     if (map::player->can_see_actor(*mon))
     {
-        msg_log::add(mon->name_a() + " appears!");
+        msg_log::add(text_format::first_to_upper(mon->name_a()) + " appears!");
 
         if (did_player_summon_hostile)
         {
@@ -2183,7 +2187,7 @@ void SpellSummonMon::run_effect(Actor* const caster, const int skill) const
 
     if (map::player->can_see_actor(*mon))
     {
-        msg_log::add(mon->name_a() + " appears!");
+        msg_log::add(text_format::first_to_upper(mon->name_a()) + " appears!");
 
         if (did_player_summon_hostile)
         {

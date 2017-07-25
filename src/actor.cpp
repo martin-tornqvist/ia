@@ -366,9 +366,14 @@ void Actor::teleport()
 
 void Actor::teleport(P p, bool blocked[map_w][map_h])
 {
-    if (!is_player() && map::player->can_see_actor(*this))
+    if (!is_player() &&
+        map::player->can_see_actor(*this))
     {
-        msg_log::add(name_the() + mon_disappear_msg);
+        const std::string actor_name_the =
+            text_format::first_to_upper(
+                name_the());
+
+        msg_log::add(actor_name_the + mon_disappear_msg);
     }
 
     if (!is_player())
@@ -378,8 +383,10 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
     // If actor was held by a spider web, destroy it
 
+    //
     // TODO: If something like a bear trap is implemented, the code below
     //       needs to be adapted to consider other "hold" type traps
+    //
     Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
 
     if (rigid->id() == FeatureId::trap)
@@ -428,9 +435,11 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
                     // Set new teleport destination
                     p = rnd::element(p_bucket);
 
-                    const std::string actor_name_a = actor->name_a();
+                    const std::string actor_name_a =
+                        text_format::first_to_upper(
+                            actor->name_a());
 
-                    msg_log::add(text_format::first_to_upper(actor_name_a) +
+                    msg_log::add(actor_name_a +
                                  " intercepts my teleportation!");
 
                     static_cast<Mon*>(actor)->become_aware_player(false);
@@ -498,8 +507,8 @@ bool Actor::restore_hp(const int hp_restored,
     // If hp is below limit, but restored hp will push it over the limit, hp is
     // set to max.
     if (!is_allowed_above_max &&
-        hp() > dif_from_max &&
-        hp() < hp_max(true))
+        (hp() > dif_from_max) &&
+        (hp() < hp_max(true)))
     {
         hp_ = hp_max(true);
         is_hp_gained = true;
@@ -507,13 +516,15 @@ bool Actor::restore_hp(const int hp_restored,
 
     // If hp is below limit, and restored hp will NOT push it over the limit -
     // restored hp is added to current.
-    if (is_allowed_above_max || hp() <= dif_from_max)
+    if (is_allowed_above_max ||
+        (hp() <= dif_from_max))
     {
         hp_ += hp_restored;
         is_hp_gained = true;
     }
 
-    if (verbosity == Verbosity::verbose && is_hp_gained)
+    if ((verbosity == Verbosity::verbose) &&
+        (is_hp_gained))
     {
         if (is_player())
         {
@@ -523,7 +534,11 @@ bool Actor::restore_hp(const int hp_restored,
         {
             if (map::player->can_see_actor(*this))
             {
-                msg_log::add(data_->name_the + " looks healthier.");
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        data_->name_the);
+
+                msg_log::add(actor_name_the + " looks healthier.");
             }
         }
     }
@@ -560,7 +575,11 @@ bool Actor::restore_spi(const int spi_restored,
         {
             if (map::player->can_see_actor(*this))
             {
-                msg_log::add(data_->name_the + " looks more spirited.");
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        data_->name_the);
+
+                msg_log::add(actor_name_the + " looks more spirited.");
             }
         }
     }
@@ -595,13 +614,17 @@ void Actor::change_max_hp(const int change, const Verbosity verbosity)
         {
             if (map::player->can_see_actor(*this))
             {
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        name_the());
+
                 if (change > 0)
                 {
-                    msg_log::add(name_the() + " looks more vigorous.");
+                    msg_log::add(actor_name_the + " looks more vigorous.");
                 }
                 else if (change < 0)
                 {
-                    msg_log::add(name_the() + " looks frailer.");
+                    msg_log::add(actor_name_the + " looks frailer.");
                 }
             }
         }
@@ -629,13 +652,19 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
         {
             if (map::player->can_see_actor(*this))
             {
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        name_the());
+
                 if (change > 0)
                 {
-                    msg_log::add(name_the() + " appears to grow in spirit.");
+                    msg_log::add(actor_name_the +
+                                 " appears to grow in spirit.");
                 }
                 else if (change < 0)
                 {
-                    msg_log::add(name_the() + " appears to shrink in spirit.");
+                    msg_log::add(actor_name_the +
+                                 " appears to shrink in spirit.");
                 }
             }
         }
@@ -709,11 +738,8 @@ ActorDied Actor::hit(int dmg,
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                const std::string corpse_name = corpse_name_the();
-
-                ASSERT(!corpse_name.empty());
-
-                msg_log::add(corpse_name_the() + " is destroyed.");
+                msg_log::add(text_format::first_to_upper(corpse_name_the()) +
+                             " is destroyed.");
             }
         }
         else // Not destroyed
@@ -880,7 +906,11 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
         {
             if (map::player->can_see_actor(*this))
             {
-                msg_log::add(name_the() + " has no spirit left!");
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        name_the());
+
+                msg_log::add(actor_name_the + " has no spirit left!");
             }
         }
 
@@ -1162,7 +1192,11 @@ void Actor::destroy()
 
 std::string Actor::death_msg() const
 {
-    return name_the() + " dies.";
+    const std::string actor_name_the =
+        text_format::first_to_upper(
+            name_the());
+
+    return actor_name_the + " dies.";
 }
 
 DidAction Actor::try_eat_corpse()
@@ -1214,12 +1248,7 @@ DidAction Actor::try_eat_corpse()
 
         const bool is_destroyed = rnd::one_in(destr_one_in_n);
 
-        std::string corpse_name_the = corpse->corpse_name_the();
-
-        if (!corpse->data().is_unique)
-        {
-            corpse_name_the = text_format::first_to_lower(corpse_name_the);
-        }
+        const std::string corpse_name_the = corpse->corpse_name_the();
 
         Snd snd("I hear ripping and chewing.",
                 SfxId::bite,
@@ -1240,9 +1269,14 @@ DidAction Actor::try_eat_corpse()
         {
             if (map::player->can_see_actor(*this))
             {
-                const std::string name = name_the();
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        name_the());
 
-                msg_log::add(name + " feeds on " + corpse_name_the + ".");
+                msg_log::add(actor_name_the +
+                             " feeds on " +
+                             corpse_name_the +
+                             ".");
             }
         }
 
@@ -1276,7 +1310,9 @@ DidAction Actor::try_eat_corpse()
 
                 for (auto* const corpse : corpses_here)
                 {
-                    const std::string name = corpse->corpse_name_a();
+                    const std::string name =
+                        text_format::first_to_upper(
+                            corpse->corpse_name_a());
 
                     msg_log::add(name + ".");
                 }

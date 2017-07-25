@@ -1274,7 +1274,8 @@ void PropHandler::apply(Prop* const prop,
                         if (!msg.empty())
                         {
                             const std::string monster_name =
-                                owning_actor_->name_the();
+                                text_format::first_to_upper(
+                                    owning_actor_->name_the());
 
                             msg_log::add(monster_name + " " + msg);
                         }
@@ -1401,7 +1402,11 @@ void PropHandler::apply(Prop* const prop,
 
                 if (!msg.empty())
                 {
-                    msg_log::add(owning_actor_->name_the() + " " + msg);
+                    const std::string actor_name_the =
+                        text_format::first_to_upper(
+                            owning_actor_->name_the());
+
+                    msg_log::add(actor_name_the + " " + msg);
                 }
             }
         }
@@ -1569,7 +1574,11 @@ void PropHandler::on_prop_end(Prop* const prop)
 
                 if (!msg.empty())
                 {
-                    msg_log::add(owning_actor_->name_the() + " " + msg);
+                    const std::string actor_name_the =
+                        text_format::first_to_upper(
+                            owning_actor_->name_the());
+
+                    msg_log::add(actor_name_the + " " + msg);
                 }
             }
         }
@@ -1883,7 +1892,7 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
 
                 const std::string mon_name =
                     can_player_see_mon ?
-                    owning_actor_->name_the() :
+                    text_format::first_to_upper(owning_actor_->name_the()) :
                     "It";
 
                 msg_log::add(mon_name + " " + res_data.resist_msg_mon);
@@ -2366,7 +2375,8 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
     if (is_player_see_owning_actor)
     {
         const std::string& name1 =
-            owning_actor_->name_the();
+            text_format::first_to_upper(
+                owning_actor_->name_the());
 
         const std::string& name2 =
             actor_data::data[(size_t)ActorId::zuul].name_the;
@@ -2405,7 +2415,11 @@ Prop* PropPoisoned::on_tick()
         {
             if (map::player->can_see_actor(*owning_actor_))
             {
-                msg_log::add(owning_actor_->name_the() +
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        owning_actor_->name_the());
+
+                msg_log::add(actor_name_the +
                              " suffers from poisoning!");
             }
         }
@@ -2461,7 +2475,11 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
         {
             if (map::player->can_see_actor(*owning_actor_))
             {
-                msg_log::add(owning_actor_->name_the() +  " struggles in pain!",
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        owning_actor_->name_the());
+
+                msg_log::add(actor_name_the +  " struggles in pain!",
                              clr_msg_good);
             }
         }
@@ -2487,9 +2505,12 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
                     {
                         if (map::player->can_see_actor(*owning_actor_))
                         {
-                            msg_log::add(
-                                owning_actor_->name_the() +
-                                " tears out a spike!");
+                            const std::string actor_name_the =
+                                text_format::first_to_upper(
+                                    owning_actor_->name_the());
+
+                            msg_log::add(actor_name_the +
+                                         " tears out a spike!");
                         }
                     }
                 }

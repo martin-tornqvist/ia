@@ -701,9 +701,14 @@ void init()
 
             delete potion;
 
-            const std::string real_name        = "Potion of "    + real_type_name;
-            const std::string real_name_plural = "Potions of "   + real_type_name;
-            const std::string real_name_a      = "a Potion of "  + real_type_name;
+            const std::string real_name =
+                "Potion of " + real_type_name;
+
+            const std::string real_name_plural =
+                "Potions of " + real_type_name;
+
+            const std::string real_name_a =
+                "a Potion of " + real_type_name;
 
             d.base_name.names[(size_t)ItemRefType::plain]  = real_name;
             d.base_name.names[(size_t)ItemRefType::plural] = real_name_plural;
@@ -722,9 +727,14 @@ void save()
 
         if (d.type == ItemType::potion)
         {
-            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::plain]);
-            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::plural]);
-            saving::put_str(d.base_name_un_id.names[(size_t)ItemRefType::a]);
+            saving::put_str(
+                d.base_name_un_id.names[(size_t)ItemRefType::plain]);
+
+            saving::put_str(
+                d.base_name_un_id.names[(size_t)ItemRefType::plural]);
+
+            saving::put_str(
+                d.base_name_un_id.names[(size_t)ItemRefType::a]);
 
             saving::put_int(d.clr.r);
             saving::put_int(d.clr.g);

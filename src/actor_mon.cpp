@@ -671,10 +671,12 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
 {
     const bool is_seen_by_player = map::player->can_see_actor(*this);
 
-    const std::string msg =
+    std::string msg =
         is_seen_by_player ?
         aggro_msg_mon_seen() :
         aggro_msg_mon_hidden();
+
+    msg = text_format::first_to_upper(msg);
 
     const SfxId sfx =
         is_seen_by_player ?
@@ -715,7 +717,9 @@ void Mon::become_aware_player(const bool is_from_seeing,
         if (is_from_seeing &&
             map::player->can_see_actor(*this))
         {
-            std::string msg = name_the() + " sees me!";
+            std::string msg =
+                text_format::first_to_upper(name_the()) +
+                " sees me!";
 
             std::string dir_str = "";
 
@@ -755,7 +759,7 @@ void Mon::become_wary_player()
     {
         if (map::player->can_see_actor(*this))
         {
-            std::string msg = data_->wary_msg;
+            std::string msg = text_format::first_to_upper(data_->wary_msg);
 
             if (!msg.empty())
             {
@@ -1460,7 +1464,7 @@ DidAction Ghost::on_act()
 
         const std::string name =
             player_sees_me ?
-            name_the() :
+            text_format::first_to_upper(name_the()) :
             "It";
 
         msg_log::add(name + " reaches for me...");
@@ -1572,7 +1576,7 @@ DidAction MindEater::on_act()
 
     const std::string name =
         player_see_me ?
-        name_the() :
+        text_format::first_to_upper(name_the()) :
         "It";
 
     if (map::player->ins() >= 50 ||
@@ -2077,7 +2081,8 @@ void StrangeColor::on_std_turn_hook()
         if (!map::player->prop_handler().has_prop(PropId::confused))
         {
             const std::string msg =
-                text_format::first_to_upper(name_the() + " bewilders me.");
+                text_format::first_to_upper(name_the()) +
+                " bewilders me.";
 
             msg_log::add(msg);
         }
@@ -2356,7 +2361,9 @@ DidAction Zombie::try_resurrect()
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
             {
-                msg_log::add(corpse_name_the() + " rises again!!",
+
+                msg_log::add(text_format::first_to_upper(corpse_name_the()) +
+                             " rises again!!",
                              clr_text,
                              true);
 
@@ -2626,11 +2633,12 @@ DidAction FloatingSkull::on_act()
 
         if (can_see_actor(*map::player, blocked_los))
         {
-            const std::string name = name_the();
-
             const bool player_see_me = map::player->can_see_actor(*this);
 
-            std::string snd_msg = player_see_me ? name : "Someone";
+            std::string snd_msg =
+                player_see_me ?
+                text_format::first_to_upper(name_the()) :
+                "Someone";
 
             snd_msg += " spews forth a litany of curses.";
 

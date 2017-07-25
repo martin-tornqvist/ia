@@ -639,7 +639,9 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             {
                 if (map::player->can_see_actor(*att_data.attacker))
                 {
-                    other_name = att_data.attacker->name_the();
+                    other_name =
+                        text_format::first_to_upper(
+                            att_data.attacker->name_the());
                 }
                 else // Player cannot see attacker
                 {
@@ -706,11 +708,6 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             if (map::player->can_see_actor(*att_data.defender))
             {
                 other_name = att_data.defender->name_the();
-
-                if (!att_data.defender->data().is_unique)
-                {
-                    other_name = text_format::first_to_lower(other_name);
-                }
             }
             else // Player cannot see defender
             {
@@ -767,7 +764,9 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
 
                 if (map::player->can_see_actor(*att_data.attacker))
                 {
-                    other_name = att_data.attacker->name_the();
+                    other_name =
+                        text_format::first_to_upper(
+                            att_data.attacker->name_the());
                 }
                 else // Player cannot see attacker
                 {
@@ -794,7 +793,9 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             {
                 if (map::player->can_see_actor(*att_data.defender))
                 {
-                    other_name = att_data.defender->name_the();
+                    other_name =
+                        text_format::first_to_upper(
+                            att_data.defender->name_the());
 
                     Clr msg_clr = clr_msg_good;
 
@@ -864,7 +865,10 @@ void print_ranged_init_msgs(const RangedAttData& data)
 
             if (map::cells[p.x][p.y].is_seen_by_player)
             {
-                const std::string attacker_name = data.attacker->name_the();
+                const std::string attacker_name =
+                    text_format::first_to_upper(
+                        data.attacker->name_the());
+
                 const std::string attack_verb = data.verb_other_attacks;
 
                 msg_log::add(attacker_name + " " + attack_verb + ".",
@@ -916,7 +920,9 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
 
             if (map::player->can_see_actor(*data.defender))
             {
-                other_name = data.defender->name_the();
+                other_name =
+                    text_format::first_to_upper(
+                        data.defender->name_the());
             }
 
             msg_log::add(other_name + " is hit" + dmg_punct, clr_msg_good);

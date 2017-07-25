@@ -113,10 +113,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Reanimated Corpse";
-    d.name_the = "The Reanimated Corpse";
-    d.corpse_name_a = "A lifeless gruesome corpse";
-    d.corpse_name_the = "The lifeless gruesome corpse";
+    d.name_a = "a Reanimated Corpse";
+    d.name_the = "the Reanimated Corpse";
+    d.corpse_name_a = "a lifeless gruesome corpse";
+    d.corpse_name_the = "the lifeless gruesome corpse";
     d.id = ActorId::zombie;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -167,10 +167,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Reanimated Corpse";
-    d.name_the = "The Reanimated Corpse";
-    d.corpse_name_a = "A lifeless gruesome corpse";
-    d.corpse_name_the = "The lifeless gruesome corpse";
+    d.name_a = "a Reanimated Corpse";
+    d.name_the = "the Reanimated Corpse";
+    d.corpse_name_a = "a lifeless gruesome corpse";
+    d.corpse_name_the = "the lifeless gruesome corpse";
     d.id = ActorId::zombie_axe;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -220,10 +220,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Bloated Corpse";
-    d.name_the = "The Bloated Corpse";
-    d.corpse_name_a = "A huge gruesome corpse";
-    d.corpse_name_the = "The huge gruesome corpse";
+    d.name_a = "a Bloated Corpse";
+    d.name_the = "the Bloated Corpse";
+    d.corpse_name_a = "a huge gruesome corpse";
+    d.corpse_name_the = "the huge gruesome corpse";
     d.id = ActorId::bloated_zombie;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -272,7 +272,7 @@ void init_data_list()
 
     d.name_a = "Major Clapham-Lee";
     d.name_the = "Major Clapham-Lee";
-    d.corpse_name_a = "The corpse of Major Clapham-Lee";
+    d.corpse_name_a = "the corpse of Major Clapham-Lee";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::major_clapham_lee;
     d.ai[(size_t)AiId::looks] = true;
@@ -316,7 +316,7 @@ void init_data_list()
 
     d.name_a = "Dean Halsey";
     d.name_the = "Dean Halsey";
-    d.corpse_name_a = "The corpse of Dean Halsey";
+    d.corpse_name_a = "the corpse of Dean Halsey";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::dean_halsey;
     d.ai[(size_t)AiId::looks] = true;
@@ -359,7 +359,7 @@ void init_data_list()
     d.reset();
 
     d.name_a = "Crawling Intestines";
-    d.name_the = "The Crawling Intestines";
+    d.name_the = "the Crawling Intestines";
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::crawling_intestines;
@@ -400,8 +400,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Crawling Hand";
-    d.name_the = "The Crawling Hand";
+    d.name_a = "a Crawling Hand";
+    d.name_the = "the Crawling Hand";
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::crawling_hand;
@@ -494,10 +494,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Floating Skull";
-    d.name_the = "The Floating Skull";
-    d.corpse_name_a = "A Skull";
-    d.corpse_name_the = "The Skull";
+    d.name_a = "a Floating Skull";
+    d.name_the = "the Floating Skull";
+    d.corpse_name_a = "a Skull";
+    d.corpse_name_the = "the Skull";
     d.id = ActorId::floating_skull;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -537,10 +537,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Cultist";
-    d.name_the = "The Cultist";
-    d.corpse_name_a = "A Cultist corpse";
-    d.corpse_name_the = "The Cultist corpse";
+    d.name_a = "a Cultist";
+    d.name_the = "the Cultist";
+    d.corpse_name_a = "a Cultist corpse";
+    d.corpse_name_the = "the Cultist corpse";
     d.id = ActorId::cultist;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -581,10 +581,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Bog Tcher";
-    d.name_the = "The Bog Tcher";
-    d.corpse_name_a = "A Bog Tcher corpse";
-    d.corpse_name_the = "The Bog Tcher corpse";
+    d.name_a = "a Bog Tcher";
+    d.name_the = "the Bog Tcher";
+    d.corpse_name_a = "a Bog Tcher corpse";
+    d.corpse_name_the = "the Bog Tcher corpse";
     d.id = ActorId::bog_tcher;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -635,7 +635,7 @@ void init_data_list()
 
     d.name_a = "Keziah Mason";
     d.name_the = "Keziah Mason";
-    d.corpse_name_a = "The corpse of Keziah Mason";
+    d.corpse_name_a = "the corpse of Keziah Mason";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::keziah_mason;
     d.ai[(size_t)AiId::looks] = true;
@@ -687,7 +687,7 @@ void init_data_list()
 
     d.name_a = "Brown Jenkin";
     d.name_the = "Brown Jenkin";
-    d.corpse_name_a = "The corpse of Brown Jenkin";
+    d.corpse_name_a = "the corpse of Brown Jenkin";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::brown_jenkin;
     d.ai[(size_t)AiId::looks] = true;
@@ -739,8 +739,8 @@ void init_data_list()
     d.reset();
 
     d.name_a = "Elder Hierophant";
-    d.name_the = "The " + d.name_a;
-    d.corpse_name_a = "The corpse of The Elder Hierophant";
+    d.name_the = "the " + d.name_a;
+    d.corpse_name_a = "the corpse of The Elder Hierophant";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::leng_elder;
     d.ai[(size_t)AiId::looks] = true;
@@ -772,10 +772,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Cultist Priest";
-    d.name_the = "The Cultist Priest";
-    d.corpse_name_a = "A Cultist Priest corpse";
-    d.corpse_name_the = "The Cultist Priest corpse";
+    d.name_a = "a Cultist Priest";
+    d.name_the = "the Cultist Priest";
+    d.corpse_name_a = "a Cultist Priest corpse";
+    d.corpse_name_the = "the Cultist Priest corpse";
     d.id = ActorId::cultist_priest;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -813,10 +813,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Wizard";
-    d.name_the = "The Wizard";
-    d.corpse_name_a = "A Wizard corpse";
-    d.corpse_name_the = "The Wizard corpse";
+    d.name_a = "a Wizard";
+    d.name_the = "the Wizard";
+    d.corpse_name_a = "a Wizard corpse";
+    d.corpse_name_the = "the Wizard corpse";
     d.id = ActorId::cultist_wizard;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -854,10 +854,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Grand Wizard";
-    d.name_the = "The Grand Wizard";
-    d.corpse_name_a = "A Grand Wizard corpse";
-    d.corpse_name_the = "The Grand Wizard corpse";
+    d.name_a = "a Grand Wizard";
+    d.name_the = "the Grand Wizard";
+    d.corpse_name_a = "a Grand Wizard corpse";
+    d.corpse_name_the = "the Grand Wizard corpse";
     d.id = ActorId::cultist_grand_wizard;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -895,10 +895,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Huge Green Spider";
-    d.name_the = "The Huge Green Spider";
-    d.corpse_name_a = "A Green Spider corpse";
-    d.corpse_name_the = "The Green Spider corpse";
+    d.name_a = "a Huge Green Spider";
+    d.name_the = "the Huge Green Spider";
+    d.corpse_name_a = "a Green Spider corpse";
+    d.corpse_name_the = "the Green Spider corpse";
     d.id = ActorId::green_spider;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -937,10 +937,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Huge White Spider";
-    d.name_the = "The Huge White Spider";
-    d.corpse_name_a = "A White Spider corpse";
-    d.corpse_name_the = "The White Spider corpse";
+    d.name_a = "a Huge White Spider";
+    d.name_the = "the Huge White Spider";
+    d.corpse_name_a = "a White Spider corpse";
+    d.corpse_name_the = "the White Spider corpse";
     d.id = ActorId::white_spider;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -979,10 +979,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Huge Red Spider";
-    d.name_the = "The Huge Red Spider";
-    d.corpse_name_a = "A Red Spider corpse";
-    d.corpse_name_the = "The Red Spider corpse";
+    d.name_a = "a Huge Red Spider";
+    d.name_the = "the Huge Red Spider";
+    d.corpse_name_a = "a Red Spider corpse";
+    d.corpse_name_the = "the Red Spider corpse";
     d.id = ActorId::red_spider;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1021,8 +1021,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Shadow Spider";
-    d.name_the = "The Shadow Spider";
+    d.name_a = "a Shadow Spider";
+    d.name_the = "the Shadow Spider";
     d.id = ActorId::shadow_spider;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1066,10 +1066,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Leng Spider";
-    d.name_the = "The Leng Spider";
-    d.corpse_name_a = "A Leng Spider corpse";
-    d.corpse_name_the = "The Leng Spider corpse";
+    d.name_a = "a Leng Spider";
+    d.name_the = "the Leng Spider";
+    d.corpse_name_a = "a Leng Spider corpse";
+    d.corpse_name_the = "the Leng Spider corpse";
     d.id = ActorId::leng_spider;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1113,10 +1113,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Pit Viper";
-    d.name_the = "The Pit Viper";
-    d.corpse_name_a = "A Pit Viper corpse";
-    d.corpse_name_the = "The Pit Viper corpse";
+    d.name_a = "a Pit Viper";
+    d.name_the = "the Pit Viper";
+    d.corpse_name_a = "a Pit Viper corpse";
+    d.corpse_name_the = "the Pit Viper corpse";
     d.id = ActorId::pit_viper;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1158,10 +1158,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Spitting Cobra";
-    d.name_the = "The Spitting Cobra";
-    d.corpse_name_a = "A Spitting Cobra corpse";
-    d.corpse_name_the = "The Spitting Cobra corpse";
+    d.name_a = "a Spitting Cobra";
+    d.name_the = "the Spitting Cobra";
+    d.corpse_name_a = "a Spitting Cobra corpse";
+    d.corpse_name_the = "the Spitting Cobra corpse";
     d.id = ActorId::spitting_cobra;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1206,10 +1206,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Black Mamba";
-    d.name_the = "The Black Mamba";
-    d.corpse_name_a = "A Black Mamba corpse";
-    d.corpse_name_the = "The Black Mamba corpse";
+    d.name_a = "a Black Mamba";
+    d.name_the = "the Black Mamba";
+    d.corpse_name_a = "a Black Mamba corpse";
+    d.corpse_name_the = "the Black Mamba corpse";
     d.id = ActorId::black_mamba;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1251,10 +1251,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Fire Hound";
-    d.name_the = "The Fire Hound";
-    d.corpse_name_a = "A Fire Hound corpse";
-    d.corpse_name_the = "The Fire Hound corpse";
+    d.name_a = "a Fire Hound";
+    d.name_the = "the Fire Hound";
+    d.corpse_name_a = "a Fire Hound corpse";
+    d.corpse_name_the = "the Fire Hound corpse";
     d.id = ActorId::fire_hound;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1306,7 +1306,7 @@ void init_data_list()
 
     d.name_a = "Zuul the Gatekeeper";
     d.name_the = "Zuul the Gatekeeper";
-    d.corpse_name_a = "The corpse of Zuul the Gatekeeper";
+    d.corpse_name_a = "the corpse of Zuul the Gatekeeper";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::zuul;
     d.ai[(size_t)AiId::looks] = true;
@@ -1357,8 +1357,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Ghost";
-    d.name_the = "The Ghost";
+    d.name_a = "a Ghost";
+    d.name_the = "the Ghost";
     d.id = ActorId::ghost;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1399,8 +1399,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Phantasm";
-    d.name_the = "The Phantasm";
+    d.name_a = "a Phantasm";
+    d.name_the = "the Phantasm";
     d.id = ActorId::phantasm;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1444,8 +1444,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Wraith";
-    d.name_the = "The Wraith";
+    d.name_a = "a Wraith";
+    d.name_the = "the Wraith";
     d.id = ActorId::wraith;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1488,8 +1488,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Void Traveler";
-    d.name_the = "The Void Traveler";
+    d.name_a = "a Void Traveler";
+    d.name_the = "the Void Traveler";
     d.id = ActorId::void_traveler;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1534,8 +1534,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "An Elder Void Traveler";
-    d.name_the = "The Elder Void Traveler";
+    d.name_a = "an Elder Void Traveler";
+    d.name_the = "the Elder Void Traveler";
     d.id = ActorId::elder_void_traveler;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1582,10 +1582,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Rat";
-    d.name_the = "The Rat";
-    d.corpse_name_a = "A Rat corpse";
-    d.corpse_name_the = "The Rat corpse";
+    d.name_a = "a Rat";
+    d.name_the = "the Rat";
+    d.corpse_name_a = "a Rat corpse";
+    d.corpse_name_the = "the Rat corpse";
     d.id = ActorId::rat;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -1621,10 +1621,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Rat-thing";
-    d.name_the = "The Rat-thing";
-    d.corpse_name_a = "A Rat-thing corpse";
-    d.corpse_name_the = "The Rat-thing corpse";
+    d.name_a = "a Rat-thing";
+    d.name_the = "the Rat-thing";
+    d.corpse_name_a = "a Rat-thing corpse";
+    d.corpse_name_the = "the Rat-thing corpse";
     d.id = ActorId::rat_thing;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1671,10 +1671,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Wolf";
-    d.name_the = "The Wolf";
-    d.corpse_name_a = "A Wolf carcass";
-    d.corpse_name_the = "The Wolf carcass";
+    d.name_a = "a Wolf";
+    d.name_the = "the Wolf";
+    d.corpse_name_a = "a Wolf carcass";
+    d.corpse_name_the = "the Wolf carcass";
     d.id = ActorId::wolf;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1716,10 +1716,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Raven";
-    d.name_the = "The Raven";
-    d.corpse_name_a = "A Raven carcass";
-    d.corpse_name_the = "The Raven carcass";
+    d.name_a = "a Raven";
+    d.name_the = "the Raven";
+    d.corpse_name_a = "a Raven carcass";
+    d.corpse_name_the = "the Raven carcass";
     d.id = ActorId::raven;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1761,10 +1761,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Giant Bat";
-    d.name_the = "The Giant Bat";
-    d.corpse_name_a = "A Giant Bat corpse";
-    d.corpse_name_the = "The Giant Bat corpse";
+    d.name_a = "a Giant Bat";
+    d.name_the = "the Giant Bat";
+    d.corpse_name_a = "a Giant Bat corpse";
+    d.corpse_name_the = "the Giant Bat corpse";
     d.id = ActorId::giant_bat;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1812,10 +1812,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Vampire Bat";
-    d.name_the = "The Vampire Bat";
-    d.corpse_name_a = "A Vampire Bat corpse";
-    d.corpse_name_the = "The Vampire Bat corpse";
+    d.name_a = "a Vampire Bat";
+    d.name_the = "the Vampire Bat";
+    d.corpse_name_a = "a Vampire Bat corpse";
+    d.corpse_name_the = "the Vampire Bat corpse";
     d.id = ActorId::vampire_bat;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1866,8 +1866,8 @@ void init_data_list()
 
     d.name_a = "Abaxu the Destroyer";
     d.name_the = "Abaxu the Destroyer";
-    d.corpse_name_a = "The corpse of Abaxu";
-    d.corpse_name_the = "The corpse of Abaxu";
+    d.corpse_name_a = "the corpse of Abaxu";
+    d.corpse_name_the = "the corpse of Abaxu";
     d.id = ActorId::abaxu;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1914,10 +1914,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Byakhee";
-    d.name_the = "The Byakhee";
-    d.corpse_name_a = "A Byakhee corpse";
-    d.corpse_name_the = "The Byakhee corpse";
+    d.name_a = "a Byakhee";
+    d.name_the = "the Byakhee";
+    d.corpse_name_a = "a Byakhee corpse";
+    d.corpse_name_the = "the Byakhee corpse";
     d.id = ActorId::byakhee;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1970,10 +1970,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Giant Mantis";
-    d.name_the = "The Giant Mantis";
-    d.corpse_name_a = "A Giant Mantis corpse";
-    d.corpse_name_the = "The Giant Mantis corpse";
+    d.name_a = "a Giant Mantis";
+    d.name_the = "the Giant Mantis";
+    d.corpse_name_a = "a Giant Mantis corpse";
+    d.corpse_name_the = "the Giant Mantis corpse";
     d.id = ActorId::giant_mantis;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2008,10 +2008,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Giant Locust";
-    d.name_the = "The Giant Locust";
-    d.corpse_name_a = "A Giant Locust corpse";
-    d.corpse_name_the = "The Giant Locust corpse";
+    d.name_a = "a Giant Locust";
+    d.name_the = "the Giant Locust";
+    d.corpse_name_a = "a Giant Locust corpse";
+    d.corpse_name_the = "the Giant Locust corpse";
     d.id = ActorId::locust;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -2050,10 +2050,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Mi-go";
-    d.name_the = "The Mi-go";
-    d.corpse_name_a = "A Mi-go corpse";
-    d.corpse_name_the = "The Mi-go corpse";
+    d.name_a = "a Mi-go";
+    d.name_the = "the Mi-go";
+    d.corpse_name_a = "a Mi-go corpse";
+    d.corpse_name_the = "the Mi-go corpse";
     d.id = ActorId::mi_go;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2116,10 +2116,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Mi-go Commander";
-    d.name_the = "The Mi-go Commander";
-    d.corpse_name_a = "A Mi-go corpse";
-    d.corpse_name_the = "The Mi-go corpse";
+    d.name_a = "a Mi-go Commander";
+    d.name_the = "the Mi-go Commander";
+    d.corpse_name_a = "a Mi-go corpse";
+    d.corpse_name_the = "the Mi-go corpse";
     d.id = ActorId::mi_go_commander;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2160,10 +2160,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Flying Polyp";
-    d.name_the = "The Flying Polyp";
-    d.corpse_name_a = "A dead Polyp";
-    d.corpse_name_the = "The dead Polyp";
+    d.name_a = "a Flying Polyp";
+    d.name_the = "the Flying Polyp";
+    d.corpse_name_a = "a dead Polyp";
+    d.corpse_name_the = "the dead Polyp";
     d.id = ActorId::flying_polyp;
     d.can_be_summoned = true;
     d.can_bleed = false;
@@ -2221,10 +2221,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Greater Polyp";
-    d.name_the = "The Greater Polyp";
-    d.corpse_name_a = "A dead Polyp";
-    d.corpse_name_the = "The dead Polyp";
+    d.name_a = "a Greater Polyp";
+    d.name_the = "the Greater Polyp";
+    d.corpse_name_a = "a dead Polyp";
+    d.corpse_name_the = "the dead Polyp";
     d.id = ActorId::greater_polyp;
     d.can_be_summoned = false;
     d.can_bleed = false;
@@ -2276,10 +2276,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Mind Eater";
-    d.name_the = "The Mind Eater";
-    d.corpse_name_a = "A Mind Eater corpse";
-    d.corpse_name_the = "The Mind Eater corpse";
+    d.name_a = "a Mind Eater";
+    d.name_the = "the Mind Eater";
+    d.corpse_name_a = "a Mind Eater corpse";
+    d.corpse_name_the = "the Mind Eater corpse";
     d.id = ActorId::mind_eater;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2327,10 +2327,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Ghoul";
-    d.name_the = "The Ghoul";
-    d.corpse_name_a = "A Ghoul corpse";
-    d.corpse_name_the = "The Ghoul corpse";
+    d.name_a = "a Ghoul";
+    d.name_the = "the Ghoul";
+    d.corpse_name_a = "a Ghoul corpse";
+    d.corpse_name_the = "the Ghoul corpse";
     d.id = ActorId::ghoul;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2389,8 +2389,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Shadow";
-    d.name_the = "The Shadow";
+    d.name_a = "a Shadow";
+    d.name_the = "the Shadow";
     d.id = ActorId::shadow;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2438,8 +2438,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "An Invisible Stalker";
-    d.name_the = "The Invisible Stalker";
+    d.name_a = "an Invisible Stalker";
+    d.name_the = "the Invisible Stalker";
     d.id = ActorId::invis_stalker;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2484,10 +2484,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Mummy";
-    d.name_the = "The Mummy";
-    d.corpse_name_a = "A lifeless Mummy";
-    d.corpse_name_the = "The lifeless Mummy";
+    d.name_a = "a Mummy";
+    d.name_the = "the Mummy";
+    d.corpse_name_a = "a lifeless Mummy";
+    d.corpse_name_the = "the lifeless Mummy";
     d.id = ActorId::mummy;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2523,10 +2523,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Crocodile Head Mummy";
-    d.name_the = "The Crocodile Head Mummy";
-    d.corpse_name_a = "A lifeless Mummy";
-    d.corpse_name_the = "The lifeless Mummy";
+    d.name_a = "a Crocodile Head Mummy";
+    d.name_the = "the Crocodile Head Mummy";
+    d.corpse_name_a = "a lifeless Mummy";
+    d.corpse_name_the = "the lifeless Mummy";
     d.id = ActorId::croc_head_mummy;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2570,7 +2570,7 @@ void init_data_list()
 
     d.name_a = "Khephren";
     d.name_the = "Khephren";
-    d.corpse_name_a = "The lifeless Mummy of Khephren";
+    d.corpse_name_a = "the lifeless Mummy of Khephren";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::khephren;
     d.ai[(size_t)AiId::looks] = true;
@@ -2612,7 +2612,7 @@ void init_data_list()
 
     d.name_a = "Nitokris";
     d.name_the = "Nitokris";
-    d.corpse_name_a = "The lifeless Mummy of Nitokris";
+    d.corpse_name_a = "the lifeless Mummy of Nitokris";
     d.corpse_name_the = d.corpse_name_a;
     d.id = ActorId::nitokris;
     d.ai[(size_t)AiId::looks] = true;
@@ -2657,10 +2657,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Deep One";
-    d.name_the = "The Deep One";
-    d.corpse_name_a = "A corpse of a Deep One";
-    d.corpse_name_the = "The corpse of a Deep One";
+    d.name_a = "a Deep One";
+    d.name_the = "the Deep One";
+    d.corpse_name_a = "a corpse of a Deep One";
+    d.corpse_name_the = "the corpse of a Deep One";
     d.id = ActorId::deep_one;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2710,10 +2710,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Carnivorous Ape";
-    d.name_the = "The Carnivorous Ape";
-    d.corpse_name_a = "An Ape corpse";
-    d.corpse_name_the = "The Ape corpse";
+    d.name_a = "a Carnivorous Ape";
+    d.name_the = "the Carnivorous Ape";
+    d.corpse_name_a = "an Ape corpse";
+    d.corpse_name_the = "the Ape corpse";
     d.id = ActorId::ape;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2760,8 +2760,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Worm Mass";
-    d.name_the = "The Worm Mass";
+    d.name_a = "a Worm Mass";
+    d.name_the = "the Worm Mass";
     d.id = ActorId::worm_mass;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -2805,7 +2805,7 @@ void init_data_list()
     d.reset();
 
     d.name_a = "Mind Worms";
-    d.name_the = "The Mind Worms";
+    d.name_the = "the Mind Worms";
     d.id = ActorId::mind_worms;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -2850,8 +2850,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Dust Vortex";
-    d.name_the = "The Dust Vortex";
+    d.name_a = "a Dust Vortex";
+    d.name_the = "the Dust Vortex";
     d.id = ActorId::dust_vortex;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2898,8 +2898,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Fire Vortex";
-    d.name_the = "The Fire Vortex";
+    d.name_a = "a Fire Vortex";
+    d.name_the = "the Fire Vortex";
     d.id = ActorId::fire_vortex;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2945,8 +2945,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Black Ooze";
-    d.name_the = "The Black Ooze";
+    d.name_a = "a Black Ooze";
+    d.name_the = "the Black Ooze";
     d.id = ActorId::ooze_black;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -3001,8 +3001,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Clear Ooze";
-    d.name_the = "The Clear Ooze";
+    d.name_a = "a Clear Ooze";
+    d.name_the = "the Clear Ooze";
     d.id = ActorId::ooze_clear;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -3058,8 +3058,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Putrid Ooze";
-    d.name_the = "The Putrid Ooze";
+    d.name_a = "a Putrid Ooze";
+    d.name_the = "the Putrid Ooze";
     d.id = ActorId::ooze_putrid;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -3116,8 +3116,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Poison Ooze";
-    d.name_the = "The Poison Ooze";
+    d.name_a = "a Poison Ooze";
+    d.name_the = "the Poison Ooze";
     d.id = ActorId::ooze_poison;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -3174,8 +3174,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Strange Color";
-    d.name_the = "The Strange Color";
+    d.name_a = "a Strange Color";
+    d.name_the = "the Strange Color";
     d.id = ActorId::strange_color;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -3228,10 +3228,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Chthonian";
-    d.name_the = "The Chthonian";
-    d.corpse_name_a = "A Chthonian corpse";
-    d.corpse_name_the = "The Chthonian corpse";
+    d.name_a = "a Chthonian";
+    d.name_the = "the Chthonian";
+    d.corpse_name_a = "a Chthonian corpse";
+    d.corpse_name_the = "the Chthonian corpse";
     d.id = ActorId::chthonian;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -3314,7 +3314,7 @@ void init_data_list()
 
     d.id = ActorId::mold;
     d.name_a = "Mold";
-    d.name_the = "The Mold";
+    d.name_the = "the Mold";
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.tile = TileId::fungi;
@@ -3364,8 +3364,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Gas Spore";
-    d.name_the = "The Gas Spore";
+    d.name_a = "a Gas Spore";
+    d.name_the = "the Gas Spore";
     d.id = ActorId::gas_spore;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -3420,10 +3420,10 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Hunting Horror";
-    d.name_the = "The Hunting Horror";
-    d.corpse_name_a = "A Hunting Horror corpse";
-    d.corpse_name_the = "The Hunting Horror corpse";
+    d.name_a = "a Hunting Horror";
+    d.name_the = "the Hunting Horror";
+    d.corpse_name_a = "a Hunting Horror corpse";
+    d.corpse_name_the = "the Hunting Horror corpse";
     d.id = ActorId::hunting_horror;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
@@ -3473,8 +3473,8 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "A Death Fiend";
-    d.name_the = "The Death Fiend";
+    d.name_a = "a Death Fiend";
+    d.name_the = "the Death Fiend";
     d.corpse_name_a = "";
     d.corpse_name_the = "";
     d.id = ActorId::death_fiend;

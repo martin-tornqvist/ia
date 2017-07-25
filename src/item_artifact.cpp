@@ -218,7 +218,11 @@ void HornOfBanishmentHeard::run(Actor& actor) const
     {
         if (map::player->can_see_actor(actor))
         {
-            msg_log::add(actor.name_the() + mon_disappear_msg);
+            const std::string name_the =
+                text_format::first_to_upper(
+                    actor.name_the());
+
+            msg_log::add(name_the + mon_disappear_msg);
         }
 
         actor.destroy_silent();

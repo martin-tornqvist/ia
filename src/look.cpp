@@ -714,7 +714,9 @@ std::string ViewActorDescr::auto_description_str() const
 
     const int nr_turns_aware = def.nr_turns_aware;
 
-    const std::string name_a = actor_.name_a();
+    const std::string name_a =
+        text_format::first_to_upper(
+            actor_.name_a());
 
     if (nr_turns_aware > 0)
     {
@@ -830,9 +832,7 @@ void print_location_info_msgs(const P& pos)
         {
             if (actor->is_corpse() && actor->pos == pos)
             {
-                str = actor->corpse_name_a();
-
-                str = text_format::first_to_upper(str);
+                str = text_format::first_to_upper(actor->corpse_name_a());
 
                 msg_log::add(str + ".");
             }
@@ -856,9 +856,9 @@ void print_location_info_msgs(const P& pos)
                 msg_log::add(i_see_here_str);
             }
 
-            std::string str = actor->name_a();
-
-            str = text_format::first_to_upper(str);
+            const std::string str =
+                text_format::first_to_upper(
+                    actor->name_a());
 
             msg_log::add(str + ".");
         }
