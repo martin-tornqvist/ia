@@ -3364,7 +3364,7 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "Gas Spore";
+    d.name_a = "A Gas Spore";
     d.name_the = "The Gas Spore";
     d.id = ActorId::gas_spore;
     d.ai[(size_t)AiId::looks] = true;
@@ -3411,7 +3411,7 @@ void init_data_list()
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = ShockLvl::none;
+    d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
