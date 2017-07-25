@@ -18,18 +18,34 @@
 void Rod::save()
 {
     saving::put_int(nr_charge_turns_left_);
+
+    saving::put_int(nr_charges_left_);
 }
 
 void Rod::load()
 {
     nr_charge_turns_left_ = saving::get_int();
+
+    nr_charges_left_ = saving::get_int();
+}
+
+void Rod::set_max_charge_turns_left()
+{
+    nr_charge_turns_left_ = 250;
+
+    if (player_bon::traits[(size_t)Trait::elec_incl])
+    {
+        nr_charge_turns_left_ /= 2;
+    }
 }
 
 ConsumeItem Rod::activate(Actor* const actor)
 {
     (void)actor;
 
-    if (nr_charge_turns_left_ > 0)
+    ASSERT(nr_charges_left_ >= -1);
+
+    if (nr_charges_left_ == 0)
     {
         const std::string rod_name =
             name(ItemRefType::plain, ItemRefInf::none);
@@ -41,7 +57,9 @@ ConsumeItem Rod::activate(Actor* const actor)
 
     data_->is_tried = true;
 
+    //
     // TODO: Sfx
+    //
 
     const std::string rod_name_a =
         name(ItemRefType::a, ItemRefInf::none);
@@ -60,16 +78,19 @@ ConsumeItem Rod::activate(Actor* const actor)
         msg_log::add("Nothing happens.");
     }
 
-    // NOTE: Various rods cannot have different recharge time, since the player
-    //       could trivially "metagame identify" rods based on the this value
-    //       when they aren't identified in-game. So here we set a fixed value,
-    //       same for all rods.
-
-    nr_charge_turns_left_ = 250;
-
-    if (player_bon::traits[(size_t)Trait::elec_incl])
+    if (nr_charges_left_ == -1)
     {
-        nr_charge_turns_left_ /= 2;
+        nr_charges_left_ = max_nr_charges();
+    }
+
+    --nr_charges_left_;
+
+    // If it was already charging (e.g. we used the second charge of two),
+    // then just continue on that countdown (which will be shorter) - otherwise,
+    // if a charging was not ongoing, start a new countdown
+    if (nr_charge_turns_left_ == 0)
+    {
+        set_max_charge_turns_left();
     }
 
     if (map::player->is_alive())
@@ -84,18 +105,45 @@ void Rod::on_std_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
 
-    if (nr_charge_turns_left_ > 0)
+    const int max_charges = this->max_nr_charges();
+
+    const int current_charges =
+        (nr_charges_left_ == -1) ?
+        max_charges :
+        nr_charges_left_;
+
+    // Already fully charged?
+    if (current_charges == max_charges)
     {
-        --nr_charge_turns_left_;
+        ASSERT(nr_charge_turns_left_ == 0);
 
-        if (nr_charge_turns_left_ == 0)
+        return;
+    }
+
+    // All charges not finished, continue countdown
+
+    ASSERT(nr_charge_turns_left_ > 0);
+
+    --nr_charge_turns_left_;
+
+    if (nr_charge_turns_left_ == 0)
+    {
+        ++nr_charges_left_;
+
+        if (nr_charges_left_ == max_charges)
         {
-            const std::string rod_name =
-                name(ItemRefType::plain,
-                     ItemRefInf::none);
-
-            msg_log::add("The " + rod_name + " has finished charging.");
+            nr_charge_turns_left_ = 0;
         }
+        else // All charges not finished, start a new countdown
+        {
+            set_max_charge_turns_left();
+        }
+
+        const std::string rod_name =
+            name(ItemRefType::plain,
+                 ItemRefInf::none);
+
+        msg_log::add("The " + rod_name + " has finished a charge.");
     }
 }
 
@@ -137,31 +185,34 @@ void Rod::identify(const Verbosity verbosity)
 
 std::string Rod::name_inf() const
 {
-    const std::string charge_str =
-        "Charging:" + std::to_string(nr_charge_turns_left_);
+    const int max_charges = this->max_nr_charges();
+
+    const int current_charges =
+        (nr_charges_left_ == -1) ?
+        max_charges :
+        nr_charges_left_;
+
+    std::string charge_str =
+        std::to_string(current_charges) +
+        "/" +
+        std::to_string(max_charges);
+
+    if (current_charges < max_charges)
+    {
+        charge_str += " " + std::to_string(nr_charge_turns_left_);
+    }
 
     if (data_->is_identified)
     {
-        return
-            nr_charge_turns_left_ > 0 ?
-            ("{" + charge_str + "}") : "";
+        return "{" + charge_str + "}";
     }
     else // Not identified
     {
-        if (nr_charge_turns_left_ > 0)
-        {
-            return
-                std::string("{") +
-                (data_->is_tried ? "Tried, " : "") +
-                charge_str +
-                "}";
-        }
-        else
-        {
-            return
-                data_->is_tried ?
-                "{Tried}" : "";
-        }
+        return
+            std::string("{") +
+            (data_->is_tried ? "Tried, " : "") +
+            charge_str +
+            "}";
     }
 }
 

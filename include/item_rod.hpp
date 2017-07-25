@@ -9,7 +9,8 @@ class Rod: public Item
 public:
     Rod(ItemDataT* const item_data) :
         Item                    (item_data),
-        nr_charge_turns_left_   (0) {}
+        nr_charge_turns_left_   (0),
+        nr_charges_left_        (-1) {}
 
     virtual ~Rod() {}
 
@@ -37,10 +38,18 @@ protected:
 
     virtual void run_effect() = 0;
 
+    virtual int max_nr_charges() const
+    {
+        return 1;
+    }
+
     std::string name_inf() const override final;
+
+    void set_max_charge_turns_left();
 
 private:
     int nr_charge_turns_left_;
+    int nr_charges_left_;
 };
 
 class RodPurgeInvis : public Rod
@@ -160,6 +169,11 @@ protected:
             "When activated, this device clouds the memories of all "
             "creatures in the area, causing them to forget the presence of "
             "the user.";
+    }
+
+    int max_nr_charges() const override
+    {
+        return 2;
     }
 
     void run_effect() override;

@@ -334,8 +334,8 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.has_std_activate = true;
         d.base_descr =
         {
-            "A peculiar metallic device of cylindrical shape. The only detail "
-            "is a single button on the side."
+            "A peculiar metallic device of cylindrical shape. The only details "
+            "are a single button on the side, and a small display."
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
