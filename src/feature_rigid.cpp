@@ -799,7 +799,7 @@ void RubbleHigh::on_hit(const int dmg,
 
         map::put(new RubbleLow(p)); // NOTE: "this" is now deleted!
 
-        if (rnd::coin_toss())
+        if (rnd::one_in(4))
         {
             item_factory::mk_item_on_floor(ItemId::rock, p);
         }
@@ -2386,13 +2386,13 @@ Tomb::Tomb(const P& p) :
     Rigid                   (p),
     is_open_                (false),
     is_trait_known_         (false),
-    push_lid_one_in_n_      (rnd::range(6, 14)),
+    push_lid_one_in_n_      (rnd::range(4, 10)),
     appearance_             (TombAppearance::common),
     is_random_appearance_   (false),
     trait_                  (TombTrait::END)
 {
     // Contained items
-    const int nr_items_min = 0;
+    const int nr_items_min = rnd::one_in(3) ? 0 : 1;
 
     const int nr_items_max =
         player_bon::traits[(size_t)Trait::treasure_hunter] ?
@@ -2586,11 +2586,11 @@ void Tomb::bump(Actor& actor_bumping)
                     {
                         msg_log::add("It does not yield at all.");
                     }
-                    else if (roll_tot < (push_lid_one_in_n_ - 1))
+                    else if (roll_tot < (push_lid_one_in_n_ - 2))
                     {
                         msg_log::add("It resists.");
                     }
-                    else if (roll_tot == (push_lid_one_in_n_ - 1))
+                    else if (roll_tot == (push_lid_one_in_n_ - 2))
                     {
                         msg_log::add("It moves a little!");
                         --push_lid_one_in_n_;

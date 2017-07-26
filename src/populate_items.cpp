@@ -134,18 +134,6 @@ void mk_items_on_floor()
             item_bucket.erase(begin(item_bucket) + item_idx);
         }
     }
-
-    // Spawn some extra rocks on the map (to give player some ranged attack)
-    positions = to_vec(blocked, false);
-
-    const int nr_rock_spawns = rnd::range(2, 3);
-
-    for (int i = 0; i < nr_rock_spawns; ++i)
-    {
-        const P& p(rnd::element(positions));
-
-        item_factory::mk_item_on_floor(ItemId::rock, p);
-    }
 }
 
 } // populate_items

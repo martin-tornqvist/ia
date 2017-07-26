@@ -42,6 +42,7 @@ enum class Trait
     magically_gifted,
     tough,
     rugged,
+    thick_skinned,
     strong_backed,
     undead_bane,
     elec_incl,

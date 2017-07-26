@@ -90,10 +90,31 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
     wpn_mod = wpn.data().melee.hit_chance_mod;
 
-    dodging_mod =
-        is_defender_aware ?
-        -defender.ability(AbilityId::dodging, true) :
-        0;
+    dodging_mod = 0;
+
+    if (is_defender_aware)
+    {
+        dodging_mod -= defender.ability(AbilityId::dodging, true);
+
+        // Evasion bonus to melee attacks from melee traits?
+        if (defender.is_player())
+        {
+            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
+            {
+                dodging_mod -= 10;
+            }
+
+            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
+            {
+                dodging_mod -= 10;
+            }
+
+            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+            {
+                dodging_mod -= 10;
+            }
+        }
+    }
 
     // Attacker gets a penalty against unseen targets
     //
@@ -229,21 +250,20 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
         if (attacker && !is_defender_aware)
         {
-            // Backstab (extra damage)
-
+            // Backstab, +50% damage
             int dmg_pct = 150;
 
-            // +50% if player and has the "Vicious" trait.
+            // +100% if player is Vicious
             if ((attacker == map::player) &&
                 player_bon::traits[(size_t)Trait::vicious])
             {
-                dmg_pct += 50;
+                dmg_pct += 100;
             }
 
-            // Double damage percent if attacking with a dagger.
+            // +300% damage if attacking with a dagger
             if (wpn.data().id == ItemId::dagger)
             {
-                dmg_pct *= 2;
+                dmg_pct += 300;
             }
 
             dmg = (dmg * dmg_pct) / 100;

@@ -833,10 +833,10 @@ void init_data_list()
     d.tile = TileId::dagger;
     d.glyph = '/';
     d.clr = clr_white;
-    d.ranged.throw_dmg = Dice(1, 6);
-    d.ranged.throw_hit_chance_mod = 0;
+    d.ranged.throw_dmg = Dice(2, 3);
+    d.ranged.throw_hit_chance_mod = 10;
     d.ranged.effective_range = 5;
-    d.max_stack_at_spawn = 8;
+    d.max_stack_at_spawn = 6;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";
     d.land_on_hard_sfx = SfxId::metal_clank;
     d.main_att_mode = AttMode::thrown;
@@ -857,10 +857,9 @@ void init_data_list()
     d.tile = TileId::rock;
     d.glyph = '*';
     d.clr = clr_gray;
-    d.ranged.throw_dmg = Dice(1, 4);
-    d.ranged.throw_hit_chance_mod = 10;
+    d.ranged.throw_dmg = Dice(1, 3);
     d.ranged.effective_range = 4;
-    d.max_stack_at_spawn = 4;
+    d.max_stack_at_spawn = 3;
     d.main_att_mode = AttMode::thrown;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -874,8 +873,8 @@ void init_data_list()
         "Commonly associated with deception, stealth, and treachery. Many "
         "assassinations have been carried out with the use of a dagger.",
 
-        "Attacking an unaware opponent with a dagger does 300% damage "
-        "(instead of the normal 150% damage from stealth attacks).",
+        "Attacking an unaware opponent with a dagger does +300% damage "
+        "(in addition to the normal +50% damage from stealth attacks).",
 
         "Melee attacks with daggers are silent."
     };

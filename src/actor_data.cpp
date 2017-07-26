@@ -518,7 +518,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
+    d.spawn_max_dlvl = dlvl_last_early_game;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 10;
     d.descr = "A severed head floating through the air.";
@@ -1286,7 +1286,7 @@ void init_data_list()
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 8;
     d.descr =
         "This extremely aggressive canine seems to be part corporeal and "
         "part fire. It breathes searing flames.";
@@ -1322,10 +1322,10 @@ void init_data_list()
     d.tile = TileId::hound;
     d.can_leave_corpse = false;
     d.is_auto_descr_allowed = false;
-    d.hp = 65;
+    d.hp = 80;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 4;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;

@@ -2476,7 +2476,7 @@ void Zombie::on_destroyed()
     //
     // Occasionally make Zombie Dust
     //
-    const int mk_dust_one_in_n = 5;
+    const int mk_dust_one_in_n = 6;
 
     if (!map::cells[pos.x][pos.y].rigid->is_bottomless() &&
         rnd::one_in(mk_dust_one_in_n))

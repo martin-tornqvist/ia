@@ -55,7 +55,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
 
     case Trait::dem_expert:
         // Too much character theme mismatch
-        return bg == Bg::occultist || bg == Bg::ghoul;
+        return
+            (bg == Bg::occultist) ||
+            (bg == Bg::ghoul);
 
     case Trait::cool_headed:
         break;
@@ -79,6 +81,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         break;
 
     case Trait::rugged:
+        break;
+
+    case Trait::thick_skinned:
         break;
 
     case Trait::strong_backed:
@@ -339,6 +344,9 @@ std::string trait_title(const Trait id)
     case Trait::rugged:
         return "Rugged";
 
+    case Trait::thick_skinned:
+        return "Thick Skinned";
+
     case Trait::treasure_hunter:
         return "Treasure Hunter";
 
@@ -391,18 +399,19 @@ std::vector<StrAndClr> bg_descr(const Bg id)
     {
     case Bg::ghoul:
         put("Does not regenerate Hit Points and cannot use medical equipment - "
-            "must instead heal by feeding on corpses (press '5' or '.' while "
-            "standing on a corpse to feed)");
+            "heals by feeding on corpses (press '5' or '.' while standing on "
+            "a corpse to feed)");
         put("");
-        put("Has an arcane ability to incite Frenzy at will (+100% speed, "
-            "+10% melee hit chance, +1 melee damage, must move towards "
-            "enemies)");
+        put("Can incite Frenzy (+100% speed, +10% melee hit chance, +1 melee "
+            "damage, must move towards enemies)");
         put("");
         put("Does not become Weakened when Frenzy ends");
         put("");
         put("+20% speed");
         put("");
         put("+10 Hit Points");
+        put("");
+        put("+1 Armor Point (physical damage reduced by 1 point)");
         put("");
         put("Is immune to Disease and Infections");
         put("");
@@ -474,32 +483,32 @@ std::string trait_descr(const Trait id)
     case Trait::adept_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks";
+            "attacks, +10% chance to evade melee attacks";
 
     case Trait::expert_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks";
+            "attacks, +10% chance to evade melee attacks";
 
     case Trait::master_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks";
+            "attacks, +10% chance to evade melee attacks";
 
     case Trait::adept_marksman:
         return
-            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
-            "and thrown weapons, +50% reload speed";
+            "+10% hit chance, and +25% attack speed with firearms and thrown "
+            "weapons, +50% reload speed";
 
     case Trait::expert_marksman:
         return
-            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
-            "and thrown weapons, +50% reload speed";
+            "+10% hit chance, and +25% attack speed with firearms and thrown "
+            "weapons, +50% reload speed";
 
     case Trait::master_marksman:
         return
-            "+10% hit chance, +25% attack speed, and +1 damage with firearms "
-            "and thrown weapons, +50% reload speed";
+            "+10% hit chance, and +25% attack speed with firearms and thrown "
+            "weapons, +50% reload speed";
 
     case Trait::steady_aimer:
         return
@@ -553,17 +562,19 @@ std::string trait_descr(const Trait id)
 
     case Trait::tough:
         return
-            "+1 Armor Point (physical damage taken reduced by 1 point), "
             "+4 Hit Points, +10% carry weight limit, less likely to sprain "
             "when kicking, more likely to succeed with object interactions "
             "requiring strength (e.g. bashing things open)";
 
     case Trait::rugged:
         return
-            "+1 Armor Point (physical damage taken reduced by 1 point), "
             "+4 Hit Points, +10% carry weight limit, less likely to sprain "
             "when kicking, more likely to succeed with object interactions "
             "requiring strength (e.g. bashing things open)";
+
+    case Trait::thick_skinned:
+        return
+            "+1 Armor Point (physical damage reduced by 1 point)";
 
     case Trait::strong_backed:
         return
@@ -571,11 +582,11 @@ std::string trait_descr(const Trait id)
 
     case Trait::dexterous:
         return
-            "+10% speed, +15% chance to dodge attacks";
+            "+10% speed, +15% chance to evade attacks";
 
     case Trait::lithe:
         return
-            "+10% speed, +15% chance to dodge attacks";
+            "+10% speed, +15% chance to evade attacks";
 
     case Trait::mobile:
         return
@@ -600,7 +611,7 @@ std::string trait_descr(const Trait id)
         return
             "You cannot be backstabbed - monsters that you are unaware of get "
             "no melee attack bonus against you, and their attacks can be "
-            "dodged";
+            "evaded";
 
     case Trait::rapid_recoverer:
         return
@@ -615,7 +626,7 @@ std::string trait_descr(const Trait id)
         return
             "While your Hit Points are reduced below 50%, you gain +20% speed, "
             "+20% hit chance with melee and ranged attacks, and +30% chance "
-            "to dodge attacks";
+            "to evade attacks";
 
     case Trait::self_aware:
         return
@@ -653,7 +664,8 @@ std::string trait_descr(const Trait id)
 
     case Trait::vicious:
         return
-            "+50% backstab damage";
+            "+100% backstab damage (in addition to the normal +50% damage from "
+            "stealth attacks)";
 
     case Trait::treasure_hunter:
         return
@@ -788,6 +800,9 @@ void trait_prereqs(const Trait trait,
 
     case Trait::rugged:
         traits_out.push_back(Trait::tough);
+        break;
+
+    case Trait::thick_skinned:
         break;
 
     case Trait::strong_backed:

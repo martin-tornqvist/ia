@@ -98,12 +98,15 @@ ActionResult Actor::roll_sneak(const Actor& other) const
         (cell.is_dark && ! cell.is_lit) ?
         40 : 0;
 
-    const int sneak_tot =
+    int sneak_tot =
         sneak_skill
         - search_mod
         + dist_mod
         + lgt_mod
         + drk_mod;
+
+    // Cap the sneak value to 99%
+    sneak_tot = std::min(99, sneak_tot);
 
     const auto result = ability_roll::roll(sneak_tot, this);
 
@@ -950,12 +953,12 @@ int Actor::armor_points() const
     // "Natural armor"
     if (is_player())
     {
-        if (player_bon::traits[(size_t)Trait::tough])
+        if (player_bon::traits[(size_t)Trait::thick_skinned])
         {
             ++ap;
         }
 
-        if (player_bon::traits[(size_t)Trait::rugged])
+        if (player_bon::bg() == Bg::ghoul)
         {
             ++ap;
         }

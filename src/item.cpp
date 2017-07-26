@@ -147,24 +147,6 @@ Dice Item::dmg(const AttMode att_mode,
         {
             return dice;
         }
-
-        if (attacker == map::player)
-        {
-            if (player_bon::traits[(size_t)Trait::adept_marksman])
-            {
-                ++dice.plus;
-            }
-
-            if (player_bon::traits[(size_t)Trait::expert_marksman])
-            {
-                ++dice.plus;
-            }
-
-            if (player_bon::traits[(size_t)Trait::master_marksman])
-            {
-                ++dice.plus;
-            }
-        }
     }
     break;
 
@@ -191,24 +173,6 @@ Dice Item::dmg(const AttMode att_mode,
             if (dice == zero_dice)
             {
                 return dice;
-            }
-        }
-
-        if (attacker == map::player)
-        {
-            if (player_bon::traits[(size_t)Trait::adept_marksman])
-            {
-                ++dice.plus;
-            }
-
-            if (player_bon::traits[(size_t)Trait::expert_marksman])
-            {
-                ++dice.plus;
-            }
-
-            if (player_bon::traits[(size_t)Trait::master_marksman])
-            {
-                ++dice.plus;
             }
         }
     }
