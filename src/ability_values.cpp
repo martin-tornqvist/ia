@@ -78,7 +78,7 @@ int AbilityVals::val(const AbilityId id,
 
         case AbilityId::ranged:
         {
-            ret += 70;
+            ret += 60;
 
             if (player_bon::traits[(size_t)Trait::adept_marksman])
             {

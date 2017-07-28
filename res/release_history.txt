@@ -7,10 +7,11 @@ Gameplay
 * Some general monster stats updates (especially to boost midgame monsters)
 * Ghoul characters have +20% speed
 * Adjusted Potion of Posion duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
-* Poison damge is slower, but poisoning generally lasts longer
+* Poison damage is slower, but poisoning generally lasts longer
 * XP gained from Monoliths increased from 15% to 20%
 * Rod of Cloud Minds (which the Rogue starts with) now stores two charges, each charge requires 250 turns to finish (or 125 with the Electrically Inclined trait)
 * Removed damage bonus from the Marksman traits (it made ranged combat very overpowered)
+* Slightly lower base hit chance with ranged weapons
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
 * Ghouls have +1 Armor Point
@@ -19,6 +20,7 @@ Gameplay
 * Throwing knives do 2d3 damage (avg 4.0) instead of 1d6 (avg 3.5), and have +10% hit chance
 * Rocks no longer have a hit chance bonus, and do less damage
 * Increased backstab bonus for Daggers and for the Vicious trait
+* Slightly more monsters spawned
 
 Interface
 * Weapon names show their average damage instead of dice rolls (e.g. "Machete 7.0 +0%") - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
