@@ -457,10 +457,10 @@ void handle_player_input(const InputData& input)
                         //
                         if (wpn->data().id == ItemId::mi_go_gun)
                         {
-                            if (map::player->spi() <= mi_go_gun_spi_drained)
+                            if (map::player->hp() <= mi_go_gun_hp_drained)
                             {
                                 msg_log::add(
-                                    "I don't have enough spirit to fire it.");
+                                    "I don't have enough health to fire it.");
 
                                 return;
                             }

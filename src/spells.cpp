@@ -2736,12 +2736,6 @@ void SpellInsight::run_effect(Actor* const caster,
     //
     // Run identify selection menu
     //
-
-    //
-    // NOTE: We push this state BEFORE giving any XP (directly or via
-    //       identifying stuff), because if the player gains a new level in
-    //       the process, the trait selection should occur first
-    //
     std::unique_ptr<State> select_identify(
         new SelectIdentify);
 

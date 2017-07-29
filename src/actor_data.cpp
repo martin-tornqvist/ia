@@ -3420,6 +3420,63 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
+    d.name_a = "a Sentry Drone";
+    d.name_the = "the Sentry Drone";
+    d.corpse_name_a = "a broken Sentry Drone";
+    d.corpse_name_the = "the broken Sentry Drone";
+    d.id = ActorId::sentry_drone;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.ranged_cooldown_turns = 3;
+    d.spell_skill = SpellSkill::expert;
+    d.glyph = 'T';
+    d.color = clr_red;
+    d.tile = TileId::device2;
+    d.hp = 18;
+    d.spi = 40;
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::ranged, 65);
+    d.ability_vals.set_val(AbilityId::dodging, 35);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
+    d.prevent_knockback = true;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_max_dlvl = (dlvl_first_late_game + dlvl_last) / 2;
+    d.actor_size = ActorSize::humanoid;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
+    d.nr_turns_aware = 16;
+    d.descr =
+        "An infernal piece of technology, seemingly designed to serve as a "
+        "sort of guard. It hovers around, searching the area for interlopers "
+        "to blast on sight. It appears to have some organic parts, and may "
+        "even be a conscious living being.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
+    d.aggro_msg_mon_seen = d.name_the + " makes a deep buzzing sound.";
+    d.aggro_msg_mon_hidden = "I hear a deep buzzing sound.";
+    d.is_infra_visible = false;
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::unsettling;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::flooded);
+    d.native_rooms.push_back(RoomType::muddy);
+    d.native_rooms.push_back(RoomType::jail);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
     d.name_a = "a Hunting Horror";
     d.name_the = "the Hunting Horror";
     d.corpse_name_a = "a Hunting Horror corpse";

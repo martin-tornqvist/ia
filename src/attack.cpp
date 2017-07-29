@@ -1981,11 +1981,13 @@ bool ranged(Actor* const attacker,
 
                 msg_log::add("The " +
                              wpn_name +
-                             " draws power from my spirit!",
+                             " draws power from my life force!",
                              clr_msg_bad);
 
-                attacker->hit_spi(mi_go_gun_spi_drained,
-                                  Verbosity::silent);
+                attacker->hit(mi_go_gun_hp_drained,
+                              DmgType::pure,
+                              DmgMethod::forced,
+                              AllowWound::no);
             }
 
             fire_projectiles(attacker,

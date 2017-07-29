@@ -644,7 +644,7 @@ void init_data_list()
     d.weight = ItemWeight::medium;
     d.tile = TileId::mi_go_gun;
     d.clr = clr_yellow;
-    d.ranged.dmg = Dice(3, 6, 0);
+    d.ranged.dmg = Dice(2, 6, 0);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
     d.ranged.prop_applied = new PropParalyzed(PropTurns::specific, 2);
