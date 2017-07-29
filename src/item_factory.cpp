@@ -370,10 +370,6 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new SpiritDagger(d);
         break;
 
-    case ItemId::orb_of_sorcery:
-        r = new OrbOfSorcery(d);
-        break;
-
     case ItemId::orb_of_life:
         r = new OrbOfLife(d);
         break;

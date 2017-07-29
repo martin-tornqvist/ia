@@ -193,7 +193,6 @@ enum class ItemId
     horn_of_banishment,
     clockwork,
     spirit_dagger,
-    orb_of_sorcery,
     orb_of_life,
 
     zombie_dust,

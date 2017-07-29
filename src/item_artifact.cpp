@@ -387,15 +387,6 @@ void SpiritDagger::on_melee_hit(Actor& actor_hit, const int dmg)
 // -----------------------------------------------------------------------------
 // Sorcery Orb
 // -----------------------------------------------------------------------------
-OrbOfSorcery::OrbOfSorcery(ItemDataT* const item_data) :
-    Item(item_data)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-// Sorcery Orb
-// -----------------------------------------------------------------------------
 OrbOfLife::OrbOfLife(ItemDataT* const item_data) :
     Item(item_data)
 {

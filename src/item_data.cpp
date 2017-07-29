@@ -2359,30 +2359,6 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::general);
-    d.id = ItemId::orb_of_sorcery;
-    d.base_name =
-    {
-        "Orb of Sorcery",
-        "",
-        "the Orb of Sorcery"
-    };
-    d.base_descr =
-    {
-        "Enhances spell casting capabilities, +10% skill level with all spells "
-        "while carried."
-    };
-    d.clr = clr_violet;
-    d.weight = ItemWeight::light;
-    d.tile = TileId::orb;
-    d.glyph = '"';
-    d.is_unique = true;
-    d.value = ItemValue::major_treasure;
-    d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
-    d.native_containers.push_back(FeatureId::tomb);
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::general);
     d.id = ItemId::orb_of_life;
     d.base_name =
     {
