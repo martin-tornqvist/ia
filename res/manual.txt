@@ -23,7 +23,7 @@ Contents:
    a      Activate, read or consume an item
    c      Close a door, or jam a closed door with an iron spike
    d      Disarm trap
-   e      Quick move (automatically move in some direction until interrupted)
+   e      Auto move (automatically move in some direction until interrupted)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground

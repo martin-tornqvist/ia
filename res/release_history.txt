@@ -34,6 +34,7 @@ Gameplay
 * Increased backstab bonus for Daggers and for the Vicious trait
 * Slightly more monsters spawned
 * The Mi-go Electric Gun runs on Hit Points instead of Spirit, and does less damage
+* The "auto move" command ("e") now also stops before hanging vines
 
 Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory

@@ -970,6 +970,7 @@ void Player::act()
             is_tgt_known_trap ||
             (tgt_rigid->id() == FeatureId::chains) ||
             (tgt_rigid->id() == FeatureId::liquid_shallow) ||
+            (tgt_rigid->id() == FeatureId::vines) ||
             (tgt_rigid->burn_state() == BurnState::burning);
 
         if (should_abort)
