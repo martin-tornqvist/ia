@@ -261,7 +261,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 7;
+        return 6;
     }
 };
 
@@ -294,7 +294,7 @@ public:
 
     SpellShock shock_type() const override
     {
-        return SpellShock::severe;
+        return SpellShock::disturbing;
     }
 
     std::vector<std::string> descr_specific(
@@ -306,7 +306,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 9;
+        return 6;
     }
 };
 
@@ -356,7 +356,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 8;
+        return 6;
     }
 };
 
@@ -399,7 +399,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 7;
+        return 8;
     }
 };
 
@@ -481,7 +481,7 @@ public:
 
     SpellShock shock_type() const override
     {
-        return SpellShock::disturbing;
+        return SpellShock::mild;
     }
 
     std::vector<std::string> descr_specific(
@@ -493,7 +493,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 7;
+        return 5;
     }
 };
 
@@ -524,7 +524,7 @@ public:
 
     SpellShock shock_type() const override
     {
-        return SpellShock::disturbing;
+        return SpellShock::mild;
     }
 
     std::vector<std::string> descr_specific(
@@ -536,7 +536,7 @@ public:
 private:
     int max_spi_cost() const override
     {
-        return 10;
+        return 4;
     }
 };
 

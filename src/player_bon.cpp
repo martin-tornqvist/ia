@@ -375,7 +375,8 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         break;
 
     case Bg::occultist:
-        put("Gains spell proficiency at a much quicker rate");
+        put("Has access to traits which allows casting more powerful versions "
+            "of spells");
         put("");
         put("Starts with a few known spells");
         put("");

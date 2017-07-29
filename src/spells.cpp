@@ -949,7 +949,7 @@ void SpellMayhem::run_effect(Actor* const caster,
     // Destroy the surrounding environment
     //
     {
-        const int nr_sweeps = 2 + (int)skill;
+        const int nr_sweeps = 1 + (int)skill;
 
         const int destr_radi = fov_std_radi_int + (int)skill * 2;
 
@@ -1568,7 +1568,61 @@ void SpellOpening::run_effect(Actor* const caster,
 
             const auto& cell = map::cells[x][y];
 
-            DidOpen did_open = cell.rigid->open(nullptr);
+            auto* const f = cell.rigid;
+
+            auto did_open = DidOpen::no;
+
+            bool is_metal_door = false;
+
+            // Is this a metal door?
+            if (f->id() == FeatureId::door)
+            {
+                auto* const door = static_cast<Door*>(f);
+
+                is_metal_door = (door->type() == DoorType::metal);
+
+                // If at least expert skill, then metal doors are also opened
+                if (is_metal_door &&
+                    !door->is_open() &&
+                    ((int)skill >= (int)SpellSkill::expert))
+                {
+                    for (int x_lever = 0; x_lever < map_w; ++x_lever)
+                    {
+                        for (int y_lever = 0; y_lever < map_h; ++y_lever)
+                        {
+                            auto* const f_lever =
+                                map::cells[x_lever][y_lever].rigid;
+
+                            if (f_lever->id() != FeatureId::lever)
+                            {
+                                continue;
+                            }
+
+                            auto* const lever = static_cast<Lever*>(f_lever);
+
+                            if (lever->is_linked_to(*f))
+                            {
+                                lever->toggle();
+
+                                did_open = DidOpen::yes;
+
+                                break;
+                            }
+                        } // Lever y loop
+
+                        if (did_open == DidOpen::yes)
+                        {
+                            break;
+                        }
+                    } // Lever x loop
+                }
+            }
+
+            if ((did_open != DidOpen::yes) &&
+                !is_metal_door)
+            {
+                did_open = cell.rigid->open(nullptr);
+            }
 
             if (did_open == DidOpen::yes)
             {
@@ -1592,8 +1646,23 @@ std::vector<std::string> SpellOpening::descr_specific(
 {
     std::vector<std::string> descr;
 
-    descr.push_back("Opens all locks, lids and doors (except heavy doors "
-                    "operated externally by a switch).");
+    std::string str = "Opens all locks, lids and doors";
+
+    if (skill == SpellSkill::basic)
+    {
+        str += " (except heavy doors operated externally by a switch)";
+    }
+
+    str += ".";
+
+    descr.push_back(str);
+
+    if ((int)skill >= (int)SpellSkill::expert)
+    {
+        descr.push_back(
+            "If cast within range of a door operated by a lever, then the "
+            "lever is toggled.");
+    }
 
     const int range = 1 + (int)skill * 3;
 
@@ -2016,12 +2085,12 @@ void SpellEnfeeble::run_effect(Actor* const caster,
         if (skill >= SpellSkill::master)
         {
             //
-            // NOTE: Being slowed effectively causes double paralyze duration
+            // NOTE: Being slowed effectively causes longer paralyze duration
             //       (property turns counts down on the actor's turn), so
             //       applying a full standard paralyze here would probably be
             //       overpowered - just do a couple turns
             //
-            prop_handler.apply(new PropParalyzed(PropTurns::specific, 2));
+            prop_handler.apply(new PropParalyzed(PropTurns::specific, 4));
         }
     }
 }
@@ -2045,6 +2114,8 @@ std::vector<std::string> SpellEnfeeble::descr_specific(
     }
 
     str += ".";
+
+    descr.push_back(str);
 
     return descr;
 }
