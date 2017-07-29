@@ -93,7 +93,7 @@ bool try_mk_aux_room(const P& p,
 
 #ifndef DISABLE_CRUMBLE_ROOMS
         // Make a "crumble room"?
-        if (rnd::one_in(10))
+        if (rnd::one_in(20))
         {
             Room* const room =
                 room_factory::mk(RoomType::crumble_room, aux_rect);

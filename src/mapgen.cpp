@@ -843,8 +843,8 @@ bool mk_std_lvl()
     // Place "snake emerge" events
     // -------------------------------------------------------------------------
     const int nr_snake_emerge_events_to_try =
-        rnd::one_in(30) ? 2 :
-        rnd::one_in(8)  ? 1 : 0;
+        rnd::one_in(60) ? 2 :
+        rnd::one_in(16) ? 1 : 0;
 
     for (int i = 0; i < nr_snake_emerge_events_to_try; ++i)
     {

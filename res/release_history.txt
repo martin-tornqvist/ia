@@ -12,6 +12,7 @@ Gameplay
 * Removed the "Sacrifice Life"/"Spirit" spells
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
+* The "snake emerge" and "wall crumbling" events are much rarer
 * Duration of Blindness from Raven attacks reduced from 3 turns to 2
 * Keziah Mason starts together with Brown Jenkin, instead of spending a turn to summon it when she sees the player
 * Some general monster stats updates (midgame monsters are slightly boosted)
