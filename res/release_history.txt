@@ -2,19 +2,28 @@
 v19.1 *** WORK IN PROGRESS ***
 --------------------------------------------------------------
 Gameplay
+* Spells have basic/expert/master tiers instead of a skill percentage - higher tiers can be achieved by picking traits for various spell domains (e.g. "Lesser Invocation" to cast all attack spells at expert level)
+* Reworked the spell skill bonuses for all spells
+* Spellcasting is now generally more powerful than before, and scales to be more useful by mid/late game
+* The spell "Healing" is now also available for the player
+* The potions "See Invisible" and "Insight" are now spells instead
+* Added spell "Transmutation" (convert items)
+* Removed Potion of Clairvoyance
+* Removed the "Sacrifice Life"/"Spirit" spells
+* Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
+* Duration of Blindness from Raven attacks reduced from 3 turns to 2
 * Keziah Mason starts together with Brown Jenkin, instead of spending a turn to summon it when she sees the player
-* Some general monster stats updates (especially to boost midgame monsters)
-* Ghoul characters have +20% speed
+* Some general monster stats updates (midgame monsters are slightly boosted)
+* Ghoul characters have +20% speed and +1 natural Armor Point
 * Adjusted Potion of Posion duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damage is slower, but poisoning generally lasts longer
 * XP gained from Monoliths increased from 15% to 20%
 * Rod of Cloud Minds (which the Rogue starts with) now stores two charges, each charge requires 250 turns to finish (or 125 with the Electrically Inclined trait)
-* Removed damage bonus from the Marksman traits (it made ranged combat very overpowered)
+* Removed the damage bonuses from the Marksman traits (it made ranged combat overpowered)
 * Slightly lower base hit chance with ranged weapons
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
-* Ghouls have +1 Armor Point
 * Each melee trait gives +10% chance to evade melee attacks
 * The base chances for bashing doors open and pushing lids are higher
 * Throwing knives do 2d3 damage (avg 4.0) instead of 1d6 (avg 3.5), and have +10% hit chance
@@ -23,7 +32,7 @@ Gameplay
 * Slightly more monsters spawned
 
 Interface
-* Weapon names show their average damage instead of dice rolls (e.g. "Machete 7.0 +0%") - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
+* Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
 * Brighter interface color scheme (some menus could be difficult to read before)
 
 Bug fixes

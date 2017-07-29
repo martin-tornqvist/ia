@@ -37,9 +37,10 @@ enum class Trait
     rapid_recoverer,
     survivalist,
     perseverant,
+    stout_spirit,
     strong_spirit,
     mighty_spirit,
-    magically_gifted,
+    // magically_gifted,
     tough,
     rugged,
     thick_skinned,
@@ -54,10 +55,17 @@ enum class Trait
     indomitable_fury,
 
     // Unique for Occultist
-    warlock,
-    summoner,
+    lesser_invoc,
+    greater_invoc,
+    lesser_summoning,
+    greater_summoning,
+    lesser_clairv,
+    greater_clairv,
+    lesser_ench,
+    greater_ench,
+    lesser_alter,
+    greater_alter,
     blood_sorc,
-    seer,
 
     // Unique for Rogue
     vicious,
@@ -99,7 +107,8 @@ void unpicked_traits_for_bg(const Bg bg,
 void trait_prereqs(const Trait id,
                    const Bg bg,
                    std::vector<Trait>& traits_out,
-                   Bg& bg_out);
+                   Bg& bg_out,
+                   int& clvl_out);
 
 Bg bg();
 
@@ -108,9 +117,11 @@ std::string trait_descr(const Trait id);
 
 std::string bg_title(const Bg id);
 
+//
 // NOTE: The string vector returned is not formatted. Each line still needs to
 //       be formatted by the caller. The reason for using a vector instead of a
 //       string is to separate the text into paragraphs.
+//
 std::vector<StrAndClr> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();

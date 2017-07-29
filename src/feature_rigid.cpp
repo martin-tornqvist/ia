@@ -153,9 +153,10 @@ void Rigid::on_new_turn()
 
             if (map::is_pos_inside_map(p))
             {
-                map::cells[p.x][p.y].rigid->hit(1,
-                                                DmgType::fire,
-                                                DmgMethod::elemental);
+                map::cells[p.x][p.y].rigid->hit(
+                    1, // Damage
+                    DmgType::fire,
+                    DmgMethod::elemental);
             }
         }
 
@@ -3196,7 +3197,6 @@ Fountain::Fountain(const P& p) :
     {
         32, // Refreshing
         8,  // XP
-        1,  // Teleport control
         4,  // Bad effect
     };
 
@@ -3217,12 +3217,6 @@ Fountain::Fountain(const P& p) :
     break;
 
     case 2:
-    {
-        fountain_effect_ = FountainEffect::tele_ctrl;
-    }
-    break;
-
-    case 3:
     {
         const int min = (int)FountainEffect::START_OF_BAD_EFFECTS + 1;
         const int max = (int)FountainEffect::END - 1;
@@ -3313,10 +3307,6 @@ void Fountain::bump(Actor& actor_bumping)
         case FountainEffect::xp:
             msg_log::add("I feel more powerful!");
             game::incr_player_xp(1);
-            break;
-
-        case FountainEffect::tele_ctrl:
-            prop_hlr.apply(new PropTeleControl(PropTurns::std));
             break;
 
         case FountainEffect::curse:

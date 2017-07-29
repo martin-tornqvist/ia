@@ -17,31 +17,32 @@ const std::string summon_warning_str =
 
 enum class SpellId
 {
-    // Available for player and all monsters
+    // Available for player and monsters
     darkbolt,
-    aza_wrath,
-    enfeeble_mon,
+    enfeeble,
     teleport,
     summon,
     pest,
+    see_invis,
+    heal,
 
     // Player only
+    aza_wrath,
     mayhem,
     searching,
     opening,
-    sacr_life,
-    sacr_spi,
     res,
     light,
     bless,
     anim_wpns,
+    insight,
+    transmut,
 
     // Ghoul background
     frenzy,
 
     // Monsters only
     disease,
-    heal_self,
     knockback,
     mi_go_hypno,
     burn,
@@ -53,6 +54,13 @@ enum class SpellId
     END
 };
 
+enum class SpellSkill
+{
+    basic,
+    expert,
+    master
+};
+
 enum class SpellSrc
 {
     learned,
@@ -60,7 +68,7 @@ enum class SpellSrc
     item
 };
 
-enum class IntrSpellShock
+enum class SpellShock
 {
     mild,
     disturbing,
@@ -91,7 +99,7 @@ public:
     virtual ~Spell() {}
 
     void cast(Actor* const caster,
-              const int skill,
+              const SpellSkill skill,
               const IsIntrinsic intrinsic) const;
 
     virtual bool allow_mon_cast_now(Mon& mon) const
@@ -118,37 +126,41 @@ public:
         return true;
     }
 
-    std::vector<std::string> descr(const int skill) const;
+    std::vector<std::string> descr(const SpellSkill skill) const;
 
     Range spi_cost(Actor* const caster = nullptr) const;
 
-    int shock_lvl_intr_cast() const
+    int shock_value() const
     {
-        const IntrSpellShock shock_type = shock_type_intr_cast();
+        const SpellShock type = shock_type();
 
-        switch (shock_type)
+        switch (type)
         {
-        case IntrSpellShock::mild:
+        case SpellShock::mild:
             return 2;
 
-        case IntrSpellShock::disturbing:
+        case SpellShock::disturbing:
             return 8;
 
-        case IntrSpellShock::severe:
+        case SpellShock::severe:
             return 16;
         }
+
+        ASSERT(false);
 
         return -1;
     }
 
-    virtual IntrSpellShock shock_type_intr_cast() const = 0;
+    virtual SpellShock shock_type() const = 0;
 
-    virtual void run_effect(Actor* const caster, const int skill) const = 0;
+    virtual void run_effect(Actor* const caster,
+                            const SpellSkill skill) const = 0;
 
 protected:
     virtual int max_spi_cost() const = 0;
 
-    virtual std::vector<std::string> descr_specific(const int skill) const = 0;
+    virtual std::vector<std::string> descr_specific(
+        const SpellSkill skill) const = 0;
 
     void on_resist(Actor& target) const;
 };
@@ -185,14 +197,16 @@ public:
         return SpellId::darkbolt;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::mild;
+        return SpellShock::mild;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -215,7 +229,7 @@ public:
 
     bool mon_can_learn() const override
     {
-        return true;
+        return false;
     }
 
     bool player_can_learn() const override
@@ -233,14 +247,16 @@ public:
         return SpellId::aza_wrath;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -276,14 +292,16 @@ public:
         return SpellId::mayhem;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::severe;
+        return SpellShock::severe;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -324,14 +342,16 @@ public:
         return SpellId::pest;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -365,14 +385,16 @@ public:
         return SpellId::anim_wpns;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::mild;
+        return SpellShock::mild;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -414,14 +436,16 @@ public:
         return false;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
-
-    virtual IntrSpellShock shock_type_intr_cast() const override
+    virtual SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    virtual void run_effect(Actor* const caster, const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 protected:
     virtual int max_spi_cost() const override
@@ -455,14 +479,16 @@ public:
         return SpellId::searching;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -496,101 +522,21 @@ public:
         return SpellId::opening;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
     {
         return 10;
-    }
-};
-
-class SpellSacrLife: public Spell
-{
-public:
-    SpellSacrLife() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Sacrifice Life";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::sacr_life;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::disturbing;
-    }
-
-    std::vector<std::string> descr_specific(const int skill) const override;
-
-    void run_effect(Actor* const caster, const int skill) const override;
-
-private:
-    int max_spi_cost() const override
-    {
-        return 7;
-    }
-};
-
-class SpellSacrSpi: public Spell
-{
-public:
-    SpellSacrSpi() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Sacrifice Spirit";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::sacr_spi;
-    }
-
-    IntrSpellShock shock_type_intr_cast() const override
-    {
-        return IntrSpellShock::disturbing;
-    }
-
-    std::vector<std::string> descr_specific(const int skill) const override;
-
-    void run_effect(Actor* const caster, const int skill) const override;
-
-private:
-    int max_spi_cost() const override
-    {
-        return 3;
     }
 };
 
@@ -624,14 +570,16 @@ public:
         return false;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::mild;
+        return SpellShock::mild;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -665,19 +613,107 @@ public:
         return SpellId::bless;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
     {
         return 16;
+    }
+};
+
+class SpellInsight: public Spell
+{
+public:
+    SpellInsight() : Spell() {}
+
+    bool mon_can_learn() const override
+    {
+        return false;
+    }
+
+    bool player_can_learn() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "Insight";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::insight;
+    }
+
+    SpellShock shock_type() const override
+    {
+        return SpellShock::disturbing;
+    }
+
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
+
+private:
+    int max_spi_cost() const override
+    {
+        return 12;
+    }
+};
+
+class SpellTransmut: public Spell
+{
+public:
+    SpellTransmut() : Spell() {}
+
+    bool mon_can_learn() const override
+    {
+        return false;
+    }
+
+    bool player_can_learn() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "Transmutation";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::transmut;
+    }
+
+    SpellShock shock_type() const override
+    {
+        return SpellShock::disturbing;
+    }
+
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
+
+private:
+    int max_spi_cost() const override
+    {
+        return 12;
     }
 };
 
@@ -705,14 +741,16 @@ public:
         return SpellId::light;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::mild;
+        return SpellShock::mild;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -753,19 +791,21 @@ public:
         return SpellId::knockback;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override
     {
         (void)skill;
 
         return {""};
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -806,14 +846,66 @@ public:
         return SpellId::teleport;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
+
+private:
+    int max_spi_cost() const override
+    {
+        return 11;
+    }
+};
+
+class SpellSeeInvis: public Spell
+{
+public:
+    SpellSeeInvis() : Spell() {}
+
+    bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 30;
+    }
+
+    bool mon_can_learn() const override
+    {
+        return true;
+    }
+
+    bool player_can_learn() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "See Invisible";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::see_invis;
+    }
+
+    SpellShock shock_type() const override
+    {
+        return SpellShock::disturbing;
+    }
+
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -854,14 +946,16 @@ public:
         return SpellId::res;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -870,10 +964,10 @@ private:
     }
 };
 
-class SpellEnfeebleMon: public Spell
+class SpellEnfeeble: public Spell
 {
 public:
-    SpellEnfeebleMon() : Spell() {}
+    SpellEnfeeble() : Spell() {}
 
     virtual bool allow_mon_cast_now(Mon& mon) const override;
 
@@ -884,20 +978,18 @@ public:
 
     std::string name() const override
     {
-        return "Enfeeble Enemies";
+        return "Enfeeble";
     }
 
     SpellId id() const override
     {
-        return SpellId::enfeeble_mon;
+        return SpellId::enfeeble;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
-
-    std::vector<std::string> descr_specific(const int skill) const override;
 
     bool mon_can_learn() const override
     {
@@ -909,7 +1001,11 @@ public:
         return true;
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 protected:
     int max_spi_cost() const override
@@ -950,19 +1046,21 @@ public:
         return SpellId::disease;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override
     {
         (void)skill;
 
         return {""};
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -1003,14 +1101,16 @@ public:
         return SpellId::summon;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -1019,16 +1119,16 @@ private:
     }
 };
 
-class SpellHealSelf: public Spell
+class SpellHeal: public Spell
 {
 public:
-    SpellHealSelf() : Spell() {}
+    SpellHeal() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
     int mon_cooldown() const override
     {
-        return 5;
+        return 6;
     }
 
     bool mon_can_learn() const override
@@ -1038,7 +1138,7 @@ public:
 
     bool player_can_learn() const override
     {
-        return false;
+        return true;
     }
 
     std::string name() const override
@@ -1048,22 +1148,19 @@ public:
 
     SpellId id() const override
     {
-        return SpellId::heal_self;
+        return SpellId::heal;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
-    {
-        (void)skill;
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
 
-        return {""};
-    }
-
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -1104,19 +1201,21 @@ public:
         return SpellId::mi_go_hypno;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override
     {
         (void)skill;
 
         return {""};
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -1157,19 +1256,21 @@ public:
         return SpellId::burn;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override
     {
         (void)skill;
 
         return {""};
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override
@@ -1210,19 +1311,21 @@ public:
         return SpellId::deafen;
     }
 
-    IntrSpellShock shock_type_intr_cast() const override
+    SpellShock shock_type() const override
     {
-        return IntrSpellShock::disturbing;
+        return SpellShock::disturbing;
     }
 
-    std::vector<std::string> descr_specific(const int skill) const override
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override
     {
         (void)skill;
 
         return {""};
     }
 
-    void run_effect(Actor* const caster, const int skill) const override;
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
 
 private:
     int max_spi_cost() const override

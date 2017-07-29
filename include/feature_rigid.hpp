@@ -1065,7 +1065,6 @@ enum class FountainEffect
 {
     refreshing,
     xp,
-    tele_ctrl,
 
     START_OF_BAD_EFFECTS,
     curse,

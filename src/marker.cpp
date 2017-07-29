@@ -751,6 +751,15 @@ CtrlTele::CtrlTele(const P& origin, const bool blocked[map_w][map_h]) :
     memcpy(blocked_, blocked, nr_map_cells);
 }
 
+int CtrlTele::chance_of_success_pct(const P& tgt) const
+{
+    const int dist = king_dist(map::player->pos, tgt);
+
+    const int chance = constr_in_range(25, 100 - dist, 95);
+
+    return chance;
+}
+
 void CtrlTele::on_start_hook()
 {
     msg_log::add("I have the power to control teleportation.",
@@ -765,9 +774,11 @@ void CtrlTele::on_moved()
 
     if (pos_ != map::player->pos)
     {
-        msg_log::add("[enter] to try teleporting here");
+        const int chance_pct = chance_of_success_pct(pos_);
 
-        msg_log::add(cancel_info_str_no_space);
+        msg_log::add(std::to_string(chance_pct) + "% chance of success.");
+
+        msg_log::add("[enter] to try teleporting here");
     }
 }
 
@@ -779,7 +790,15 @@ void CtrlTele::handle_input(const InputData& input)
     {
         if (pos_ != map::player->pos)
         {
-            const bool is_tele_success = !blocked_[pos_.x][pos_.y];
+            const int chance = chance_of_success_pct(pos_);
+
+            const bool roll_ok = rnd::percent(chance);
+
+            const bool is_tele_success =
+                roll_ok &&
+                !blocked_[pos_.x][pos_.y];
+
+            const P tgt_p(pos_);
 
             states::pop();
 
@@ -789,7 +808,8 @@ void CtrlTele::handle_input(const InputData& input)
 
             if (is_tele_success)
             {
-                map::player->teleport(pos_, blocked_);
+                // Teleport to this exact destination
+                map::player->teleport(tgt_p, blocked_);
             }
             else // Failed to teleport (blocked or roll failed)
             {
@@ -797,6 +817,9 @@ void CtrlTele::handle_input(const InputData& input)
                              clr_white,
                              false,
                              MorePromptOnMsg::yes);
+
+                // Run a randomized teleport with teleport control disabled
+                map::player->teleport(ShouldCtrlTele::never);
             }
         }
     }

@@ -119,7 +119,8 @@ protected:
     {
         return
             "When activated, this device opens all locks, lids and doors in "
-            "the surrounding area.";
+            "the surrounding area (except heavy doors operated externally by "
+            "a switch).";
     }
 
     void run_effect() override;

@@ -37,11 +37,11 @@ void load();
 
 void learn_spell(const SpellId id, const Verbosity verbosity);
 
-void incr_spell_skill(const SpellId id, const Verbosity verbosity);
+void incr_spell_skill(const SpellId id);
 
-int spell_skill_pct_tot(const SpellId id);
+SpellSkill spell_skill(const SpellId id);
 
-void set_spell_skill_pct(const SpellId id, const int val);
+void set_spell_skill(const SpellId id, const SpellSkill val);
 
 bool is_spell_learned(const SpellId id);
 

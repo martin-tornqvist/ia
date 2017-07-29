@@ -65,7 +65,7 @@ public:
 
     Clr clr() const override;
 
-    int spell_skill(const SpellId id) const override;
+    SpellSkill spell_skill(const SpellId id) const override;
 
     void mk_start_items() override;
 

@@ -62,7 +62,7 @@ public:
 
     virtual Clr clr() const override;
 
-    int spell_skill(const SpellId id) const override;
+    SpellSkill spell_skill(const SpellId id) const override;
 
     void avail_attacks(Actor& defender, AiAvailAttacksData& dst);
 

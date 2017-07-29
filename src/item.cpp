@@ -292,8 +292,8 @@ std::string Item::name(const ItemRefType ref_type,
 
     // If requested ref type is "plural" and this is a single item, use ref type
     // "a" instead.
-    if (ref_type == ItemRefType::plural &&
-        (!data_->is_stackable || nr_items_ == 1))
+    if ((ref_type == ItemRefType::plural) &&
+        (!data_->is_stackable || (nr_items_ == 1)))
     {
         ref_type_used = ItemRefType::a;
     }
@@ -335,7 +335,7 @@ std::string Item::name(const ItemRefType ref_type,
         }
     }
 
-    dmg_str = this->dmg_str(att_inf, ItemRefDmgValue::average);
+    dmg_str = this->dmg_str(att_inf, ItemRefDmgValue::average_and_melee_plus);
 
     switch (att_inf_used)
     {
@@ -450,10 +450,38 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
         {
             const Dice dmg_dice = dmg(AttMode::melee, map::player);
 
-            dmg_str =
-                (dmg_value == ItemRefDmgValue::average) ?
-                dmg_dice.str_avg() :
-                dmg_dice.str();
+            const std::string str_avg = dmg_dice.str_avg();
+
+            switch (dmg_value)
+            {
+            case ItemRefDmgValue::average:
+            {
+                dmg_str = str_avg;
+            }
+            break;
+
+            case ItemRefDmgValue::average_and_melee_plus:
+            {
+                dmg_str = str_avg;
+
+                // Get damage if not used by an actor (no skill bonus, etc)
+                const Dice dmg_dice_raw = dmg(AttMode::melee, nullptr);
+
+                const std::string str_plus = dmg_dice_raw.str_plus();
+
+                if (!str_plus.empty())
+                {
+                    dmg_str += " {" + str_plus + "}";
+                }
+            }
+            break;
+
+            case ItemRefDmgValue::dice:
+            {
+                dmg_str = dmg_dice.str();
+            }
+            break;
+            }
         }
     }
     break;
@@ -472,7 +500,8 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
             }
 
             dmg_str =
-                (dmg_value == ItemRefDmgValue::average) ?
+                ((dmg_value == ItemRefDmgValue::average) ||
+                 (dmg_value == ItemRefDmgValue::average_and_melee_plus)) ?
                 dmg_dice.str_avg() :
                 dmg_dice.str();
         }
@@ -493,7 +522,8 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
             const Dice dmg_dice = dmg(AttMode::thrown, map::player);
 
             dmg_str =
-                (dmg_value == ItemRefDmgValue::average) ?
+                ((dmg_value == ItemRefDmgValue::average) ||
+                 (dmg_value == ItemRefDmgValue::average_and_melee_plus)) ?
                 dmg_dice.str_avg() :
                 dmg_dice.str();
         }
@@ -515,7 +545,9 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
 
 bool Item::is_in_effective_range_lmt(const P& p0, const P& p1) const
 {
-    return king_dist(p0, p1) <= data_->ranged.effective_range;
+    return
+        king_dist(p0, p1) <=
+        data_->ranged.effective_range;
 }
 
 void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
@@ -825,14 +857,16 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
 {
     (void)dmg;
 
+    //
     // TODO: If some "constructed" monster is added (something not made of
     //       flesh, e.g. a golem), then a Ghoul player would be able to feed
     //       from it, which would be a problem. In that case, there should
     //       probably be a field in the actor data called something like either
     //       "is_flesh_body", or "is_construct".
-
+    //
 
     // Ghoul feeding from Ravenous trait?
+
     //
     // NOTE: Player should never feed on monsters such as Ghosts or Shadows.
     //       Checking that the monster is not Ethereal and that it can bleed
@@ -1013,7 +1047,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    Prop* const prop = new PropBlind(PropTurns::specific, 3);
+    Prop* const prop = new PropBlind(PropTurns::specific, 2);
 
     actor_hit.prop_handler().apply(prop);
 }

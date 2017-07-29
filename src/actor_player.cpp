@@ -105,12 +105,8 @@ void Player::mk_start_items()
         // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
 
-        player_spells::set_spell_skill_pct(SpellId::darkbolt, 40);
-
         // Learn the Searching spell
         player_spells::learn_spell(SpellId::searching, Verbosity::silent);
-
-        player_spells::set_spell_skill_pct(SpellId::searching, 40);
 
         // Identify the Darkbolt scroll
         {
@@ -1376,10 +1372,11 @@ void Player::on_std_turn()
     // Spell resistance
     //
     const int spi_trait_lvl =
-        player_bon::traits[(size_t)Trait::mighty_spirit]  ? 2 :
-        player_bon::traits[(size_t)Trait::strong_spirit]  ? 1 : 0;
+        player_bon::traits[(size_t)Trait::mighty_spirit]    ? 3 :
+        player_bon::traits[(size_t)Trait::strong_spirit]    ? 2 :
+        player_bon::traits[(size_t)Trait::stout_spirit]     ? 1 : 0;
 
-    if (spi_trait_lvl > 0 &&
+    if ((spi_trait_lvl > 0) &&
         !prop_handler_->has_prop(PropId::r_spell))
     {
         if (nr_turns_until_rspell_ <= 0)
@@ -1941,9 +1938,9 @@ Clr Player::clr() const
     return data_->color;
 }
 
-int Player::spell_skill(const SpellId id) const
+SpellSkill Player::spell_skill(const SpellId id) const
 {
-    return player_spells::spell_skill_pct_tot(id);
+    return player_spells::spell_skill(id);
 }
 
 void Player::auto_melee()

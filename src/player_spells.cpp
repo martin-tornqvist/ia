@@ -24,8 +24,7 @@ namespace
 
 std::vector<Spell*> learned_spells_;
 
-// Spell skill levels
-int spell_skill_pct_[(size_t)SpellId::END];
+SpellSkill spell_skills_[(size_t)SpellId::END];
 
 std::vector<SpellOpt> spells_avail()
 {
@@ -132,7 +131,7 @@ void try_cast(const SpellOpt& spell_opt)
 
         if (map::player->is_alive())
         {
-            const int skill = map::player->spell_skill(spell->id());
+            const SpellSkill skill = map::player->spell_skill(spell->id());
 
             spell->cast(map::player,
                         skill,
@@ -159,7 +158,7 @@ void cleanup()
 
     for (size_t i = 0; i < (size_t)SpellId::END; ++i)
     {
-        spell_skill_pct_[i] = 0;
+        spell_skills_[i] = (SpellSkill)0;
     }
 }
 
@@ -174,7 +173,7 @@ void save()
 
     for (size_t i = 0; i < (size_t)SpellId::END; ++i)
     {
-        saving::put_int(spell_skill_pct_[i]);
+        saving::put_int((int)spell_skills_[i]);
     }
 }
 
@@ -191,7 +190,7 @@ void load()
 
     for (size_t i = 0; i < (size_t)SpellId::END; ++i)
     {
-        spell_skill_pct_[i] = saving::get_int();
+        spell_skills_[i] = (SpellSkill)saving::get_int();
     }
 }
 
@@ -242,70 +241,42 @@ void learn_spell(const SpellId id, const Verbosity verbosity)
     learned_spells_.push_back(spell);
 }
 
-void incr_spell_skill(const SpellId id, const Verbosity verbosity)
+void incr_spell_skill(const SpellId id)
 {
-    Dice incr_dice;
+    auto& skill = spell_skills_[(size_t)id];
 
-    if (player_bon::bg() == Bg::occultist)
+    if (skill == SpellSkill::basic)
     {
-        incr_dice = Dice(3, 5);
+        skill = SpellSkill::expert;
     }
-    else // Not Occultist
+    else if (skill == SpellSkill::expert)
     {
-        incr_dice = Dice(1, 5);
-    }
-
-    const int incr = incr_dice.roll();
-
-    int& base_skill = spell_skill_pct_[(size_t)id];
-
-    const int base_skill_before = base_skill;
-
-    base_skill += incr;
-
-    base_skill = std::min(100, base_skill);
-
-    if (base_skill > base_skill_before &&
-        verbosity == Verbosity::verbose)
-    {
-        const int skill_tot = spell_skill_pct_tot(id);
-
-        msg_log::add("I am now more proficient at casting this spell (" +
-                     std::to_string(skill_tot) + "%).");
+        skill = SpellSkill::master;
     }
 }
 
-int spell_skill_pct_tot(const SpellId id)
+SpellSkill spell_skill(const SpellId id)
 {
-    int skill_tot = spell_skill_pct_[(size_t)id];
+    ASSERT(id != SpellId::END);
 
-    // Bonus skill from trait?
-    if (player_bon::traits[(size_t)Trait::magically_gifted])
+    if (id == SpellId::END)
     {
-        skill_tot += 20;
+        return SpellSkill::basic;
     }
 
-    // Bonus skill from the Sorcery Crystal?
-    if (map::player->inv().has_item_in_backpack(ItemId::orb_of_sorcery))
-    {
-        skill_tot += 10;
-    }
-
-    // Teleport skill bonus from Talisman of Teleportation Control?
-    if ((id == SpellId::teleport) &&
-        map::player->inv().has_item_in_backpack(ItemId::tele_ctrl_talisman))
-    {
-        skill_tot += 40;
-    }
-
-    skill_tot = std::min(100, skill_tot);
-
-    return skill_tot;
+    return spell_skills_[(size_t)id];
 }
 
-void set_spell_skill_pct(const SpellId id, const int val)
+void set_spell_skill(const SpellId id, const SpellSkill val)
 {
-    spell_skill_pct_[(size_t)id] = val;
+    ASSERT(id != SpellId::END);
+
+    if (id == SpellId::END)
+    {
+        return;
+    }
+
+    spell_skills_[(size_t)id] = val;
 }
 
 } // player_spells
@@ -335,7 +306,7 @@ void BrowseSpell::draw()
 {
     const int nr_spells = spell_opts_.size();
 
-    io::draw_text_center("Invoke which power?",
+    io::draw_text_center("Use which power?",
                          Panel::screen,
                          P(screen_w / 2, 0),
                          clr_title);
@@ -429,8 +400,7 @@ void BrowseSpell::draw()
 
         const SpellId id = spell->id();
 
-        const int skill_pct =
-            player_spells::spell_skill_pct_tot(id);
+        const auto skill = player_spells::spell_skill(id);
 
         // Draw skill level if learned
         if (spell_opt.src == SpellSrc::learned)
@@ -444,9 +414,22 @@ void BrowseSpell::draw()
                           p,
                           clr_gray_drk);
 
-            str = std::to_string(skill_pct) + "%";
+            p.x += str.size();
 
-            p.x = descr_x0 - 1 - str.size();
+            switch (skill)
+            {
+            case SpellSkill::basic:
+                str = "I";
+                break;
+
+            case SpellSkill::expert:
+                str = "II";
+                break;
+
+            case SpellSkill::master:
+                str = "III";
+                break;
+            }
 
             io::draw_text(str,
                           Panel::screen,
@@ -456,7 +439,7 @@ void BrowseSpell::draw()
 
         if (is_idx_marked)
         {
-            const int skill = map::player->spell_skill(id);
+            const auto skill = map::player->spell_skill(id);
 
             const auto descr = spell->descr(skill);
 

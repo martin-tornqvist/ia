@@ -101,9 +101,6 @@ const int shock_from_obsession = 30;
 
 const double shock_from_disturbing_items = 0.1;
 
-// Spell skill level used when casting from scrolls (manuscripts)
-const int scroll_min_spell_skill = 50;
-
 // How many "units" of weight the player can carry, without trait modifiers etc
 const int player_carry_weight_base = 500;
 
@@ -218,6 +215,7 @@ enum class ItemRefAttInf
 enum class ItemRefDmgValue
 {
     average,
+    average_and_melee_plus,
     dice,
 };
 
@@ -327,6 +325,13 @@ enum class ActorState
     alive,
     corpse,
     destroyed
+};
+
+enum class ShouldCtrlTele
+{
+    if_tele_ctrl_prop,
+    never,
+    always
 };
 
 enum class Axis

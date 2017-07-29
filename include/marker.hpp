@@ -237,6 +237,8 @@ protected:
     void handle_input(const InputData& input) override;
 
 private:
+    int chance_of_success_pct(const P& tgt) const;
+
     bool blocked_[map_w][map_h];
 };
 

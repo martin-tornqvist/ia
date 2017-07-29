@@ -68,7 +68,7 @@ bool try_cast_random_spell(Mon& mon)
 
                 current_cooldown = spell->mon_cooldown();
 
-                const int skill = mon.spell_skill(spell->id());
+                const auto skill = mon.spell_skill(spell->id());
 
                 spell->cast(&mon,
                             skill,

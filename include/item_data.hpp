@@ -139,18 +139,19 @@ enum class ItemId
     scroll_darkbolt,
     scroll_pest,
     scroll_telep,
-    scroll_enfeeble_mon,
+    scroll_enfeeble,
     scroll_searching,
     scroll_bless,
     scroll_mayhem,
     scroll_aza_wrath,
     scroll_opening,
-    scroll_sacr_life,
-    scroll_sacr_spi,
     scroll_res,
     scroll_summon_mon,
     scroll_light,
     scroll_anim_wpns,
+    scroll_insight,
+    scroll_transmut,
+    scroll_heal,
 
     potion_vitality,
     potion_spirit,
@@ -160,13 +161,12 @@ enum class ItemId
     potion_r_elec,
     potion_conf,
     potion_poison,
-    potion_insight,
-    potion_clairv,
     potion_r_fire,
     potion_curing,
     potion_descent,
     potion_invis,
-    potion_see_invis,
+    // potion_sacr_life,
+    // potion_sacr_spi,
 
     device_blaster,
     device_shockwave,
@@ -343,7 +343,7 @@ class Item;
 namespace item_data
 {
 
-extern ItemDataT data[size_t(ItemId::END)];
+extern ItemDataT data[(size_t)ItemId::END];
 
 void init();
 void cleanup();

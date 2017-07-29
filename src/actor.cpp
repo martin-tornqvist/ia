@@ -250,10 +250,15 @@ void Actor::on_std_turn_common()
         }
 
         // Regenerate spirit
-        int regen_spi_n_turns = 20;
+        int regen_spi_n_turns = 18;
 
         if (is_player())
         {
+            if (player_bon::traits[(size_t)Trait::stout_spirit])
+            {
+                regen_spi_n_turns -= 4;
+            }
+
             if (player_bon::traits[(size_t)Trait::strong_spirit])
             {
                 regen_spi_n_turns -= 4;
@@ -268,7 +273,7 @@ void Actor::on_std_turn_common()
         {
             // Monsters regen spirit very quickly, so spell casters doesn't
             // suddenly get completely handicapped
-            regen_spi_n_turns = 2;
+            regen_spi_n_turns = 1;
         }
 
         const bool regen_spi_this_turn =
@@ -283,7 +288,7 @@ void Actor::on_std_turn_common()
     on_std_turn();
 }
 
-void Actor::teleport()
+void Actor::teleport(const ShouldCtrlTele ctrl_tele)
 {
     bool blocks_flood[map_w][map_h];
 
@@ -340,9 +345,14 @@ void Actor::teleport()
     //
     // Teleport control?
     //
-    if (is_player() &&
+    const bool can_actor_use_tele_ctrl =
+        is_player() &&
         prop_handler_->has_prop(PropId::tele_ctrl) &&
-        !prop_handler_->has_prop(PropId::confused))
+        !prop_handler_->has_prop(PropId::confused);
+
+    if ((ctrl_tele == ShouldCtrlTele::always) ||
+        ((ctrl_tele == ShouldCtrlTele::if_tele_ctrl_prop) &&
+         can_actor_use_tele_ctrl))
     {
         auto tele_ctrl_state = std::unique_ptr<State>(
             new CtrlTele(pos, blocked));

@@ -1517,7 +1517,7 @@ void SelectIdentify::on_start()
     {
         const Item* const item = inv.backpack_[i];
 
-        if (item->id() != ItemId::potion_insight)
+        if (item->id() != ItemId::scroll_insight)
         {
             const ItemDataT& d = item->data();
 
@@ -1667,11 +1667,13 @@ void SelectIdentify::update()
         //
         states::pop();
 
+        io::clear_screen();
+
+        map::update_vision();
+
         //
         // Identify item
         //
-        states::draw();
-
         item_to_identify->identify(Verbosity::verbose);
 
         return;

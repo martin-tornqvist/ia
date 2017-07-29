@@ -485,94 +485,6 @@ void PotionRAcid::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void PotionInsight::quaff_impl(Actor& actor)
-{
-    (void)actor;
-
-    //
-    // Run identify selection menu
-    //
-    // NOTE: We push this state BEFORE giving any XP (directly or via
-    //       identifying stuff), because if the player gains a new level in
-    //       the process, the trait selection should occur first
-    //
-    std::unique_ptr<State> select_identify(
-        new SelectIdentify);
-
-    states::push(std::move(select_identify));
-
-    // Insight gives some extra XP, to avoid making them worthless if the player
-    // identifies all items)
-    msg_log::add("I feel insightful.");
-
-    game::incr_player_xp(5);
-
-    identify(Verbosity::verbose);
-
-    msg_log::more_prompt();
-}
-
-void PotionClairv::quaff_impl(Actor& actor)
-{
-    if (!actor.is_player())
-    {
-        return;
-    }
-
-    msg_log::add("I see far and wide!");
-
-    std::vector<P> anim_cells;
-
-    anim_cells.clear();
-
-    //
-    // All cells which do not block LOS are revealed (it just looks nice)
-    //
-    bool blocks_los[map_w][map_h];
-
-    map_parsers::BlocksLos()
-        .run(blocks_los);
-
-    //
-    // Some important map features are always revealed (keep this list up to
-    // date when game design changes and important features are added/removed!)
-    //
-    bool always_show[map_w][map_h];
-
-    map_parsers::IsAnyOfFeatures feature_parser(
-    {
-        FeatureId::stairs,
-        FeatureId::monolith,
-    });
-
-    feature_parser.run(always_show);
-
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            Cell& cell = map::cells[x][y];
-
-            if (!blocks_los[x][y] || always_show[x][y])
-            {
-                cell.is_explored = true;
-
-                cell.is_seen_by_player = true;
-
-                anim_cells.push_back(P(x, y));
-            }
-        }
-    }
-
-    states::draw();
-
-    map::update_vision();
-
-    io::draw_blast_at_cells(anim_cells, clr_white);
-
-    identify(Verbosity::verbose);
-}
-
 void PotionDescent::quaff_impl(Actor& actor)
 {
     (void)actor;
@@ -610,25 +522,147 @@ void PotionInvis::collide_hook(const P& pos, Actor* const actor)
     }
 }
 
-void PotionSeeInvis::quaff_impl(Actor& actor)
-{
-    actor.prop_handler().apply(new PropSeeInvis(PropTurns::std));
+//
+// TODO: Implement sacrifice life/spirit as potions
+//
 
-    if (map::player->can_see_actor(actor))
-    {
-        identify(Verbosity::verbose);
-    }
-}
+// void SpellSacrLife::run_effect(Actor* const caster,
+//                                const SpellSkill skill) const
+// {
+//     (void)caster;
 
-void PotionSeeInvis::collide_hook(const P& pos, Actor* const actor)
-{
-    (void)pos;
+//     // Convert every 2 HP to 1 SP
 
-    if (actor)
-    {
-        quaff_impl(*actor);
-    }
-}
+//     const int player_hp_cur = map::player->hp();
+
+//     if (player_hp_cur > 2)
+//     {
+//         const int hp_drained = ((player_hp_cur - 1) / 2) * 2;
+
+//         map::player->hit(hp_drained, DmgType::pure);
+
+//         map::player->restore_spi(hp_drained, true);
+
+//         if (skill >= 50)
+//         {
+//             SpellAzaWrath spell;
+
+//             spell.run_effect(caster, skill);
+//         }
+
+//         if (skill >= 100)
+//         {
+//             SpellMayhem  spell;
+
+//             spell.run_effect(caster, skill);
+//         }
+//     }
+//     else // Not enough HP
+//     {
+//         msg_log::add("I feel like I have very little to offer.");
+//     }
+// }
+
+// std::vector<std::string> SpellSacrLife::descr_specific(
+//     const SpellSkill skill) const
+// {
+//     std::vector<std::string> descr;
+
+//     descr.push_back(
+//         "Brings the caster to the brink of death in order to restore the "
+//         "spirit. The amount restored is proportional to the life "
+//         "sacrificed.");
+
+//     if (skill >= 50)
+//     {
+//         SpellAzaWrath spell;
+
+//         const std::string wrath_name = spell.name();
+
+//         descr.push_back(
+//             "If any health was sacrificed, the spell \"" + wrath_name + "\""
+//             "is also cast.");
+//     }
+
+//     if (skill >= 100)
+//     {
+//         SpellMayhem spell;
+
+//         const std::string name = spell.name();
+
+//         descr.push_back("Also casts the spell \"" + name + "\".");
+//     }
+
+//     return descr;
+// }
+
+// void SpellSacrSpi::run_effect(Actor* const caster,
+//                               const SpellSkill skill) const
+// {
+//     (void)caster;
+
+//     // Convert all SPI to HP
+
+//     const int player_spi_cur = map::player->spi();
+
+//     if (player_spi_cur > 0)
+//     {
+//         const int spi_drained = player_spi_cur - 1;
+
+//         map::player->hit_spi(spi_drained);
+
+//         map::player->restore_hp(hp_drained);
+
+//         std::vector<PropId> props_can_heal;
+
+//         if (skill >= 50)
+//         {
+//             props_can_heal.push_back(PropId::poisoned);
+//         }
+
+//         if (skill >= 100)
+//         {
+//             props_can_heal.push_back(PropId::blind);
+//             props_can_heal.push_back(PropId::infected);
+//             props_can_heal.push_back(PropId::diseased);
+//             props_can_heal.push_back(PropId::weakened);
+//         }
+
+//         for (PropId prop_id : props_can_heal)
+//         {
+//             caster->prop_handler().end_prop(prop_id);
+//         }
+//     }
+//     else // Not enough spirit
+//     {
+//         msg_log::add("I feel like I have very little to offer.");
+//     }
+// }
+
+// std::vector<std::string> SpellSacrSpi::descr_specific(
+//     const SpellSkill skill) const
+// {
+//     std::vector<std::string> descr;
+
+//     descr.push_back(
+//         "Brings the caster to the brink of spiritual death in order to "
+//         "restore health. The amount restored is proportional to the "
+//         "spirit sacrificed.");
+
+//     if (skill >= 100)
+//     {
+//         descr.push_back(
+//             "If any spirit was sacrificed, cures blindness, poisoning, "
+//             "infections, disease, and weakening.");
+//     }
+//     // skill < 100
+//     else if (skill >= 50)
+//     {
+//         descr.push_back("If any spirit was sacrificed, cures poisoning.");
+//     }
+
+//     return descr;
+// }
 
 namespace potion_handling
 {

@@ -720,10 +720,10 @@ void init_data_list()
     d.name_short = "SeeInvis";
     d.descr = "Can see invisible creatures, cannot be blinded";
     d.msg[(size_t)PropMsg::start_player] = "My eyes perceive the invisible.";
-    d.msg[(size_t)PropMsg::start_mon] = "seems to see very clearly.";
+    d.msg[(size_t)PropMsg::start_mon] = "seems very keen.";
     d.msg[(size_t)PropMsg::end_player] =
         "My eyes can no longer perceive the invisible.";
-    d.msg[(size_t)PropMsg::end_mon] = "seems to see less clearly.";
+    d.msg[(size_t)PropMsg::end_mon] = "seems less keen.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.allow_apply_more_while_active = true;
@@ -1496,7 +1496,8 @@ void PropHandler::apply_from_att(const Wpn& wpn,
 
             const int nr_turns =
                 (turns_init_type == PropTurns::specific) ?
-                origin_prop->nr_turns_left_ : -1;
+                origin_prop->nr_turns_left_ :
+                -1;
 
             // Make a copy of the weapon effect
             auto* const prop_cpy = mk_prop(origin_prop->id(),
@@ -1637,7 +1638,9 @@ void PropHandler::on_turn_begin()
             mon->become_aware_player(false);
         }
 
+        //
         // NOTE: The property may return a nullptr here, if it removed itself
+        //
         prop = prop->on_tick();
 
         if (prop)

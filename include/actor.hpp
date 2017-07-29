@@ -159,7 +159,7 @@ public:
 
     int armor_points() const;
 
-    virtual int spell_skill(const SpellId id) const = 0;
+    virtual SpellSkill spell_skill(const SpellId id) const = 0;
 
     virtual std::string name_the() const
     {
@@ -198,7 +198,8 @@ public:
         (void)light;
     }
 
-    void teleport();
+    void teleport(
+        const ShouldCtrlTele ctrl_tele = ShouldCtrlTele::if_tele_ctrl_prop);
 
     void teleport(P p, bool blocked[map_w][map_h]);
 

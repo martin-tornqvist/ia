@@ -637,7 +637,7 @@ Clr Mon::clr() const
     return data_->color;
 }
 
-int Mon::spell_skill(const SpellId id) const
+SpellSkill Mon::spell_skill(const SpellId id) const
 {
     (void)id;
 
@@ -1203,10 +1203,11 @@ void BogTcher::mk_start_items()
 
 void CultistPriest::mk_start_items()
 {
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
+    spells_known_.push_back(new SpellSeeInvis);
 
     if (rnd::coin_toss())
     {
@@ -1241,10 +1242,11 @@ void CultistPriest::mk_start_items()
 
 void CultistWizard::mk_start_items()
 {
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
+    spells_known_.push_back(new SpellSeeInvis);
 
     if (rnd::coin_toss())
     {
@@ -1271,12 +1273,13 @@ void CultistWizard::mk_start_items()
 
 void CultistGrandWizard::mk_start_items()
 {
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
     spells_known_.push_back(new SpellAzaWrath);
     spells_known_.push_back(new SpellBurn);
+    spells_known_.push_back(new SpellSeeInvis);
 
     if (rnd::coin_toss())
     {
@@ -1528,7 +1531,7 @@ void MiGo::mk_start_items()
 
     spells_known_.push_back(new SpellTeleport);
     spells_known_.push_back(new SpellMiGoHypno);
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
 
     if (rnd::coin_toss())
     {
@@ -1539,9 +1542,10 @@ void MiGo::mk_start_items()
 void SentryDrone::mk_start_items()
 {
     spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellBurn);
+    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void FlyingPolyp::mk_start_items()
@@ -1723,9 +1727,10 @@ void ElderVoidTraveler::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::elder_void_traveler_rip));
 
     spells_known_.push_back(new SpellDisease);
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellDeafen);
+    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void Mummy::mk_start_items()
@@ -1881,7 +1886,8 @@ void DeathFiend::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::death_fiend_claw));
 
-    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellEnfeeble);
+    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void HuntingHorror::mk_start_items()
@@ -1926,13 +1932,13 @@ DidAction KeziahMason::on_act()
 void KeziahMason::mk_start_items()
 {
     spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellHealSelf);
+    spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellSummonMon);
     spells_known_.push_back(new SpellPest);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeebleMon);
+    spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellDeafen);
-
+    spells_known_.push_back(new SpellSeeInvis);
 
     // Make some treasures to drop
     for (int i = rnd::range(2, 3); i > 0; --i)
@@ -2711,13 +2717,15 @@ void TheHighPriest::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::the_high_priest_claw));
 
-    spells_known_.push_back(new SpellSummonMon());
-    spells_known_.push_back(new SpellBurn());
-    spells_known_.push_back(new SpellEnfeebleMon());
-    spells_known_.push_back(new SpellMiGoHypno());
-    spells_known_.push_back(new SpellPest());
-    spells_known_.push_back(new SpellTeleport());
-    spells_known_.push_back(new SpellAzaWrath());
+    spells_known_.push_back(new SpellHeal);
+    spells_known_.push_back(new SpellSummonMon);
+    spells_known_.push_back(new SpellBurn);
+    spells_known_.push_back(new SpellEnfeeble);
+    spells_known_.push_back(new SpellMiGoHypno);
+    spells_known_.push_back(new SpellPest);
+    spells_known_.push_back(new SpellTeleport);
+    spells_known_.push_back(new SpellAzaWrath);
+    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void TheHighPriest::on_death()
@@ -2780,7 +2788,7 @@ DidAction TheHighPriest::on_act()
 
 AnimatedWpn::AnimatedWpn() :
     Mon                     (),
-    nr_turns_until_drop_    (rnd::range(75, 125)) {}
+    nr_turns_until_drop_    (rnd::range(225, 250)) {}
 
 std::string AnimatedWpn::name_the() const
 {

@@ -32,8 +32,6 @@ public:
 protected:
     virtual std::string descr_identified() const = 0;
 
-    //TODO: *All* potions do nothing but run the quaff implementation when this
-    //is called. That should probably be moved up to the base collide function
     virtual void collide_hook(const P& pos, Actor* const actor) = 0;
 
     virtual void quaff_impl(Actor& actor) = 0;
@@ -232,60 +230,6 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
-class PotionInsight: public Potion
-{
-public:
-    PotionInsight(ItemDataT* const item_data) :
-        Potion(item_data) {}
-    ~PotionInsight() {}
-
-    void quaff_impl(Actor& actor) override;
-
-    const std::string real_name() const override
-    {
-        return "Insight";
-    }
-
-private:
-    std::string descr_identified() const override
-    {
-        return "This strange concoction causes a sudden flash of intuition.";
-    }
-
-    void collide_hook(const P& pos, Actor* const actor) override
-    {
-        (void)pos;
-        (void)actor;
-    }
-};
-
-class PotionClairv: public Potion
-{
-public:
-    PotionClairv(ItemDataT* const item_data) :
-        Potion(item_data) {}
-    ~PotionClairv() {}
-
-    void quaff_impl(Actor& actor) override;
-
-    const std::string real_name() const override
-    {
-        return "Clairvoyance";
-    }
-
-private:
-    std::string descr_identified() const override
-    {
-        return "Bestows visions of the surrounding area.";
-    }
-
-    void collide_hook(const P& pos, Actor* const actor) override
-    {
-        (void)pos;
-        (void)actor;
-    }
-};
-
 class PotionRFire: public Potion
 {
 public:
@@ -426,30 +370,6 @@ private:
     std::string descr_identified() const override
     {
         return "Makes the consumer invisible to normal vision.";
-    }
-
-    void collide_hook(const P& pos, Actor* const actor) override;
-};
-
-class PotionSeeInvis: public Potion
-{
-public:
-    PotionSeeInvis(ItemDataT* const item_data) :
-        Potion(item_data) {}
-    ~PotionSeeInvis() {}
-
-    void quaff_impl(Actor& actor) override;
-
-    const std::string real_name() const override
-    {
-        return "See Invisible";
-    }
-
-private:
-    std::string descr_identified() const override
-    {
-        return "Grants the consumer extraordinary vision, including the ability to see that "
-               "which is normally invisible.";
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;

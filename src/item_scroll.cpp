@@ -33,11 +33,9 @@ std::vector<std::string> Scroll::descr() const
     {
         const auto* const spell = mk_spell();
 
-        const int player_spell_skill = map::player->spell_skill(spell->id());
+        const auto player_spell_skill = map::player->spell_skill(spell->id());
 
-        const int skill = std::max(player_spell_skill, scroll_min_spell_skill);
-
-        const auto descr = spell->descr(skill);
+        const auto descr = spell->descr(player_spell_skill);
 
         delete spell;
 
@@ -103,19 +101,17 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
     const SpellId id = spell->id();
 
-    const int player_spell_skill = map::player->spell_skill(id);
-
-    const int skill = std::max(player_spell_skill, scroll_min_spell_skill);
+    const auto player_spell_skill = map::player->spell_skill(id);
 
     spell->cast(map::player,
-                skill,
+                player_spell_skill,
                 IsIntrinsic::no);
 
     msg_log::add(crumble_str);
 
     identify(Verbosity::verbose);
 
-    // Learn spell, increase skill level
+    // Learn spell
     if (spell->player_can_learn())
     {
         const bool is_learned_before = player_spells::is_spell_learned(id);
@@ -124,12 +120,6 @@ ConsumeItem Scroll::activate(Actor* const actor)
         {
             player_spells::learn_spell(id, Verbosity::verbose);
         }
-
-        const auto skill_incr_verbosity =
-            is_learned_before ?
-            Verbosity::verbose : Verbosity::silent;
-
-        player_spells::incr_spell_skill(id, skill_incr_verbosity);
     }
 
     delete spell;

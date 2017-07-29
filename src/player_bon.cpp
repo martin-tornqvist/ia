@@ -27,77 +27,51 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     switch (trait)
     {
     case Trait::adept_melee_fighter:
-        break;
-
     case Trait::expert_melee_fighter:
-        break;
-
     case Trait::master_melee_fighter:
-        break;
-
     case Trait::adept_marksman:
-        break;
-
     case Trait::expert_marksman:
-        break;
-
     case Trait::master_marksman:
-        break;
-
     case Trait::steady_aimer:
-        break;
-
     case Trait::sharpshooter:
-        break;
-
     case Trait::fast_shooter:
-        break;
-
-    case Trait::dem_expert:
-        // Too much character theme mismatch
-        return
-            (bg == Bg::occultist) ||
-            (bg == Bg::ghoul);
-
     case Trait::cool_headed:
-        break;
-
+    case Trait::perseverant:
+    case Trait::observant:
+    case Trait::ravenous:
+    case Trait::foul:
+    case Trait::toxic:
+    case Trait::indomitable_fury:
+    case Trait::vigilant:
+    case Trait::self_aware:
+    case Trait::stout_spirit:
+    case Trait::strong_spirit:
+    case Trait::mighty_spirit:
+    case Trait::stealthy:
+    case Trait::silent:
+    case Trait::imperceptible:
+    case Trait::vicious:
+    case Trait::treasure_hunter:
+    case Trait::undead_bane:
     case Trait::courageous:
-        break;
-
-    case Trait::warlock:
-        break;
-
-    case Trait::summoner:
-        break;
-
+    case Trait::lesser_invoc:
+    case Trait::greater_invoc:
+    case Trait::lesser_summoning:
+    case Trait::greater_summoning:
+    case Trait::lesser_clairv:
+    case Trait::greater_clairv:
+    case Trait::lesser_ench:
+    case Trait::greater_ench:
+    case Trait::lesser_alter:
+    case Trait::greater_alter:
     case Trait::blood_sorc:
-        break;
-
-    case Trait::seer:
-        break;
-
     case Trait::tough:
-        break;
-
     case Trait::rugged:
-        break;
-
     case Trait::thick_skinned:
-        break;
-
     case Trait::strong_backed:
-        break;
-
     case Trait::dexterous:
-        break;
-
     case Trait::lithe:
-        break;
-
     case Trait::mobile:
-        break;
-
     case Trait::fearless:
         break;
 
@@ -105,11 +79,11 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         // Cannot use Medial Bag
         return bg == Bg::ghoul;
 
-    case Trait::observant:
-        break;
-
-    case Trait::vigilant:
-        break;
+    case Trait::dem_expert:
+        // Too much character theme mismatch
+        return
+            (bg == Bg::occultist) ||
+            (bg == Bg::ghoul);
 
     case Trait::rapid_recoverer:
         // Cannot regen hp passively
@@ -119,53 +93,8 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         // Has RDISEASE already + a bit of theme mismatch
         return bg == Bg::ghoul;
 
-    case Trait::perseverant:
-        break;
-
-    case Trait::self_aware:
-        break;
-
-    case Trait::strong_spirit:
-        break;
-
-    case Trait::mighty_spirit:
-        break;
-
-    case Trait::magically_gifted:
-        break;
-
-    case Trait::stealthy:
-        break;
-
-    case Trait::silent:
-        break;
-
-    case Trait::imperceptible:
-        break;
-
-    case Trait::vicious:
-        break;
-
-    case Trait::treasure_hunter:
-        break;
-
-    case Trait::undead_bane:
-        break;
-
     case Trait::elec_incl:
         return bg == Bg::ghoul;
-        break;
-
-    case Trait::ravenous:
-        break;
-
-    case Trait::foul:
-        break;
-
-    case Trait::toxic:
-        break;
-
-    case Trait::indomitable_fury:
         break;
 
     case Trait::END:
@@ -251,17 +180,38 @@ std::string trait_title(const Trait id)
     case Trait::courageous:
         return "Courageous";
 
-    case Trait::warlock:
-        return "Warlock";
+    case Trait::lesser_invoc:
+        return "Lesser Invocation";
 
-    case Trait::summoner:
-        return "Summoner";
+    case Trait::greater_invoc:
+        return "Greater Invocation";
+
+    case Trait::lesser_summoning:
+        return "Lesser Summoning";
+
+    case Trait::greater_summoning:
+        return "Greater Summoning";
+
+    case Trait::lesser_clairv:
+        return "Lesser Clairvoyance";
+
+    case Trait::greater_clairv:
+        return "Greater Clairvoyance";
+
+    case Trait::lesser_ench:
+        return "Lesser Enchantment";
+
+    case Trait::greater_ench:
+        return "Greater Enchantment";
+
+    case Trait::lesser_alter:
+        return "Lesser Alteration";
+
+    case Trait::greater_alter:
+        return "Greater Alteration";
 
     case Trait::blood_sorc:
         return "Blood Sorcerer";
-
-    case Trait::seer:
-        return "Seer";
 
     case Trait::dexterous:
         return "Dexterous";
@@ -314,14 +264,14 @@ std::string trait_title(const Trait id)
     case Trait::self_aware:
         return "Self-aware";
 
+    case Trait::stout_spirit:
+        return "Stout Spirit";
+
     case Trait::strong_spirit:
         return "Strong Spirit";
 
     case Trait::mighty_spirit:
         return "Mighty Spirit";
-
-    case Trait::magically_gifted:
-        return "Magically Gifted";
 
     case Trait::stealthy:
         return "Stealthy";
@@ -537,28 +487,62 @@ std::string trait_descr(const Trait id)
         return
             "+20% shock resistance";
 
-    case Trait::warlock:
+    case Trait::lesser_invoc:
         return
-            "-1 Spirit cost for damage dealing spells (not counting any spells "
-            "which deals damage as a side effect of a high skill level), and "
-            "when cast, has a 20% chance of triggering the effect again "
-            "(recursively, so an infinite number of casts is theoretically "
-            "possible)";
+            "Attack spells are cast at expert level (Darkbolt, "
+            "Azathoth's Wrath, Mayhem)";
 
-    case Trait::summoner:
+    case Trait::greater_invoc:
         return
-            "-1 Spirit cost for summoning spells, halved risk that called "
-            "creatures are hostile";
+            "Attack spells are cast at master level (Darkbolt, "
+            "Azathoth's Wrath, Mayhem)";
+
+    case Trait::lesser_summoning:
+        return
+            "Summoning spells are cast at expert level (Summoning, Pestilence)";
+
+    case Trait::greater_summoning:
+        return
+            "Summoning spells are cast at master level (Summoning, Pestilence)";
+
+    case Trait::lesser_clairv:
+        return
+            "Spells related to detection and information are cast at expert "
+            "level (Searching, Insight, See Invisible)";
+
+    case Trait::greater_clairv:
+        return
+            "Spells related to detection and information are cast at master "
+            "level (Searching, Insight, See Invisible)";
+
+    case Trait::lesser_ench:
+        return
+            "Spells related to bestowing properties, aiding, or debilitating "
+            "are cast at expert level (Resistance, Light, Bless, Healing, "
+            "Enfeeble)";
+
+    case Trait::greater_ench:
+        return
+            "Spells related to bestowing properties, aiding, or debilitating "
+            "are cast at master level (Resistance, Light, Bless, Healing, "
+            "Enfeeble)";
+
+    case Trait::lesser_alter:
+        return
+            "Spells related to moving, shifting, or changing the nature of "
+            "things are cast at expert level (Teleport, Animate Weapons, "
+            "Opening, Transmutation)";
+
+    case Trait::greater_alter:
+        return
+            "Spells related to moving, shifting, or changing the nature of "
+            "things are cast at master level (Teleport, Animate Weapons, "
+            "Opening, Transmutation)";
 
     case Trait::blood_sorc:
         return
             "-1 Spirit cost for all spells, casting a spell drains 2 "
             "Hit Points";
-
-    case Trait::seer:
-        return
-            "The spell \"Searching\" has lower Spirit cost, and monsters are "
-            "detected with tripled duration";
 
     case Trait::tough:
         return
@@ -633,21 +617,23 @@ std::string trait_descr(const Trait id)
             "You cannot become confused, the number of remaining turns for "
             "status effects are displayed";
 
-    case Trait::strong_spirit:
+    case Trait::stout_spirit:
         return
             "+2 Spirit Points, increased Spirit regeneration rate, you can "
             "defy harmful spells (it takes a certain number of turns to regain "
             "spell resistance)";
+
+    case Trait::strong_spirit:
+        return
+            "+2 Spirit Points, increased Spirit regeneration rate, you can "
+            "defy harmful spells - the number of turns to regain spell "
+            "resistance is reduced";
 
     case Trait::mighty_spirit:
         return
             "+2 Spirit Points, increased Spirit regeneration rate, you can "
             "defy harmful spells - the number of turns to regain spell "
             "resistance is reduced";
-
-    case Trait::magically_gifted:
-        return
-            "+20% skill with all spells";
 
     case Trait::stealthy:
         return
@@ -716,10 +702,14 @@ std::string trait_descr(const Trait id)
 void trait_prereqs(const Trait trait,
                    const Bg bg,
                    std::vector<Trait>& traits_out,
-                   Bg& bg_out)
+                   Bg& bg_out,
+                   int& clvl_out)
 {
     traits_out.clear();
+
     bg_out = Bg::END;
+
+    clvl_out = -1;
 
     switch (trait)
     {
@@ -771,27 +761,64 @@ void trait_prereqs(const Trait trait,
         traits_out.push_back(Trait::cool_headed);
         break;
 
-    case Trait::warlock:
-        traits_out.push_back(Trait::magically_gifted);
-        traits_out.push_back(Trait::mighty_spirit);
+    case Trait::lesser_invoc:
         bg_out = Bg::occultist;
+        clvl_out = 3;
         break;
 
-    case Trait::summoner:
-        traits_out.push_back(Trait::magically_gifted);
-        traits_out.push_back(Trait::cool_headed);
+    case Trait::greater_invoc:
+        traits_out.push_back(Trait::lesser_invoc);
         bg_out = Bg::occultist;
+        clvl_out = 6;
+        break;
+
+    case Trait::lesser_summoning:
+        bg_out = Bg::occultist;
+        clvl_out = 3;
+        break;
+
+    case Trait::greater_summoning:
+        traits_out.push_back(Trait::lesser_summoning);
+        bg_out = Bg::occultist;
+        clvl_out = 6;
+        break;
+
+    case Trait::lesser_clairv:
+        bg_out = Bg::occultist;
+        clvl_out = 3;
+        break;
+
+    case Trait::greater_clairv:
+        traits_out.push_back(Trait::lesser_clairv);
+        bg_out = Bg::occultist;
+        clvl_out = 6;
+        break;
+
+    case Trait::lesser_ench:
+        bg_out = Bg::occultist;
+        clvl_out = 3;
+        break;
+
+    case Trait::greater_ench:
+        traits_out.push_back(Trait::lesser_ench);
+        bg_out = Bg::occultist;
+        clvl_out = 6;
+        break;
+
+    case Trait::lesser_alter:
+        bg_out = Bg::occultist;
+        clvl_out = 3;
+        break;
+
+    case Trait::greater_alter:
+        traits_out.push_back(Trait::lesser_alter);
+        bg_out = Bg::occultist;
+        clvl_out = 6;
         break;
 
     case Trait::blood_sorc:
-        traits_out.push_back(Trait::magically_gifted);
         traits_out.push_back(Trait::tough);
-        bg_out = Bg::occultist;
-        break;
-
-    case Trait::seer:
-        traits_out.push_back(Trait::magically_gifted);
-        traits_out.push_back(Trait::observant);
+        traits_out.push_back(Trait::cool_headed);
         bg_out = Bg::occultist;
         break;
 
@@ -850,19 +877,20 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::self_aware:
-        traits_out.push_back(Trait::strong_spirit);
+        traits_out.push_back(Trait::stout_spirit);
         traits_out.push_back(Trait::observant);
         break;
 
+    case Trait::stout_spirit:
+        break;
+
     case Trait::strong_spirit:
+        traits_out.push_back(Trait::stout_spirit);
         break;
 
     case Trait::mighty_spirit:
         traits_out.push_back(Trait::strong_spirit);
-        break;
-
-    case Trait::magically_gifted:
-        traits_out.push_back(Trait::strong_spirit);
+        bg_out = Bg::occultist;
         break;
 
     case Trait::stealthy:
@@ -890,7 +918,7 @@ void trait_prereqs(const Trait trait,
     case Trait::undead_bane:
         traits_out.push_back(Trait::tough);
         traits_out.push_back(Trait::fearless);
-        traits_out.push_back(Trait::strong_spirit);
+        traits_out.push_back(Trait::stout_spirit);
         break;
 
     case Trait::elec_incl:
@@ -1006,13 +1034,21 @@ void unpicked_traits_for_bg(const Bg bg,
 
         Bg bg_prereq = Bg::END;
 
+        int clvl_prereq = -1;
+
         //
         // NOTE: Traits blocked for the current background are not
         //       considered prerequisites
         //
-        trait_prereqs(trait, bg, trait_prereq_list, bg_prereq);
+        trait_prereqs(trait,
+                      bg,
+                      trait_prereq_list,
+                      bg_prereq,
+                      clvl_prereq);
 
-        bool is_bg_ok = (bg_ == bg_prereq) || (bg_prereq == Bg::END);
+        const bool is_bg_ok =
+            (bg_ == bg_prereq) ||
+            (bg_prereq == Bg::END);
 
         if (!is_bg_ok)
         {
@@ -1030,6 +1066,10 @@ void unpicked_traits_for_bg(const Bg bg,
                 break;
             }
         }
+
+        is_trait_prereqs_ok =
+            is_trait_prereqs_ok &&
+            (game::clvl() >= clvl_prereq);
 
         if (is_trait_prereqs_ok)
         {
@@ -1086,13 +1126,11 @@ void pick_bg(const Bg bg)
         player_spells::learn_spell(SpellId::frenzy,
                                    Verbosity::silent);
 
-        player_spells::set_spell_skill_pct(SpellId::frenzy, 100);
-
         map::player->change_max_hp(10, Verbosity::silent);
         break;
 
     case Bg::occultist:
-        pick_trait(Trait::strong_spirit);
+        pick_trait(Trait::stout_spirit);
         map::player->change_max_spi(2, Verbosity::silent);
         map::player->change_max_hp(-2, Verbosity::silent);
         break;
@@ -1130,6 +1168,53 @@ void pick_trait(const Trait id)
 
     switch (id)
     {
+    case Trait::lesser_invoc:
+    case Trait::greater_invoc:
+    {
+        player_spells::incr_spell_skill(SpellId::darkbolt);
+        player_spells::incr_spell_skill(SpellId::aza_wrath);
+        player_spells::incr_spell_skill(SpellId::mayhem);
+    }
+    break;
+
+    case Trait::lesser_summoning:
+    case Trait::greater_summoning:
+    {
+        player_spells::incr_spell_skill(SpellId::summon);
+        player_spells::incr_spell_skill(SpellId::pest);
+    }
+    break;
+
+    case Trait::lesser_clairv:
+    case Trait::greater_clairv:
+    {
+        player_spells::incr_spell_skill(SpellId::searching);
+        player_spells::incr_spell_skill(SpellId::insight);
+        player_spells::incr_spell_skill(SpellId::see_invis);
+    }
+    break;
+
+    case Trait::lesser_ench:
+    case Trait::greater_ench:
+    {
+        player_spells::incr_spell_skill(SpellId::heal);
+        player_spells::incr_spell_skill(SpellId::res);
+        player_spells::incr_spell_skill(SpellId::light);
+        player_spells::incr_spell_skill(SpellId::bless);
+        player_spells::incr_spell_skill(SpellId::enfeeble);
+    }
+    break;
+
+    case Trait::lesser_alter:
+    case Trait::greater_alter:
+    {
+        player_spells::incr_spell_skill(SpellId::teleport);
+        player_spells::incr_spell_skill(SpellId::opening);
+        player_spells::incr_spell_skill(SpellId::anim_wpns);
+        player_spells::incr_spell_skill(SpellId::transmut);
+    }
+    break;
+
     case Trait::tough:
     {
         const int hp_incr = 4;
@@ -1156,7 +1241,7 @@ void pick_trait(const Trait id)
     }
     break;
 
-    case Trait::strong_spirit:
+    case Trait::stout_spirit:
     {
         const int spi_incr = 2;
 
@@ -1175,6 +1260,7 @@ void pick_trait(const Trait id)
     }
     break;
 
+    case Trait::strong_spirit:
     case Trait::mighty_spirit:
     {
         const int spi_incr = 2;
