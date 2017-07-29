@@ -1717,14 +1717,16 @@ void init_data_list()
         "straps.",
 
         "It can absorb a high amount of damage, but it makes sneaking and "
-        "dodging very difficult."
+        "dodging more difficult.",
+
+        "-20% stealth, -20% dodging."
     };
-    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -50;
-    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -50;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -20;
     d.weight = ItemWeight::heavy;
     d.clr = clr_white;
     d.spawn_std_range.min = 2;
-    d.armor.armor_points = 6;
+    d.armor.armor_points = 5;
     d.armor.dmg_to_durability_factor = 0.3;
     d.land_on_hard_snd_msg = "I hear a crashing sound.";
     d.native_containers.push_back(FeatureId::cabinet);
@@ -1737,10 +1739,12 @@ void init_data_list()
     {
         "An armour consisting of steel plates sewn into a waistcoat. It "
         "offers very good protection for its weight. Sneaking and dodging is "
-        "slightly more difficult."
+        "slightly more difficult.",
+
+        "-10% stealth, -10% dodging."
     };
-    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -20;
-    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -10;
     d.weight = ItemWeight::medium;
     d.clr = clr_green;
     d.spawn_std_range.min = 3;
@@ -1759,10 +1763,12 @@ void init_data_list()
         "mask, gloves and shoes. It protects the wearer against fire, acid "
         "and electricity, and also against smoke, fumes and gas.",
 
-        "It is a bit bulky, so sneaking and dodging is slightly more difficult."
+        "It is a bit bulky, so sneaking and dodging is slightly more difficult.",
+
+        "-10% stealth, -10% dodging."
     };
-    d.ability_mods_while_equipped[(size_t)AbilityId::stealth]   = -20;
-    d.ability_mods_while_equipped[(size_t)AbilityId::dodging]   = -20;
+    d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -10;
+    d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -10;
     d.weight = ItemWeight::medium;
     d.clr = clr_red_lgt;
     d.spawn_std_range.min = 3;
@@ -1800,7 +1806,9 @@ void init_data_list()
         "the filter.",
 
         "Due to the small eye windows, aiming is slightly more difficult, and "
-        "it is harder to detect sneaking enemies and hidden objects."
+        "it is harder to detect sneaking enemies and hidden objects.",
+
+        "-10% melee and ranged hit chance, -6% searching."
     };
     d.ability_mods_while_equipped[(size_t)AbilityId::melee]     = -10;
     d.ability_mods_while_equipped[(size_t)AbilityId::ranged]    = -10;
