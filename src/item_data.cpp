@@ -2398,7 +2398,7 @@ void init_data_list()
     d.spawn_std_range.max = dlvl_last;
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::zombie_dust;
-    d.glyph = '%';
+    d.glyph = '*';
     d.clr = clr_brown;
     d.ranged.throw_dmg = Dice(0, 0);
     d.ranged.throw_hit_chance_mod = 15;

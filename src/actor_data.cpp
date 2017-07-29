@@ -2132,7 +2132,7 @@ void init_data_list()
     d.ranged_cooldown_turns = 4;
     d.spell_skill = SpellSkill::basic;
     d.glyph = 'E';
-    d.color = clr_red;
+    d.color = clr_green;
     d.tile = TileId::mi_go;
     d.hp = 24;
     d.spi = 20;
@@ -2237,7 +2237,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'E';
-    d.color = clr_red;
+    d.color = clr_cyan_lgt;
     d.tile = TileId::polyp;
     d.hp = 70;
     d.spi = 30;

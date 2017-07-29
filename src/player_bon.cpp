@@ -408,6 +408,8 @@ std::vector<StrAndClr> bg_descr(const Bg id)
     case Bg::war_vet:
         put("Switches to prepared weapon instantly");
         put("");
+        put("Starts with a Flak Jacket");
+        put("");
         put("Maintains armor twice as long before it breaks");
         put("");
         put_trait(Trait::adept_marksman);

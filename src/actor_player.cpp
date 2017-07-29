@@ -68,7 +68,6 @@ void Player::mk_start_items()
     bool has_pistol = true;
     bool has_medbag = true;
     bool has_lantern = true;
-    bool has_leather_jacket = true;
 
     int nr_cartridges = 2;
     int nr_dynamite = 2;
@@ -90,6 +89,10 @@ void Player::mk_start_items()
         nr_dynamite = 0;
         nr_molotov = 0;
         nr_throwing_knives = 0;
+
+        inv_->put_in_slot(SlotId::body,
+                          item_factory::mk(ItemId::armor_leather_jacket),
+                          Verbosity::silent);
 
         // Occultist starts with some spells and a potion
 
@@ -152,6 +155,10 @@ void Player::mk_start_items()
         static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
         item->give_xp_for_identify(Verbosity::silent);
         inv_->put_in_backpack(item);
+
+        inv_->put_in_slot(SlotId::body,
+                          item_factory::mk(ItemId::armor_leather_jacket),
+                          Verbosity::silent);
     }
     break;
 
@@ -160,9 +167,14 @@ void Player::mk_start_items()
         // War Veteran starts with an extra cartridge, some smoke grenades,
         // flares, and a gas mask
         ++nr_cartridges;
+
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
         inv_->put_in_backpack(item_factory::mk(ItemId::flare, 2));
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
+
+        inv_->put_in_slot(SlotId::body,
+                          item_factory::mk(ItemId::armor_flack_jacket),
+                          Verbosity::silent);
     }
     break;
 
@@ -172,7 +184,6 @@ void Player::mk_start_items()
         has_pistol = false;
         has_medbag = false;
         has_lantern = false;
-        has_leather_jacket = false;
 
         nr_cartridges = 0;
         nr_dynamite = 0;
@@ -279,13 +290,6 @@ void Player::mk_start_items()
     {
         inv_->put_in_backpack(
             item_factory::mk(ItemId::lantern));
-    }
-
-    if (has_leather_jacket)
-    {
-        inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_leather_jacket),
-                          Verbosity::silent);
     }
 }
 

@@ -28,6 +28,7 @@ Gameplay
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
 * Each melee trait gives +10% chance to evade melee attacks
+* The War Veteran starts with a Flak Jacket instead of a Leather Jacket
 * The base chances for bashing doors open and pushing lids are higher
 * Throwing knives do 2d3 damage (avg 4.0) instead of 1d6 (avg 3.5), and have +10% hit chance
 * Rocks no longer have a hit chance bonus, and do less damage
@@ -41,6 +42,7 @@ Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
 * Brighter interface color scheme (some menus could be difficult to read before)
 * The descriptions for armors and gas masks includes their exact ability penalty values
+* Multiple monsters had a red "E" as symbol when playing in text mode, they now use different colors from each other
 
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead
