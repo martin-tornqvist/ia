@@ -4,7 +4,9 @@ v19.1 *** WORK IN PROGRESS ***
 Gameplay
 * Spells have basic/expert/master tiers instead of a skill percentage - higher tiers can be achieved by picking traits for various spell domains (e.g. "Lesser Invocation" to cast all attack spells at expert level)
 * Reworked the spell skill bonuses for all spells
+* Generally lowered the Spirit and Shock costs for many spells
 * Spellcasting is now generally more powerful than before, and scales to be more useful by mid/late game
+* Being Blessed/Cursed no longer affects Spirit costs for spells
 * The spell "Healing" is now also available for the player
 * The potions "See Invisible" and "Insight" are now spells instead
 * Added spell "Transmutation" (convert items)

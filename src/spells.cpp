@@ -254,15 +254,6 @@ Range Spell::spi_cost(Actor* const caster) const
             --cost_max;
         }
 
-        if (caster->has_prop(PropId::blessed))
-        {
-            --cost_max;
-        }
-
-        if (caster->has_prop(PropId::cursed))
-        {
-            cost_max += 3;
-        }
     } // Is player, and use modified cost
 
     cost_max = std::max(1, cost_max);
