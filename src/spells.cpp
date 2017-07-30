@@ -461,8 +461,6 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     //     }
     // }
 
-    Actor* target = nullptr;
-
     std::vector<Actor*> target_bucket;
 
     // When master, any creature that the caster is aware of can be targeted
@@ -518,22 +516,30 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
     int flood[map_w][map_h];
 
-    //
-    // TODO: There should probably be a range limit
-    //
+    const int travel_lmt = 12;
 
     floodfill(caster->pos,
               blocked,
-              flood);
+              flood,
+              travel_lmt);
 
-    std::remove_if(begin(target_bucket),
-                   end(target_bucket),
-                   [flood](Actor* const actor)
-                   {
-                       const P& p = actor->pos;
+    // Remove all actors to which there is no path
+    for (auto it = begin(target_bucket); it != end(target_bucket); )
+    {
+        auto* const actor = *it;
 
-                       return flood[p.x][p.y] <= 0;
-                   });
+        const P& p = actor->pos;
+
+        // A path exists to this actor?
+        if (flood[p.x][p.y] > 0)
+        {
+            ++it;
+        }
+        else // No path
+        {
+            it = target_bucket.erase(it);
+        }
+    }
 
     if (target_bucket.empty())
     {
@@ -546,7 +552,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         return;
     }
 
-    target = map::random_closest_actor(caster->pos, target_bucket);
+    Actor* const target = map::random_closest_actor(caster->pos, target_bucket);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -720,7 +726,8 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
 
         descr.push_back("The caster does not have to see the target, the bolt "
                         "will travel to any creature that the caster knows the "
-                        "position of - if the target is reachable.");
+                        "position of - if the target is reachable. The bolt "
+                        "can travel up to 12 steps.");
     }
     else // Not master
     {
