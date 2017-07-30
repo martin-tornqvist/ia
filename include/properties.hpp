@@ -127,7 +127,6 @@ struct PropDataT
         descr                           (""),
         is_making_mon_aware             (false),
         allow_display_turns             (true),
-        allow_apply_more_while_active   (true),
         update_vision_when_start_or_end (false),
         allow_test_on_bot               (false),
         alignment                       (PropAlignment::bad)
@@ -146,7 +145,6 @@ struct PropDataT
     std::string msg[(size_t)PropMsg::END];
     bool is_making_mon_aware;
     bool allow_display_turns;
-    bool allow_apply_more_while_active;
     bool update_vision_when_start_or_end;
     bool allow_test_on_bot;
     PropAlignment alignment;
@@ -352,11 +350,6 @@ public:
     virtual void msg(const PropMsg msg_type, std::string& msg_ref) const
     {
         msg_ref = data_.msg[size_t(msg_type)];
-    }
-
-    virtual bool allow_apply_more_while_active() const
-    {
-        return data_.allow_apply_more_while_active;
     }
 
     //

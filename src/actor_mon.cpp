@@ -1626,14 +1626,7 @@ void Rat::mk_start_items()
 {
     Item* item = nullptr;
 
-    if (rnd::percent(15))
-    {
-        item = item_factory::mk(ItemId::rat_bite_diseased);
-    }
-    else
-    {
-        item = item_factory::mk(ItemId::rat_bite);
-    }
+    item = item_factory::mk(ItemId::rat_bite);
 
     inv_->put_in_intrinsics(item);
 }
@@ -2495,14 +2488,7 @@ void ZombieClaw::mk_start_items()
 {
     Item* item = nullptr;
 
-    if (rnd::percent(20))
-    {
-        item = item_factory::mk(ItemId::zombie_claw_diseased);
-    }
-    else // Not diseased
-    {
-        item = item_factory::mk(ItemId::zombie_claw);
-    }
+    item = item_factory::mk(ItemId::zombie_claw);
 
     inv_->put_in_intrinsics(item);
 }

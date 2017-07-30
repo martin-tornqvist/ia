@@ -53,7 +53,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to physical harm.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -70,7 +69,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fire.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -87,7 +85,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to poison.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -104,7 +101,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to electricity.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -121,7 +117,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to acid.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -138,7 +133,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to sleep.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -155,7 +149,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fear.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -172,7 +165,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -189,7 +181,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to confusion.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -206,7 +197,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to disease.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -222,7 +212,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
@@ -237,7 +226,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::start_mon] = "can breath without harm.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -252,7 +240,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to magic spells.";
     d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to magic spells.";
     d.is_making_mon_aware = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false; // NOTE: This prop is tested anyway
     d.alignment = PropAlignment::good;
@@ -272,7 +259,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -290,7 +276,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -308,7 +293,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -326,7 +310,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists fainting.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -344,7 +327,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists burning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -363,7 +345,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists poisoning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -382,7 +363,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists paralyzation.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = false;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -403,7 +383,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists fear.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -424,7 +403,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists confusion.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -443,7 +421,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists stunning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -464,7 +441,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists slowness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -483,7 +459,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "slows down.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -497,7 +472,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::start_player] =
         "Everything around me suddenly seems very still.";
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -514,7 +488,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::start_mon] = "is perforated by a flare!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -528,7 +501,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "tears free!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -545,7 +517,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::bad;
@@ -564,7 +535,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -583,7 +553,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists disease.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -599,7 +568,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_player] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = false;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
@@ -620,7 +588,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "resists weakness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -642,7 +609,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::neutral;
@@ -658,7 +624,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_player] = "I have normal luck.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -676,7 +641,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_player] = "I resist misfortune.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -691,7 +655,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_player] = "It suddenly gets darker.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::neutral;
@@ -708,7 +671,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "is visible.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -726,7 +688,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "seems less keen.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -743,7 +704,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -757,7 +717,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::start_player] = "I feel in control.";
     d.msg[(size_t)PropMsg::end_player] = "I feel less in control.";
     d.allow_display_turns = true;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
@@ -771,7 +730,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::start_player] = "";
     d.msg[(size_t)PropMsg::end_player] = "";
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
@@ -783,7 +741,6 @@ void init_data_list()
     d.name_short = "Aiming";
     d.descr = "Increased range attack effectiveness";
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -795,7 +752,6 @@ void init_data_list()
     d.descr = "";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -809,7 +765,6 @@ void init_data_list()
     d.msg[(size_t)PropMsg::end_mon] = "Looks more determined.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -817,7 +772,6 @@ void init_data_list()
     d.id = PropId::poss_by_zuul;
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = false;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::neutral;
@@ -829,7 +783,6 @@ void init_data_list()
     d.descr = "Can fly over low obstacles";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
@@ -842,7 +795,6 @@ void init_data_list()
         "Can pass through solid objects, and is harder to hit with all attacks";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
@@ -856,7 +808,6 @@ void init_data_list()
         "or beneath doors";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
@@ -868,7 +819,6 @@ void init_data_list()
     d.descr = "Can move through and destroy walls";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
@@ -878,7 +828,6 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -887,7 +836,6 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -896,7 +844,6 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -905,7 +852,6 @@ void init_data_list()
     d.std_rnd_turns = Range(1, 1);
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.allow_apply_more_while_active = true;
     d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -1301,12 +1247,6 @@ void PropHandler::apply(Prop* const prop,
             if ((old_prop->src_ == PropSrc::intr) &&
                 (prop->id() == old_prop->id()))
             {
-                if (!prop->allow_apply_more_while_active())
-                {
-                    delete prop;
-                    return;
-                }
-
                 const int turns_left_old = old_prop->nr_turns_left_;
                 const int turns_left_new = prop->nr_turns_left_;
 
@@ -1347,7 +1287,8 @@ void PropHandler::apply(Prop* const prop,
                 old_prop->on_more();
 
                 const bool is_turns_nr_indefinite =
-                    (turns_left_old < 0) || (turns_left_new < 0);
+                    (turns_left_old < 0) ||
+                    (turns_left_new < 0);
 
                 old_prop->nr_turns_left_ =
                     is_turns_nr_indefinite ?
@@ -1471,12 +1412,13 @@ void PropHandler::apply_from_att(const Wpn& wpn,
 {
     const auto& d = wpn.data();
 
-    const auto* const origin_prop
-        = is_melee ?
+    const auto& att_prop =
+        is_melee ?
         d.melee.prop_applied :
         d.ranged.prop_applied;
 
-    if (origin_prop)
+    if (att_prop.prop &&
+        rnd::percent(att_prop.pct_chance))
     {
         // If weapon damage is resisted by the defender, the property is
         // automatically resisted
@@ -1492,16 +1434,16 @@ void PropHandler::apply_from_att(const Wpn& wpn,
 
         if (!is_dmg_resisted)
         {
-            const auto turns_init_type = origin_prop->turns_init_type();
+            const auto turns_init_type = att_prop.prop->turns_init_type();
 
             const int nr_turns =
                 (turns_init_type == PropTurns::specific) ?
-                origin_prop->nr_turns_left_ :
+                att_prop.prop->nr_turns_left_ :
                 -1;
 
             // Make a copy of the weapon effect
-            auto* const prop_cpy = mk_prop(origin_prop->id(),
-                                           origin_prop->turns_init_type_,
+            auto* const prop_cpy = mk_prop(att_prop.prop->id(),
+                                           att_prop.prop->turns_init_type_,
                                            nr_turns);
 
             apply(prop_cpy);

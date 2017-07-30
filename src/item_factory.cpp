@@ -45,7 +45,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::player_punch:
     case ItemId::zombie_axe:
     case ItemId::zombie_claw:
-    case ItemId::zombie_claw_diseased:
     case ItemId::bloated_zombie_punch:
     case ItemId::bloated_zombie_spit:
     case ItemId::crawling_intestines_strangle:
@@ -53,7 +52,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::thing_strangle:
     case ItemId::floating_skull_bite:
     case ItemId::rat_bite:
-    case ItemId::rat_bite_diseased:
     case ItemId::rat_thing_bite:
     case ItemId::brown_jenkin_bite:
     case ItemId::worm_mass_bite:

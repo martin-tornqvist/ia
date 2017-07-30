@@ -73,7 +73,6 @@ enum class ItemId
     player_ghoul_claw,
 
     rat_bite,
-    rat_bite_diseased,
     rat_thing_bite,
     brown_jenkin_bite,
     worm_mass_bite,
@@ -97,7 +96,7 @@ enum class ItemId
     fire_hound_breath, fire_hound_bite, zuul_bite,
     raven_peck,
     giant_bat_bite, vampire_bat_bite, abaxu_bite,
-    zombie_axe, zombie_claw, zombie_claw_diseased,
+    zombie_axe, zombie_claw,
     bloated_zombie_punch, bloated_zombie_spit,
     crawling_intestines_strangle,
     crawling_hand_strangle, thing_strangle,
@@ -214,6 +213,21 @@ struct ItemContainerSpawnRule
     int pct_chance_to_incl;
 };
 
+struct ItemAttProp
+{
+    ItemAttProp() :
+        prop        (nullptr),
+        pct_chance  (100) {}
+
+    ItemAttProp(Prop* const prop, int pct_chance = 100) :
+        prop        (prop),
+        pct_chance  (pct_chance) {}
+
+    Prop* prop;
+
+    int pct_chance;
+};
+
 class ItemDataT
 {
 public:
@@ -273,7 +287,7 @@ public:
         int                     hit_chance_mod;
         bool                    is_noisy;
         ItemAttMsgs             att_msgs;
-        Prop*                   prop_applied;
+        ItemAttProp             prop_applied;
         DmgType                 dmg_type;
         DmgMethod               dmg_method;
         bool                    knocks_back;
@@ -325,7 +339,7 @@ public:
         bool                    makes_ricochet_snd;
         SfxId                   att_sfx;
         SfxId                   reload_sfx;
-        Prop*                   prop_applied;
+        ItemAttProp             prop_applied;
     } ranged;
 
     struct ItemArmorData

@@ -915,7 +915,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -957,7 +957,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -999,7 +999,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.spawn_min_dlvl = dlvl_first_mid_game;
+    d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
@@ -1264,7 +1264,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 6;
+    d.ranged_cooldown_turns = 4;
     d.glyph = 'd';
     d.color = clr_red;
     d.tile = TileId::hound;

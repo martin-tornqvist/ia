@@ -491,9 +491,12 @@ void PotionDescent::quaff_impl(Actor& actor)
 
     if (map::dlvl < dlvl_last - 1)
     {
-        map::player->prop_handler().apply(new PropDescend(PropTurns::std));
+        if (!map::player->has_prop(PropId::descend))
+        {
+            map::player->prop_handler().apply(new PropDescend(PropTurns::std));
+        }
     }
-    else
+    else // Dungeon level is near the end
     {
         msg_log::add("I feel a faint sinking sensation, "
                      "but it soon disappears...");
