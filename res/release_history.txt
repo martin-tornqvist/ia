@@ -16,8 +16,9 @@ Gameplay
 * Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
 * The "snake emerge" and "wall crumbling" events are much rarer
 * Duration of Blindness from Raven attacks reduced from 3 turns to 2
+* "Snake pit" rooms now contains much fewer monsters (instead of filling the whole room)
+* Oozes have much shorter awareness duration, somewhat fewer hit points, and tend to spawn in smaller groups
 * Keziah Mason starts together with Brown Jenkin, instead of spending a turn to summon it when she sees the player
-* Some general monster stats updates (midgame monsters are slightly boosted)
 * Ghoul characters have +20% speed and +1 natural Armor Point
 * Adjusted Potion of Posion duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damage is slower, but poisoning generally lasts longer
@@ -33,7 +34,6 @@ Gameplay
 * Throwing knives do 2d3 damage (avg 4.0) instead of 1d6 (avg 3.5), and have +10% hit chance
 * Rocks no longer have a hit chance bonus, and do less damage
 * Increased backstab bonus for Daggers and for the Vicious trait
-* Slightly more monsters spawned
 * The Mi-go Electric Gun runs on Hit Points instead of Spirit, and does less damage
 * The "auto move" command ("e") now also stops before hanging vines
 * Greatly reduced the ability penalties for wearing Iron Suit, and slightly reduced the penalties for the other armors

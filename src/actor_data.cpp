@@ -2783,9 +2783,8 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_early_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    2),
-        MonGroupSpawnRule(MonGroupSize::pack,   8),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::few,    8),
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
@@ -2827,9 +2826,8 @@ void init_data_list()
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    2),
-        MonGroupSpawnRule(MonGroupSize::pack,   8),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::few,    8),
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.prevent_knockback = true;
@@ -2959,7 +2957,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_gray;
     d.tile = TileId::ooze;
-    d.hp = 20;
+    d.hp = 16;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2971,14 +2969,14 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
     });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 32;
+    d.nr_turns_aware = 8;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3028,14 +3026,14 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1)
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
     });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 32;
+    d.nr_turns_aware = 8;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3072,7 +3070,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = TileId::ooze;
-    d.hp = 20;
+    d.hp = 16;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -3084,14 +3082,14 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 5;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
     });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 32;
+    d.nr_turns_aware = 8;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3142,14 +3140,14 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 9;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    1),
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
     });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 32;
+    d.nr_turns_aware = 8;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3204,7 +3202,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 14;
     d.actor_size = ActorSize::humanoid;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 8;
     d.can_open_doors = false;
     d.can_bash_doors = false;
     d.descr =

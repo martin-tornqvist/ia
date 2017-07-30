@@ -12,6 +12,7 @@
 #include "gods.hpp"
 #include "actor_factory.hpp"
 #include "game_time.hpp"
+#include "populate_monsters.hpp"
 
 #ifdef DEMO_MODE
 #include "io.hpp"
@@ -133,7 +134,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
-        add_to_room_bucket(RoomType::snake_pit, 2);
+        add_to_room_bucket(RoomType::snake_pit, 1);
         add_to_room_bucket(RoomType::crypt, 4);
         add_to_room_bucket(RoomType::monster, 2);
         add_to_room_bucket(RoomType::flooded, rnd::range(1, 3));
@@ -150,7 +151,7 @@ void init_room_bucket()
     {
         add_to_room_bucket(RoomType::monster, 1);
         add_to_room_bucket(RoomType::spider, 1);
-        add_to_room_bucket(RoomType::snake_pit, 2);
+        add_to_room_bucket(RoomType::snake_pit, 1);
         add_to_room_bucket(RoomType::flooded, 1);
         add_to_room_bucket(RoomType::muddy, 2);
         add_to_room_bucket(RoomType::chasm, 2);
@@ -812,8 +813,8 @@ std::vector<RoomAutoFeatureRule> SnakePitRoom::auto_features_allowed() const
 bool SnakePitRoom::is_allowed() const
 {
     return
-        r_.min_dim() >= 3 &&
-        r_.max_dim() <= 4;
+        r_.min_dim() >= 2 &&
+        r_.max_dim() <= 6;
 }
 
 void SnakePitRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
@@ -840,61 +841,119 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    std::vector<ActorId> snake_bucket;
+    //
+    // Put rubble everywhere, to make the room more "pit like"
+    //
+    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+    {
+        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+        {
+            if (map::room_map[x][y] != this)
+            {
+                continue;
+            }
+
+            const P p(x, y);
+
+            if (map::cells[x][y].rigid->can_have_rigid())
+            {
+                map::put(new RubbleLow(p));
+            }
+        }
+    }
+
+    //
+    // Put some monsters in the room
+    //
+    std::vector<ActorId> actor_id_bucket;
 
     for (size_t i = 0; i < size_t(ActorId::END); ++i)
     {
         const ActorDataT& d = actor_data::data[i];
 
+        //
         // NOTE: We do not allow Spitting Cobras in snake pits, because it's
         //       VERY tedious to fight swarms of them (attack, get blinded,
         //       back away, repeat...)
+        //
         if (d.is_snake && d.id != ActorId::spitting_cobra)
         {
-            snake_bucket.push_back(d.id);
+            actor_id_bucket.push_back(d.id);
         }
     }
 
     // Hijacking snake pit rooms to make a worm room...
     if (map::dlvl <= dlvl_last_mid_game)
     {
-        snake_bucket.push_back(ActorId::worm_mass);
+        actor_id_bucket.push_back(ActorId::worm_mass);
     }
 
-    snake_bucket.push_back(ActorId::mind_worms);
+    actor_id_bucket.push_back(ActorId::mind_worms);
 
-    const size_t idx =
-        rnd::range(0, snake_bucket.size() - 1);
-
-    const ActorId actor_id =
-        ActorId(snake_bucket[idx]);
+    const auto actor_id = rnd::element(actor_id_bucket);
 
     bool blocked[map_w][map_h];
 
     map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked,
-             MapParseMode::overwrite,
-             r_);
+             MapParseMode::overwrite);
 
-    // Fill the room with snakes
-    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+    const int min_dist_to_player = fov_std_radi_int + 1;
+
+    const P& player_pos = map::player->pos;
+
+    const int x0 = std::max(0, player_pos.x - min_dist_to_player);
+    const int y0 = std::max(0, player_pos.y - min_dist_to_player);
+    const int x1 = std::min(map_w - 1, player_pos.x + min_dist_to_player);
+    const int y1 = std::min(map_h - 1, player_pos.y + min_dist_to_player);
+
+    for (int x = x0; x <= x1; ++x)
     {
-        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+        for (int y = y0; y <= y1; ++y)
         {
-            if (!blocked[x][y] && map::room_map[x][y] == this)
+            blocked[x][y] = true;
+        }
+    }
+
+    const int nr_groups = rnd::range(1, 2);
+
+    for (int group_idx = 0; group_idx < nr_groups; ++group_idx)
+    {
+        // Find an origin
+        std::vector<P> origin_bucket;
+
+        for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+        {
+            for (int y = r_.p0.y; y <= r_.p1.y; ++y)
             {
-                const P p(x, y);
-
-                actor_factory::mk(actor_id, p);
-
-                // Put rubble on every "snake position", to make the room more
-                // pit like
-                if (map::cells[x][y].rigid->can_have_rigid())
+                if (!blocked[x][y] &&
+                    (map::room_map[x][y] == this))
                 {
-                    map::put(new RubbleLow(p));
+                    origin_bucket.push_back(P(x, y));
                 }
             }
         }
+
+        if (origin_bucket.empty())
+        {
+            return;
+        }
+
+        const P origin(rnd::element(origin_bucket));
+
+        const auto sorted_free_cells =
+            populate_mon::mk_sorted_free_cells(origin, blocked);
+
+        if (sorted_free_cells.empty())
+        {
+            return;
+        }
+
+        populate_mon::mk_group_at(
+            actor_id,
+            sorted_free_cells,
+            blocked,    // New blocked cells (output)
+            true);      // Roaming allowed
     }
 }
 
