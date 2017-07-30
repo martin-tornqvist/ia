@@ -876,7 +876,8 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         //       VERY tedious to fight swarms of them (attack, get blinded,
         //       back away, repeat...)
         //
-        if (d.is_snake && d.id != ActorId::spitting_cobra)
+        if (d.is_snake &&
+            (d.id != ActorId::spitting_cobra))
         {
             actor_id_bucket.push_back(d.id);
         }
@@ -888,7 +889,10 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         actor_id_bucket.push_back(ActorId::worm_mass);
     }
 
-    actor_id_bucket.push_back(ActorId::mind_worms);
+    if (map::dlvl >= 3)
+    {
+        actor_id_bucket.push_back(ActorId::mind_worms);
+    }
 
     const auto actor_id = rnd::element(actor_id_bucket);
 

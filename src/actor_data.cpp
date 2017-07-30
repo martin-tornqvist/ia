@@ -1125,7 +1125,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'S';
     d.color = clr_green_lgt;
     d.tile = TileId::snake;
@@ -1170,7 +1170,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::fast;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'S';
     d.color = clr_red;
     d.tile = TileId::snake;
@@ -1218,7 +1218,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'S';
     d.color = clr_gray;
     d.tile = TileId::snake;
