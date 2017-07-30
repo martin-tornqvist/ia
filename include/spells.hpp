@@ -130,26 +130,7 @@ public:
 
     Range spi_cost(Actor* const caster = nullptr) const;
 
-    int shock_value() const
-    {
-        const SpellShock type = shock_type();
-
-        switch (type)
-        {
-        case SpellShock::mild:
-            return 2;
-
-        case SpellShock::disturbing:
-            return 8;
-
-        case SpellShock::severe:
-            return 16;
-        }
-
-        ASSERT(false);
-
-        return -1;
-    }
+    int shock_value() const;
 
     virtual SpellShock shock_type() const = 0;
 

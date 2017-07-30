@@ -6,7 +6,7 @@ Gameplay
 * Reworked the spell skill bonuses for all spells
 * Generally lowered the Spirit and Shock costs for many spells
 * Spellcasting is now generally more powerful than before, and scales to be more useful by mid/late game
-* Being Blessed/Cursed no longer affects Spirit costs for spells
+* Being Blessed/Cursed affects the shock cost of casting spells, instead of the spirit cost
 * The spell "Healing" is now also available for the player
 * The potions "See Invisible" and "Insight" are now spells instead
 * Added spell "Transmutation" (convert items)

@@ -287,7 +287,7 @@ void Spell::cast(Actor* const caster,
 
         const int value = shock_value();
 
-        map::player->incr_shock(value, shock_src);
+        map::player->incr_shock((double)value, shock_src);
 
         Snd snd("",
                 SfxId::spell_generic,
@@ -407,6 +407,40 @@ std::vector<std::string> Spell::descr(const SpellSkill skill) const
     }
 
     return ret;
+}
+
+int Spell::shock_value() const
+{
+    const SpellShock type = shock_type();
+
+    int value = 0;
+
+    switch (type)
+    {
+    case SpellShock::mild:
+        value = 2;
+        break;
+
+    case SpellShock::disturbing:
+        value = 8;
+        break;
+
+    case SpellShock::severe:
+        value = 16;
+        break;
+    }
+
+    // Blessed/cursed affects shock
+    if (map::player->has_prop(PropId::blessed))
+    {
+        --value;
+    }
+    else if (map::player->has_prop(PropId::cursed))
+    {
+        ++value;
+    }
+
+    return value;
 }
 
 // -----------------------------------------------------------------------------
