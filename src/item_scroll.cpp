@@ -112,14 +112,11 @@ ConsumeItem Scroll::activate(Actor* const actor)
     identify(Verbosity::verbose);
 
     // Learn spell
-    if (spell->player_can_learn())
+    if (spell->player_can_learn() &&
+        (is_identified_before ||
+         (player_bon::bg() == Bg::occultist)))
     {
-        const bool is_learned_before = player_spells::is_spell_learned(id);
-
-        if (!is_learned_before)
-        {
-            player_spells::learn_spell(id, Verbosity::verbose);
-        }
+        player_spells::learn_spell(id, Verbosity::verbose);
     }
 
     delete spell;

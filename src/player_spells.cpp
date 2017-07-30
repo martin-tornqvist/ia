@@ -209,27 +209,21 @@ bool is_spell_learned(const SpellId id)
 
 void learn_spell(const SpellId id, const Verbosity verbosity)
 {
+    if (is_spell_learned(id))
+    {
+        // Spell already known
+        return;
+    }
+
     Spell* const spell = spell_handling::mk_spell_from_id(id);
 
     const bool player_can_learn = spell->player_can_learn();
 
     ASSERT(player_can_learn);
 
-    //Robustness for release mode
+    // Robustness for release mode
     if (!player_can_learn)
     {
-        return;
-    }
-
-    const bool is_learned_before = is_spell_learned(id);
-
-    ASSERT(!is_learned_before);
-
-    // Robustness for release mode
-    if (is_learned_before)
-    {
-        delete spell;
-
         return;
     }
 

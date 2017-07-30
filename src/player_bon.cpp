@@ -378,6 +378,10 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("Has access to traits which allows casting more powerful versions "
             "of spells");
         put("");
+        put("Learns spells by heart immediately when casting from unidentified "
+            "manuscripts (other backgrounds only learns spells when casting "
+            "from known manuscripts)");
+        put("");
         put("Starts with a few known spells");
         put("");
         put("-50% shock taken from carrying, using and identifying strange "
