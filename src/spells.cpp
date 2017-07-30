@@ -2733,37 +2733,27 @@ void SpellInsight::run_effect(Actor* const caster,
 
     if (skill != SpellSkill::master)
     {
-        const int player_hp = map::player->hp();
+        auto& prop_handler = map::player->prop_handler();
 
-        if (player_hp > 1)
+        prop_handler.apply(new PropFainted(PropTurns::std));
+
+        if (!prop_handler.has_prop(PropId::fainted))
         {
-            msg_log::add("My life is drained!", clr_msg_bad);
+            msg_log::add("I fail to fall asleep.");
 
-            map::player->hit(player_hp - 1, DmgType::pure);
+            return;
         }
 
-        const int player_spi = map::player->spi();
+        const int chance_to_id =
+            (skill == SpellSkill::basic) ?
+            60 :
+            80;
 
-        if (player_spi > 1)
+        if (!rnd::percent(chance_to_id))
         {
-            //
-            // NOTE: No need to print a message here, "hit_spi" already does
-            //
-            map::player->hit_spi(player_spi - 1);
-        }
+            msg_log::add("It is a dreamless sleep.");
 
-        if (skill != SpellSkill::expert)
-        {
-            auto& prop_handler = map::player->prop_handler();
-
-            prop_handler.apply(new PropFainted(PropTurns::std));
-
-            if (!prop_handler.has_prop(PropId::fainted))
-            {
-                msg_log::add("I fail to fall asleep.");
-
-                return;
-            }
+            return;
         }
     }
 
@@ -2789,26 +2779,28 @@ std::vector<std::string> SpellInsight::descr_specific(
     descr.push_back(
         "Using this spell requires sacrificing another item of sufficient "
         "value (a Manuscript, Potion, Rod, etc), and the corpse of any "
-        "creature (stand over an item and a corpse when casting).");
+        "creature (stand over an item and a corpse when casting, then select "
+        "an item to identify, if the spell succeeds).");
 
-    if (skill == SpellSkill::basic)
-    {
-        descr.push_back(
-            "The spell causes the caster to fall asleep and discover the "
-            "nature of the item within a dream - so one should take precaution "
-            "to cast in a safe area.");
-    }
-    else // Not basic
+    if (skill == SpellSkill::master)
     {
         descr.push_back(
             "The item can be identified in an awakened state.");
     }
-
-    if (skill != SpellSkill::master)
+    else // Not master
     {
         descr.push_back(
-            "The spell drains nearly all of the caster's life and spirit.");
+            "The spell causes the caster to fall asleep and discover the "
+            "nature of an item within a dream - one should take precaution "
+            "to cast in a safe area.");
     }
+
+    const int chance_to_id =
+        (skill == SpellSkill::basic) ? 60 :
+        (skill == SpellSkill::expert) ? 80 :
+        100;
+
+    descr.push_back(std::to_string(chance_to_id) + "% chance to identify.");
 
     return descr;
 }
