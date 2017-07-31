@@ -39,6 +39,7 @@ Gameplay
 * Greatly reduced the ability penalties for wearing Iron Suit, and slightly reduced the penalties for the other armors
 * Properties applied from attacks (such as paralyzation or blindness) now have a certain percent chance to get applied, with a separate chance for each type of weapon or attack - many attacks still have 100% chance to apply their effect, but some now have a lower chance (especially very harsh effects like burning from Fire Hound breathing/biting, paralyzation from White Spider bites, or confusion from Mind Worms bites)
 * Paralyzation can now be re-applied while already active
+* Burning no longer completely prevents reading manuscripts or casting spells - instead there is a 50% chance to fail (wasting the manuscript or spirit upon failure)
 
 Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory

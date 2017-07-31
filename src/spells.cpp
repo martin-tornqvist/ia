@@ -271,10 +271,23 @@ void Spell::cast(Actor* const caster,
 
     ASSERT(caster);
 
-    if (!caster->prop_handler().allow_cast_spell(Verbosity::verbose))
+    auto& prop_handler = caster->prop_handler();
+
+    // If this is an intrinsic cast, check properties which NEVER allows casting
+    // or speaking
+
+    //
+    // NOTE: If this is a non-intrinsic cast (e.g. from a scroll), then we
+    //       assume that the caller has made all checks themselves
+    //
+    if ((intrinsic == IsIntrinsic::yes) &&
+        (!prop_handler.allow_cast_intr_spell_absolute(Verbosity::verbose) ||
+         !prop_handler.allow_speak(Verbosity::verbose)))
     {
         return;
     }
+
+    // OK, we can try to cast
 
     if (caster->is_player())
     {
@@ -339,14 +352,22 @@ void Spell::cast(Actor* const caster,
         snd_emit::run(snd);
     }
 
+    bool allow_cast = true;
+
     if (intrinsic == IsIntrinsic::yes)
     {
         const Range cost = spi_cost(caster);
 
         caster->hit_spi(cost.roll(), Verbosity::silent);
+
+        // Check properties which MAY allow casting, with a random chance
+        allow_cast =
+            prop_handler.allow_cast_intr_spell_chance(
+                Verbosity::verbose);
     }
 
-    if (caster->is_alive())
+    if (allow_cast &&
+        caster->is_alive())
     {
         run_effect(caster, skill);
     }

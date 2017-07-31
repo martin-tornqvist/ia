@@ -318,7 +318,9 @@ void init_data_list()
     d.std_rnd_turns = Range(7, 11);
     d.name = "Burning";
     d.name_short = "Burning";
-    d.descr = "Takes damage each turn, cannot read, cannot cast spells";
+    d.descr =
+        "Takes damage each turn, 50% chance to fail when attempting to read "
+        "or cast spells";
     d.msg[(size_t)PropMsg::start_player] = "I am Burning!";
     d.msg[(size_t)PropMsg::start_mon] = "is burning.";
     d.msg[(size_t)PropMsg::end_player] = "The flames are put out.";
@@ -1948,11 +1950,11 @@ bool PropHandler::allow_act() const
     return true;
 }
 
-bool PropHandler::allow_read(const Verbosity verbosity) const
+bool PropHandler::allow_read_absolute(const Verbosity verbosity) const
 {
     for (auto prop : props_)
     {
-        if (!prop->allow_read(verbosity))
+        if (!prop->allow_read_absolute(verbosity))
         {
             return false;
         }
@@ -1961,11 +1963,39 @@ bool PropHandler::allow_read(const Verbosity verbosity) const
     return true;
 }
 
-bool PropHandler::allow_cast_spell(const Verbosity verbosity) const
+bool PropHandler::allow_read_chance(const Verbosity verbosity) const
 {
     for (auto prop : props_)
     {
-        if (!prop->allow_cast_spell(verbosity))
+        if (!prop->allow_read_chance(verbosity))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool PropHandler::allow_cast_intr_spell_absolute(
+    const Verbosity verbosity) const
+{
+    for (auto prop : props_)
+    {
+        if (!prop->allow_cast_intr_spell_absolute(verbosity))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool PropHandler::allow_cast_intr_spell_chance(
+    const Verbosity verbosity) const
+{
+    for (auto prop : props_)
+    {
+        if (!prop->allow_cast_intr_spell_chance(verbosity))
         {
             return false;
         }
@@ -2573,7 +2603,7 @@ void PropWound::on_more()
     nr_wounds_ = std::min(max_nr_wounds, nr_wounds_ + 1);
 }
 
-bool PropConfused::allow_read(const Verbosity verbosity) const
+bool PropConfused::allow_read_absolute(const Verbosity verbosity) const
 {
     if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
@@ -2583,11 +2613,13 @@ bool PropConfused::allow_read(const Verbosity verbosity) const
     return false;
 }
 
-bool PropConfused::allow_cast_spell(const Verbosity verbosity) const
+bool PropConfused::allow_cast_intr_spell_absolute(
+    const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owning_actor_->is_player() &&
+        (verbosity == Verbosity::verbose))
     {
-        msg_log::add("I am too confused to concentrate.");
+        msg_log::add("I am too confused to concentrate!");
     }
 
     return false;
@@ -2771,7 +2803,7 @@ void PropFrenzied::on_end()
     }
 }
 
-bool PropFrenzied::allow_read(const Verbosity verbosity) const
+bool PropFrenzied::allow_read_absolute(const Verbosity verbosity) const
 {
     if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
     {
@@ -2781,9 +2813,11 @@ bool PropFrenzied::allow_read(const Verbosity verbosity) const
     return false;
 }
 
-bool PropFrenzied::allow_cast_spell(const Verbosity verbosity) const
+bool PropFrenzied::allow_cast_intr_spell_absolute(
+    const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owning_actor_->is_player() &&
+        (verbosity == Verbosity::verbose))
     {
         msg_log::add("I am too enraged to concentrate!");
     }
@@ -2803,31 +2837,55 @@ Prop* PropBurning::on_tick()
     return this;
 }
 
-bool PropBurning::allow_read(const Verbosity verbosity) const
+bool PropBurning::allow_read_chance(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (!rnd::coin_toss())
     {
-        msg_log::add("I cannot read while burning.");
+        if (owning_actor_->is_player() &&
+            (verbosity == Verbosity::verbose))
+        {
+            msg_log::add("I fail to concentrate!");
+        }
+
+        return false;
     }
 
-    return false;
+    return true;
 }
 
-bool PropBurning::allow_cast_spell(const Verbosity verbosity) const
+bool PropBurning::allow_cast_intr_spell_chance(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (!rnd::coin_toss())
     {
-        msg_log::add("I cannot concentrate while burning!");
+        if (owning_actor_->is_player() &&
+            (verbosity == Verbosity::verbose))
+        {
+            msg_log::add("I fail to concentrate!");
+        }
+
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool PropBurning::allow_attack_ranged(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owning_actor_->is_player() &&
+        (verbosity == Verbosity::verbose))
     {
         msg_log::add("Not while burning.");
+    }
+
+    return false;
+}
+
+bool PropBlind::allow_read_absolute(const Verbosity verbosity) const
+{
+    if (owning_actor_->is_player() &&
+        (verbosity == Verbosity::verbose))
+    {
+        msg_log::add("I cannot read while blind.");
     }
 
     return false;

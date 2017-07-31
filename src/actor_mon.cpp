@@ -241,7 +241,9 @@ void Mon::act()
     // Cast instead of attacking?
     if (rnd::one_in(5))
     {
-        if (ai::action::try_cast_random_spell(*this))
+        const bool did_cast = ai::action::try_cast_random_spell(*this);
+
+        if (did_cast)
         {
             return;
         }
@@ -249,15 +251,22 @@ void Mon::act()
 
     if (data_->ai[(size_t)AiId::attacks] && tgt_)
     {
-        if (try_attack(*tgt_))
+        const bool did_attack = try_attack(*tgt_);
+
+        if (did_attack)
         {
             return;
         }
     }
 
-    if (ai::action::try_cast_random_spell(*this))
+    if (rnd::coin_toss())
     {
-        return;
+        const bool did_cast = ai::action::try_cast_random_spell(*this);
+
+        if (did_cast)
+        {
+            return;
+        }
     }
 
     int erratic_move_pct = (int)data_->erratic_move_pct;

@@ -77,9 +77,10 @@ void try_cast(const SpellOpt& spell_opt)
 
     const auto& props = map::player->prop_handler();
 
-    bool allow_cast = props.allow_cast_spell(Verbosity::verbose);
+    bool allow_cast = props.allow_cast_intr_spell_absolute(Verbosity::verbose);
 
-    if (allow_cast && spell_opt.src == SpellSrc::learned)
+    if (allow_cast &&
+        (spell_opt.src == SpellSrc::learned))
     {
         allow_cast = allow_cast && props.allow_speak(Verbosity::verbose);
     }

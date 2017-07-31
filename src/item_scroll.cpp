@@ -49,38 +49,32 @@ std::vector<std::string> Scroll::descr() const
 
 ConsumeItem Scroll::activate(Actor* const actor)
 {
+    TRACE_FUNC_BEGIN;
+
     auto& prop_handler = actor->prop_handler();
 
-    if (!prop_handler.allow_cast_spell(Verbosity::verbose) ||
-        !prop_handler.allow_read(Verbosity::verbose) ||
+    // Check properties which NEVER allows reading or speaking
+    if (!prop_handler.allow_read_absolute(Verbosity::verbose) ||
         !prop_handler.allow_speak(Verbosity::verbose))
     {
         return ConsumeItem::no;
     }
 
-    if (!map::player->prop_handler().allow_see())
-    {
-        msg_log::add("I cannot read while blind.");
-
-        return ConsumeItem::no;
-    }
-
-    // OK, we can cast spells, read, speak, and see
-
     const P& player_pos(map::player->pos);
 
     const Cell& cell = map::cells[player_pos.x][player_pos.y];
 
-    if (cell.is_dark && !cell.is_lit)
+    if (cell.is_dark &&
+        !cell.is_lit)
     {
         msg_log::add("It's too dark to read here.");
+
+        TRACE_FUNC_END;
 
         return ConsumeItem::no;
     }
 
-    auto* const spell = mk_spell();
-
-    const std::string crumble_str = "The Manuscript crumbles to dust.";
+    // OK, we can try to cast
 
     const bool is_identified_before = data_->is_identified;
 
@@ -98,6 +92,22 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
         data_->is_tried = true;
     }
+
+    const std::string crumble_str = "The Manuscript crumbles to dust.";
+
+    // Check properties which MAY allow reading, with a random chance
+    if (!prop_handler.allow_read_chance(Verbosity::verbose))
+    {
+        msg_log::add(crumble_str);
+
+        TRACE_FUNC_END;
+
+        return ConsumeItem::yes;
+    }
+
+    // OK, we are fully allowed to read the scroll - cast the spell
+
+    auto* const spell = mk_spell();
 
     const SpellId id = spell->id();
 
@@ -120,6 +130,8 @@ ConsumeItem Scroll::activate(Actor* const actor)
     }
 
     delete spell;
+
+    TRACE_FUNC_END;
 
     return ConsumeItem::yes;
 }

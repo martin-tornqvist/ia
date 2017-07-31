@@ -242,10 +242,23 @@ public:
     bool allow_see() const;
     bool allow_move() const;
     bool allow_act() const;
-    bool allow_read(const Verbosity verbosity) const;
-    bool allow_cast_spell(const Verbosity verbosity) const;
     bool allow_speak(const Verbosity verbosity) const;
     bool allow_eat(const Verbosity verbosity) const; // Also used for drinking
+
+    //
+    // NOTE: The allow_*_absolute methods below answer if some action could
+    //       EVER be performed, and the allow_*_chance methods allows the
+    //       action with a random chance.
+    //       For example, blindness never allows the player to read scrolls, and
+    //       the game won't let the player try, and waste a scroll. But burning
+    //       will allow the player to try, with a certain percent chance of
+    //       success, and the scroll will be wasted.
+    //       (All plain allow_* methods above are also considered "absolute".)
+    //
+    bool allow_read_absolute(const Verbosity verbosity) const;
+    bool allow_read_chance(const Verbosity verbosity) const;
+    bool allow_cast_intr_spell_absolute(const Verbosity verbosity) const;
+    bool allow_cast_intr_spell_chance(const Verbosity verbosity) const;
 
     void on_hit();
     void on_death(const bool is_player_see_owning_actor);
@@ -417,18 +430,6 @@ public:
         return true;
     }
 
-    virtual bool allow_read(const Verbosity verbosity) const
-    {
-        (void)verbosity;
-        return true;
-    }
-
-    virtual bool allow_cast_spell(const Verbosity verbosity) const
-    {
-        (void)verbosity;
-        return true;
-    }
-
     virtual bool allow_speak(const Verbosity verbosity) const
     {
         (void)verbosity;
@@ -436,6 +437,30 @@ public:
     }
 
     virtual bool allow_eat(const Verbosity verbosity) const
+    {
+        (void)verbosity;
+        return true;
+    }
+
+    virtual bool allow_read_absolute(const Verbosity verbosity) const
+    {
+        (void)verbosity;
+        return true;
+    }
+
+    virtual bool allow_read_chance(const Verbosity verbosity) const
+    {
+        (void)verbosity;
+        return true;
+    }
+
+    virtual bool allow_cast_intr_spell_absolute(const Verbosity verbosity) const
+    {
+        (void)verbosity;
+        return true;
+    }
+
+    virtual bool allow_cast_intr_spell_chance(const Verbosity verbosity) const
     {
         (void)verbosity;
         return true;
@@ -653,6 +678,8 @@ public:
 
     bool need_update_vision_when_start_or_end() const override;
 
+    bool allow_read_absolute(const Verbosity verbosity) const override;
+
     bool allow_see() const override
     {
         return false;
@@ -771,8 +798,8 @@ public:
     PropBurning(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::burning, turns_init, nr_turns) {}
 
-    bool allow_read(const Verbosity verbosity) const override;
-    bool allow_cast_spell(const Verbosity verbosity) const override;
+    bool allow_read_chance(const Verbosity verbosity) const override;
+    bool allow_cast_intr_spell_chance(const Verbosity verbosity) const override;
 
     int ability_mod(const AbilityId ability) const override
     {
@@ -808,10 +835,11 @@ public:
 
     void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
-    bool allow_read(const Verbosity verbosity) const override;
-    bool allow_cast_spell(const Verbosity verbosity) const override;
     bool allow_attack_melee(const Verbosity verbosity) const override;
     bool allow_attack_ranged(const Verbosity verbosity) const override;
+    bool allow_read_absolute(const Verbosity verbosity) const override;
+    bool allow_cast_intr_spell_absolute(
+        const Verbosity verbosity) const override;
 };
 
 class PropStunned: public Prop
@@ -1088,8 +1116,9 @@ public:
 
     void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
-    bool allow_read(const Verbosity verbosity) const override;
-    bool allow_cast_spell(const Verbosity verbosity) const override;
+    bool allow_read_absolute(const Verbosity verbosity) const override;
+    bool allow_cast_intr_spell_absolute(
+        const Verbosity verbosity) const override;
 
     bool is_resisting_other_prop(const PropId prop_id) const override;
 

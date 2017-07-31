@@ -20,10 +20,11 @@ namespace action
 
 bool try_cast_random_spell(Mon& mon)
 {
+    const auto& prop_handler = mon.prop_handler();
+
     if (!mon.is_alive() ||
         mon.spells_known_.empty() ||
-        !mon.prop_handler().allow_cast_spell(Verbosity::silent) ||
-        !rnd::fraction(1, 3))
+        !prop_handler.allow_cast_intr_spell_absolute(Verbosity::silent))
     {
         return false;
     }
