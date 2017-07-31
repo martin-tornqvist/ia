@@ -1784,14 +1784,13 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 4;
+    d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  10),
-        MonGroupSpawnRule(MonGroupSize::few,    20),
-        MonGroupSpawnRule(MonGroupSize::pack,   10),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::pack,   2),
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -1835,14 +1834,13 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 6;
+    d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = 999;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  10),
-        MonGroupSpawnRule(MonGroupSize::few,    20),
-        MonGroupSpawnRule(MonGroupSize::pack,   20),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    4),
+        MonGroupSpawnRule(MonGroupSize::pack,   2),
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -3450,7 +3448,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
-    d.spawn_max_dlvl = (dlvl_first_late_game + dlvl_last) / 2;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 4;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
