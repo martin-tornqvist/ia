@@ -2666,16 +2666,14 @@ void SpellInsight::run_effect(Actor* const caster,
         }
     }
 
-    Actor* const corpse = map::actor_at_pos(p, ActorState::corpse);
-
-    if (!item || !corpse)
+    if (!item)
     {
         msg_log::add("I gain a brief flash of insight, but it disappears...");
 
         return;
     }
 
-    // OK, all preconditions fulfilled - we can identify
+    // OK, there is a valid item - we can identify
 
     const bool is_multiple_items =
         item->data().is_stackable &&
@@ -2702,37 +2700,9 @@ void SpellInsight::run_effect(Actor* const caster,
         cell.item = nullptr;
     }
 
-    const std::string corpse_name_the =
-        text_format::first_to_upper(
-            corpse->corpse_name_the());
-
-    corpse->destroy_silent();
-
-    for (const P& d : dir_utils::dir_list_w_center)
-    {
-        const P p_adj(p + d);
-
-        auto& cell_adj = map::cells[p_adj.x][p_adj.y];
-
-        if (rnd::coin_toss())
-        {
-            cell_adj.rigid->mk_bloody();
-
-            if (rnd::coin_toss())
-            {
-                cell_adj.rigid->try_put_gore();
-            }
-        }
-    }
-
     if (cell.is_seen_by_player)
     {
         msg_log::add(item_name + " disappears.",
-                     clr_text,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        msg_log::add(corpse_name_the + " is destroyed.",
                      clr_text,
                      false,
                      MorePromptOnMsg::yes);
@@ -2753,8 +2723,8 @@ void SpellInsight::run_effect(Actor* const caster,
 
         const int chance_to_id =
             (skill == SpellSkill::basic) ?
-            60 :
-            80;
+            50 :
+            75;
 
         if (!rnd::percent(chance_to_id))
         {
@@ -2785,9 +2755,8 @@ std::vector<std::string> SpellInsight::descr_specific(
 
     descr.push_back(
         "Using this spell requires sacrificing another item of sufficient "
-        "value (a Manuscript, Potion, Rod, etc), and the corpse of any "
-        "creature (stand over an item and a corpse when casting, then select "
-        "an item to identify, if the spell succeeds).");
+        "value (a Manuscript, Potion, Rod, etc - stand over an item when "
+        "casting, then select an item to identify if the spell succeeds).");
 
     if (skill == SpellSkill::master)
     {
@@ -2803,8 +2772,8 @@ std::vector<std::string> SpellInsight::descr_specific(
     }
 
     const int chance_to_id =
-        (skill == SpellSkill::basic) ? 60 :
-        (skill == SpellSkill::expert) ? 80 :
+        (skill == SpellSkill::basic) ? 50 :
+        (skill == SpellSkill::expert) ? 75 :
         100;
 
     descr.push_back(std::to_string(chance_to_id) + "% chance to identify.");
