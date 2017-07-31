@@ -9,8 +9,7 @@ class Rod: public Item
 public:
     Rod(ItemDataT* const item_data) :
         Item                    (item_data),
-        nr_charge_turns_left_   (0),
-        nr_charges_left_        (-1) {}
+        nr_charge_turns_left_   (0) {}
 
     virtual ~Rod() {}
 
@@ -38,9 +37,9 @@ protected:
 
     virtual void run_effect() = 0;
 
-    virtual int max_nr_charges() const
+    virtual int nr_turns_to_recharge() const
     {
-        return 1;
+        return 250;
     }
 
     std::string name_inf() const override final;
@@ -49,7 +48,6 @@ protected:
 
 private:
     int nr_charge_turns_left_;
-    int nr_charges_left_;
 };
 
 class RodPurgeInvis : public Rod
@@ -172,9 +170,9 @@ protected:
             "the user.";
     }
 
-    int max_nr_charges() const override
+    virtual int nr_turns_to_recharge() const override
     {
-        return 2;
+        return 90;
     }
 
     void run_effect() override;
