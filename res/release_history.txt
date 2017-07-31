@@ -26,7 +26,6 @@ Gameplay
 * XP gained from Monoliths increased from 15% to 20%
 * Rod of Cloud Minds (which the Rogue starts with) now stores two charges, each charge requires 250 turns to finish (or 125 with the Electrically Inclined trait)
 * Removed the damage bonuses from the Marksman traits (it made ranged combat overpowered)
-* Slightly lower base hit chance with ranged weapons
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
 * Each melee trait gives +10% chance to evade melee attacks
