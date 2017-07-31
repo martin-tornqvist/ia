@@ -1643,7 +1643,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 40);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 1;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 4;
+    d.spawn_max_dlvl = 3;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    20),

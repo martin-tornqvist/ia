@@ -1380,7 +1380,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear a burst of flames.";
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.ranged.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std), 25);
+        ItemAttProp(new PropBurning(PropTurns::std), 35);
     d.ranged.projectile_clr = clr_red_lgt;
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_leaves_trail = true;
@@ -1393,7 +1393,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.melee.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std), 25);
+        ItemAttProp(new PropBurning(PropTurns::std), 35);
     d.melee.dmg_type = DmgType::fire;
     d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
