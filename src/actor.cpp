@@ -105,8 +105,6 @@ ActionResult Actor::roll_sneak(const Actor& actor_searching) const
         - lgt_mod
         + drk_mod;
 
-    std::cout << name_a() << ": " << sneak_tot << std::endl;
-
     //
     // NOTE: There is no need to cap the sneak value, since there's always
     //       critical fails

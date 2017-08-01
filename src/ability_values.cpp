@@ -13,6 +13,11 @@ int AbilityVals::val(const AbilityId id,
 {
     int ret = ability_list[(size_t)id];
 
+    if (actor.is_player())
+    {
+        ASSERT(ret == 0);
+    }
+
     if (is_affected_by_props)
     {
         ret += actor.prop_handler().ability_mod(id);
@@ -156,7 +161,11 @@ int AbilityVals::val(const AbilityId id,
         }
     }
 
-    ret = std::max(0, ret);
+    //
+    // NOTE: Do *NOT* clamp the returned skill value here, we must be able to
+    //       return e.g. negative dodging due to wearing armor (and possibly
+    //       also become positive again due to melee traits)
+    //
 
     return ret;
 }

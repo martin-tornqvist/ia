@@ -173,7 +173,7 @@ void Player::mk_start_items()
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
 
         inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_flack_jacket),
+                          item_factory::mk(ItemId::armor_flak_jacket),
                           Verbosity::silent);
     }
     break;

@@ -560,8 +560,6 @@ bool look(Mon& mon)
         {
             const auto result = actor->roll_sneak(mon);
 
-            std::cout << mon.name_a() << ": " << (int)result << std::endl;
-
             const bool is_non_critical_fail =
                 (result == ActionResult::fail) ||
                 (result == ActionResult::fail_big);

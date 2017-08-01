@@ -191,7 +191,7 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new MiGoGun(d);
         break;
 
-    case ItemId::armor_flack_jacket:
+    case ItemId::armor_flak_jacket:
     case ItemId::armor_leather_jacket:
     case ItemId::armor_iron_suit:
         r = new Armor(d);

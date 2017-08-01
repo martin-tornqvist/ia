@@ -198,7 +198,7 @@ void draw()
 
     // Use flack jacket as default tile/glyph
     const auto& flak_jacket_data =
-        item_data::data[(size_t)ItemId::armor_flack_jacket];
+        item_data::data[(size_t)ItemId::armor_flak_jacket];
 
     TileId armor_tile = flak_jacket_data.tile;
 

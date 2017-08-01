@@ -117,6 +117,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     }
 
     // Attacker gets a penalty against unseen targets
+
     //
     // NOTE: The AI never attacks unseen targets, so in the case of a
     //       monster attacker, we can assume the target is seen. We only

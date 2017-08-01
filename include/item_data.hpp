@@ -129,7 +129,7 @@ enum class ItemId
 
     armor_leather_jacket,
     armor_iron_suit,
-    armor_flack_jacket,
+    armor_flak_jacket,
     armor_asb_suit,
     armor_mi_go,
 

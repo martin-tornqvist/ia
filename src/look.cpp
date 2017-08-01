@@ -240,7 +240,7 @@ void ViewActorDescr::on_start()
         "Dodging",
         "Range",
         "State",
-        "Total"
+        "Total*"
     };
 
     const int val_undefined = INT_MAX;
@@ -433,6 +433,12 @@ void ViewActorDescr::on_start()
     }
 
     p.x = 0;
+
+    p.y += 2;
+
+    put_text(" * Attacks can always critically fail/succeed (2% chance each)",
+             p,
+             clr_gray);
 
     p.y += 3;
 

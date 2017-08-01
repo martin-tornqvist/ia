@@ -1755,7 +1755,7 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::armor);
-    d.id = ItemId::armor_flack_jacket;
+    d.id = ItemId::armor_flak_jacket;
     d.base_name = {"Flak Jacket", "", "a Flak Jacket"};
     d.base_descr =
     {
