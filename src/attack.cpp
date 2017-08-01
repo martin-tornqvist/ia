@@ -216,9 +216,11 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         dodging_mod +
         state_mod;
 
+    //
     // NOTE: Total skill may be negative or above 100 (the attacker may still
     //       critically hit or miss)
-    att_result = ability_roll::roll(hit_chance_tot, attacker);
+    //
+    att_result = ability_roll::roll(hit_chance_tot);
 
     //
     // Determine damage
@@ -408,7 +410,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
 
         set_constr_in_range(5, hit_chance_tot, 99);
 
-        att_result = ability_roll::roll(hit_chance_tot, attacker);
+        att_result = ability_roll::roll(hit_chance_tot);
 
         if (att_result >= ActionResult::success)
         {
@@ -569,7 +571,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
 
         set_constr_in_range(5, hit_chance_tot, 99);
 
-        att_result = ability_roll::roll(hit_chance_tot, attacker);
+        att_result = ability_roll::roll(hit_chance_tot);
 
         if (att_result >= ActionResult::success)
         {

@@ -558,21 +558,27 @@ bool look(Mon& mon)
     {
         if (actor->is_player())
         {
-            const auto sneak_result = actor->roll_sneak(mon);
+            const auto result = actor->roll_sneak(mon);
 
-            // Become aware if we got a "big fail" or worse, OR if we got a
-            // normal fail and we are already wary
+            std::cout << mon.name_a() << ": " << (int)result << std::endl;
+
+            const bool is_non_critical_fail =
+                (result == ActionResult::fail) ||
+                (result == ActionResult::fail_big);
+
+            // Become aware if we got a critical fail, OR if we got a
+            // non-critical (normal/big) fail, and we were already wary
             const bool become_aware =
-                (sneak_result <= ActionResult::fail_big) ||
-                ((sneak_result == ActionResult::fail) &&
+                (result == ActionResult::fail_critical) ||
+                (is_non_critical_fail &&
                  mon.wary_of_player_counter_);
 
             if (become_aware)
             {
                 mon.become_aware_player(true);
             }
-            // Not aware, just become wary if normal success
-            else if (sneak_result == ActionResult::fail)
+            // Not aware, just become wary if non-critical fail
+            else if (is_non_critical_fail)
             {
                 mon.become_wary_player();
             }

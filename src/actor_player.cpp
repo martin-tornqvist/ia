@@ -1526,7 +1526,7 @@ void Player::on_std_turn()
                 if (skill_tot > 0)
                 {
                     const bool is_spotted =
-                        ability_roll::roll(skill_tot, map::player) >=
+                        ability_roll::roll(skill_tot) >=
                         ActionResult::success;
 
                     if (is_spotted)

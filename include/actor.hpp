@@ -61,11 +61,13 @@ public:
 
     int ability(const AbilityId id, const bool is_affected_by_props) const;
 
+    //
     // NOTE: This function is not concerned with whether actors are within FOV,
     //       or if they are actually hidden or not. It merely performs a skill
     //       check, taking various conditions such as light/dark into concern.
     //       It has no side effects.
-    ActionResult roll_sneak(const Actor& actor) const;
+    //
+    ActionResult roll_sneak(const Actor& actor_searching) const;
 
     void place(const P& pos_, ActorDataT& data);
 

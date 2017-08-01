@@ -1746,7 +1746,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::floor;
-    d.nr_turns_aware = 3;
+    d.nr_turns_aware = 4;
     d.descr = "A vicious black bird.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear the flapping of wings.";

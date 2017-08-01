@@ -214,19 +214,9 @@ void Mon::act()
     // -------------------------------------------------------------------------
 
     //
-    // NOTE: Looking is as an action if monster was not aware before, and became
-    //       aware from looking. (This is to give the monsters some reaction
-    //       time, and not instantly attack)
+    // NOTE: Monsters try to detect the player visually on standard turns,
+    //       otherwise very fast monsters are much better at finding the player
     //
-    // if (data_->ai[(size_t)AiId::looks] &&
-    //     (leader_ != map::player) &&
-    //     (!tgt_ || tgt_->is_player()))
-    // {
-    //     if (ai::info::look(*this))
-    //     {
-    //         return;
-    //     }
-    // }
 
     if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
         leader_ != map::player &&
@@ -396,7 +386,7 @@ bool Mon::can_see_actor(const Actor& other,
     // Monster allied to player looking at other monster which is hidden?
     if (is_actor_my_leader(map::player) &&
         !other.is_player() &&
-        static_cast<const Mon*>(&other)->player_aware_of_me_counter_ <= 0)
+        (static_cast<const Mon*>(&other)->player_aware_of_me_counter_ <= 0))
     {
         return false;
     }
@@ -407,9 +397,10 @@ bool Mon::can_see_actor(const Actor& other,
         return false;
     }
 
-    const LosResult los = fov::check_cell(pos,
-                                          other.pos,
-                                          hard_blocked_los);
+    const LosResult los =
+        fov::check_cell(pos,
+                        other.pos,
+                        hard_blocked_los);
 
     // LOS blocked hard (e.g. a wall or smoke)?
     if (los.is_blocked_hard)
@@ -433,10 +424,12 @@ bool Mon::can_see_actor(const Actor& other,
         other.data().is_infra_visible;
 
     const bool can_see_actor_with_infravis =
-        has_infravis && is_other_infra_visible;
+        has_infravis &&
+        is_other_infra_visible;
 
     const bool can_see_other_in_drk =
-        can_see_invis || can_see_actor_with_infravis;
+        can_see_invis ||
+        can_see_actor_with_infravis;
 
     // Blocked by darkness, and not seeing actor with infravision?
     if (los.is_blocked_by_drk &&
@@ -551,8 +544,8 @@ void Mon::on_std_turn()
         }
     }
 
-    // AI searches for the player on standard turns - otherwise very fast
-    // monsters get too many chances to detect the player
+    // Monsters try to detect the player visually on standard turns, otherwise
+    // very fast monsters are much better at finding the player
     if (is_alive() &&
         data_->ai[(size_t)AiId::looks] &&
         (leader_ != map::player) &&

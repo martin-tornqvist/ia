@@ -130,16 +130,16 @@ int AbilityVals::val(const AbilityId id,
 
         case AbilityId::stealth:
         {
-            ret += 25;
+            ret += 40;
 
             if (player_bon::traits[(size_t)Trait::stealthy])
             {
-                ret += 40;
+                ret += 35;
             }
 
             if (player_bon::traits[(size_t)Trait::imperceptible])
             {
-                ret += 20;
+                ret += 35;
             }
         }
         break;
@@ -182,92 +182,59 @@ void AbilityVals::change_val(const AbilityId ability, const int change)
 namespace ability_roll
 {
 
-ActionResult roll(const int skill_value,
-                  const Actor* const actor_rolling)
+ActionResult roll(const int skill_value)
 {
     /*
-      Examples:
+      Example:
       ------------
-      Skill value = 50, not blessed, not cursed
+      Skill value = 50
 
-        1 -   1     Critical success
-        2 -  25     Big success
+        1 -   2     Critical success
+        3 -  25     Big success
        26 -  50     Normal success
        51 -  75     Normal fail
-       76 -  99     Big fail
-      100 - 100     Critical fail
-
-
-      Skill value = 90, not blessed, not cursed
-
-        1 -   1     Critical success
-        2 -  45     Big success
-       46 -  90     Normal success
-       91 -  95     Normal fail
-       96 -  99     Big fail
-      100 - 100     Critical fail
-
-
-      Skill value = 10, not blessed, not cursed
-
-        1 -   1     Critical success
-        2 -   5     Big success
-        6 -  10     Normal success
-       11 -  55     Normal fail
-       56 -  99     Big fail
-      100 - 100     Critical fail
+       76 -  98     Big fail
+       99 - 100     Critical fail
     */
+
+    const int succ_cri_lmt = 2;
+    const int succ_big_lmt = ceil((double)skill_value / 2.0);
+    const int succ_nrm_lmt = skill_value;
+    const int fail_nrm_lmt = ceil(100.0 - ((double)(100 - skill_value) / 2.0));
+    const int fail_big_lmt = 98;
 
     const int roll = rnd::range(1, 100);
 
-    const bool is_cursed =
-        actor_rolling &&
-        actor_rolling->has_prop(PropId::cursed);
-
-    const bool is_blessed =
-        actor_rolling &&
-        actor_rolling->has_prop(PropId::blessed);
-
-    int succ_cri_lmt = 1;
-
-    if (is_blessed)
-    {
-        succ_cri_lmt = 5;
-    }
-
-    if (is_cursed)
-    {
-        succ_cri_lmt = -1;
-    }
-
-    int fail_big_lmt = 99;
-
-    if (is_blessed)
-    {
-        fail_big_lmt = 100;
-    }
-
-    if (is_cursed)
-    {
-        fail_big_lmt = 95;
-    }
-
-    const int succ_big_lmt = ceil((double)skill_value / 2.0);
-    const int succ_nrm_lmt = skill_value;
-    const int fail_nrm_lmt = ceil(100 - ((double)(100 - skill_value) / 2.0));
-
     //
-    // NOTE: We check for critical fail/success first, since they should not be
-    //       completely unaffected by the skill value (you can always critically
-    //       fail/succeed, unless cursed/blessed)
+    // NOTE: We check critical success and fail first, since they should
+    //       be completely unaffected by skill values - they can always
+    //       happen, and always have the same chance to happen, regardless
+    //       of skills
     //
-    if (roll <= succ_cri_lmt)   return ActionResult::success_critical;
+    if (roll <= succ_cri_lmt)
+    {
+        return ActionResult::success_critical;
+    }
 
-    if (roll > fail_big_lmt)    return ActionResult::fail_critical;
+    if (roll > fail_big_lmt)
+    {
+        return ActionResult::fail_critical;
+    }
 
-    if (roll <= succ_big_lmt)   return ActionResult::success_big;
-    if (roll <= succ_nrm_lmt)   return ActionResult::success;
-    if (roll <= fail_nrm_lmt)   return ActionResult::fail;
+    if (roll <= succ_big_lmt)
+    {
+        return ActionResult::success_big;
+    }
+
+    if (roll <= succ_nrm_lmt)
+    {
+        return ActionResult::success;
+    }
+
+    if (roll <= fail_nrm_lmt)
+    {
+        return ActionResult::fail;
+    }
 
     // Sanity check:
     ASSERT(roll <= fail_big_lmt);

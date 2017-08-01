@@ -67,48 +67,52 @@ int Actor::ability(const AbilityId id,
     return data_->ability_vals.val(id, is_affected_by_props, *this);
 }
 
-ActionResult Actor::roll_sneak(const Actor& other) const
+ActionResult Actor::roll_sneak(const Actor& actor_searching) const
 {
     const int sneak_skill = ability(AbilityId::stealth, true);
 
     const int search_mod =
-        other.is_player() ?
-        other.ability(AbilityId::searching, true) :
+        actor_searching.is_player() ?
+        actor_searching.ability(AbilityId::searching, true) :
         0;
 
-    const int dist = king_dist(pos, other.pos);
+    const int dist = king_dist(pos, actor_searching.pos);
 
     // Distance  Sneak bonus
     // ----------------------
-    // 1         -20
+    // 1         -10
     // 2           0
-    // 3          20
-    // 4          40
-    // 5          60
-    // 6          80
-    const int dist_mod = std::min((dist - 2) * 20, 80);
+    // 3          10
+    // 4          20
+    // 5          30
+    // 6          40
+    const int dist_mod = std::min((dist - 2) * 10, 80);
 
     const Cell& cell = map::cells[pos.x][pos.y];
 
     const int lgt_mod =
         cell.is_lit ?
-        -40 : 0;
+        20 : 0;
 
     const int drk_mod =
-        (cell.is_dark && ! cell.is_lit) ?
-        40 : 0;
+        (cell.is_dark && !cell.is_lit) ?
+        20 : 0;
 
     int sneak_tot =
         sneak_skill
         - search_mod
         + dist_mod
-        + lgt_mod
+        - lgt_mod
         + drk_mod;
 
-    // Cap the sneak value to 99%
-    sneak_tot = std::min(99, sneak_tot);
+    std::cout << name_a() << ": " << sneak_tot << std::endl;
 
-    const auto result = ability_roll::roll(sneak_tot, this);
+    //
+    // NOTE: There is no need to cap the sneak value, since there's always
+    //       critical fails
+    //
+
+    const auto result = ability_roll::roll(sneak_tot);
 
     return result;
 }

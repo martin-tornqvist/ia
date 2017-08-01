@@ -67,8 +67,7 @@ private:
 namespace ability_roll
 {
 
-ActionResult roll(const int skill_value,
-                  const Actor* const actor_rolling);
+ActionResult roll(const int skill_value);
 
 } // ability_roll
 
