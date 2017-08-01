@@ -1780,7 +1780,7 @@ void init_data_list()
     d.hp = 8;
     d.spi = 6;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 40);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1827,10 +1827,10 @@ void init_data_list()
     d.glyph = 'B';
     d.color = clr_red_lgt;
     d.tile = TileId::bat;
-    d.hp = 14;
+    d.hp = 12;
     d.spi = 8;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1939,9 +1939,8 @@ void init_data_list()
     d.spawn_max_dlvl = 999;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few,    40),
-        MonGroupSpawnRule(MonGroupSize::pack,   5),
-        MonGroupSpawnRule(MonGroupSize::swarm,  1)
+        MonGroupSpawnRule(MonGroupSize::alone,  4),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;

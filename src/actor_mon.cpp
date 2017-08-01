@@ -681,7 +681,16 @@ void Mon::hear_sound(const Snd& snd)
     if (is_alive() &&
         snd.is_alerting_mon())
     {
+        const bool was_aware_before = aware_of_player_counter_ > 0;
+
         become_aware_player(false);
+
+        // Give the monster some reaction time
+        if (!was_aware_before &&
+            !is_actor_my_leader(map::player))
+        {
+            prop_handler().apply(new PropWaiting(PropTurns::specific, 1));
+        }
     }
 }
 
