@@ -1065,7 +1065,7 @@ void SpellMayhem::run_effect(Actor* const caster,
                 }
 
                 if ((P(x, y) != caster->pos) &&
-                    rnd::one_in(3))
+                    rnd::one_in(6))
                 {
                     f->hit(1, // Damage (doesn't matter)
                            DmgType::fire,

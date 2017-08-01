@@ -129,6 +129,13 @@ int Actor::hp_max(const bool with_modifiers) const
 
 int Actor::speed_pct() const
 {
+    // Paralyzed actors always act at normal speed (otherwise paralysis will
+    // barely affect super fast monsters at all)
+    if (has_prop(PropId::paralyzed))
+    {
+        return 100;
+    }
+
     int speed = data_->speed_pct;
 
     //
