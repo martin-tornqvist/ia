@@ -439,26 +439,26 @@ int Spell::shock_value() const
     switch (type)
     {
     case SpellShock::mild:
-        value = 2;
+        value = 4;
         break;
 
     case SpellShock::disturbing:
-        value = 8;
+        value = 16;
         break;
 
     case SpellShock::severe:
-        value = 16;
+        value = 24;
         break;
     }
 
     // Blessed/cursed affects shock
     if (map::player->has_prop(PropId::blessed))
     {
-        --value;
+        value -= 2;
     }
     else if (map::player->has_prop(PropId::cursed))
     {
-        ++value;
+        value += 2;
     }
 
     return value;

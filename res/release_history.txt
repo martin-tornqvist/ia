@@ -4,7 +4,8 @@ v19.1 *** WORK IN PROGRESS ***
 Gameplay
 * Spells have basic/expert/master tiers instead of a skill percentage - higher tiers can be achieved by picking traits for various spell domains (e.g. "Lesser Invocation" to cast all attack spells at expert level)
 * Reworked the spell skill bonuses for all spells
-* Generally lowered the Spirit and Shock costs for many spells
+* Lowered the spirit cost for many spells
+* The Occultist receives halved shock for casting spells (not just from using strange items)
 * Spellcasting is now generally more powerful than before, and scales to be more useful by mid/late game
 * Being Blessed/Cursed affects the shock cost of casting spells, instead of the spirit cost
 * Characters other than Occultists only learns spells when casting from an already identified manuscripts

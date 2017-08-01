@@ -384,16 +384,17 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("");
         put("Starts with a few known spells");
         put("");
-        put("-50% shock taken from carrying, using and identifying strange "
-            "items (e.g. drinking a potion or carrying a disturbing artifact)");
+        put("-50% shock taken from casting spells, and from carrying, using "
+            "or identifying strange items (e.g. drinking a potion or carrying "
+            "a disturbing artifact)");
         put("");
         put("Can dispel magic traps");
         put("");
-        put("+2 Spirit Points (in addition to \"Strong Spirit\")");
+        put("+2 Spirit Points (in addition to \"Stout Spirit\")");
         put("");
         put("-2 Hit Points");
         put("");
-        put_trait(Trait::strong_spirit);
+        put_trait(Trait::stout_spirit);
         break;
 
     case Bg::rogue:
