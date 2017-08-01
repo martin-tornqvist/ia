@@ -585,8 +585,6 @@ bool look(Mon& mon)
         // Did the monster become aware?
         if (mon.aware_of_player_counter_ > 0)
         {
-            game_time::tick();
-
             return true;
         }
     }

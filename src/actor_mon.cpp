@@ -200,8 +200,8 @@ void Mon::act()
     // -------------------------------------------------------------------------
     // Special monster actions (e.g. zombies rising)
     // -------------------------------------------------------------------------
-    if (leader_ != map::player &&
-        (tgt_ == nullptr || tgt_ == map::player))
+    if ((leader_ != map::player) &&
+        (!tgt_ || tgt_->is_player()))
     {
         if (on_act() == DidAction::yes)
         {
@@ -218,15 +218,15 @@ void Mon::act()
     //       aware from looking. (This is to give the monsters some reaction
     //       time, and not instantly attack)
     //
-    if (data_->ai[(size_t)AiId::looks] &&
-        leader_ != map::player &&
-        (tgt_ == nullptr || tgt_ == map::player))
-    {
-        if (ai::info::look(*this))
-        {
-            return;
-        }
-    }
+    // if (data_->ai[(size_t)AiId::looks] &&
+    //     (leader_ != map::player) &&
+    //     (!tgt_ || tgt_->is_player()))
+    // {
+    //     if (ai::info::look(*this))
+    //     {
+    //         return;
+    //     }
+    // }
 
     if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
         leader_ != map::player &&
@@ -548,6 +548,22 @@ void Mon::on_std_turn()
         if (cd > 0)
         {
             --cd;
+        }
+    }
+
+    // AI searches for the player on standard turns - otherwise very fast
+    // monsters get too many chances to detect the player
+    if (is_alive() &&
+        data_->ai[(size_t)AiId::looks] &&
+        (leader_ != map::player) &&
+        (!tgt_ || tgt_->is_player()))
+    {
+        const bool did_become_aware_now = ai::info::look(*this);
+
+        // If the monster became aware, give it some reaction time
+        if (did_become_aware_now)
+        {
+            prop_handler().apply(new PropWaiting(PropTurns::specific, 1));
         }
     }
 
@@ -2021,7 +2037,8 @@ void LengElder::mk_start_items()
 
 void Ooze::on_std_turn_hook()
 {
-    if (is_alive() && !has_prop(PropId::burning))
+    if (is_alive() &&
+        !has_prop(PropId::burning))
     {
         restore_hp(1, false, Verbosity::silent);
     }
@@ -2745,7 +2762,8 @@ void TheHighPriest::on_std_turn_hook()
 {
     const int regen_every_n_turn = 3;
 
-    if (is_alive() && (game_time::turn_nr() % regen_every_n_turn == 0))
+    if (is_alive() &&
+        (game_time::turn_nr() % regen_every_n_turn == 0))
     {
         restore_hp(1, false, Verbosity::silent);
     }
