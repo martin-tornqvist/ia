@@ -632,7 +632,7 @@ void init_data_list()
         "electricity.",
 
         "The weapon does not use ammunition, instead it draws power from the "
-        "spirit of the wielder."
+        "life force of the wielder (2 Hit Points per attack)."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;

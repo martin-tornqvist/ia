@@ -1748,7 +1748,14 @@ void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
 
-    spells_known_.push_back(spell_handling::mk_spell_from_id(SpellId::disease));
+    spells_known_.push_back(
+        spell_handling::mk_spell_from_id(SpellId::disease));
+
+    spells_known_.push_back(
+        spell_handling::mk_spell_from_id(SpellId::enfeeble));
+
+    spells_known_.push_back(
+        spell_handling::mk_spell_from_id(SpellId::heal));
 
     const int nr_spells = 3;
 

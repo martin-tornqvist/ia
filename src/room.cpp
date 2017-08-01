@@ -867,7 +867,7 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     //
     std::vector<ActorId> actor_id_bucket;
 
-    for (size_t i = 0; i < size_t(ActorId::END); ++i)
+    for (size_t i = 0; i < (size_t)ActorId::END; ++i)
     {
         const ActorDataT& d = actor_data::data[i];
 

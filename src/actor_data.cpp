@@ -1554,7 +1554,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 30);
-    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
+    d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 12;
@@ -2494,7 +2494,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow + 10;
     d.spell_skill = SpellSkill::expert;
     d.glyph = 'P';
     d.color = clr_magenta;
@@ -2533,7 +2533,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow + 10;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = TileId::croc_head_mummy;
@@ -2541,11 +2541,13 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
-    d.spawn_min_dlvl = dlvl_first_late_game - 3;
+    d.spawn_min_dlvl = dlvl_first_mid_game + 4;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
-        MonGroupSpawnRule(MonGroupSize::swarm,  2)
+        MonGroupSpawnRule(MonGroupSize::alone,  20),
+        MonGroupSpawnRule(MonGroupSize::few,    60),
+        MonGroupSpawnRule(MonGroupSize::pack,   10),
+        MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2578,7 +2580,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow + 10;
     d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -2620,7 +2622,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::slow + 10;
     d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
