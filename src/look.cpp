@@ -595,17 +595,22 @@ std::string ViewActorDescr::mon_speed_str() const
 {
     const auto& def = actor_.data();
 
-    if (def.speed_pct >= (int)ActorSpeed::fastest)
+    if (def.speed_pct > (int)ActorSpeed::fast)
     {
         return "very swiftly";
     }
 
-    if (def.speed_pct >= (int)ActorSpeed::fast)
+    if (def.speed_pct > ((int)ActorSpeed::normal + 20))
     {
         return "fast";
     }
 
-    if (def.speed_pct >= (int)ActorSpeed::normal)
+    if (def.speed_pct > (int)ActorSpeed::normal)
+    {
+        return "somewhat fast";
+    }
+
+    if (def.speed_pct == (int)ActorSpeed::normal)
     {
         return "";
     }
