@@ -177,7 +177,8 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     }
 
     // Give small attack bonus if defender cannot see.
-    if (!is_big_att_bon && !is_small_att_bon)
+    if (!is_big_att_bon &&
+        !is_small_att_bon)
     {
         if (!defender.prop_handler().allow_see())
         {

@@ -68,21 +68,17 @@ void ViewActorDescr::on_start()
         ++p.y;
     }
 
-    p.y += 2;
+    p.y += 3;
 
     // Hit chances
-    const std::string indent = "  ";
+    const std::string indent = "   ";
 
     const std::vector<std::string> sections =
     {
-        "Melee hit chance",
-        indent + "Player vs monster",
-        indent + "Monster vs player",
-        "",
-        "Ranged hit chance",
-        indent + "Player vs monster",
-        indent + "Player vs monster, throwing",
-        indent + "Monster vs player",
+        "Chance to hit monster",
+        indent + "Melee",
+        indent + "Ranged weapon",
+        indent + "Throwing",
     };
 
     P p_section(p);
@@ -104,7 +100,7 @@ void ViewActorDescr::on_start()
         ++p_section.y;
     }
 
-    p.x = 31;
+    p.x = 24;
 
     const Item* player_wpn_item =
         map::player->inv().item_in_slot(SlotId::wpn);
@@ -156,90 +152,13 @@ void ViewActorDescr::on_start()
 
     }
 
-    //
-    // TODO: This would not make sense if the monster has multiple intrinsic
-    //       melee weapons (currently, no monster has this however). Perhaps
-    //       monsters should instead have one (optional) intrinsic melee weapon
-    //       and one (optional) intrinsic ranged weapon (instead of a vector of
-    //       intrinsic weapons), for simplicity's sake.
-    //
-    const Item* mon_melee_wpn_item = nullptr;
-
-    const Item* mon_ranged_wpn_item = nullptr;
-
-    for (Item* item : actor_.inv().intrinsics_)
-    {
-        if (item->data().melee.is_melee_wpn)
-        {
-            mon_melee_wpn_item = item;
-        }
-
-        if (item->data().ranged.is_ranged_wpn)
-        {
-            mon_ranged_wpn_item = item;
-        }
-    }
-
-    // If monster does not have an intrinsic melee or ranged weapon, check if it
-    // has a wielded weapon instead
-    if (!mon_melee_wpn_item)
-    {
-        const Item* const wielded = actor_.inv().item_in_slot(SlotId::wpn);
-
-        if (wielded &&
-            wielded->data().melee.is_melee_wpn)
-        {
-            mon_melee_wpn_item = wielded;
-        }
-    }
-
-    if (!mon_ranged_wpn_item)
-    {
-        const Item* const wielded = actor_.inv().item_in_slot(SlotId::wpn);
-
-        if (wielded &&
-            wielded->data().ranged.is_ranged_wpn)
-        {
-            mon_ranged_wpn_item = wielded;
-        }
-    }
-
-    const Wpn* mon_melee_wpn = nullptr;
-
-    std::unique_ptr<const MeleeAttData> mon_melee;
-
-    if (mon_melee_wpn_item)
-    {
-        mon_melee_wpn = static_cast<const Wpn*>(mon_melee_wpn_item);
-
-        mon_melee.reset(new MeleeAttData(&actor_,
-                                         *map::player,
-                                         *mon_melee_wpn));
-    }
-
-    const Wpn* mon_ranged_wpn = nullptr;
-
-    std::unique_ptr<const RangedAttData> mon_ranged;
-
-    if (mon_ranged_wpn_item)
-    {
-        mon_ranged_wpn = static_cast<const Wpn*>(mon_ranged_wpn_item);
-
-        mon_ranged.reset(
-            new RangedAttData(&actor_,
-                              actor_.pos,           // Origin
-                              map::player->pos,     // Aim position
-                              map::player->pos,     // Current position
-                              *mon_ranged_wpn));
-    }
-
-    const std::vector<std::string> labels =
+     const std::vector<std::string> labels =
     {
         "Skill",
         "Weapon",
         "Dodging",
         "Range",
-        "State",
+        "Monster state",
         "Total*"
     };
 
@@ -255,18 +174,6 @@ void ViewActorDescr::on_start()
         player_melee_vals.push_back(val_undefined);
         player_melee_vals.push_back(player_melee->state_mod);
         player_melee_vals.push_back(player_melee->hit_chance_tot);
-    }
-
-    std::vector<int> mon_melee_vals;
-
-    if (mon_melee)
-    {
-        mon_melee_vals.push_back(mon_melee->skill_mod);
-        mon_melee_vals.push_back(mon_melee->wpn_mod);
-        mon_melee_vals.push_back(mon_melee->dodging_mod);
-        mon_melee_vals.push_back(val_undefined);
-        mon_melee_vals.push_back(mon_melee->state_mod);
-        mon_melee_vals.push_back(mon_melee->hit_chance_tot);
     }
 
     std::vector<int> player_ranged_vals;
@@ -291,18 +198,6 @@ void ViewActorDescr::on_start()
         player_throwing_vals.push_back(player_throwing->dist_mod);
         player_throwing_vals.push_back(player_throwing->state_mod);
         player_throwing_vals.push_back(player_throwing->hit_chance_tot);
-    }
-
-    std::vector<int> mon_ranged_vals;
-
-    if (mon_ranged)
-    {
-        mon_ranged_vals.push_back(mon_ranged->skill_mod);
-        mon_ranged_vals.push_back(mon_ranged->wpn_mod);
-        mon_ranged_vals.push_back(mon_ranged->dodging_mod);
-        mon_ranged_vals.push_back(mon_ranged->dist_mod);
-        mon_ranged_vals.push_back(mon_ranged->state_mod);
-        mon_ranged_vals.push_back(mon_ranged->hit_chance_tot);
     }
 
     auto print_val = [&](const int val,
@@ -343,8 +238,9 @@ void ViewActorDescr::on_start()
                 clr = clr_white;
 
                 clr =
-                (val < 0)   ? clr_msg_bad :
-                (val == 0)  ? clr_white : clr_msg_good;
+                    (val < 0) ? clr_msg_bad :
+                    (val == 0) ? clr_white :
+                    clr_msg_good;
             }
         }
 
@@ -384,18 +280,6 @@ void ViewActorDescr::on_start()
         ++p.y;
 
         //
-        // Monster melee
-        //
-        if (mon_melee)
-        {
-            print_val(mon_melee_vals[i],
-                      p,
-                      is_sum);
-        }
-
-        p.y += 3;
-
-        //
         // Player ranged
         //
         if (player_ranged)
@@ -419,80 +303,16 @@ void ViewActorDescr::on_start()
 
         ++p.y;
 
-        //
-        // Monster ranged
-        //
-        if (mon_ranged)
-        {
-            print_val(mon_ranged_vals[i],
-                      p,
-                      is_sum);
-        }
-
         p.x += label.size() + 2;
     }
 
     p.x = 0;
 
-    p.y += 2;
+    p.y += 1;
 
-    put_text(" * Attacks can always critically fail/succeed (2% chance each)",
+    put_text(" * Attacks can always critically fail or succeed (2% chance each)",
              p,
              clr_gray);
-
-    p.y += 3;
-
-    // Add properties
-    const std::string offset = "   ";
-
-    put_text("Current properties",
-             p,
-             clr_white_lgt);
-
-    const auto prop_list = actor_.prop_handler().props_list();
-
-    ++p.y;
-
-    p.x += 3;
-
-    if (prop_list.empty())
-    {
-        put_text("None",
-                 p,
-                 clr_white);
-
-        ++p.y;
-    }
-    else // Has properties
-    {
-        const int max_w_descr = (map_w * 3) / 4;
-
-        for (const auto& e : prop_list)
-        {
-            const auto& title = e.first;
-
-            put_text(title.str,
-                     p,
-                     title.clr);
-
-            ++p.y;
-
-            const auto descr_formatted =
-                text_format::split(e.second,
-                                   max_w_descr);
-
-            for (const auto& descr_line : descr_formatted)
-            {
-                put_text(descr_line,
-                         p,
-                         clr_gray);
-
-                ++p.y;
-            }
-
-            ++p.y;
-        }
-    }
 
     // Add a single empty line at the end (looks better)
     lines_.resize(lines_.size() + 1);

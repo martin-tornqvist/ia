@@ -886,7 +886,7 @@ void PropHandler::init_natural_props()
     const ActorDataT& d = owning_actor_->data();
 
     // Add natural properties
-    for (size_t i = 0; i < size_t(PropId::END); ++i)
+    for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
         active_props_info_[i] = 0;
 
