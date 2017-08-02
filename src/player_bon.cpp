@@ -359,7 +359,7 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("");
         put("+20% speed");
         put("");
-        put("+10 Hit Points");
+        put("+6 Hit Points");
         put("");
         put("+1 Armor Point (physical damage reduced by 1 point)");
         put("");
@@ -1134,7 +1134,7 @@ void pick_bg(const Bg bg)
         player_spells::learn_spell(SpellId::frenzy,
                                    Verbosity::silent);
 
-        map::player->change_max_hp(10, Verbosity::silent);
+        map::player->change_max_hp(6, Verbosity::silent);
         break;
 
     case Bg::occultist:
