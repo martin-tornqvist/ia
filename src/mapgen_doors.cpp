@@ -120,7 +120,7 @@ void mk_metal_doors_and_levers()
 
     const std::vector<int> nr_doors_weights =
     {
-        4,  // 0 doors
+        8,  // 0 doors
         3,  // 1 -
         2,  // 2 -
         1,  // 3 -

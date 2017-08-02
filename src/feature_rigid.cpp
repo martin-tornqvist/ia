@@ -1279,10 +1279,13 @@ void LiquidShallow::bump(Actor& actor_bumping)
 
     if (actor_bumping.is_player())
     {
-        const std::string msg =
+        const std::string type_str =
             (type_ == LiquidType::water) ?
-            "*Splash*" :
-            "*Glop*";
+            "water" :
+            "mud";
+
+        const std::string msg =
+            "I wade slowly through the knee high " + type_str + ".";
 
         Snd snd(msg,
                 SfxId::END,

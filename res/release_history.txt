@@ -57,6 +57,7 @@ Interface
 * "Ornate Tombs" are now colored cyan instead (they were hard to distinguish from normal tombs)
 * When viewing monster descriptions ("v"), the monster's hit chances and properties are no longer displayed (only the player's chance to hit the monster)
 * Fixed Fire Hound projectile animation in tiles mode (a small "blast" tile instead of a bunch of forward slashes)
+* When walking through water or mud, more descriptive messages are printed ("I wade slowly through the knee high water") instead of "splash" or "glop" - this is to emphasise that they cost an extra turn to move through
 
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead
