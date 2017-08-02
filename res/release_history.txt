@@ -56,6 +56,7 @@ Interface
 * Multiple monsters had a red "E" as symbol when playing in text mode, they now use different colors from each other
 * "Ornate Tombs" are now colored cyan instead (they were hard to distinguish from normal tombs)
 * When viewing monster descriptions ("v"), the monster's hit chances and properties are no longer displayed (only the player's chance to hit the monster)
+* Fixed Fire Hound projectile animation in tiles mode (a small "blast" tile instead of a bunch of forward slashes)
 
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead

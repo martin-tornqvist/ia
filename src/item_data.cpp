@@ -1383,6 +1383,7 @@ void init_data_list()
         ItemAttProp(new PropBurning(PropTurns::std), 35);
     d.ranged.projectile_clr = clr_red_lgt;
     d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_tile = TileId::blast1;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.projectile_leaves_smoke = true;
     d.ranged.dmg_type = DmgType::fire;
