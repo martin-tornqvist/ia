@@ -196,6 +196,8 @@ void draw()
 
     Clr armor_clr = clr_gray;
 
+    div_clr(armor_clr, 1.5);
+
     // Use flack jacket as default tile/glyph
     const auto& flak_jacket_data =
         item_data::data[(size_t)ItemId::armor_flak_jacket];
