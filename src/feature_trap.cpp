@@ -881,7 +881,8 @@ void TrapGasConfusion::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropConfused(PropTurns::std)},
-                   &clr_magenta);
+                   &clr_magenta,
+                   ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -911,7 +912,8 @@ void TrapGasParalyzation::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropParalyzed(PropTurns::std)},
-                   &clr_magenta);
+                   &clr_magenta,
+                   ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -942,7 +944,8 @@ void TrapGasFear::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropTerrified(PropTurns::std)},
-                   &clr_magenta);
+                   &clr_magenta,
+                   ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
 }

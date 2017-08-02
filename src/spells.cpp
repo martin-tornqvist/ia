@@ -42,7 +42,7 @@ Spell* random_spell_for_mon()
 
     for (int i = 0; i < (int)SpellId::END; ++i)
     {
-        Spell* const spell = mk_spell_from_id(SpellId(i));
+        Spell* const spell = mk_spell_from_id((SpellId)i);
 
         if (spell->mon_can_learn())
         {
@@ -95,6 +95,9 @@ Spell* mk_spell_from_id(const SpellId spell_id)
 
     case SpellId::anim_wpns:
         return new SpellAnimWpns;
+
+    case SpellId::subdue_wpns:
+        return new SpellSubdueWpns;
 
     case SpellId::searching:
         return new SpellSearching;
@@ -1355,6 +1358,49 @@ std::vector<std::string> SpellAnimWpns::descr_specific(
     {
         descr.push_back("The weapons can see invisible creatures.");
     }
+
+    return descr;
+}
+
+// -----------------------------------------------------------------------------
+// Subdue Animated weapons
+// -----------------------------------------------------------------------------
+void SpellSubdueWpns::run_effect(Actor* const caster,
+                                 const SpellSkill skill) const
+{
+    (void)skill;
+
+    if (!caster->is_player())
+    {
+        return;
+    }
+
+    // Drop all seen animated weapons
+
+    for (auto* const actor : game_time::actors)
+    {
+        if ((actor->id() != ActorId::animated_wpn) ||
+            !map::player->can_see_actor(*actor))
+        {
+            continue;
+        }
+
+        auto* anim_wpn = static_cast<AnimatedWpn*>(actor);
+
+        anim_wpn->drop();
+    }
+}
+
+std::vector<std::string> SpellSubdueWpns::descr_specific(
+    const SpellSkill skill) const
+{
+    (void)skill;
+
+    std::vector<std::string> descr;
+
+    descr.push_back(
+        "Causes all visible Animated Weapons to become lifeless, and drop down "
+        "to the ground again.");
 
     return descr;
 }

@@ -1011,6 +1011,8 @@ public:
 
     void on_std_turn_hook() override;
 
+    void drop();
+
 private:
     int nr_turns_until_drop_;
 };

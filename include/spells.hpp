@@ -50,6 +50,7 @@ enum class SpellId
 
     // Spells from special sources
     pharaoh_staff, // From the Staff of the Pharaohs artifact
+    subdue_wpns, // Learned at the same time as Animate Weapons
 
     END
 };
@@ -381,6 +382,55 @@ private:
     int max_spi_cost() const override
     {
         return 6;
+    }
+};
+
+class SpellSubdueWpns : public Spell
+{
+public:
+    SpellSubdueWpns() {}
+    ~SpellSubdueWpns() {}
+
+    virtual bool mon_can_learn() const override
+    {
+        return false;
+    }
+
+    virtual bool player_can_learn() const override
+    {
+        return true;
+    }
+
+    virtual std::string name() const override
+    {
+        return "Subdue Weapons";
+    }
+
+    virtual SpellId id() const override
+    {
+        return SpellId::subdue_wpns;
+    }
+
+    bool can_be_improved_with_skill() const override
+    {
+        return false;
+    }
+
+    virtual SpellShock shock_type() const override
+    {
+        return SpellShock::mild;
+    }
+
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
+
+protected:
+    virtual int max_spi_cost() const override
+    {
+        return 2;
     }
 };
 

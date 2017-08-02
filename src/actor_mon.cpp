@@ -2910,10 +2910,15 @@ void AnimatedWpn::on_std_turn_hook()
 
     if (nr_turns_until_drop_ <= 0)
     {
-        die(true, false, true);
+        drop();
     }
     else // Not yet time to die
     {
         --nr_turns_until_drop_;
     }
+}
+
+void AnimatedWpn::drop()
+{
+    die(true, false, true);
 }

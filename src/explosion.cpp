@@ -155,7 +155,8 @@ void run(const P& origin,
          const int radi_change,
          const ExplExclCenter exclude_center,
          std::vector<Prop*> properties_applied,
-         const Clr* const clr_override)
+         const Clr* const clr_override,
+         const ExplIsGas is_gas)
 {
     const int radi = expl_std_radi + radi_change;
 
@@ -284,12 +285,32 @@ void run(const P& origin,
             {
                 bool should_apply_on_living_actor = (living_actor != nullptr);
 
-                // Do not apply burning if actor is player with the demolition
-                // expert trait, and  intentionally throwing a Molotov
-                if (living_actor == map::player &&
-                    prop->id() == PropId::burning &&
-                    is_dem_exp &&
-                    expl_src == ExplSrc::player_use_moltv_intended)
+                if (living_actor == map::player)
+                {
+                    // Do not apply burning if this is player with Demolition
+                    // Expert trait, and intentionally throwing a Molotov
+                    if ((prop->id() == PropId::burning) &&
+                        is_dem_exp &&
+                        (expl_src == ExplSrc::player_use_moltv_intended))
+                    {
+                        should_apply_on_living_actor = false;
+                    }
+
+                    // Do not apply effect if wearing Gas Mask, and this is a
+                    // gas explosion
+                    const Item* const head_item =
+                        map::player->inv().item_in_slot(SlotId::head);
+
+                    if ((is_gas == ExplIsGas::yes) &&
+                        head_item &&
+                        (head_item->id() == ItemId::gas_mask))
+                    {
+                        should_apply_on_living_actor = false;
+                    }
+                }
+
+                if (living_actor &&
+                    living_actor->has_prop(PropId::r_breath))
                 {
                     should_apply_on_living_actor = false;
                 }
