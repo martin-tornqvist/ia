@@ -842,7 +842,7 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     (void)door_proposals;
 
     //
-    // Put rubble everywhere, to make the room more "pit like"
+    // Put lots of rubble, to make the room more "pit like"
     //
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
@@ -855,7 +855,8 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
             const P p(x, y);
 
-            if (map::cells[x][y].rigid->can_have_rigid())
+            if (map::cells[x][y].rigid->can_have_rigid() &&
+                rnd::coin_toss())
             {
                 map::put(new RubbleLow(p));
             }

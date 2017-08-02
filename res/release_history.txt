@@ -43,6 +43,7 @@ Gameplay
 * Paralyzation can now be re-applied while already active
 * Paralyzed actors always have 100% speed (so that very fast monsters like Bats doesn't immediately start moving again)
 * Monsters now attempt to detect the player by vision on standard turns, instead of on their own turns (to prevent very fast monsters from detecting the player too easily)
+* Ravens, Bats, and Vampire Bats no longer actively moves towards the player
 * Much higher chances that monsters become "wary" instead of immediately detecting the player
 * When monsters detect the player due to sounds, they pause for one turn (just like they already did when detecing by vision)
 * Burning no longer completely prevents reading manuscripts or casting spells - instead there is a 50% chance to fail (wasting the manuscript or spirit upon failure)
