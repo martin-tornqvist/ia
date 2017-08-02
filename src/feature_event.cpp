@@ -105,6 +105,34 @@ void EventWallCrumble::on_new_turn()
                      MorePromptOnMsg::yes);
     }
 
+    bool should_make_dark = false;
+
+    // Check if any cell adjacent to the destroyed walls is dark
+    for (const P& p : wall_cells_)
+    {
+        for (const P& d : dir_utils::dir_list_w_center)
+        {
+            const P p_adj(p + d);
+
+            if (!map::is_pos_inside_map(p_adj, false))
+            {
+                continue;
+            }
+
+            if (map::cells[p_adj.x][p_adj.y].is_dark)
+            {
+                should_make_dark = true;
+
+                break;
+            }
+        }
+
+        if (should_make_dark)
+        {
+            break;
+        }
+    }
+
     // Destroy the outer walls
     for (const P& p : wall_cells_)
     {
@@ -115,7 +143,10 @@ void EventWallCrumble::on_new_turn()
 
         auto& cell = map::cells[p.x][p.y];
 
-        cell.is_dark = true;
+        if (should_make_dark)
+        {
+            cell.is_dark = true;
+        }
 
         auto* const f = cell.rigid;
 
@@ -130,7 +161,10 @@ void EventWallCrumble::on_new_turn()
     {
         auto& cell = map::cells[p.x][p.y];
 
-        cell.is_dark = true;
+        if (should_make_dark)
+        {
+            cell.is_dark = true;
+        }
 
         Rigid* const f = cell.rigid;
 

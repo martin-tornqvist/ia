@@ -2966,8 +2966,8 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
+    d.spawn_min_dlvl = 2;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 1;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
@@ -3137,7 +3137,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 9;
+    d.spawn_min_dlvl = 7;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {

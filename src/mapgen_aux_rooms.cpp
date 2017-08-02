@@ -125,7 +125,10 @@ void mk_aux_rooms(Region regions[3][3])
 
     auto rnd_aux_room_dim = []()
     {
-        return P(rnd::range(3, 7), rnd::range(3, 7));
+        const Range range(2, 7);
+
+        return P(range.roll(),
+                 range.roll());
     };
 
     bool floor_cells[map_w][map_h];
