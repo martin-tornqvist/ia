@@ -2338,7 +2338,7 @@ void init_data_list()
     //
     // NOTE: This should be the same as the player Ghoul background bonus
     //
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'M';
     d.color = clr_green;
     d.tile = TileId::ghoul;

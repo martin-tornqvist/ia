@@ -357,7 +357,7 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("");
         put("Does not become Weakened when Frenzy ends");
         put("");
-        put("+20% speed");
+        put("+10% speed");
         put("");
         put("+6 Hit Points");
         put("");
