@@ -1735,7 +1735,7 @@ void init_data_list()
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 30);
+    d.ability_vals.set_val(AbilityId::melee, 25);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
@@ -1780,7 +1780,7 @@ void init_data_list()
     d.hp = 8;
     d.spi = 6;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 40);
+    d.ability_vals.set_val(AbilityId::melee, 35);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1830,7 +1830,7 @@ void init_data_list()
     d.hp = 12;
     d.spi = 8;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1839,8 +1839,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    4),
-        MonGroupSpawnRule(MonGroupSize::pack,   2),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
     });
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;

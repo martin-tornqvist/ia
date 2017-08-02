@@ -2393,7 +2393,7 @@ Tomb::Tomb(const P& p) :
     trait_                  (TombTrait::END)
 {
     // Contained items
-    const int nr_items_min = rnd::one_in(3) ? 0 : 1;
+    const int nr_items_min = rnd::one_in(4) ? 0 : 1;
 
     const int nr_items_max =
         player_bon::traits[(size_t)Trait::treasure_hunter] ?
@@ -2404,12 +2404,12 @@ Tomb::Tomb(const P& p) :
                                     nr_items_max));
 
     // Appearance
-    if (rnd::one_in(12))
+    if (rnd::one_in(20))
     {
         // Do not base appearance on items (random appearance)
         const int nr_app = (int)TombAppearance::END;
 
-        appearance_ = TombAppearance(rnd::range(0, nr_app - 1));
+        appearance_ = (TombAppearance)rnd::range(0, nr_app - 1);
 
         is_random_appearance_ = true;
     }
@@ -2515,7 +2515,10 @@ std::string Tomb::name(const Article article) const
 
 TileId Tomb::tile() const
 {
-    return is_open_ ? TileId::tomb_open : TileId::tomb_closed;
+    return
+        is_open_ ?
+        TileId::tomb_open :
+        TileId::tomb_closed;
 }
 
 Clr Tomb::clr_default() const
@@ -2526,7 +2529,7 @@ Clr Tomb::clr_default() const
         return clr_gray;
 
     case TombAppearance::ornate:
-        return clr_white;
+        return clr_cyan;
 
     case TombAppearance::marvelous:
         return clr_yellow;

@@ -393,20 +393,6 @@ OrbOfLife::OrbOfLife(ItemDataT* const item_data) :
 
 }
 
-void OrbOfLife::on_std_turn_in_inv(const InvType inv_type)
-{
-    (void)inv_type;
-
-    ASSERT(actor_carrying_);
-
-    const int turns_per_hp = 4;
-
-    if (game_time::turn_nr() % turns_per_hp == 0)
-    {
-        actor_carrying_->restore_hp(1, false, Verbosity::silent);
-    }
-}
-
 void OrbOfLife::on_pickup_hook()
 {
     map::player->change_max_hp(4, Verbosity::verbose);

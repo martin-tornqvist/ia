@@ -184,8 +184,6 @@ class OrbOfLife: public Item
 public:
     OrbOfLife(ItemDataT* const item_data);
 
-    void on_std_turn_in_inv(const InvType inv_type) override;
-
 private:
     void on_pickup_hook() override;
 

@@ -316,7 +316,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = SfxId::metal_clank;
-        d.chance_to_incl_in_spawn_list = 10;
+        d.chance_to_incl_in_spawn_list = 7;
         d.native_containers.push_back(FeatureId::chest);
         d.native_containers.push_back(FeatureId::cocoon);
         break;
@@ -339,7 +339,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
         d.land_on_hard_sfx = SfxId::metal_clank;
-        d.chance_to_incl_in_spawn_list = 10;
+        d.chance_to_incl_in_spawn_list = 7;
         d.native_containers.push_back(FeatureId::chest);
         d.native_containers.push_back(FeatureId::cocoon);
         break;
@@ -2163,7 +2163,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2188,7 +2188,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2213,7 +2213,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2237,7 +2237,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2264,7 +2264,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::chest);
     data[(size_t)d.id] = d;
 
@@ -2291,7 +2291,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2317,7 +2317,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2342,7 +2342,7 @@ void init_data_list()
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2376,7 +2376,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
@@ -2390,8 +2390,7 @@ void init_data_list()
     };
     d.base_descr =
     {
-        "+4 Hit Points, heals 1 Hit Point every 4th turn, grants resistance "
-        "against poison and disease."
+        "+4 Hit Points, grants resistance against poison and disease."
     };
     d.clr = clr_white_lgt;
     d.weight = ItemWeight::light;
@@ -2400,7 +2399,7 @@ void init_data_list()
     d.is_unique = true;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 2;
+    d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
     data[(size_t)d.id] = d;
 
