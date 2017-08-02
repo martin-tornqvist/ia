@@ -1944,9 +1944,6 @@ DidAction KeziahMason::on_act()
     {
         auto* mon = summoned[0];
 
-        mon->prop_handler().apply(
-            new PropSummoned(PropTurns::indefinite));
-
         // Do not print a separate "feeling" for spawning this monster
         mon->is_player_feeling_msg_allowed_ = true;
     }
@@ -2602,6 +2599,9 @@ DidAction MajorClaphamLee::on_act()
             {
                 // Do not print a separate "feeling" for spawned monsters
                 mon->is_player_feeling_msg_allowed_ = true;
+
+                mon->prop_handler().apply(
+                    new PropSummoned(PropTurns::indefinite));
             }
 
             has_summoned_tomb_legions = true;

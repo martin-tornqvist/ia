@@ -48,6 +48,7 @@ Gameplay
 * When monsters detect the player due to sounds, they pause for one turn (just like they already did when detecing by vision)
 * Burning no longer completely prevents reading manuscripts or casting spells - instead there is a 50% chance to fail (wasting the manuscript or spirit upon failure)
 * Removed the regeneration aspect from the Orb of Life
+* The Horn of Banishment now also works on Major Clapham Lee's summoned "Tomb Legions"
 
 Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory
