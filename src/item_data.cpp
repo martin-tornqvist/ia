@@ -2229,7 +2229,7 @@ void init_data_list()
     d.base_descr =
     {
         "Grants the owner the ability to control the destination when "
-        "teleporting. Also grants +40% skill level with the Teleport spell."
+        "teleporting."
     };
     d.clr = clr_orange;
     d.weight = ItemWeight::light;
