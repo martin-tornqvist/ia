@@ -3485,7 +3485,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed_pct = (int)ActorSpeed::fastest;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'W';
     d.color = clr_gray_drk;
     d.tile = TileId::hunting_horror;
