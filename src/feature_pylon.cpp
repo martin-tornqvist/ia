@@ -20,8 +20,7 @@ Pylon::Pylon(const P& p, PylonId id) :
 {
     if (id == PylonId::any)
     {
-        // Make most pylons of the burning type
-        if (rnd::fraction(3, 4))
+        if (rnd::coin_toss())
         {
             id = PylonId::burning;
         }
