@@ -886,7 +886,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         d.can_bleed &&
         player_bon::traits[(size_t)Trait::ravenous] &&
         is_feed_needed &&
-        rnd::one_in(4))
+        rnd::one_in(6))
     {
         Snd snd("",
                 SfxId::bite,
