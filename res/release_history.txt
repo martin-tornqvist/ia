@@ -31,7 +31,7 @@ Gameplay
 * Removed the damage bonuses from the Marksman traits (it made ranged combat overpowered)
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
-* Each melee trait gives +10% chance to evade melee attacks
+* Each melee trait gives +5% chance to evade melee attacks
 * The War Veteran starts with a Flak Jacket instead of a Leather Jacket
 * The base chances for bashing doors open and pushing lids are higher
 * Throwing knives do 2d3 damage (avg 4.0) instead of 1d6 (avg 3.5), and have +10% hit chance

@@ -441,17 +441,17 @@ std::string trait_descr(const Trait id)
     case Trait::adept_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks, +10% chance to evade melee attacks";
+            "attacks, +5% chance to evade melee attacks";
 
     case Trait::expert_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks, +10% chance to evade melee attacks";
+            "attacks, +5% chance to evade melee attacks";
 
     case Trait::master_melee_fighter:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
-            "attacks, +10% chance to evade melee attacks";
+            "attacks, +5% chance to evade melee attacks";
 
     case Trait::adept_marksman:
         return

@@ -1913,17 +1913,17 @@ void melee(Actor* const attacker,
         {
             if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
-                speed_pct_diff += 10;
+                speed_pct_diff += 5;
             }
 
             if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
             {
-                speed_pct_diff += 10;
+                speed_pct_diff += 5;
             }
 
             if (player_bon::traits[(size_t)Trait::master_melee_fighter])
             {
-                speed_pct_diff += 10;
+                speed_pct_diff += 5;
             }
         }
 
