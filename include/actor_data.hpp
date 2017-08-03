@@ -130,9 +130,9 @@ enum class ActorSpeed
 enum class ActorErraticFreq
 {
     never       = 0,
-    rare        = 8,
-    somewhat    = 25,
-    very        = 50
+    rare        = 5,
+    somewhat    = 15,
+    very        = 35
 };
 
 enum class ActorSize

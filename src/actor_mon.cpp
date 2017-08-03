@@ -219,8 +219,9 @@ void Mon::act()
     //
 
     if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
-        leader_ != map::player &&
-        tgt_ == map::player)
+        (leader_ != map::player) &&
+        (tgt_ == map::player) &&
+        rnd::coin_toss())
     {
         if (ai::action::make_room_for_friend(*this))
         {
