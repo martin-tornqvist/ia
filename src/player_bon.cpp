@@ -658,7 +658,7 @@ std::string trait_descr(const Trait id)
 
     case Trait::vicious:
         return
-            "+100% backstab damage (in addition to the normal +50% damage from "
+            "+150% backstab damage (in addition to the normal +50% damage from "
             "stealth attacks)";
 
     case Trait::treasure_hunter:
