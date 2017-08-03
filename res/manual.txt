@@ -78,7 +78,7 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 --------------------------------------------------------------------------------
 The following is an example of what the interface lines can look like:
 
-   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60)     } M1911 Colt 9.5 +0% 5/7
+   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60%)    } M1911 Colt 9.5 +0% 5/7
    Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 4.5 +0%
    Blind Diseased                                                         T:264
 
