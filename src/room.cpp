@@ -122,7 +122,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::monster, 1);
         add_to_room_bucket(RoomType::flooded, rnd::range(1, 2));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 2));
-        add_to_room_bucket(RoomType::snake_pit, 1);
+        add_to_room_bucket(RoomType::snake_pit, rnd::one_in(3) ? 1 : 0);
 
         const size_t nr_plain_rooms = room_bucket_.size() * 2;
 

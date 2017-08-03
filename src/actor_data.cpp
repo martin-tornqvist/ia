@@ -125,7 +125,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_brown;
     d.tile = TileId::zombie_unarmed;
@@ -138,14 +138,14 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  20),
-        MonGroupSpawnRule(MonGroupSize::few,    60),
+        MonGroupSpawnRule(MonGroupSize::few,    70),
         MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 8;
+    d.nr_turns_aware = 7;
     d.descr =
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It has grown sharp claws to "
@@ -179,7 +179,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'Z';
     d.color = clr_gray;
     d.tile = TileId::zombie_armed;
@@ -192,14 +192,14 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  20),
-        MonGroupSpawnRule(MonGroupSize::few,    60),
+        MonGroupSpawnRule(MonGroupSize::few,    70),
         MonGroupSpawnRule(MonGroupSize::pack,   10),
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 8;
+    d.nr_turns_aware = 7;
     d.descr =
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It is wielding a rusty axe.";
