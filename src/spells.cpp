@@ -688,16 +688,23 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         msg_log::add(str_begin + " struck by a blast!", msg_clr);
     }
 
-    int dmg = 7 + (int)skill * 7;
+    // Skill  damage     avg
+    // -----------------------
+    // 0       5  - 9     7.0
+    // 1       9  - 17   13.0
+    // 2      13  - 25   19.0
+    Range dmg_range(5 + (int)skill * 4,
+                    9 + (int)skill * 8);
 
     // If a monster is casting, only do 50% damage to avoid making this spell
     // extremely dangerous for the player
     if (!caster->is_player())
     {
-        dmg /= 2;
+        dmg_range.min /= 2;
+        dmg_range.max /= 2;
     }
 
-    target->hit(dmg,
+    target->hit(dmg_range.roll(),
                 DmgType::physical,
                 DmgMethod::END,
                 AllowWound::no);
@@ -737,11 +744,14 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
         "some will on its own - the caster cannot determine exactly which "
         "creature will be struck.");
 
-    const int dmg = 7 + (int)skill * 7;
+    const Range dmg_range(5 + (int)skill * 4,
+                          9 + (int)skill * 8);
 
     descr.push_back(
         "The impact does " +
-        std::to_string(dmg) +
+        std::to_string(dmg_range.min) +
+        "-" +
+        std::to_string(dmg_range.max) +
         " damage.");
 
     if (skill == SpellSkill::master)
@@ -851,9 +861,17 @@ void SpellAzaWrath::run_effect(Actor* const caster,
             msg_log::add(str_begin + " struck by a roaring blast!", msg_clr);
         }
 
-        const int dmg = 5 + ((int)skill * 5);
+        // const int dmg = 5 + ((int)skill * 5);
 
-        target->hit(dmg,
+        // Skill  damage     avg
+        // -----------------------
+        // 0       3  - 7     5.0
+        // 1       5  - 11    8.0
+        // 2       7  - 15   11.0
+        Range dmg_range(3 + (int)skill * 2,
+                        7 + (int)skill * 4);
+
+        target->hit(dmg_range.roll(),
                     DmgType::physical,
                     DmgMethod::END,
                     AllowWound::no);
@@ -890,11 +908,14 @@ std::vector<std::string> SpellAzaWrath::descr_specific(
     descr.push_back(
         "Channels the destructive force of Azathoth unto all visible enemies.");
 
-    const int dmg = 5 + ((int)skill * 5);
+    const Range dmg_range(3 + (int)skill * 2,
+                          7 + (int)skill * 4);
 
     descr.push_back(
         "The spell does " +
-        std::to_string(dmg) +
+        std::to_string(dmg_range.min) +
+        "-" +
+        std::to_string(dmg_range.max) +
         " damage per creature.");
 
     if (skill == SpellSkill::master)

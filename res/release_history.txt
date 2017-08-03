@@ -7,6 +7,7 @@ Gameplay
 * Lowered the spirit cost for many spells
 * The Occultist receives halved shock for casting spells (not just from using strange items)
 * Spellcasting is now generally more powerful than before, and scales to be more useful by mid/late game
+* Darkbolt and Azathoth's Wrath do random damage within a range, instead of a fixed number
 * Being Blessed/Cursed affects the shock cost of casting spells, instead of the spirit cost
 * Characters other than Occultists only learns spells when casting from an already identified manuscripts
 * The spell "Healing" is now also available for the player
