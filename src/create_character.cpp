@@ -72,54 +72,6 @@ void NewGameState::on_resume()
 }
 
 // -----------------------------------------------------------------------------
-// Gain level state
-// -----------------------------------------------------------------------------
-GainLvlState::GainLvlState()
-{
-
-}
-
-GainLvlState::~GainLvlState()
-{
-
-}
-
-StateId GainLvlState::id()
-{
-    return StateId::new_level;
-}
-
-void GainLvlState::on_start()
-{
-    game::incr_clvl();
-
-    const int clvl = game::clvl();
-
-    msg_log::add("Welcome to level " + std::to_string(clvl) + "!",
-                 clr_green,
-                 false,
-                 MorePromptOnMsg::yes);
-
-    // Let the player pick a trait
-    std::unique_ptr<State> trait_state(new PickTraitState);
-
-    states::push(std::move(trait_state));
-}
-
-void GainLvlState::update()
-{
-    // (Player has picked a trait, and the trait state has been popped)
-
-    // Increase hit points and spirit
-    map::player->change_max_hp(hp_per_lvl);
-
-    map::player->change_max_spi(spi_per_lvl);
-
-    // OK, we're done gaining a level, back to the game!
-    states::pop();
-}
-
-// -----------------------------------------------------------------------------
 // Pick background state
 // -----------------------------------------------------------------------------
 PickBgState::PickBgState() :

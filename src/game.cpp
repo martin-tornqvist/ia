@@ -1014,19 +1014,46 @@ void incr_player_xp(const int xp_gained,
         {
             ++clvl_;
 
+            msg_log::add("Welcome to level " + std::to_string(clvl_) + "!",
+                         clr_green,
+                         false,
+                         MorePromptOnMsg::yes);
+
             msg_log::more_prompt();
 
-            map::player->change_max_hp(hp_per_lvl);
+            // Increase SPI on even levels, and HP on odd levels
+            if ((clvl_ % 2) == 0)
+            {
+                const int spi_gained = rnd::range(1, 3);
 
-            map::player->restore_hp(hp_per_lvl,
-                                    false,
-                                    Verbosity::silent);
+                map::player->change_max_spi(spi_gained,
+                                            Verbosity::silent);
 
-            map::player->change_max_spi(spi_per_lvl);
+                map::player->restore_spi(spi_gained,
+                                         false,
+                                         Verbosity::silent);
 
-            map::player->restore_spi(spi_per_lvl,
-                                     false,
-                                     Verbosity::silent);
+                msg_log::add("Gained +" +
+                             std::to_string(spi_gained) +
+                             " Spirit Points.",
+                             clr_msg_good);
+            }
+            else // Odd level
+            {
+                const int hp_gained = rnd::range(1, 3);
+
+                map::player->change_max_hp(hp_gained,
+                                           Verbosity::silent);
+
+                map::player->restore_hp(hp_gained,
+                                        false,
+                                        Verbosity::silent);
+
+                msg_log::add("Gained +" +
+                             std::to_string(hp_gained) +
+                             " Hit Points.",
+                             clr_msg_good);
+            }
 
             msg_log::more_prompt();
 

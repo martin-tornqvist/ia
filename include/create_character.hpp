@@ -22,20 +22,6 @@ public:
 
     void on_resume() override;
 
-    StateId id() override; 
-};
-
-class GainLvlState: public State
-{
-public:
-    GainLvlState();
-
-    ~GainLvlState();
-
-    void on_start() override;
-
-    void update() override;
-
     StateId id() override;
 };
 
