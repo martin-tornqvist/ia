@@ -429,7 +429,7 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
     d.ranged.max_ammo = 2;
     d.ranged.dmg = Dice(8, 3);
-    d.ranged.hit_chance_mod = -5;
+    d.ranged.hit_chance_mod = 0;
     d.ranged.effective_range = 3;
     d.ranged.ammo_item_id = ItemId::shotgun_shell;
     d.ranged.att_msgs = {"fire", "fires a shotgun"};
@@ -459,7 +459,7 @@ void init_data_list()
     d.melee.att_msgs = {"strike", "strikes me with a shotgun"};
     d.ranged.max_ammo = 8;
     d.ranged.dmg = Dice(6, 3);
-    d.ranged.hit_chance_mod = 5;
+    d.ranged.hit_chance_mod = 0;
     d.ranged.effective_range = 5;
     d.ranged.ammo_item_id = ItemId::shotgun_shell;
     d.ranged.att_msgs = {"fire", "fires a shotgun"};
