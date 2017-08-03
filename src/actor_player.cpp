@@ -680,7 +680,7 @@ void Player::incr_insanity()
 
     if (!config::is_bot_playing())
     {
-        const int ins_incr = 5;
+        const int ins_incr = rnd::range(10, 20);
 
         ins_ += ins_incr;
     }
