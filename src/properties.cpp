@@ -511,10 +511,9 @@ void init_data_list()
     d.name = "Wounded";
     d.name_short = "Wound";
     d.descr =
-        "For each wound: -10% melee hit chance, -5% ranged hit chance, "
-        "-10% chance to evade attacks, -10% Hit Points, and reduced Hit Point "
-        "generation rate - also, walking takes extra turns if more than two "
-        "wounds are received";
+        "For each wound: -5% melee hit chance, -5% chance to evade attacks, "
+        "-10% Hit Points, and reduced Hit Point generation rate - also, "
+        "walking takes extra turns if more than two wounds are received";
     d.msg[(size_t)PropMsg::start_player] = "I am wounded!";
     d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
     d.is_making_mon_aware = false;
@@ -2534,25 +2533,20 @@ void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
 
 int PropWound::ability_mod(const AbilityId ability) const
 {
-    const bool is_survivalist =
-        owning_actor_->is_player() &&
-        player_bon::traits[(size_t)Trait::survivalist];
-
-    const int div = is_survivalist ? 2 : 1;
-
-    const int k = std::min(4, nr_wounds_);
+    // A player with Survivalist receives no ability penalties
+    if (owning_actor_->is_player() &&
+        player_bon::traits[(size_t)Trait::survivalist])
+    {
+        return 0;
+    }
 
     if (ability == AbilityId::melee)
     {
-        return (k * -10) / div;
-    }
-    else if (ability == AbilityId::ranged)
-    {
-        return (k *  -5) / div;
+        return (nr_wounds_ * -5);
     }
     else if (ability == AbilityId::dodging)
     {
-        return (k * -10) / div;
+        return (nr_wounds_ * -5);
     }
 
     return 0;
@@ -2564,11 +2558,9 @@ int PropWound::affect_max_hp(const int hp_max) const
 
     int hp_pen_pct = nr_wounds_ * pen_pct_per_wound;
 
-    const bool is_survivalist =
-        owning_actor_->is_player() &&
-        player_bon::traits[(size_t)Trait::survivalist];
-
-    if (is_survivalist)
+    // The HP penalty is halved for a player with Survivalist
+    if (owning_actor_->is_player() &&
+        player_bon::traits[(size_t)Trait::survivalist])
     {
         hp_pen_pct /= 2;
     }

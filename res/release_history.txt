@@ -53,6 +53,8 @@ Gameplay
 * Gas masks now also protects against gas explosion traps
 * Instead of a fixed +1 HP and +1 SPI per level, you now gain 1-3 HP on odd levels, and 1-3 SPI on even levels
 * Insanity increases by random value within 10-20%, instead of a fixed 5%
+* Reduced the penalty for each wound to -5% melee hit chance (instead of -10%), -5% dodging (instead of -10%), and no penalty to ranged attacks (instead of -5%)
+* The Survivalist trait completely removes the penalties to hit chance and dodging from wounds
 
 Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory

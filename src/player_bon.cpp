@@ -611,8 +611,9 @@ std::string trait_descr(const Trait id)
 
     case Trait::survivalist:
         return
-            "You cannot become diseased, negative effects from wounds reduced "
-            "by 50%";
+            "You cannot become diseased, wounds do not affect combat "
+            "abilities, and the effect on Hit Points and regeneration "
+            "is halved";
 
     case Trait::perseverant:
         return
