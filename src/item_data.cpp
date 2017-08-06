@@ -1910,7 +1910,6 @@ void init_data_list()
 
     reset_data(d, ItemType::scroll);
     d.id = ItemId::scroll_opening;
-    d.spawn_std_range.max = dlvl_first_mid_game;
     d.spell_cast_from_scroll = SpellId::opening;
     data[(size_t)d.id] = d;
 
@@ -1947,6 +1946,16 @@ void init_data_list()
     reset_data(d, ItemType::scroll);
     d.id = ItemId::scroll_heal;
     d.spell_cast_from_scroll = SpellId::heal;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::scroll);
+    d.id = ItemId::scroll_see_invis;
+    d.spell_cast_from_scroll = SpellId::see_invis;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::scroll);
+    d.id = ItemId::scroll_spell_shield;
+    d.spell_cast_from_scroll = SpellId::spell_shield;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);

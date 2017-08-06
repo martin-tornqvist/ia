@@ -236,9 +236,9 @@ void init_data_list()
     d.name_short = "rSpell";
     d.descr = "Cannot be affected by harmful spells";
     d.msg[(size_t)PropMsg::start_player] = "I defy harmful spells!";
-    d.msg[(size_t)PropMsg::start_mon] = "is defying harmful magic spells.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to magic spells.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to magic spells.";
+    d.msg[(size_t)PropMsg::start_mon] = "is defying harmful spells.";
+    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to spells.";
+    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to spells.";
     d.is_making_mon_aware = false;
     d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false; // NOTE: This prop is tested anyway

@@ -138,6 +138,9 @@ Spell* mk_spell_from_id(const SpellId spell_id)
     case SpellId::see_invis:
         return new SpellSeeInvis;
 
+    case SpellId::spell_shield:
+        return new SpellSpellShield;
+
     case SpellId::END:
         break;
     }
@@ -153,9 +156,9 @@ StateId BrowseSpell::id()
     return StateId::browse_spells;
 }
 
-Range Spell::spi_cost(Actor* const caster) const
+Range Spell::spi_cost(const SpellSkill skill, Actor* const caster) const
 {
-    int cost_max = max_spi_cost();
+    int cost_max = max_spi_cost(skill);
 
     if (caster == map::player)
     {
@@ -359,7 +362,7 @@ void Spell::cast(Actor* const caster,
 
     if (intrinsic == IsIntrinsic::yes)
     {
-        const Range cost = spi_cost(caster);
+        const Range cost = spi_cost(skill, caster);
 
         caster->hit_spi(cost.roll(), Verbosity::silent);
 
@@ -398,9 +401,15 @@ void Spell::on_resist(Actor& target) const
         io::draw_blast_at_cells({target.pos}, clr_white);
     }
 
-    if (is_player)
+    target.prop_handler().end_prop(PropId::r_spell);
+
+    if (is_player &&
+        player_bon::traits[(size_t)Trait::absorb])
     {
-        target.prop_handler().end_prop(PropId::r_spell);
+        map::player->restore_spi(
+            rnd::dice(1, 6),
+            false, // Not allowed above max
+            Verbosity::verbose);
     }
 }
 
@@ -1918,13 +1927,13 @@ std::vector<std::string> SpellLight::descr_specific(
 void SpellSeeInvis::run_effect(Actor* const caster,
                             const SpellSkill skill) const
 {
-    const int nr_turns =
-        (skill == SpellSkill::basic) ? 7 :
-        (skill == SpellSkill::expert) ? 60 :
-        500;
+    const Range duration_range =
+        (skill == SpellSkill::basic) ? Range(5, 8) :
+        (skill == SpellSkill::expert) ? Range(40, 80) :
+        Range(400, 600);
 
     caster->prop_handler().apply(
-        new PropSeeInvis(PropTurns::specific, nr_turns));
+        new PropSeeInvis(PropTurns::specific, duration_range.roll()));
 }
 
 std::vector<std::string> SpellSeeInvis::descr_specific(
@@ -1936,14 +1945,16 @@ std::vector<std::string> SpellSeeInvis::descr_specific(
         "Grants the caster the ability to see that which is "
         "normally invisible.");
 
-    const int nr_turns =
-        (skill == SpellSkill::basic) ? 7 :
-        (skill == SpellSkill::expert) ? 60 :
-        500;
+    const Range duration_range =
+        (skill == SpellSkill::basic) ? Range(5, 8) :
+        (skill == SpellSkill::expert) ? Range(40, 80) :
+        Range(400, 600);
 
     descr.push_back(
         "The spell lasts " +
-        std::to_string(nr_turns) +
+        std::to_string(duration_range.min) +
+        "-" +
+        std::to_string(duration_range.max) +
         " turns.");
 
     return descr;
@@ -1955,6 +1966,44 @@ bool SpellSeeInvis::allow_mon_cast_now(Mon& mon) const
         !mon.has_prop(PropId::see_invis) &&
         (mon.aware_of_player_counter_ > 0) &&
         rnd::one_in(8);
+}
+
+// -----------------------------------------------------------------------------
+// Spell Shield
+// -----------------------------------------------------------------------------
+int SpellSpellShield::max_spi_cost(const SpellSkill skill) const
+{
+    return 4 - (int)skill;
+}
+
+void SpellSpellShield::run_effect(Actor* const caster,
+                                  const SpellSkill skill) const
+{
+    (void)skill;
+
+    caster->prop_handler().apply(new PropRSpell(PropTurns::indefinite));
+}
+
+std::vector<std::string> SpellSpellShield::descr_specific(
+    const SpellSkill skill) const
+{
+    (void)skill;
+
+    std::vector<std::string> descr;
+
+    descr.push_back(
+        "Grants protection against harmful spells. The effect lasts until a "
+        "spell is blocked.");
+
+    descr.push_back("Skill level affects the amount of Spirit one needs to "
+                    "spend to cast the spell.");
+
+    return descr;
+}
+
+bool SpellSpellShield::allow_mon_cast_now(Mon& mon) const
+{
+    return !mon.has_prop(PropId::spell_reflect);
 }
 
 // -----------------------------------------------------------------------------

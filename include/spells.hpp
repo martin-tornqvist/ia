@@ -25,6 +25,7 @@ enum class SpellId
     pest,
     see_invis,
     heal,
+    spell_shield,
 
     // Player only
     aza_wrath,
@@ -129,7 +130,7 @@ public:
 
     std::vector<std::string> descr(const SpellSkill skill) const;
 
-    Range spi_cost(Actor* const caster = nullptr) const;
+    Range spi_cost(const SpellSkill skill, Actor* const caster = nullptr) const;
 
     int shock_value() const;
 
@@ -139,7 +140,7 @@ public:
                             const SpellSkill skill) const = 0;
 
 protected:
-    virtual int max_spi_cost() const = 0;
+    virtual int max_spi_cost(const SpellSkill skill) const = 0;
 
     virtual std::vector<std::string> descr_specific(
         const SpellSkill skill) const = 0;
@@ -191,8 +192,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 4;
     }
 };
@@ -241,8 +244,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -286,8 +291,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -336,8 +343,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -379,8 +388,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -428,8 +439,10 @@ public:
                     const SpellSkill skill) const override;
 
 protected:
-    virtual int max_spi_cost() const override
+    virtual int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 2;
     }
 };
@@ -479,8 +492,10 @@ public:
                     const SpellSkill skill) const override;
 
 protected:
-    virtual int max_spi_cost() const override
+    virtual int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 7;
     }
 };
@@ -522,8 +537,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 5;
     }
 };
@@ -565,8 +582,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 4;
     }
 };
@@ -613,8 +632,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 3;
     }
 };
@@ -656,8 +677,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 8;
     }
 };
@@ -699,8 +722,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 8;
     }
 };
@@ -742,8 +767,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 8;
     }
 };
@@ -784,8 +811,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 4;
     }
 };
@@ -839,8 +868,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 8;
     }
 };
@@ -889,8 +920,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 10;
     }
 };
@@ -939,10 +972,59 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 8;
     }
+};
+
+class SpellSpellShield: public Spell
+{
+public:
+    SpellSpellShield() : Spell() {}
+
+    bool allow_mon_cast_now(Mon& mon) const override;
+
+    int mon_cooldown() const override
+    {
+        return 3;
+    }
+
+    bool mon_can_learn() const override
+    {
+        return true;
+    }
+
+    bool player_can_learn() const override
+    {
+        return true;
+    }
+
+    std::string name() const override
+    {
+        return "Spell Shield";
+    }
+
+    SpellId id() const override
+    {
+        return SpellId::spell_shield;
+    }
+
+    SpellShock shock_type() const override
+    {
+        return SpellShock::mild;
+    }
+
+    std::vector<std::string> descr_specific(
+        const SpellSkill skill) const override;
+
+    void run_effect(Actor* const caster,
+                    const SpellSkill skill) const override;
+
+private:
+    int max_spi_cost(const SpellSkill skill) const override;
 };
 
 class SpellRes: public Spell
@@ -989,8 +1071,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -1039,8 +1123,10 @@ public:
                     const SpellSkill skill) const override;
 
 protected:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -1094,8 +1180,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 7;
     }
 };
@@ -1144,8 +1232,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 7;
     }
 };
@@ -1194,8 +1284,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 6;
     }
 };
@@ -1249,8 +1341,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 7;
     }
 };
@@ -1304,8 +1398,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 7;
     }
 };
@@ -1359,8 +1455,10 @@ public:
                     const SpellSkill skill) const override;
 
 private:
-    int max_spi_cost() const override
+    int max_spi_cost(const SpellSkill skill) const override
     {
+        (void)skill;
+
         return 4;
     }
 };

@@ -66,6 +66,7 @@ enum class Trait
     lesser_alter,
     greater_alter,
     blood_sorc,
+    absorb,
 
     // Unique for Rogue
     vicious,

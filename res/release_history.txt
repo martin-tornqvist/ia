@@ -14,9 +14,11 @@ Gameplay
 * The potions "See Invisible" and "Insight" are now spells instead
 * Added spell "Transmutation" (convert items)
 * Added spell "Subdue Weapons" - learned simultaneously as "Animate Weapons" (very cheap spell which drops all visible Animated Weapons)
+* Added spell "Spell Shield" - grants spell resistance until a spell is blocked (same effect as the spirit traits)
 * Removed Potion of Clairvoyance
 * Removed the "Sacrifice Life"/"Spirit" spells
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
+* Added trait "Absorption" for Occultists - blocking a spell restores 1d6 Spirit
 * Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
 * The "snake emerge" and "wall crumbling" events are much rarer
 * Reduced duration of Blindness from Raven attacks

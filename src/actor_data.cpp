@@ -3602,7 +3602,6 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
-    d.natural_props[(size_t)PropId::invis] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 20);

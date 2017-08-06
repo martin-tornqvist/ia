@@ -85,59 +85,61 @@ void try_cast(const SpellOpt& spell_opt)
         allow_cast = allow_cast && props.allow_speak(Verbosity::verbose);
     }
 
-    if (allow_cast)
+    if (!allow_cast)
     {
-        msg_log::clear();
+        return;
+    }
 
-        Spell* const spell = spell_opt.spell;
+    msg_log::clear();
 
-        const Range spi_cost_range = spell->spi_cost(map::player);
+    Spell* const spell = spell_opt.spell;
 
-        if (spi_cost_range.max >= map::player->spi())
+    const SpellSkill skill = map::player->spell_skill(spell->id());
+
+    const Range spi_cost_range = spell->spi_cost(skill, map::player);
+
+    if (spi_cost_range.max >= map::player->spi())
+    {
+        msg_log::add("Cast spell and risk depleting your spirit? [y/n]",
+                     clr_white_lgt);
+
+        if (query::yes_or_no() == BinaryAnswer::no)
         {
-            msg_log::add("Cast spell and risk depleting your spirit? [y/n]",
-                         clr_white_lgt);
-
-            if (query::yes_or_no() == BinaryAnswer::no)
-            {
-                msg_log::clear();
-
-                return;
-            }
-
             msg_log::clear();
+
+            return;
         }
 
-        const bool is_blood_sorc =
-            player_bon::traits[size_t(Trait::blood_sorc)];
+        msg_log::clear();
+    }
 
-        const int blood_sorc_hp_drained = 2;
+    const bool is_blood_sorc =
+        player_bon::traits[size_t(Trait::blood_sorc)];
 
-        if (is_blood_sorc)
+    const int blood_sorc_hp_drained = 2;
+
+    if (is_blood_sorc)
+    {
+        if (map::player->hp() <= blood_sorc_hp_drained)
         {
-            if (map::player->hp() <= blood_sorc_hp_drained)
-            {
-                msg_log::add("I do not have enough life force.");
+            msg_log::add("I do not have enough life force.");
 
-                return;
-            }
+            return;
         }
+    }
 
-        msg_log::add("I cast " + spell->name() + "!");
+    msg_log::add("I cast " + spell->name() + "!");
 
-        if (is_blood_sorc)
-        {
-            map::player->hit(blood_sorc_hp_drained, DmgType::pure);
-        }
+    if (is_blood_sorc)
+    {
+        map::player->hit(blood_sorc_hp_drained, DmgType::pure);
+    }
 
-        if (map::player->is_alive())
-        {
-            const SpellSkill skill = map::player->spell_skill(spell->id());
-
-            spell->cast(map::player,
-                        skill,
-                        IsIntrinsic::yes);
-        }
+    if (map::player->is_alive())
+    {
+        spell->cast(map::player,
+                    skill,
+                    IsIntrinsic::yes);
     }
 }
 
@@ -386,7 +388,11 @@ void BrowseSpell::draw()
 
         p.x += str.size();
 
-        const Range spi_cost = spell->spi_cost(map::player);
+        const SpellId id = spell->id();
+
+        const auto skill = player_spells::spell_skill(id);
+
+        const Range spi_cost = spell->spi_cost(skill, map::player);
 
         const std::string lower_str = std::to_string(spi_cost.min);
         const std::string upper_str = std::to_string(spi_cost.max);
@@ -400,10 +406,6 @@ void BrowseSpell::draw()
                           Panel::screen,
                           p,
                           clr_white);
-
-        const SpellId id = spell->id();
-
-        const auto skill = player_spells::spell_skill(id);
 
         // Draw skill level if learned
         if ((spell_opt.src == SpellSrc::learned) &&

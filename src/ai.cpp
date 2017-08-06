@@ -39,8 +39,11 @@ bool try_cast_random_spell(Mon& mon)
         if ((current_cooldown <= 0) &&
             spell->allow_mon_cast_now(mon))
         {
+            const auto skill = mon.spell_skill(spell->id());
+
             const int current_spi = mon.spi();
-            const int spell_max_spi = spell->spi_cost(&mon).max;
+
+            const int spell_max_spi = spell->spi_cost(skill, &mon).max;
 
             const int current_hp = mon.hp();
             const int max_hp = mon.hp_max(true);
@@ -68,8 +71,6 @@ bool try_cast_random_spell(Mon& mon)
                 }
 
                 current_cooldown = spell->mon_cooldown();
-
-                const auto skill = mon.spell_skill(spell->id());
 
                 spell->cast(&mon,
                             skill,

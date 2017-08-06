@@ -1236,6 +1236,7 @@ void CultistPriest::mk_start_items()
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
     {
@@ -1275,6 +1276,7 @@ void CultistWizard::mk_start_items()
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
     {
@@ -1308,6 +1310,7 @@ void CultistGrandWizard::mk_start_items()
     spells_known_.push_back(new SpellAzaWrath);
     spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
     {
@@ -1524,6 +1527,7 @@ void Phantasm::mk_start_items()
 void Wraith::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::wraith_claw));
+
     spells_known_.push_back(spell_handling::random_spell_for_mon());
     spells_known_.push_back(spell_handling::random_spell_for_mon());
 }
@@ -1560,6 +1564,7 @@ void MiGo::mk_start_items()
     spells_known_.push_back(new SpellTeleport);
     spells_known_.push_back(new SpellMiGoHypno);
     spells_known_.push_back(new SpellHeal);
+    spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
     {
@@ -1752,20 +1757,17 @@ void ElderVoidTraveler::mk_start_items()
     spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellDeafen);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 }
 
 void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
 
-    spells_known_.push_back(
-        spell_handling::mk_spell_from_id(SpellId::disease));
-
-    spells_known_.push_back(
-        spell_handling::mk_spell_from_id(SpellId::enfeeble));
-
-    spells_known_.push_back(
-        spell_handling::mk_spell_from_id(SpellId::heal));
+    spells_known_.push_back(new SpellDisease);
+    spells_known_.push_back(new SpellEnfeeble);
+    spells_known_.push_back(new SpellHeal);
+    spells_known_.push_back(new SpellSpellShield);
 
     const int nr_spells = 3;
 
@@ -1790,7 +1792,10 @@ void MummyUnique::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
 
-    spells_known_.push_back(spell_handling::mk_spell_from_id(SpellId::disease));
+    spells_known_.push_back(new SpellDisease);
+    spells_known_.push_back(new SpellEnfeeble);
+    spells_known_.push_back(new SpellHeal);
+    spells_known_.push_back(new SpellSpellShield);
 
     spells_known_.push_back(spell_handling::random_spell_for_mon());
     spells_known_.push_back(spell_handling::random_spell_for_mon());
@@ -1964,6 +1969,7 @@ void KeziahMason::mk_start_items()
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellDeafen);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 
     // Make some treasures to drop
     for (int i = rnd::range(2, 3); i > 0; --i)
@@ -2748,6 +2754,7 @@ void TheHighPriest::mk_start_items()
     spells_known_.push_back(new SpellTeleport);
     spells_known_.push_back(new SpellAzaWrath);
     spells_known_.push_back(new SpellSeeInvis);
+    spells_known_.push_back(new SpellSpellShield);
 }
 
 void TheHighPriest::on_death()

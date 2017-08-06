@@ -65,6 +65,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::lesser_alter:
     case Trait::greater_alter:
     case Trait::blood_sorc:
+    case Trait::absorb:
     case Trait::tough:
     case Trait::rugged:
     case Trait::thick_skinned:
@@ -212,6 +213,9 @@ std::string trait_title(const Trait id)
 
     case Trait::blood_sorc:
         return "Blood Sorcerer";
+
+    case Trait::absorb:
+        return "Absorption";
 
     case Trait::dexterous:
         return "Dexterous";
@@ -527,13 +531,13 @@ std::string trait_descr(const Trait id)
         return
             "Spells related to bestowing properties, aiding, or debilitating "
             "are cast at expert level (Resistance, Light, Bless, Healing, "
-            "Enfeeble)";
+            "Enfeeble, Spell Shield)";
 
     case Trait::greater_ench:
         return
             "Spells related to bestowing properties, aiding, or debilitating "
             "are cast at master level (Resistance, Light, Bless, Healing, "
-            "Enfeeble)";
+            "Enfeeble, Spell Shield)";
 
     case Trait::lesser_alter:
         return
@@ -551,6 +555,11 @@ std::string trait_descr(const Trait id)
         return
             "-1 Spirit cost for all spells, casting a spell drains 2 "
             "Hit Points";
+
+    case Trait::absorb:
+        return
+            "1d6 Spirit is restored each time a spell is resisted by Spell "
+            "Resistance (granted by Spirit traits, or the Spell Shield spell)";
 
     case Trait::tough:
         return
@@ -828,6 +837,11 @@ void trait_prereqs(const Trait trait,
     case Trait::blood_sorc:
         traits_out.push_back(Trait::tough);
         traits_out.push_back(Trait::cool_headed);
+        bg_out = Bg::occultist;
+        break;
+
+    case Trait::absorb:
+        traits_out.push_back(Trait::strong_spirit);
         bg_out = Bg::occultist;
         break;
 
@@ -1211,6 +1225,7 @@ void pick_trait(const Trait id)
         player_spells::incr_spell_skill(SpellId::light);
         player_spells::incr_spell_skill(SpellId::bless);
         player_spells::incr_spell_skill(SpellId::enfeeble);
+        player_spells::incr_spell_skill(SpellId::spell_shield);
     }
     break;
 

@@ -1381,12 +1381,32 @@ void Player::on_std_turn()
         player_bon::traits[(size_t)Trait::strong_spirit]    ? 2 :
         player_bon::traits[(size_t)Trait::stout_spirit]     ? 1 : 0;
 
-    if ((spi_trait_lvl > 0) &&
-        !prop_handler_->has_prop(PropId::r_spell))
+    const int nr_turns_base = 125 + rnd::range(0, 25);
+
+    const int nr_turns_bon = (spi_trait_lvl - 1) * 50;
+
+    int nr_turns_to_recharge_full =
+        std::max(10,
+                 nr_turns_base - nr_turns_bon);
+
+    // Halved number of turns due to the Talisman of Reflection?
+    if (inv_->has_item_in_backpack(ItemId::refl_talisman))
+    {
+        nr_turns_to_recharge_full /= 2;
+    }
+
+    // If we already have spell resistance (e.g. due to the Spell Shield spell),
+    // then always (re)set the cooldown to max number of turns
+    if (prop_handler_->has_prop(PropId::r_spell))
+    {
+        nr_turns_until_rspell_ = nr_turns_to_recharge_full;
+    }
+    // Spell resistance not currently active
+    else if (spi_trait_lvl > 0)
     {
         if (nr_turns_until_rspell_ <= 0)
         {
-            // Cooldown has finished, OR countdown has not yet been initialized
+            // Cooldown has finished, OR countdown not initialized
 
             if (nr_turns_until_rspell_ == 0)
             {
@@ -1396,21 +1416,11 @@ void Player::on_std_turn()
                 msg_log::more_prompt();
             }
 
-            const int nr_turns_base = 125 + rnd::range(0, 25);
-
-            const int nr_turns_bon = (spi_trait_lvl - 1) * 50;
-
-            nr_turns_until_rspell_ = std::max(10, nr_turns_base - nr_turns_bon);
-
-            // Halved number of turns due to the Talisman of Reflection?
-            if (inv_->has_item_in_backpack(ItemId::refl_talisman))
-            {
-                nr_turns_until_rspell_ /= 2;
-            }
+            nr_turns_until_rspell_ = nr_turns_to_recharge_full;
         }
 
         if (!prop_handler_->has_prop(PropId::r_spell) &&
-            nr_turns_until_rspell_ > 0)
+            (nr_turns_until_rspell_ > 0))
         {
             // Spell resistance is in cooldown state, decrement number of
             // remaining turns
