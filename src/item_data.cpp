@@ -366,7 +366,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.has_std_activate = true;
         d.weight = ItemWeight::light;
         d.glyph = '-';
-        d.max_stack_at_spawn = 3;
+        d.max_stack_at_spawn = 2;
         d.land_on_hard_snd_msg = "";
         break;
 
@@ -1957,7 +1957,6 @@ void init_data_list()
     d.id = ItemId::scroll_spell_shield;
     d.spell_cast_from_scroll = SpellId::spell_shield;
     data[(size_t)d.id] = d;
-
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_vitality;
     data[(size_t)d.id] = d;

@@ -69,6 +69,7 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::tough:
     case Trait::rugged:
     case Trait::thick_skinned:
+    case Trait::resistant:
     case Trait::strong_backed:
     case Trait::dexterous:
     case Trait::lithe:
@@ -300,6 +301,9 @@ std::string trait_title(const Trait id)
 
     case Trait::thick_skinned:
         return "Thick Skinned";
+
+    case Trait::resistant:
+        return "Resistant";
 
     case Trait::treasure_hunter:
         return "Treasure Hunter";
@@ -577,6 +581,10 @@ std::string trait_descr(const Trait id)
         return
             "+1 Armor Point (physical damage reduced by 1 point)";
 
+    case Trait::resistant:
+        return
+            "Halved damage from fire and electricity (at least 1 damage taken)";
+
     case Trait::strong_backed:
         return
             "+30% carry weight limit";
@@ -852,7 +860,12 @@ void trait_prereqs(const Trait trait,
         traits_out.push_back(Trait::tough);
         break;
 
+    case Trait::resistant:
+        traits_out.push_back(Trait::tough);
+        break;
+
     case Trait::thick_skinned:
+        traits_out.push_back(Trait::tough);
         break;
 
     case Trait::strong_backed:

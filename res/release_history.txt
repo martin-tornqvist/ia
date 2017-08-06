@@ -19,6 +19,7 @@ Gameplay
 * Removed the "Sacrifice Life"/"Spirit" spells
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Added trait "Absorption" for Occultists - blocking a spell restores 1d6 Spirit
+* Added trait "Resistant" - halved damage from fire and electricity
 * Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
 * The "snake emerge" and "wall crumbling" events are much rarer
 * Reduced duration of Blindness from Raven attacks

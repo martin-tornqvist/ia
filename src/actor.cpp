@@ -740,7 +740,7 @@ ActorDied Actor::hit(int dmg,
                 (method == DmgMethod::slashing) ||
                 (method == DmgMethod::piercing))
             {
-                Snd snd("*Crack!",
+                Snd snd("*Crack!*",
                         SfxId::hit_corpse_break,
                         IgnoreMsgIfOriginSeen::yes,
                         pos,
@@ -804,9 +804,10 @@ ActorDied Actor::hit(int dmg,
         Verbosity::silent;
 
     const bool is_dmg_resisted =
-        prop_handler_->is_resisting_dmg(dmg_type,
-                                        attacker,
-                                        verbosity);
+        prop_handler_->is_resisting_dmg(
+            dmg_type,
+            attacker,
+            verbosity);
 
     if (is_dmg_resisted)
     {
@@ -821,6 +822,15 @@ ActorDied Actor::hit(int dmg,
     if (dmg_type == DmgType::physical)
     {
         dmg = hit_armor(dmg);
+    }
+
+    // Fire/electricity damage reduction from the Resistant trait?
+    if (((dmg_type == DmgType::fire) ||
+         (dmg_type == DmgType::electric)) &&
+        is_player() &&
+        player_bon::traits[(size_t)Trait::resistant])
+    {
+        dmg /= 2;
     }
 
     //

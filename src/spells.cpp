@@ -728,7 +728,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         target->is_alive())
     {
         target->prop_handler().apply(
-            new PropBurning(PropTurns::specific, 4));
+            new PropBurning(PropTurns::specific, 3));
     }
 
     Snd snd("",
@@ -895,7 +895,7 @@ void SpellAzaWrath::run_effect(Actor* const caster,
             target->is_alive())
         {
             target->prop_handler().apply(
-                new PropBurning(PropTurns::specific, 3));
+                new PropBurning(PropTurns::specific, 2));
         }
 
         Snd snd("",
@@ -2719,7 +2719,7 @@ void SpellBurn::run_effect(Actor* const caster,
         msg_log::add("Flames are rising around " + target_str + "!");
     }
 
-    const int nr_turns = 3 + (int)skill;
+    const int nr_turns = 2 + (int)skill;
 
     Prop* const prop = new PropBurning(PropTurns::specific, nr_turns);
 

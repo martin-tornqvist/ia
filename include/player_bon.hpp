@@ -44,6 +44,7 @@ enum class Trait
     tough,
     rugged,
     thick_skinned,
+    resistant,
     strong_backed,
     undead_bane,
     elec_incl,

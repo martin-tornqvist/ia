@@ -315,7 +315,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::burning;
-    d.std_rnd_turns = Range(7, 11);
+    d.std_rnd_turns = Range(6, 8);
     d.name = "Burning";
     d.name_short = "Burning";
     d.descr =
@@ -2824,7 +2824,7 @@ Prop* PropBurning::on_tick()
         msg_log::add("AAAARGH IT BURNS!!!", clr_red_lgt);
     }
 
-    owning_actor_->hit(rnd::dice(1, 2), DmgType::fire);
+    owning_actor_->hit(rnd::dice(1, 3), DmgType::fire);
 
     return this;
 }
