@@ -34,6 +34,7 @@ enum class PropId
     burning,
     radiant,
     invis,
+    cloaked,
     see_invis,
     infravis,
     poisoned,
@@ -728,6 +729,13 @@ class PropInvisible: public Prop
 public:
     PropInvisible(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::invis, turns_init, nr_turns) {}
+};
+
+class PropCloaked: public Prop
+{
+public:
+    PropCloaked(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::cloaked, turns_init, nr_turns) {}
 };
 
 class PropSeeInvis: public Prop

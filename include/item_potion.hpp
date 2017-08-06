@@ -369,7 +369,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "Makes the consumer invisible to normal vision.";
+        return
+            "Makes the consumer invisible to normal vision for a brief time. "
+            "Attacking or casting spells immediately reveals the consumer.";
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;

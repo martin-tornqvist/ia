@@ -279,6 +279,9 @@ void throw_item(Actor& actor_throwing,
 
                     delete &item_thrown;
 
+                    // Attacking ends cloaking
+                    actor_throwing.prop_handler().end_prop(PropId::cloaked);
+
                     game_time::tick(speed_pct_diff);
 
                     return;
@@ -345,6 +348,9 @@ void throw_item(Actor& actor_throwing,
         potion->on_collide(pos, nullptr);
 
         delete &item_thrown;
+
+        // Attacking ends cloaking
+        actor_throwing.prop_handler().end_prop(PropId::cloaked);
 
         game_time::tick(speed_pct_diff);
 
@@ -429,6 +435,9 @@ void throw_item(Actor& actor_throwing,
             snd.run();
         }
     }
+
+    // Attacking ends cloaking
+    actor_throwing.prop_handler().end_prop(PropId::cloaked);
 
     game_time::tick(speed_pct_diff);
 }

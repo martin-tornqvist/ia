@@ -412,7 +412,8 @@ bool Mon::can_see_actor(const Actor& other,
     const bool can_see_invis = has_prop(PropId::see_invis);
 
     // Actor is invisible, and monster cannot see invisible?
-    if (other.has_prop(PropId::invis) &&
+    if ((other.has_prop(PropId::invis) ||
+         other.has_prop(PropId::cloaked)) &&
         !can_see_invis)
     {
         return false;

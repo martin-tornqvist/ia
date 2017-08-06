@@ -678,6 +678,24 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
+    d.id = PropId::cloaked;
+    d.std_rnd_turns = Range(7, 9);
+    d.name = "Cloaked";
+    d.name_short = "Cloaked";
+    d.descr =
+        "Cannot be detected by normal sight, ends if attacking or casting "
+        "spells";
+    d.msg[(size_t)PropMsg::start_player] = "I am out of sight!";
+    d.msg[(size_t)PropMsg::start_mon] = "is out of sight!";
+    d.msg[(size_t)PropMsg::end_player] = "I am visible.";
+    d.msg[(size_t)PropMsg::end_mon] = "is visible.";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = true;
+    d.update_vision_when_start_or_end = true;
+    d.allow_test_on_bot = true;
+    d.alignment = PropAlignment::good;
+    add_prop_data(d);
+
     d.id = PropId::see_invis;
     d.std_rnd_turns = Range(50, 100);
     d.name = "See Invisible";
@@ -1167,6 +1185,9 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::invis:
         return new PropInvisible(turns_init, nr_turns);
+
+    case PropId::cloaked:
+        return new PropCloaked(turns_init, nr_turns);
 
     case PropId::see_invis:
         return new PropSeeInvis(turns_init, nr_turns);

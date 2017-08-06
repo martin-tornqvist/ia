@@ -1927,6 +1927,9 @@ void melee(Actor* const attacker,
             }
         }
 
+        // Attacking ends cloaking
+        attacker->prop_handler().end_prop(PropId::cloaked);
+
         game_time::tick(speed_pct_diff);
     }
 }
@@ -2045,6 +2048,9 @@ bool ranged(Actor* const attacker,
                 speed_pct_diff += 100;
             }
         }
+
+        // Attacking ends cloaking
+        attacker->prop_handler().end_prop(PropId::cloaked);
 
         game_time::tick(speed_pct_diff);
     }

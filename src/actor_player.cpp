@@ -392,7 +392,9 @@ bool Player::can_see_actor(const Actor& other) const
     const bool can_see_invis = has_prop(PropId::see_invis);
 
     // Monster is invisible, and player cannot see invisible?
-    if (other.has_prop(PropId::invis) && !can_see_invis)
+    if ((other.has_prop(PropId::invis) ||
+         other.has_prop(PropId::cloaked)) &&
+        !can_see_invis)
     {
         return false;
     }
@@ -1061,8 +1063,12 @@ void Player::on_actor_turn()
         {
             mon.is_msg_mon_in_view_printed_ = false;
 
+            const bool is_mon_invis =
+                mon.has_prop(PropId::invis) ||
+                mon.has_prop(PropId::cloaked);
+
             if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
-                (!mon.has_prop(PropId::invis) ||
+                (!is_mon_invis ||
                  has_prop(PropId::see_invis)))
             {
                 //
@@ -1946,7 +1952,8 @@ Clr Player::clr() const
         return clr_magenta;
     }
 
-    if (has_prop(PropId::invis))
+    if (has_prop(PropId::invis) ||
+        has_prop(PropId::cloaked))
     {
         return clr_gray;
     }

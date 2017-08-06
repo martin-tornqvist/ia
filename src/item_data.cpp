@@ -2005,7 +2005,7 @@ void init_data_list()
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_descent;
-    mod_spawn_chance(d, 0.66);
+    mod_spawn_chance(d, 0.15);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);

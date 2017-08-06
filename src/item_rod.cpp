@@ -199,9 +199,11 @@ void RodPurgeInvis::run_effect()
         if (!los.is_blocked_hard)
         {
             // Reveal invisible monsters
-            if (actor->has_prop(PropId::invis))
+            if (actor->has_prop(PropId::invis) ||
+                actor->has_prop(PropId::cloaked))
             {
                 actor->prop_handler().end_prop(PropId::invis);
+                actor->prop_handler().end_prop(PropId::cloaked);
 
                 if (map::player->can_see_actor(*actor))
                 {

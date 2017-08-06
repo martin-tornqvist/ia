@@ -378,6 +378,9 @@ void Spell::cast(Actor* const caster,
         run_effect(caster, skill);
     }
 
+    // Casting spells ends cloaking
+    caster->prop_handler().end_prop(PropId::cloaked);
+
     game_time::tick();
 
     TRACE_FUNC_END;

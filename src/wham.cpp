@@ -112,6 +112,9 @@ void run()
 
                 try_sprain_player();
 
+                // Attacking ends cloaking
+                map::player->prop_handler().end_prop(PropId::cloaked);
+
                 game_time::tick();
             }
 
@@ -220,6 +223,9 @@ void run()
             }
         }
 
+        // Attacking ends cloaking
+        map::player->prop_handler().end_prop(PropId::cloaked);
+
         game_time::tick();
 
         TRACE_FUNC_END;
@@ -298,6 +304,9 @@ void run()
                      DmgType::physical,
                      wpn_used->data().melee.dmg_method,
                      map::player);
+
+        // Attacking ends cloaking
+        map::player->prop_handler().end_prop(PropId::cloaked);
 
         game_time::tick();
     }

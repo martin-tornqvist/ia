@@ -507,7 +507,7 @@ void PotionDescent::quaff_impl(Actor& actor)
 
 void PotionInvis::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropInvisible(PropTurns::std));
+    actor.prop_handler().apply(new PropCloaked(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
