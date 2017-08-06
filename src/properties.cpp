@@ -599,9 +599,9 @@ void init_data_list()
     d.name = "Frenzied";
     d.name_short = "Frenzied";
     d.descr =
-        "Must move towards seen enemies, +100% speed, +10% melee hit chance, "
-        "immune to confusion, fainting, fear, and weakening, cannot read or "
-        "cast spells, becomes weakened when the frenzy ends";
+        "Cannot move away from seen enemies, +100% speed, +10% melee hit "
+        "chance, immune to confusion, fainting, fear, and weakening, cannot "
+        "read or cast spells, becomes weakened when the frenzy ends";
     d.msg[(size_t)PropMsg::start_player] = "I feel ferocious!!!";
     d.msg[(size_t)PropMsg::start_mon] = "Looks ferocious!";
     d.msg[(size_t)PropMsg::end_player] = "I calm down.";
@@ -2733,7 +2733,8 @@ bool PropStrangled::allow_eat(const Verbosity verbosity) const
 
 void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 {
-    if (!owning_actor_->is_player())
+    if (!owning_actor_->is_player() ||
+        (dir == Dir::center))
     {
         return;
     }
