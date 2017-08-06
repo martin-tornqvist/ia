@@ -305,8 +305,9 @@ bool mk_egypt_lvl()
         map_templates::level_templ(
             LevelTemplId::egypt);
 
-    const P     templ_dims  = templ.dims();
-    const char  stair_c     = '1' + rnd::range(0, 1);
+    const P templ_dims = templ.dims();
+
+    const char stair_c = '1' + rnd::range(0, 3);
 
     for (int x = 0; x < templ_dims.x; ++x)
     {
@@ -325,6 +326,8 @@ bool mk_egypt_lvl()
             case 'C':
             case '1':
             case '2':
+            case '3':
+            case '4':
             {
                 if (c == '@')
                 {
@@ -386,6 +389,28 @@ bool mk_egypt_lvl()
             case 'S':
             {
                 map::put(new Statue(p));
+            }
+            break;
+
+            case '+':
+            {
+                Door* const door =
+                    new Door(p,
+                             new Wall(p),
+                             DoorType::wood,
+                             DoorSpawnState::closed);
+
+                map::put(door);
+            }
+            break;
+
+            case '~':
+            {
+                auto liquid = new LiquidShallow(p);
+
+                liquid->type_ = LiquidType::water;
+
+                map::put(liquid);
             }
             break;
             }
