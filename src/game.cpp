@@ -65,9 +65,10 @@ void query_quit()
     };
 
     const int quit_choice =
-        popup::show_menu_msg("Save and highscore are not kept.",
-                             quit_choices,
-                             "Quit the current game?");
+        popup::show_menu_msg(
+            "Save and highscore are not kept.",
+            quit_choices,
+            "Quit the current game?");
 
     if (quit_choice == 0)
     {

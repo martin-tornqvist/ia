@@ -72,6 +72,7 @@ void sort_entries(std::vector<HighscoreEntry>& entries)
 void write_file(std::vector<HighscoreEntry>& entries)
 {
     std::ofstream file;
+
     file.open("res/data/highscores", std::ios::trunc);
 
     for (const auto entry : entries)
@@ -85,7 +86,7 @@ void write_file(std::vector<HighscoreEntry>& entries)
         file << entry.lvl() << std::endl;
         file << entry.dlvl() << std::endl;
         file << entry.ins() << std::endl;
-        file << int(entry.bg()) << std::endl;
+        file << (int)entry.bg() << std::endl;
     }
 }
 
@@ -128,7 +129,7 @@ std::vector<HighscoreEntry> read_file()
         const int ins = to_int(line);
 
         getline(file, line);
-        Bg bg = Bg(to_int(line));
+        Bg bg = (Bg)to_int(line);
 
         entries.push_back(
             HighscoreEntry(date_and_time,
@@ -173,16 +174,18 @@ void on_game_over(const bool is_win)
 
     std::vector<HighscoreEntry> entries = entries_sorted();
 
-    const auto time = current_time().time_str(TimeType::minute, true);
+    const auto time = current_time().time_str(TimeType::day, true);
 
-    final_score_ = new HighscoreEntry(time,
-                                      map::player->name_a(),
-                                      game::xp_accumulated(),
-                                      game::clvl(),
-                                      map::dlvl,
-                                      map::player->ins(),
-                                      is_win,
-                                      player_bon::bg());
+    final_score_ =
+        new HighscoreEntry(
+            time,
+            map::player->name_a(),
+            game::xp_accumulated(),
+            game::clvl(),
+            map::dlvl,
+            map::player->ins(),
+            is_win,
+            player_bon::bg());
 
     entries.push_back(*final_score_);
 
@@ -237,8 +240,9 @@ void BrowseHighscore::draw()
     }
 
     const int x_pos_date = 0;
-    const int x_pos_name = x_pos_date + 19;
-    const int x_pos_lvl = x_pos_name + player_name_max_len + 2;
+    const int x_pos_name = x_pos_date + 11;
+    const int x_pos_bg = x_pos_name + player_name_max_len + 2;
+    const int x_pos_lvl = x_pos_bg + 13;
     const int x_pos_dlvl = x_pos_lvl + 7;
     const int x_pos_ins = x_pos_dlvl + 7;
     const int x_pos_win = x_pos_ins + 10;
@@ -249,12 +253,13 @@ void BrowseHighscore::draw()
 
     int y_pos = 1;
 
-    const Clr& label_clr = clr_white_lgt;
+    const Clr& label_clr = clr_title;
 
     const Panel panel = Panel::screen;
 
     io::draw_text("Ended", panel, P(x_pos_date, y_pos), label_clr);
     io::draw_text("Name", panel, P(x_pos_name, y_pos), label_clr);
+    io::draw_text("Background", panel, P(x_pos_bg, y_pos), label_clr);
     io::draw_text("Level", panel, P(x_pos_lvl, y_pos), label_clr);
     io::draw_text("Depth", panel, P(x_pos_dlvl, y_pos), label_clr);
     io::draw_text("Insanity", panel, P(x_pos_ins, y_pos), label_clr);
@@ -271,6 +276,7 @@ void BrowseHighscore::draw()
 
         const std::string date_and_time = entry.date_and_time();
         const std::string name = entry.name();
+        const std::string bg = player_bon::bg_title(entry.bg());
         const std::string lvl = std::to_string(entry.lvl());
         const std::string dlvl = std::to_string(entry.dlvl());
         const std::string ins = std::to_string(entry.ins());
@@ -281,6 +287,7 @@ void BrowseHighscore::draw()
 
         io::draw_text(date_and_time, panel, P(x_pos_date, y_pos), clr);
         io::draw_text(name, panel, P(x_pos_name, y_pos), clr);
+        io::draw_text(bg, panel, P(x_pos_bg, y_pos), clr);
         io::draw_text(lvl, panel, P(x_pos_lvl, y_pos), clr);
         io::draw_text(dlvl, panel, P(x_pos_dlvl, y_pos), clr);
         io::draw_text(ins + "%", panel, P(x_pos_ins, y_pos), clr);
