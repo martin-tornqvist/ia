@@ -1021,26 +1021,8 @@ void incr_player_xp(const int xp_gained,
 
             msg_log::more_prompt();
 
-            // Increase SPI on even levels, and HP on odd levels
-            if ((clvl_ % 2) == 0)
             {
-                const int spi_gained = rnd::range(1, 3);
-
-                map::player->change_max_spi(spi_gained,
-                                            Verbosity::silent);
-
-                map::player->restore_spi(spi_gained,
-                                         false,
-                                         Verbosity::silent);
-
-                msg_log::add("Gained +" +
-                             std::to_string(spi_gained) +
-                             " Spirit Points.",
-                             clr_msg_good);
-            }
-            else // Odd level
-            {
-                const int hp_gained = rnd::range(1, 3);
+                const int hp_gained = 1;
 
                 map::player->change_max_hp(hp_gained,
                                            Verbosity::silent);
@@ -1048,14 +1030,18 @@ void incr_player_xp(const int xp_gained,
                 map::player->restore_hp(hp_gained,
                                         false,
                                         Verbosity::silent);
-
-                msg_log::add("Gained +" +
-                             std::to_string(hp_gained) +
-                             " Hit Points.",
-                             clr_msg_good);
             }
 
-            msg_log::more_prompt();
+            {
+                const int spi_gained = 1;
+
+                map::player->change_max_spi(spi_gained,
+                                            Verbosity::silent);
+
+                map::player->restore_spi(spi_gained,
+                                         false,
+                                         Verbosity::silent);
+            }
 
             std::unique_ptr<State> trait_state(new PickTraitState);
 
