@@ -1332,7 +1332,8 @@ void Player::update_tmp_shock()
                                                  ShockSrc::misc);
         }
     }
-    else // Is blind
+    // Is blind
+    else if (!has_prop(PropId::fainted))
     {
         shock_tmp_ += shock_taken_after_mods(30.0, ShockSrc::misc);
     }
