@@ -412,7 +412,7 @@ bool mk_std_lvl()
     // Reserve regions for a "river"
     // -------------------------------------------------------------------------
 #ifndef DISABLE_MK_RIVER
-    const int river_one_in_n = 8;
+    const int river_one_in_n = 12;
 
     if (map::dlvl >= dlvl_first_mid_game &&
         rnd::one_in(river_one_in_n))

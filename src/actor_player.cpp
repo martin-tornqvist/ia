@@ -1110,7 +1110,7 @@ void Player::on_actor_turn()
         //
         // Passive shock taken over time
         //
-        double passive_shock_taken = 0.085;
+        double passive_shock_taken = 0.09;
 
         if (player_bon::bg() == Bg::rogue)
         {

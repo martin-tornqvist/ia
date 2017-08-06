@@ -1315,6 +1315,7 @@ void ForestRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
+
     mapgen::cavify_room(*this);
 }
 
@@ -1370,7 +1371,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
     int nr_trees_placed = 0;
 
-    const int tree_one_in_n = rnd::range(2, 5);
+    const int tree_one_in_n = rnd::range(3, 10);
 
     while (!tree_pos_bucket.empty())
     {

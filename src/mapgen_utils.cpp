@@ -295,17 +295,17 @@ void cavify_room(Room& room)
 
     const auto& r = room.r_;
 
-    const int X0 = r.p0.x + 1;
-    const int Y0 = r.p0.y + 1;
-    const int X1 = r.p1.x - 1;
-    const int Y1 = r.p1.y - 1;
+    const int x0 = r.p0.x + 1;
+    const int y0 = r.p0.y + 1;
+    const int x1 = r.p1.x - 1;
+    const int y1 = r.p1.y - 1;
 
-    for (int x = X0; x <= X1; ++x)
+    for (int x = x0; x <= x1; ++x)
     {
-        for (int y = Y0; y <= Y1; ++y)
+        for (int y = y0; y <= y1; ++y)
         {
-            // Add to origin bucket if we are on the edge
-            if (x == X0 || x == X1 || y == Y0 || y == Y1)
+            // add to origin bucket if we are on the edge
+            if (x == x0 || x == x1 || y == y0 || y == y1)
             {
                 origin_bucket.push_back({x, y});
             }
@@ -333,7 +333,8 @@ void cavify_room(Room& room)
         {
             for (int y = 0; y < map_h; ++y)
             {
-                if (flood[x][y] > 0)
+                if ((flood[x][y] > 0) &&
+                    (map::room_map[x][y] != &room))
                 {
                     map::put(new Floor({x, y}));
 
