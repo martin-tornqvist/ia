@@ -2398,9 +2398,19 @@ Tomb::Tomb(const P& p) :
     // Contained items
     const int nr_items_min = rnd::one_in(4) ? 0 : 1;
 
-    const int nr_items_max =
-        player_bon::traits[(size_t)Trait::treasure_hunter] ?
-        2 : 1;
+    int nr_items_max = 1;
+
+    int incr_max_items_one_in = 12;
+
+    if (player_bon::traits[(size_t)Trait::treasure_hunter])
+    {
+        incr_max_items_one_in /= 2;
+    }
+
+    if (rnd::one_in(incr_max_items_one_in))
+    {
+        ++nr_items_max;
+    }
 
     item_container_.init(FeatureId::tomb,
                          rnd::range(nr_items_min,
@@ -2941,12 +2951,22 @@ Chest::Chest(const P& p) :
         matl_ = ChestMatl::iron;
     }
 
-    const bool is_treasure_hunter =
-        player_bon::traits[(size_t)Trait::treasure_hunter];
+    // Contained items
+    const int nr_items_min = rnd::one_in(4) ? 0 : 1;
 
-    const int nr_items_min = 0;
+    int nr_items_max = 2;
 
-    const int nr_items_max = is_treasure_hunter ? 3 : 2;
+    int incr_max_items_one_in = 12;
+
+    if (player_bon::traits[(size_t)Trait::treasure_hunter])
+    {
+        incr_max_items_one_in /= 2;
+    }
+
+    if (rnd::one_in(incr_max_items_one_in))
+    {
+        ++nr_items_max;
+    }
 
     item_container_.init(FeatureId::chest,
                          rnd::range(nr_items_min, nr_items_max));
@@ -3384,15 +3404,26 @@ Cabinet::Cabinet(const P& p) :
     Rigid       (p),
     is_open_    (false)
 {
-    Range items_range((rnd::coin_toss() ? 0 : 1), 1);
+    // Contained items
+    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+
+    int nr_items_max = 1;
+
+    int incr_max_items_one_in = 12;
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
-        ++items_range.max;
+        incr_max_items_one_in /= 2;
+    }
+
+    if (rnd::one_in(incr_max_items_one_in))
+    {
+        ++nr_items_max;
     }
 
     item_container_.init(FeatureId::cabinet,
-                         items_range.roll());
+                         rnd::range(nr_items_min,
+                                    nr_items_max));
 }
 
 void Cabinet::on_hit(const int dmg,
@@ -3499,15 +3530,26 @@ Bookshelf::Bookshelf(const P& p) :
     Rigid       (p),
     is_looted_  (false)
 {
-    Range items_range((rnd::coin_toss() ? 0 : 1), 1);
+    // Contained items
+    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+
+    int nr_items_max = 1;
+
+    int incr_max_items_one_in = 12;
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
-        ++items_range.max;
+        incr_max_items_one_in /= 2;
+    }
+
+    if (rnd::one_in(incr_max_items_one_in))
+    {
+        ++nr_items_max;
     }
 
     item_container_.init(FeatureId::bookshelf,
-                         items_range.roll());
+                         rnd::range(nr_items_min,
+                                    nr_items_max));
 }
 
 void Bookshelf::on_hit(const int dmg,

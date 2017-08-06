@@ -24,7 +24,7 @@ int nr_items()
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {
-        nr += 2;
+        nr += rnd::range(1, 2);
     }
 
     return nr;
