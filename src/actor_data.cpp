@@ -3338,6 +3338,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.nr_turns_aware = 5;
     d.spawn_min_dlvl = 3;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::floor;
     d.is_auto_descr_allowed = false;
     d.erratic_move_pct = ActorErraticFreq::never;
@@ -3487,7 +3488,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'W';
-    d.color = clr_gray_drk;
+    d.color = clr_gray;
     d.tile = TileId::hunting_horror;
     d.hp = 90;
     d.spi = 40;
@@ -3541,7 +3542,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::slow;
     d.spell_skill = SpellSkill::expert;
     d.glyph = 'Y';
-    d.color = clr_red;
+    d.color = clr_gray;
     d.tile = TileId::fiend;
     d.hp = 90;
     d.spi = 40;
