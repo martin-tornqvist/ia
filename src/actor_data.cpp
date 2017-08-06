@@ -1730,7 +1730,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fastest;
     d.glyph = 'b';
-    d.color = clr_gray_drk;
+    d.color = clr_gray;
     d.tile = TileId::raven;
     d.hp = 2;
     d.spi = 6;
