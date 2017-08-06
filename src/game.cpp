@@ -507,9 +507,21 @@ void handle_player_input(const InputData& input)
         if (item_at_player &&
             item_at_player->data().id == ItemId::trapez)
         {
+            game::add_history_event("Beheld The Shining Trapezohedron!");
+
             states::pop();
 
+            //
+            // Show victory text
+            //
             game::win_game();
+
+            //
+            // Go to postmortem menu
+            //
+            std::unique_ptr<State> postmortem_state(new PostmortemMenu);
+
+            states::push(std::move(postmortem_state));
 
             return;
         }
@@ -1370,7 +1382,6 @@ void GameState::update()
         //
         // Go to postmortem menu
         //
-
         states::pop();
 
         std::unique_ptr<State> postmortem_state(new PostmortemMenu);

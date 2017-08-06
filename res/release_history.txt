@@ -75,7 +75,8 @@ Interface
 * When not wearing armor, the armor icon is drawn slightly darker than before
 * Ravens are brighter (they could be hard to see)
 * The highscore list now also shows player background
-* A postmortem info text file is always stored after the game (there is no menu option for it)
+* A game summary text file is always stored after the game (there is no menu option for this)
+* You now also go to the postmortem menu after winning the game, and a game summary file is written
 
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead

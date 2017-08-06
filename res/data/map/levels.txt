@@ -109,13 +109,17 @@ $ Egypt
 '   @   Start position, floor
 '   .   Floor
 '   #   Wall
+'   ~   Water
+'   +   Door
 '   v   Brazier
 '   S   Statue
 '   P   Khephren, floor
 '   M   Mummy, floor
 '   C   Crocodile head mummy, floor
 '   1   Stair candidate one, floor
-'   2   Stair candidate two, floor
+'   2   -
+'   3   -
+'   4   -
 
 ################################################################################
 ###...##...###########################........................##################
