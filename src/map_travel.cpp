@@ -187,6 +187,9 @@ void go_to_nxt()
 
     map::player->mon_feeling();
 
+    game::add_history_event("Reached dungeon level " +
+                            std::to_string(map::dlvl));
+
     if (!map::player->has_prop(PropId::deaf))
     {
         if ((map_data.is_main_dungeon == IsMainDungeon::yes) &&
