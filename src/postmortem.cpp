@@ -35,7 +35,7 @@ PostmortemMenu::PostmortemMenu() :
     State       (),
     browser_    ()
 {
-    browser_.reset(7);
+    browser_.reset(6);
 }
 
 StateId PostmortemMenu::id()
@@ -75,7 +75,11 @@ void PostmortemMenu::on_start()
 
     ASSERT(score);
 
-    info_lines_.push_back({map::player->name_a(), clr_heading});
+    const std::string name = map::player->name_a();
+
+    const std::string bg = player_bon::bg_title(player_bon::bg());
+
+    info_lines_.push_back({name + " (" + bg + ")", clr_heading});
 
     const int dlvl = score->dlvl();
 
@@ -269,6 +273,11 @@ void PostmortemMenu::on_start()
         "The final moment:",
         clr_heading
     });
+
+    //
+    // Also dump the lines to a memorial file
+    //
+    mk_memorial_file();
 }
 
 void PostmortemMenu::on_popped()
@@ -285,7 +294,6 @@ void PostmortemMenu::draw()
     {
         "New journey",
         "Show game summary",
-        "Write memorial file",
         "View high scores",
         "View message log",
         "Return to main menu",
@@ -366,15 +374,6 @@ void PostmortemMenu::mk_memorial_file() const
     }
 
     file.close();
-
-    io::draw_text("Wrote: " + file_path + any_key_info_str,
-                  Panel::screen,
-                  P(1, 1),
-                  clr_white_lgt);
-
-    io::update_screen();
-
-    query::wait_for_key_press();
 }
 
 void PostmortemMenu::update()
@@ -423,18 +422,9 @@ void PostmortemMenu::update()
         break;
 
         //
-        // Store memorial file
-        //
-        case 2:
-        {
-            mk_memorial_file();
-        }
-        break;
-
-        //
         // Show highscores
         //
-        case 3:
+        case 2:
         {
             std::unique_ptr<State> browse_highscore_state(new BrowseHighscore);
 
@@ -445,7 +435,7 @@ void PostmortemMenu::update()
         //
         // Display message history
         //
-        case 4:
+        case 3:
         {
             std::unique_ptr<State> msg_history_state(new MsgHistoryState);
 
@@ -456,7 +446,7 @@ void PostmortemMenu::update()
         //
         // Return to main menu
         //
-        case 5:
+        case 4:
         {
             //
             // Exit screen
@@ -470,7 +460,7 @@ void PostmortemMenu::update()
         //
         // Quit game
         //
-        case 6:
+        case 5:
         {
             //
             // Bye!
