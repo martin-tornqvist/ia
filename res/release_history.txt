@@ -24,7 +24,7 @@ Gameplay
 * Oozes have much shorter awareness duration, somewhat fewer hit points, and tend to spawn in smaller groups
 * Keziah Mason starts together with Brown Jenkin, instead of spending a turn to summon it when she sees the player
 * Ghoul characters have +20% speed and +1 natural Armor Point
-* Adjusted Potion of Posion duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
+* Adjusted Potion of Poison duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damage is slower, but poisoning generally lasts longer
 * XP gained from Monoliths increased from 15% to 20%
 * Rod of Cloud Minds (which the Rogue starts with) now only requires 90 turns to recharge (or 45 with the Electrically Inclined trait)
