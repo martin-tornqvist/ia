@@ -311,9 +311,7 @@ void try_spawn_due_to_time_passed()
 
     if (!free_cells_vector.empty())
     {
-        const int element = rnd::range(0, free_cells_vector.size() - 1);
-
-        const P& origin = free_cells_vector[element];
+        const P origin = rnd::element(free_cells_vector);
 
         free_cells_vector = mk_sorted_free_cells(origin, blocked);
 
