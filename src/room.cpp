@@ -120,7 +120,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::crypt, rnd::range(2, 3));
         add_to_room_bucket(RoomType::monster, 1);
-        add_to_room_bucket(RoomType::flooded, rnd::range(2, 4));
+        add_to_room_bucket(RoomType::flooded, rnd::range(1, 2));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 2));
         add_to_room_bucket(RoomType::snake_pit, rnd::one_in(3) ? 1 : 0);
 
@@ -137,7 +137,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::snake_pit, 1);
         add_to_room_bucket(RoomType::crypt, 4);
         add_to_room_bucket(RoomType::monster, 2);
-        add_to_room_bucket(RoomType::flooded, rnd::range(3, 4));
+        add_to_room_bucket(RoomType::flooded, rnd::range(1, 3));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 3));
         add_to_room_bucket(RoomType::cave, 2);
         add_to_room_bucket(RoomType::chasm, 1);
@@ -152,7 +152,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::monster, 1);
         add_to_room_bucket(RoomType::spider, 1);
         add_to_room_bucket(RoomType::snake_pit, 1);
-        add_to_room_bucket(RoomType::flooded, rnd::range(4, 5));
+        add_to_room_bucket(RoomType::flooded, rnd::range(2, 4));
         add_to_room_bucket(RoomType::muddy, rnd::range(1, 3));
         add_to_room_bucket(RoomType::chasm, 2);
         add_to_room_bucket(RoomType::forest, 2);
@@ -1167,7 +1167,7 @@ void FloodedRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         .run(blocked);
 
     const int liquid_one_in_n =
-        rnd::range(1, 5);
+        rnd::range(2, 5);
 
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
