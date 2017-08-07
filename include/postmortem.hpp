@@ -8,7 +8,7 @@
 class PostmortemMenu: public State
 {
 public:
-    PostmortemMenu();
+    PostmortemMenu(const IsWin is_win);
 
     void on_start() override;
 
@@ -21,9 +21,11 @@ public:
     StateId id() override;
 
 private:
-    void mk_memorial_file() const;
+    void mk_memorial_file(const std::string path) const;
 
     MenuBrowser browser_;
+
+    IsWin is_win_;
 };
 
 class PostmortemInfo: public State

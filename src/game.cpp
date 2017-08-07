@@ -517,9 +517,10 @@ void handle_player_input(const InputData& input)
             game::win_game();
 
             //
-            // Go to postmortem menu
+            // Go to postmortem state
             //
-            std::unique_ptr<State> postmortem_state(new PostmortemMenu);
+            std::unique_ptr<State> postmortem_state(
+                new PostmortemMenu(IsWin::yes));
 
             states::push(std::move(postmortem_state));
 
@@ -1075,8 +1076,6 @@ void win_game()
     io::cover_panel(Panel::screen);
     io::update_screen();
 
-    highscore::on_game_over(true);
-
     const std::vector<std::string> win_msg =
     {
         "As I approach the crystal, an eerie glow illuminates the area. "
@@ -1133,8 +1132,7 @@ void win_game()
 
     ++y;
 
-    const std::string cmd_label =
-        "[space/esc/enter] to record high score and return to main menu";
+    const std::string cmd_label = "[space/esc/enter] to continue";
 
     io::draw_text(cmd_label,
                   Panel::screen,
@@ -1377,14 +1375,13 @@ void GameState::update()
                      false,
                      MorePromptOnMsg::yes);
 
-        highscore::on_game_over(false); // Not a win
-
         //
         // Go to postmortem menu
         //
         states::pop();
 
-        std::unique_ptr<State> postmortem_state(new PostmortemMenu);
+        std::unique_ptr<State> postmortem_state(
+            new PostmortemMenu(IsWin::no));
 
         states::push(std::move(postmortem_state));
 

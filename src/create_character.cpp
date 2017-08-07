@@ -273,7 +273,7 @@ void PickTraitState::update()
     }
 
     MenuBrowser& browser =
-        screen_mode_ == TraitScreenMode::pick_new ?
+        (screen_mode_ == TraitScreenMode::pick_new) ?
         browser_traits_avail_ :
         browser_traits_unavail_;
 

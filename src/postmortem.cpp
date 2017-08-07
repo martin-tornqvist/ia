@@ -31,9 +31,10 @@ std::vector<StrAndClr> info_lines_;
 // -----------------------------------------------------------------------------
 // Postmortem menu
 // -----------------------------------------------------------------------------
-PostmortemMenu::PostmortemMenu() :
+PostmortemMenu::PostmortemMenu(const IsWin is_win) :
     State       (),
-    browser_    ()
+    browser_    (),
+    is_win_     (is_win)
 {
     browser_.reset(6);
 }
@@ -45,9 +46,36 @@ StateId PostmortemMenu::id()
 
 void PostmortemMenu::on_start()
 {
+    //
+    // Game summary file path
+    //
+    const std::string game_summary_time_stamp =
+        game::start_time().time_str(TimeType::second, false);
+
+    const std::string game_summary_filename =
+        map::player->name_a() +
+        "_" +
+        game_summary_time_stamp +
+        ".txt";
+
+    const std::string game_summary_file_path =
+        "res/data/" +
+        game_summary_filename;
+
+    //
+    // Highscore entry
+    //
+    const auto highscore_entry =
+        highscore::mk_entry_from_current_game_data(
+            game_summary_file_path,
+            is_win_);
+
+    highscore::append_entry_to_highscores_file(highscore_entry);
+
     info_lines_.clear();
 
     const Clr clr_heading = clr_white_lgt;
+
     const Clr clr_info = clr_white;
 
     const std::string offset = "   ";
@@ -71,17 +99,13 @@ void PostmortemMenu::on_start()
         }
     }
 
-    const HighscoreEntry* const score = highscore::final_score();
+    const std::string name = highscore_entry.name();
 
-    ASSERT(score);
-
-    const std::string name = map::player->name_a();
-
-    const std::string bg = player_bon::bg_title(player_bon::bg());
+    const std::string bg = player_bon::bg_title(highscore_entry.bg());
 
     info_lines_.push_back({name + " (" + bg + ")", clr_heading});
 
-    const int dlvl = score->dlvl();
+    const int dlvl = map::dlvl;
 
     if (dlvl == 0)
     {
@@ -101,9 +125,12 @@ void PostmortemMenu::on_start()
 
     }
 
+    const int ins = highscore_entry.ins();
+
     info_lines_.push_back(
     {
-        offset + "Was " + std::to_string(score->ins()) + "% insane",
+        offset + "Was " + std::to_string(ins) + "% insane",
+
         clr_info
     });
 
@@ -113,15 +140,19 @@ void PostmortemMenu::on_start()
         clr_info
     });
 
-    info_lines_.push_back(
-    {
-        offset + "Gained " + std::to_string(score->xp()) + " experience points",
-        clr_info
-    });
+    const int xp = highscore_entry.xp();
 
     info_lines_.push_back(
     {
-        offset + "Gained a score of " + std::to_string(score->score()),
+        offset + "Gained " + std::to_string(xp) + " experience points",
+        clr_info
+    });
+
+    const int score = highscore_entry.score();
+
+    info_lines_.push_back(
+    {
+        offset + "Gained a score of " + std::to_string(score),
         clr_info
     });
 
@@ -277,7 +308,7 @@ void PostmortemMenu::on_start()
     //
     // Also dump the lines to a memorial file
     //
-    mk_memorial_file();
+    mk_memorial_file(game_summary_file_path);
 }
 
 void PostmortemMenu::on_popped()
@@ -325,19 +356,12 @@ void PostmortemMenu::draw()
     io::draw_box(R(0, 0, screen_w - 1, screen_h - 1));
 }
 
-void PostmortemMenu::mk_memorial_file() const
+void PostmortemMenu::mk_memorial_file(const std::string path) const
 {
-    const std::string time_stamp =
-        game::start_time().time_str(TimeType::second, false);
-
-    const std::string file_name =
-        map::player->name_a() + "_" + time_stamp + ".txt";
-
-    const std::string file_path = "res/data/" + file_name;
-
     // Write memorial file
     std::ofstream file;
-    file.open(file_path.data(), std::ios::trunc);
+
+    file.open(path.c_str(), std::ios::trunc);
 
     // Add info lines to file
     for (const StrAndClr& line : info_lines_)
@@ -360,6 +384,7 @@ void PostmortemMenu::mk_memorial_file() const
                 // Nope - well, this is pretty difficult to handle in a good way
                 // as things are now. The current strategy is to show the symbol
                 // as a wall then (it's probably a wall, rubble, or a statue).
+
                 //
                 // TODO: Perhaps text mode should strictly use only printable
                 //       basic ASCII symbols?
@@ -494,6 +519,7 @@ void PostmortemInfo::draw()
                                 InfScreenType::scrolling);
 
     const int nr_info_lines = (int)info_lines_.size();
+
     const int nr_lines_tot = nr_info_lines + map_h;
 
     int screen_y = 1;
@@ -558,6 +584,7 @@ void PostmortemInfo::draw()
 void PostmortemInfo::update()
 {
     const int line_jump = 3;
+
     const int nr_lines_tot = info_lines_.size() + map_h;
 
     const auto input = io::get(false);

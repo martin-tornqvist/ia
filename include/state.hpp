@@ -22,6 +22,7 @@ enum class StateId
     view_actor,
     inventory,
     highscore,
+    browse_highscore_entry,
     config,
     descript
 };

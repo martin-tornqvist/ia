@@ -302,6 +302,12 @@ enum class GameEntryMode
     load_game
 };
 
+enum class IsWin
+{
+    no,
+    yes
+};
+
 enum class SpawnRate
 {
     never,

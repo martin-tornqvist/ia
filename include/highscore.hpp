@@ -6,22 +6,30 @@
 
 #include "state.hpp"
 #include "player_bon.hpp"
+#include "global.hpp"
+#include "browser.hpp"
 
 class HighscoreEntry
 {
 public:
-    HighscoreEntry(std::string entry_date_and_time,
+    HighscoreEntry(std::string game_summary_file_path,
+                   std::string entry_date_and_time,
                    std::string player_name,
                    int player_xp,
                    int player_lvl,
                    int player_dlvl,
                    int player_insanity,
-                   bool is_win_game,
+                   IsWin is_win,
                    Bg player_bg);
 
     ~HighscoreEntry();
 
     int score() const;
+
+    std::string game_summary_file_path() const
+    {
+        return game_summary_file_path_;
+    }
 
     std::string date_and_time() const
     {
@@ -53,7 +61,7 @@ public:
         return ins_;
     }
 
-    bool is_win() const
+    IsWin is_win() const
     {
         return is_win_;
     }
@@ -64,9 +72,14 @@ public:
     }
 
 private:
-    std::string date_and_time_, name_;
-    int xp_, lvl_, dlvl_, ins_;
-    bool is_win_;
+    std::string game_summary_file_path_;
+    std::string date_and_time_;
+    std::string name_;
+    int xp_;
+    int lvl_;
+    int dlvl_;
+    int ins_;
+    IsWin is_win_;
     Bg bg_;
 };
 
@@ -76,21 +89,24 @@ namespace highscore
 void init();
 void cleanup();
 
-void on_game_over(const bool is_win);
+//
+// NOTE: All this does is construct a HighscoreEntry object, populated with
+//       highscore info based on the current game - it has no side effects
+//
+HighscoreEntry mk_entry_from_current_game_data(
+    const std::string game_summary_file_path,
+    const IsWin is_win);
+
+void append_entry_to_highscores_file(const HighscoreEntry& entry);
 
 std::vector<HighscoreEntry> entries_sorted();
-
-const HighscoreEntry* final_score();
 
 } // highscore
 
 class BrowseHighscore: public State
 {
 public:
-    BrowseHighscore() :
-        State       (),
-        entries_    (),
-        top_idx_    (0) {}
+    BrowseHighscore();
 
     void on_start() override;
 
@@ -108,6 +124,29 @@ public:
 
 private:
     std::vector<HighscoreEntry> entries_;
+
+    MenuBrowser browser_;
+};
+
+class BrowseHighscoreEntry: public State
+{
+public:
+    BrowseHighscoreEntry(const std::string& file_path);
+
+    void on_start() override;
+
+    void draw() override;
+
+    void update() override;
+
+    StateId id() override;
+
+private:
+    void read_file();
+
+    const std::string file_path_;
+
+    std::vector<std::string> lines_;
 
     int top_idx_;
 };

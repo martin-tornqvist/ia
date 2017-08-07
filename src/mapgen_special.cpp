@@ -220,14 +220,16 @@ bool mk_intro_lvl()
                  end(entries),
                  [](const HighscoreEntry & e)
     {
-        return !e.is_win();
+        return (e.is_win() == IsWin::no);
     });
 
     if (nr_non_win > 0)
     {
-        size_t  entry_idx   = 0;
-        int     nr_placed   = 0;
-        bool    is_done     = false;
+        size_t entry_idx = 0;
+
+        int nr_placed = 0;
+
+        bool is_done = false;
 
         for (int x = (templ_dims.x - 1); x >= 0; --x)
         {
@@ -244,7 +246,7 @@ bool mk_intro_lvl()
                     HighscoreEntry entry = entries[entry_idx];
 
                     // Skip winning entries
-                    while (entry.is_win())
+                    while (entry.is_win() == IsWin::yes)
                     {
                         ++entry_idx;
                         entry = entries[entry_idx];

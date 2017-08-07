@@ -16,22 +16,24 @@
 // -----------------------------------------------------------------------------
 // Highscore entry
 // -----------------------------------------------------------------------------
-HighscoreEntry::HighscoreEntry(std::string entry_date_and_time,
+HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
+                               std::string entry_date_and_time,
                                std::string player_name,
                                int player_xp,
                                int player_lvl,
                                int player_dlvl,
                                int player_insanity,
-                               bool is_win_game,
+                               IsWin is_win,
                                Bg player_bg) :
-    date_and_time_  (entry_date_and_time),
-    name_           (player_name),
-    xp_             (player_xp),
-    lvl_            (player_lvl),
-    dlvl_           (player_dlvl),
-    ins_            (player_insanity),
-    is_win_         (is_win_game),
-    bg_             (player_bg) {}
+    game_summary_file_path_ (game_summary_file_path),
+    date_and_time_          (entry_date_and_time),
+    name_                   (player_name),
+    xp_                     (player_xp),
+    lvl_                    (player_lvl),
+    dlvl_                   (player_dlvl),
+    ins_                    (player_insanity),
+    is_win_                 (is_win),
+    bg_                     (player_bg) {}
 
 HighscoreEntry::~HighscoreEntry() {}
 
@@ -41,7 +43,9 @@ int HighscoreEntry::score() const
     const double dlvl_last_db = double(dlvl_last);
     const double xp_db = double(xp_);
 
-    const double xp_factor = 1.0 + xp_db + (is_win_ ? (xp_db / 5.0) : 0.0);
+    const bool win = is_win_ == IsWin::yes;
+
+    const double xp_factor = 1.0 + xp_db + (win ? (xp_db / 5.0) : 0.0);
     const double dlvl_factor = 1.0 + (dlvl_db / dlvl_last_db);
 
     return (int)(xp_factor * dlvl_factor);
@@ -55,9 +59,6 @@ namespace highscore
 
 namespace
 {
-
-// Set at game over
-HighscoreEntry* final_score_ = nullptr;
 
 void sort_entries(std::vector<HighscoreEntry>& entries)
 {
@@ -77,8 +78,9 @@ void write_file(std::vector<HighscoreEntry>& entries)
 
     for (const auto entry : entries)
     {
-        const std::string win_str = entry.is_win() ? "W" : "0";
+        const std::string win_str = (entry.is_win() == IsWin::yes) ? "1" : "0";
 
+        file << entry.game_summary_file_path() << std::endl;
         file << win_str << std::endl;
         file << entry.date_and_time() << std::endl;
         file << entry.name() << std::endl;
@@ -97,6 +99,7 @@ std::vector<HighscoreEntry> read_file()
     std::vector<HighscoreEntry> entries;
 
     std::ifstream file;
+
     file.open("res/data/highscores");
 
     if (!file.is_open())
@@ -108,7 +111,13 @@ std::vector<HighscoreEntry> read_file()
 
     while (getline(file, line))
     {
-        bool is_win = line[0] == 'W';
+        const std::string game_summary_file = line;
+
+        getline(file, line);
+        IsWin is_win =
+            (line[0] == '1') ?
+            IsWin::yes :
+            IsWin::no;
 
         getline(file, line);
         const std::string date_and_time = line;
@@ -132,7 +141,8 @@ std::vector<HighscoreEntry> read_file()
         Bg bg = (Bg)to_int(line);
 
         entries.push_back(
-            HighscoreEntry(date_and_time,
+            HighscoreEntry(game_summary_file,
+                           date_and_time,
                            name,
                            xp,
                            lvl,
@@ -153,41 +163,41 @@ std::vector<HighscoreEntry> read_file()
 
 void init()
 {
-    final_score_ = nullptr;
+
 }
 
 void cleanup()
 {
-    delete final_score_;
 
-    final_score_ = nullptr;
 }
 
-const HighscoreEntry* final_score()
+HighscoreEntry mk_entry_from_current_game_data(
+    const std::string game_summary_file_path,
+    const IsWin is_win)
 {
-    return final_score_;
+    const auto date = current_time().time_str(TimeType::day, true);
+
+    HighscoreEntry entry(
+        game_summary_file_path,
+        date,
+        map::player->name_a(),
+        game::xp_accumulated(),
+        game::clvl(),
+        map::dlvl,
+        map::player->ins(),
+        is_win,
+        player_bon::bg());
+
+    return entry;
 }
 
-void on_game_over(const bool is_win)
+ void append_entry_to_highscores_file(const HighscoreEntry& entry)
 {
     TRACE_FUNC_BEGIN;
 
     std::vector<HighscoreEntry> entries = entries_sorted();
 
-    const auto time = current_time().time_str(TimeType::day, true);
-
-    final_score_ =
-        new HighscoreEntry(
-            time,
-            map::player->name_a(),
-            game::xp_accumulated(),
-            game::clvl(),
-            map::dlvl,
-            map::player->ins(),
-            is_win,
-            player_bon::bg());
-
-    entries.push_back(*final_score_);
+    entries.push_back(entry);
 
     sort_entries(entries);
 
@@ -216,9 +226,20 @@ std::vector<HighscoreEntry> entries_sorted()
 namespace
 {
 
-const int max_nr_lines_on_scr_ = screen_h - 3;
+const int top_more_y_ = 1;
+const int btm_more_y_ = screen_h - 1;
+
+const int entries_y0_ = top_more_y_ + 1;
+const int entries_y1_ = btm_more_y_ - 1;
+
+const int entries_h_ = entries_y1_ - entries_y0_ + 1;
 
 } // namespace
+
+BrowseHighscore::BrowseHighscore() :
+        State       (),
+        entries_    (),
+        browser_    () {}
 
 StateId BrowseHighscore::id()
 {
@@ -230,6 +251,8 @@ void BrowseHighscore::on_start()
     entries_ = highscore::read_file();
 
     highscore::sort_entries(entries_);
+
+    browser_.reset(entries_.size(), entries_h_);
 }
 
 void BrowseHighscore::draw()
@@ -239,38 +262,55 @@ void BrowseHighscore::draw()
         return;
     }
 
-    const int x_pos_date = 0;
-    const int x_pos_name = x_pos_date + 11;
-    const int x_pos_bg = x_pos_name + player_name_max_len + 2;
-    const int x_pos_lvl = x_pos_bg + 13;
-    const int x_pos_dlvl = x_pos_lvl + 7;
-    const int x_pos_ins = x_pos_dlvl + 7;
-    const int x_pos_win = x_pos_ins + 10;
-    const int x_pos_score = x_pos_win + 5;
-
-    io::draw_info_scr_interface("High Scores",
-                                InfScreenType::scrolling);
-
-    int y_pos = 1;
-
-    const Clr& label_clr = clr_title;
-
     const Panel panel = Panel::screen;
 
-    io::draw_text("Ended", panel, P(x_pos_date, y_pos), label_clr);
-    io::draw_text("Name", panel, P(x_pos_name, y_pos), label_clr);
-    io::draw_text("Background", panel, P(x_pos_bg, y_pos), label_clr);
-    io::draw_text("Level", panel, P(x_pos_lvl, y_pos), label_clr);
-    io::draw_text("Depth", panel, P(x_pos_dlvl, y_pos), label_clr);
-    io::draw_text("Insanity", panel, P(x_pos_ins, y_pos), label_clr);
-    io::draw_text("Win", panel, P(x_pos_win, y_pos), label_clr);
-    io::draw_text("Score", panel, P(x_pos_score, y_pos), label_clr);
+    const std::string title =
+        "Browsing high scores [select] to view game summary";
 
-    ++y_pos;
+    io::draw_text_center(title,
+                         panel,
+                         P(map_w_half, 0),
+                         clr_title,
+                         clr_black,
+                         true);
 
-    for (int i = top_idx_;
-         (i < (int)entries_.size()) && ((i - top_idx_) < max_nr_lines_on_scr_);
-         i++)
+    const Clr& label_clr = clr_white;
+
+    const int labels_y = 1;
+
+    const int x_date = 0;
+    const int x_name = x_date + 12;
+    const int x_bg = player_name_max_len + 14;
+    const int x_lvl = x_bg + 13;
+    const int x_dlvl = x_lvl + 7;
+    const int x_ins = x_dlvl + 7;
+    const int x_win = x_ins + 10;
+    const int x_score = x_win + 5;
+
+    const std::vector< std::pair<std::string, int> > labels
+    {
+        {"Level", x_lvl},
+        {"Depth", x_dlvl},
+        {"Insanity", x_ins},
+        {"Win", x_win},
+        {"Score", x_score}
+    };
+
+    for (const auto& label : labels)
+    {
+        io::draw_text(label.first,
+                      panel,
+                      P(label.second, labels_y),
+                      label_clr);
+    }
+
+    const int browser_y = browser_.y();
+
+    int y = entries_y0_;
+
+    const Range idx_range_shown = browser_.range_shown();
+
+    for (int i = idx_range_shown.min; i <= idx_range_shown.max; ++i)
     {
         const auto& entry = entries_[i];
 
@@ -280,21 +320,43 @@ void BrowseHighscore::draw()
         const std::string lvl = std::to_string(entry.lvl());
         const std::string dlvl = std::to_string(entry.dlvl());
         const std::string ins = std::to_string(entry.ins());
-        const std::string win = entry.is_win() ? "Yes" : "No";
+        const std::string win = (entry.is_win() == IsWin::yes) ? "Yes" : "No";
         const std::string score = std::to_string(entry.score());
 
-        const Clr& clr = clr_white;
+        const bool is_idx_marked = browser_y == i;
 
-        io::draw_text(date_and_time, panel, P(x_pos_date, y_pos), clr);
-        io::draw_text(name, panel, P(x_pos_name, y_pos), clr);
-        io::draw_text(bg, panel, P(x_pos_bg, y_pos), clr);
-        io::draw_text(lvl, panel, P(x_pos_lvl, y_pos), clr);
-        io::draw_text(dlvl, panel, P(x_pos_dlvl, y_pos), clr);
-        io::draw_text(ins + "%", panel, P(x_pos_ins, y_pos), clr);
-        io::draw_text(win, panel, P(x_pos_win, y_pos), clr);
-        io::draw_text(score, panel, P(x_pos_score, y_pos), clr);
+        const Clr& clr =
+            is_idx_marked ?
+            clr_menu_highlight:
+            clr_menu_drk;
 
-        ++y_pos;
+        io::draw_text(date_and_time, panel, P(x_date, y), clr);
+        io::draw_text(name, panel, P(x_name, y), clr);
+        io::draw_text(bg, panel, P(x_bg, y), clr);
+        io::draw_text(lvl, panel, P(x_lvl, y), clr);
+        io::draw_text(dlvl, panel, P(x_dlvl, y), clr);
+        io::draw_text(ins + "%", panel, P(x_ins, y), clr);
+        io::draw_text(win, panel, P(x_win, y), clr);
+        io::draw_text(score, panel, P(x_score, y), clr);
+
+        ++y;
+    }
+
+    // Draw "more" labels
+    if (!browser_.is_on_top_page())
+    {
+        io::draw_text("(More - Page Up)",
+                      Panel::screen,
+                      P(0, top_more_y_),
+                      clr_white_lgt);
+    }
+
+    if (!browser_.is_on_btm_page())
+    {
+        io::draw_text("(More - Page Down)",
+                      Panel::screen,
+                      P(0, btm_more_y_),
+                      clr_white_lgt);
     }
 }
 
@@ -302,7 +364,7 @@ void BrowseHighscore::update()
 {
     if (entries_.empty())
     {
-        popup::show_msg("No High Score entries found.");
+        popup::show_msg("No high score entries found.");
 
         //
         // Exit screen
@@ -312,8 +374,103 @@ void BrowseHighscore::update()
         return;
     }
 
+    const auto input = io::get(false);
+
+    const MenuAction action =
+        browser_.read(input,
+                      MenuInputMode::scrolling);
+
+    switch (action)
+    {
+    case MenuAction::selected:
+    case MenuAction::selected_shift:
+    {
+        const int browser_y = browser_.y();
+
+        ASSERT(browser_y < (int)entries_.size());
+
+        const auto& entry_marked = entries_[browser_y];
+
+        const std::string file_path = entry_marked.game_summary_file_path();
+
+        auto state = std::unique_ptr<BrowseHighscoreEntry>(
+            new BrowseHighscoreEntry(file_path));
+
+        states::push(std::move(state));
+    }
+    break;
+
+    case MenuAction::space:
+    case MenuAction::esc:
+    {
+        //
+        // Exit screen
+        //
+        states::pop();
+    }
+    break;
+
+    default:
+        break;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Browse highscore entry game summary file
+// -----------------------------------------------------------------------------
+namespace
+{
+
+const int max_nr_lines_on_scr_ = screen_h - 2;
+
+} // namespace
+
+BrowseHighscoreEntry::BrowseHighscoreEntry(
+    const std::string& file_path) :
+        State       (),
+        file_path_  (file_path),
+        lines_      (),
+        top_idx_    (0) {}
+
+StateId BrowseHighscoreEntry::id()
+{
+    return StateId::browse_highscore_entry;
+}
+
+void BrowseHighscoreEntry::on_start()
+{
+    read_file();
+}
+
+void BrowseHighscoreEntry::draw()
+{
+    io::draw_info_scr_interface("Game summary",
+                                InfScreenType::scrolling);
+
+    const int nr_lines_tot = lines_.size();
+
+    int btm_nr =
+        std::min(top_idx_ + max_nr_lines_on_scr_ - 1,
+                 nr_lines_tot - 1);
+
+    int screen_y = 1;
+
+    for (int i = top_idx_; i <= btm_nr; ++i)
+    {
+        io::draw_text(lines_[i],
+                      Panel::screen,
+                      P(0, screen_y),
+                      clr_text);
+
+        ++screen_y;
+    }
+}
+
+void BrowseHighscoreEntry::update()
+{
     const int line_jump = 3;
-    const int nr_lines_tot = entries_.size();
+
+    const int nr_lines_tot = lines_.size();
 
     const auto input = io::get(false);
 
@@ -347,5 +504,38 @@ void BrowseHighscore::update()
         //
         states::pop();
         break;
+
+    default:
+        break;
     }
+}
+
+void BrowseHighscoreEntry::read_file()
+{
+    lines_.clear();
+
+    std::ifstream file(file_path_);
+
+    if (!file.is_open())
+    {
+        popup::show_msg("Path: \"" + file_path_ + "\"",
+                        "Game summary file could not be opened",
+                        SfxId::END,
+                        20);
+
+        states::pop();
+
+        return;
+    }
+
+    std::string current_line;
+
+    std::vector<std::string> formatted;
+
+    while (getline(file, current_line))
+    {
+        lines_.push_back(current_line);
+    }
+
+    file.close();
 }

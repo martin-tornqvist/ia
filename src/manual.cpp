@@ -32,8 +32,9 @@ void BrowseManual::draw()
 
     const int nr_lines_tot = lines_.size();
 
-    int btm_nr = std::min(top_idx_ + max_nr_lines_on_scr_ - 1,
-                          nr_lines_tot - 1);
+    const int btm_nr =
+        std::min(top_idx_ + max_nr_lines_on_scr_ - 1,
+                 nr_lines_tot - 1);
 
     int screen_y = 1;
 
@@ -51,6 +52,7 @@ void BrowseManual::draw()
 void BrowseManual::update()
 {
     const int line_jump = 3;
+
     const int nr_lines_tot = lines_.size();
 
     const auto input = io::get(false);
