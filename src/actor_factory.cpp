@@ -88,6 +88,9 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::fire_hound:
         return new FireHound();
 
+    case ActorId::energy_hound:
+        return new EnergyHound();
+
     case ActorId::zuul:
         return new Zuul();
 
@@ -142,8 +145,14 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::greater_polyp:
         return new GreaterPolyp();
 
-    case ActorId::mind_eater:
-        return new MindEater();
+    case ActorId::mind_leech:
+        return new MindLeech();
+
+    case ActorId::spirit_leech:
+        return new SpiritLeech();
+
+    case ActorId::life_leech:
+        return new LifeLeech();
 
     case ActorId::mi_go:
         return new MiGo();
@@ -204,6 +213,9 @@ Actor* mk_actor_from_id(const ActorId id)
 
     case ActorId::fire_vortex:
         return new FireVortex();
+
+    case ActorId::energy_vortex:
+        return new EnergyVortex();
 
     case ActorId::ooze_black:
         return new OozeBlack();

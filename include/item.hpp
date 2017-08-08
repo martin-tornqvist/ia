@@ -427,6 +427,33 @@ public:
     void on_melee_hit(Actor& actor_hit, const int dmg) override;
 };
 
+class MindLeechSting : public Wpn
+{
+public:
+    MindLeechSting(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
+};
+
+class SpiritLeechSting : public Wpn
+{
+public:
+    SpiritLeechSting(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
+};
+
+class LifeLeechSting : public Wpn
+{
+public:
+    LifeLeechSting(ItemDataT* const item_data) :
+        Wpn(item_data) {}
+
+    void on_melee_hit(Actor& actor_hit, const int dmg) override;
+};
+
 class DustVortexEngulf : public Wpn
 {
 public:

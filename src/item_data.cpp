@@ -1399,6 +1399,28 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
 
+    reset_data(d, ItemType::ranged_wpn_intr);
+    d.id = ItemId::energy_hound_breath;
+    d.ranged.att_msgs = {"", "breathes lightning at me"};
+    d.ranged.snd_msg = "I hear a burst of lightning.";
+    set_dmg_from_mon_id(d, ActorId::energy_hound);
+    d.ranged.prop_applied =
+        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 25);
+    d.ranged.projectile_clr = clr_yellow;
+    d.ranged.projectile_leaves_trail = true;
+    d.ranged.dmg_type = DmgType::electric;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::energy_hound_bite;
+    d.melee.att_msgs = {"", "bites me"};
+    set_dmg_from_mon_id(d, ActorId::energy_hound);
+    d.melee.prop_applied =
+        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 25);
+    d.melee.dmg_type = DmgType::electric;
+    d.melee.dmg_method = DmgMethod::elemental;
+    data[(size_t)d.id] = d;
+
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::zuul_bite;
     d.melee.att_msgs = {"", "bites me"};
@@ -1424,11 +1446,20 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::energy_vortex_engulf;
+    d.melee.att_msgs = {"", "engulfs me"};
+    d.melee.dmg_method = DmgMethod::elemental;
+    set_dmg_from_mon_id(d, ActorId::energy_vortex);
+    d.melee.prop_applied =
+        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 25);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::ghost_claw;
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::ghost);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::specific, 4));
+        ItemAttProp(new PropTerrified(PropTurns::std), 35);
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1438,7 +1469,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "slices me with an ethereal sickle"};
     set_dmg_from_mon_id(d, ActorId::phantasm);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::specific, 4));
+        ItemAttProp(new PropTerrified(PropTurns::std), 35);
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1448,7 +1479,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::wraith);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::specific, 4));
+        ItemAttProp(new PropTerrified(PropTurns::std), 35);
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1492,12 +1523,24 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::mind_eater_tentacle;
+    d.id = ItemId::mind_leech_sting;
     d.melee.att_msgs = {"", "stings me"};
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2),
-                    75);
-    set_dmg_from_mon_id(d, ActorId::mind_eater);
+    set_dmg_from_mon_id(d, ActorId::mind_leech);
+    d.melee.dmg_method = DmgMethod::piercing;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::spirit_leech_sting;
+    d.melee.att_msgs = {"", "stings me"};
+    set_dmg_from_mon_id(d, ActorId::spirit_leech);
+    d.melee.dmg_method = DmgMethod::piercing;
+    d.melee.dmg_type = DmgType::spirit;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::life_leech_sting;
+    d.melee.att_msgs = {"", "stings me"};
+    set_dmg_from_mon_id(d, ActorId::life_leech);
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 

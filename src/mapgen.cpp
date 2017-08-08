@@ -526,6 +526,19 @@ bool mk_std_lvl()
     }
 
     // -------------------------------------------------------------------------
+    // If there are too few rooms at this point (including main rooms,
+    // sub rooms, aux rooms, ...), then invalidate the map
+    // -------------------------------------------------------------------------
+    const size_t min_nr_rooms = 8;
+
+    if (map::room_list.size() < min_nr_rooms)
+    {
+        is_map_valid = false;
+
+        return false;
+    }
+
+    // -------------------------------------------------------------------------
     // Run the pre-connect hook on all rooms
     // -------------------------------------------------------------------------
     TRACE << "Running pre-connect functions for all rooms" << std:: endl;

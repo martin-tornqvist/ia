@@ -1342,6 +1342,12 @@ void FireHound::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::fire_hound_bite));
 }
 
+void EnergyHound::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::energy_hound_breath));
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::energy_hound_bite));
+}
+
 void Zuul::place_hook()
 {
     if (actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn > 0)
@@ -1456,12 +1462,13 @@ DidAction Vortex::on_act()
 
                 TRACE << "Attempt pull (knockback)" << std::endl;
 
-                // TODO: There should be a sfx here
-
+                //
+                // TODO: Add sfx
+                //
                 knockback::run(*map::player,
-                                           knockback_from_pos,
-                                           false,
-                                           Verbosity::silent);
+                               knockback_from_pos,
+                               false,
+                               Verbosity::silent);
 
                 pull_cooldown = 2;
 
@@ -1483,6 +1490,11 @@ void DustVortex::mk_start_items()
 void FireVortex::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::fire_vortex_engulf));
+}
+
+void EnergyVortex::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::energy_vortex_engulf));
 }
 
 DidAction Ghost::on_act()
@@ -1592,68 +1604,19 @@ void GreaterPolyp::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::greater_polyp_tentacle));
 }
 
-void MindEater::mk_start_items()
+void MindLeech::mk_start_items()
 {
-    inv_->put_in_intrinsics(item_factory::mk(ItemId::mind_eater_tentacle));
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::mind_leech_sting));
 }
 
-DidAction MindEater::on_act()
+void SpiritLeech::mk_start_items()
 {
-    if (!is_alive() ||
-        !is_pos_adj(pos, map::player->pos, false) ||
-        has_prop(PropId::disabled_attack) ||
-        has_prop(PropId::burning) ||
-        has_prop(PropId::confused) ||
-        has_prop(PropId::terrified) ||
-        !map::player->has_prop(PropId::paralyzed))
-    {
-        return DidAction::no;
-    }
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::spirit_leech_sting));
+}
 
-    const bool player_see_me = map::player->can_see_actor(*this);
-
-    const std::string name =
-        player_see_me ?
-        text_format::first_to_upper(name_the()) :
-        "It";
-
-    if (map::player->ins() >= 50 ||
-        map::player->has_prop(PropId::confused) ||
-        map::player->has_prop(PropId::frenzied))
-    {
-        msg_log::add(name + " attempts to probe my brain.");
-
-        if (player_see_me)
-        {
-            msg_log::add(name + " looks shocked!");
-        }
-
-        hit(rnd::dice(3, 5), DmgType::pure);
-
-        if (is_alive())
-        {
-            prop_handler_->apply(new PropConfused(PropTurns::std));
-
-            prop_handler_->apply(new PropTerrified(PropTurns::std));
-        }
-    }
-    else // Player mind can be eaten
-    {
-        msg_log::add(name + " probes my brain!!!");
-
-        map::player->prop_handler().apply(
-            new PropTerrified(PropTurns::std));
-
-        map::player->incr_shock(ShockLvl::mind_shattering,
-                                ShockSrc::misc);
-
-        // Add an attack cooldown to avoid locking the player
-        prop_handler_->apply(new PropDisabledAttack(PropTurns::specific, 4));
-    }
-
-    game_time::tick();
-
-    return DidAction::yes;
+void LifeLeech::mk_start_items()
+{
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::life_leech_sting));
 }
 
 void Rat::mk_start_items()
@@ -2655,7 +2618,7 @@ DidAction FloatingSkull::on_act()
 {
     if (is_alive() &&
         (aware_of_player_counter_ > 0) &&
-        rnd::one_in(4))
+        rnd::one_in(3))
     {
         bool blocked_los[map_w][map_h];
 

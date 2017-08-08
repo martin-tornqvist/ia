@@ -343,16 +343,31 @@ private:
     DidAction on_act() override;
 };
 
-class MindEater: public Mon
+class MindLeech: public Mon
 {
 public:
-    MindEater() : Mon() {}
-    ~MindEater() {}
+    MindLeech() : Mon() {}
+    ~MindLeech() {}
 
     void mk_start_items() override;
+};
 
-private:
-    DidAction on_act() override;
+class SpiritLeech: public Mon
+{
+public:
+    SpiritLeech() : Mon() {}
+    ~SpiritLeech() {}
+
+    void mk_start_items() override;
+};
+
+class LifeLeech: public Mon
+{
+public:
+    LifeLeech() : Mon() {}
+    ~LifeLeech() {}
+
+    void mk_start_items() override;
 };
 
 class KeziahMason: public Mon
@@ -490,6 +505,14 @@ class FireHound: public Mon
 public:
     FireHound() : Mon() {}
     ~FireHound() {}
+    void mk_start_items() override;
+};
+
+class EnergyHound: public Mon
+{
+public:
+    EnergyHound() : Mon() {}
+    ~EnergyHound() {}
     void mk_start_items() override;
 };
 
@@ -868,6 +891,14 @@ class FireVortex: public Vortex
 public:
     FireVortex() : Vortex() {}
     ~FireVortex() {}
+    void mk_start_items() override;
+};
+
+class EnergyVortex: public Vortex
+{
+public:
+    EnergyVortex() : Vortex() {}
+    ~EnergyVortex() {}
     void mk_start_items() override;
 };
 

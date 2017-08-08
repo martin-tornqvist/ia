@@ -18,6 +18,7 @@
 #include "actor_factory.hpp"
 #include "game.hpp"
 #include "player_bon.hpp"
+#include "text_format.hpp"
 
 // -----------------------------------------------------------------------------
 // Item
@@ -1053,7 +1054,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
 }
 
 // -----------------------------------------------------------------------------
-// Raven peck
+// Vampire Bat Bite
 // -----------------------------------------------------------------------------
 void VampireBatBite::on_melee_hit(Actor& actor_hit, const int dmg)
 {
@@ -1065,6 +1066,107 @@ void VampireBatBite::on_melee_hit(Actor& actor_hit, const int dmg)
     actor_carrying_->restore_hp(dmg,
                                 false,
                                 Verbosity::verbose);
+}
+
+// -----------------------------------------------------------------------------
+// Mind Leech Sting
+// -----------------------------------------------------------------------------
+void MindLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
+{
+    (void)dmg;
+
+    if (!actor_hit.is_alive() ||
+        !actor_hit.is_player())
+    {
+        return;
+    }
+
+    auto* const mon = actor_carrying_;
+
+    if (map::player->ins() >= 50 ||
+        map::player->has_prop(PropId::confused) ||
+        map::player->has_prop(PropId::frenzied))
+    {
+        const bool player_see_mon = map::player->can_see_actor(*mon);
+
+        if (player_see_mon)
+        {
+            const std::string mon_name_the =
+                text_format::first_to_upper(mon->name_the());
+
+            msg_log::add(mon_name_the + " looks shocked!");
+        }
+
+        mon->hit(rnd::dice(3, 5), DmgType::pure);
+
+        if (mon->is_alive())
+        {
+            mon->prop_handler().apply(new PropConfused(PropTurns::std));
+
+            mon->prop_handler().apply(new PropTerrified(PropTurns::std));
+        }
+    }
+    else // Player mind can be eaten
+    {
+        map::player->incr_shock(ShockLvl::mind_shattering,
+                                ShockSrc::misc);
+
+        // Add an attack cooldown, so things don't get too crazy
+        mon->prop_handler().apply(
+            new PropDisabledAttack(PropTurns::specific, 2));
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Spirit Leech Sting
+// -----------------------------------------------------------------------------
+void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
+{
+    (void)dmg;
+
+    if (!actor_hit.is_alive() ||
+        !actor_hit.is_player())
+    {
+        return;
+    }
+
+    map::player->change_max_spi(-1, Verbosity::verbose);
+
+    auto* const mon = actor_carrying_;
+
+    mon->change_max_spi(1, Verbosity::silent);
+
+    mon->restore_spi(1, false, Verbosity::silent);
+
+    // Add an attack cooldown, so things don't get too crazy
+    mon->prop_handler().apply(
+        new PropDisabledAttack(PropTurns::specific, 2));
+}
+
+// -----------------------------------------------------------------------------
+// Life Leech Sting
+// -----------------------------------------------------------------------------
+void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
+{
+    (void)dmg;
+
+    if (!actor_hit.is_alive() ||
+        !actor_hit.is_player())
+    {
+        return;
+    }
+
+    map::player->change_max_hp(-1, Verbosity::verbose);
+
+    auto* const mon = actor_carrying_;
+
+    mon->change_max_hp(1, Verbosity::silent);
+
+    mon->restore_hp(1, false, Verbosity::silent);
+
+    // Add an attack cooldown, so things don't get too crazy
+    mon->prop_handler().apply(
+        new PropDisabledAttack(PropTurns::specific, 2));
 }
 
 // -----------------------------------------------------------------------------

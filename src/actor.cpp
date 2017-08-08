@@ -86,7 +86,7 @@ ActionResult Actor::roll_sneak(const Actor& actor_searching) const
     // 4          20
     // 5          30
     // 6          40
-    const int dist_mod = std::min((dist - 2) * 10, 80);
+    const int dist_mod = std::min((dist - 2) * 10, 40);
 
     const Cell& cell = map::cells[pos.x][pos.y];
 

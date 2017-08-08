@@ -66,6 +66,8 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::black_mamba_bite:
     case ItemId::fire_hound_breath:
     case ItemId::fire_hound_bite:
+    case ItemId::energy_hound_breath:
+    case ItemId::energy_hound_bite:
     case ItemId::zuul_bite:
     case ItemId::giant_bat_bite:
     case ItemId::wolf_bite:
@@ -74,7 +76,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::wraith_claw:
     case ItemId::polyp_tentacle:
     case ItemId::greater_polyp_tentacle:
-    case ItemId::mind_eater_tentacle:
     case ItemId::ghoul_claw:
     case ItemId::void_traveler_rip:
     case ItemId::elder_void_traveler_rip:
@@ -97,6 +98,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::death_fiend_claw:
     case ItemId::hunting_horror_bite:
     case ItemId::fire_vortex_engulf:
+    case ItemId::energy_vortex_engulf:
     case ItemId::mold_spores:
     case ItemId::mi_go_sting:
     case ItemId::mi_go_commander_sting:
@@ -177,6 +179,18 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::vampire_bat_bite:
     case ItemId::abaxu_bite:
         r = new VampireBatBite(d);
+        break;
+
+    case ItemId::mind_leech_sting:
+        r = new MindLeechSting(d);
+        break;
+
+    case ItemId::spirit_leech_sting:
+        r = new SpiritLeechSting(d);
+        break;
+
+    case ItemId::life_leech_sting:
+        r = new LifeLeechSting(d);
         break;
 
     case ItemId::dust_vortex_engulf:

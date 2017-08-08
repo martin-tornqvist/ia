@@ -288,7 +288,7 @@ void init_data_list()
     d.tile = TileId::zombie_unarmed;
     d.hp = 26;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
@@ -379,8 +379,8 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = dlvl_last_early_game;
+    d.spawn_min_dlvl = 2;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  2),
@@ -422,8 +422,8 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.spawn_min_dlvl = 3;
-    d.spawn_max_dlvl = dlvl_last_early_game;
+    d.spawn_min_dlvl = 2;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  2),
@@ -464,17 +464,17 @@ void init_data_list()
     d.glyph = 'z';
     d.color = clr_magenta;
     d.tile = TileId::crawling_hand;
-    d.hp = 25;
+    d.hp = 28;
     d.spi = 25;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 50);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 1;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 999;
     d.descr =
@@ -513,7 +513,7 @@ void init_data_list()
     d.hp = 6;
     d.spi = 16;
     d.dmg_melee = min_dmg_to_wound - 2;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -557,8 +557,8 @@ void init_data_list()
     d.tile = TileId::cultist_firearm;
     d.hp = 4;
     d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 45);
-    d.ability_vals.set_val(AbilityId::ranged, 50);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::ranged, 60);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
@@ -601,8 +601,8 @@ void init_data_list()
     d.tile = TileId::bog_tcher;
     d.hp = 6;
     d.spi = 12;
-    d.ability_vals.set_val(AbilityId::melee, 45);
-    d.ability_vals.set_val(AbilityId::ranged, 50);
+    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::ranged, 60);
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
@@ -791,7 +791,7 @@ void init_data_list()
     d.tile = TileId::cultist_dagger;
     d.hp = 6;
     d.spi = 30;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
@@ -832,7 +832,7 @@ void init_data_list()
     d.tile = TileId::witch_or_warlock;
     d.hp = 22;
     d.spi = 40;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
     d.actor_size = ActorSize::humanoid;
@@ -873,7 +873,7 @@ void init_data_list()
     d.tile = TileId::witch_or_warlock;
     d.hp = 36;
     d.spi = 50;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
@@ -913,7 +913,7 @@ void init_data_list()
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -955,7 +955,7 @@ void init_data_list()
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -997,7 +997,7 @@ void init_data_list()
     d.tile = TileId::giant_spider;
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -1037,7 +1037,7 @@ void init_data_list()
     d.tile = TileId::giant_spider;
     d.hp = 8;
     d.dmg_melee = min_dmg_to_wound;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::stealth, 95);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
@@ -1085,9 +1085,9 @@ void init_data_list()
     d.hp = 32;
     d.dmg_melee = min_dmg_to_wound + 3;
 //  d.dmg_ranged = 1;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 80);
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.group_sizes.assign(
@@ -1253,8 +1253,6 @@ void init_data_list()
 
     d.name_a = "a Fire Hound";
     d.name_the = "the Fire Hound";
-    d.corpse_name_a = "a Fire Hound corpse";
-    d.corpse_name_the = "the Fire Hound corpse";
     d.id = ActorId::fire_hound;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -1264,29 +1262,29 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 4;
+    d.ranged_cooldown_turns = 3;
     d.glyph = 'd';
     d.color = clr_red;
     d.tile = TileId::hound;
     d.hp = 22;
     d.dmg_melee = min_dmg_to_wound + 1;
     d.dmg_ranged = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::ranged, 65);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = 999;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::alone,  10),
-        MonGroupSpawnRule(MonGroupSize::few,    4),
-        MonGroupSpawnRule(MonGroupSize::pack,   1)
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 8;
+    d.nr_turns_aware = 12;
     d.descr =
         "This extremely aggressive canine seems to be part corporeal and "
         "part fire. It breathes searing flames.";
@@ -1299,6 +1297,60 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_canine = true;
     d.can_be_summoned = true;
+    d.can_leave_corpse = false;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::monster);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "an Energy Hound";
+    d.name_the = "the Energy Hound";
+    d.id = ActorId::energy_hound;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::fast;
+    d.ranged_cooldown_turns = 2;
+    d.glyph = 'd';
+    d.color = clr_yellow;
+    d.tile = TileId::hound;
+    d.hp = 32;
+    d.dmg_melee = min_dmg_to_wound + 5;
+    d.dmg_ranged = min_dmg_to_wound + 3;
+    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::ranged, 70);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.natural_props[(size_t)PropId::r_elec] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::infravis] = true;
+    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
+    d.spawn_max_dlvl = 999;
+    d.group_sizes.assign(
+    {
+        MonGroupSpawnRule(MonGroupSize::alone,  1),
+        MonGroupSpawnRule(MonGroupSize::few,    1),
+    });
+    d.actor_size = ActorSize::floor;
+    d.can_bash_doors = true;
+    d.nr_turns_aware = 12;
+    d.descr =
+        "This extremely aggressive canine seems to be part corporeal and "
+        "part energy. It breathes lightning.";
+    d.wary_msg = d.name_the + " seems aggravated.";
+    d.aggro_msg_mon_seen = d.name_the + " snarls.";
+    d.aggro_msg_mon_hidden = "I hear a snarl.";
+    d.aggro_sfx_mon_seen = SfxId::dog_snarl;
+    d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::frightening;
+    d.is_canine = true;
+    d.can_be_summoned = true;
+    d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     data[(size_t)d.id] = d;
@@ -1324,8 +1376,8 @@ void init_data_list()
     d.is_auto_descr_allowed = false;
     d.hp = 80;
     d.spi = 40;
-    d.dmg_melee = min_dmg_to_wound + 4;
-    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.dmg_melee = min_dmg_to_wound + 5;
+    d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1505,7 +1557,7 @@ void init_data_list()
     d.hp = 50;
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = 999;
@@ -1552,7 +1604,7 @@ void init_data_list()
     d.spi = 30;
     d.spell_skill = SpellSkill::expert;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = 999;
@@ -1694,7 +1746,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 0;
-    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
@@ -1735,7 +1787,7 @@ void init_data_list()
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 25);
+    d.ability_vals.set_val(AbilityId::melee, 35);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
@@ -1780,7 +1832,7 @@ void init_data_list()
     d.hp = 8;
     d.spi = 6;
     d.dmg_melee = 2;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1830,7 +1882,7 @@ void init_data_list()
     d.hp = 12;
     d.spi = 8;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1880,7 +1932,7 @@ void init_data_list()
     d.hp = 120;
     d.spi = 36;
     d.dmg_melee = min_dmg_to_wound + 6;
-    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -1930,7 +1982,7 @@ void init_data_list()
     d.hp = 32;
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound + 4;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
@@ -2125,16 +2177,16 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 4;
+    d.ranged_cooldown_turns = 3;
     d.spell_skill = SpellSkill::basic;
     d.glyph = 'E';
     d.color = clr_green;
     d.tile = TileId::mi_go;
     d.hp = 24;
     d.spi = 20;
-    d.dmg_melee = min_dmg_to_wound + 2;
-    d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::ranged, 70);
+    d.dmg_melee = min_dmg_to_wound + 3;
+    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::ranged, 80);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 12;
     d.actor_size = ActorSize::humanoid;
@@ -2177,7 +2229,7 @@ void init_data_list()
     d.hp = 12;
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     //
     // NOTE: Polyps should be resistant against all damage except electricity
     //
@@ -2238,7 +2290,7 @@ void init_data_list()
     d.hp = 70;
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 90);
     //
     // NOTE: Polyps should be resistant against all damage except electricity
     //
@@ -2272,11 +2324,11 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "a Mind Eater";
-    d.name_the = "the Mind Eater";
-    d.corpse_name_a = "a Mind Eater corpse";
-    d.corpse_name_the = "the Mind Eater corpse";
-    d.id = ActorId::mind_eater;
+    d.name_a = "a Mind Leech";
+    d.name_the = "the Mind Leech";
+    d.corpse_name_a = "a Mind Leech corpse";
+    d.corpse_name_the = "the Mind Leech corpse";
+    d.id = ActorId::mind_leech;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
@@ -2285,10 +2337,10 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.glyph = 'E';
+    d.glyph = 'L';
     d.color = clr_yellow_drk;
-    d.tile = TileId::mind_eater;
-    d.hp = 22;
+    d.tile = TileId::leech;
+    d.hp = 28;
     d.spi = 40;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2298,21 +2350,111 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
+    d.spawn_min_dlvl = 5;
+    d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 16;
     d.descr =
         "A tentacled alien creature, mysteriously floating through the air "
         "in a ghostly manner. They somehow sustain themselves on the brain "
-        "activity of other beings. Their preferred strategy is to subdue their "
-        "victim with a paralyzing sting, and once immobilized, a second "
-        "appendage probes the brain. This will usually not kill the victim, "
+        "activity of other beings. This will usually not kill the victim, "
         "but the experience is horrific beyond words. They only feed on "
         "sound minds however - a strange or chaotic mind will cause them "
         "great distress.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.is_infra_visible = false;
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::terrifying;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::cave);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "a Life Leech";
+    d.name_the = "the Life Leech";
+    d.corpse_name_a = "a Life Leech corpse";
+    d.corpse_name_the = "the Life Leech corpse";
+    d.id = ActorId::life_leech;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.glyph = 'L';
+    d.color = clr_red_lgt;
+    d.tile = TileId::leech;
+    d.hp = 28;
+    d.spi = 40;
+    d.dmg_melee = min_dmg_to_wound - 1;
+    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.spawn_min_dlvl = 5;
+    d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
+    d.actor_size = ActorSize::humanoid;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
+    d.nr_turns_aware = 16;
+    d.descr =
+        "A tentacled alien creature, mysteriously floating through the air "
+        "in a ghostly manner. They sustain themselves by consuming the life "
+        "force of other beings.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.is_infra_visible = false;
+    d.erratic_move_pct = ActorErraticFreq::rare;
+    d.mon_shock_lvl = ShockLvl::terrifying;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::cave);
+    d.native_rooms.push_back(RoomType::chasm);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "a Spirit Leech";
+    d.name_the = "the Spirit Leech";
+    d.corpse_name_a = "a Spirit Leech corpse";
+    d.corpse_name_the = "the Spirit Leech corpse";
+    d.id = ActorId::spirit_leech;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = true;
+    d.speed_pct = (int)ActorSpeed::normal;
+    d.glyph = 'L';
+    d.color = clr_violet;
+    d.tile = TileId::leech;
+    d.hp = 28;
+    d.spi = 40;
+    d.dmg_melee = 1;
+    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.natural_props[(size_t)PropId::r_sleep] = true;
+    d.natural_props[(size_t)PropId::r_disease] = true;
+    d.spawn_min_dlvl = 5;
+    d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
+    d.actor_size = ActorSize::humanoid;
+    d.can_bash_doors = false;
+    d.can_open_doors = false;
+    d.nr_turns_aware = 16;
+    d.descr =
+        "A tentacled alien creature, mysteriously floating through the air "
+        "in a ghostly manner. They sustain themselves by consuming the Spirit "
+        "of other beings.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
@@ -2402,7 +2544,7 @@ void init_data_list()
     d.hp = 4;
     d.spi = 12;
     d.dmg_melee = 3;
-    d.ability_vals.set_val(AbilityId::melee, 45);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 95);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
@@ -2451,7 +2593,8 @@ void init_data_list()
     d.hp = 15;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -2500,7 +2643,7 @@ void init_data_list()
     d.hp = 36;
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::melee, 65);
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2677,7 +2820,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 4;
     d.dmg_ranged = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::ranged, 60);
+    d.ability_vals.set_val(AbilityId::ranged, 70);
     d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -2727,7 +2870,7 @@ void init_data_list()
     d.hp = 22;
     d.spi = 6;
     d.dmg_melee = min_dmg_to_wound + 1;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 75);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
@@ -2853,7 +2996,7 @@ void init_data_list()
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fast;
@@ -2863,7 +3006,7 @@ void init_data_list()
     d.hp = 10;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -2873,21 +3016,19 @@ void init_data_list()
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few, 1)
+        MonGroupSpawnRule(MonGroupSize::alone, 1)
     });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.descr =
-        "A spinning force of destruction. It seems to move with some "
-        "manner of purpose.";
+    d.descr = "A spinning force of destruction.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
-    d.erratic_move_pct = ActorErraticFreq::very;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -2901,7 +3042,7 @@ void init_data_list()
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fast;
@@ -2911,7 +3052,7 @@ void init_data_list()
     d.hp = 16;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -2921,20 +3062,59 @@ void init_data_list()
     d.spawn_min_dlvl = 8;
     d.group_sizes.assign(
     {
-        MonGroupSpawnRule(MonGroupSize::few, 2)
+        MonGroupSpawnRule(MonGroupSize::alone, 2)
     });
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
-    d.descr =
-        "A spinning force of fire and destruction. It seems to move with "
-        "some manner of purpose.";
+    d.descr = "A spinning force of fire and destruction.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear a howling wind.";
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.erratic_move_pct = ActorErraticFreq::very;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.mon_shock_lvl = ShockLvl::unsettling;
+    d.native_rooms.push_back(RoomType::plain);
+    d.native_rooms.push_back(RoomType::cave);
+    data[(size_t)d.id] = d;
+    d.reset();
+
+    d.name_a = "an Energy Vortex";
+    d.name_the = "the Energy Vortex";
+    d.id = ActorId::energy_vortex;
+    d.ai[(size_t)AiId::looks] = true;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
+    d.ai[(size_t)AiId::attacks] = true;
+    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
+    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
+    d.ai[(size_t)AiId::moves_to_leader] = false;
+    d.speed_pct = (int)ActorSpeed::fast;
+    d.glyph = 'V';
+    d.color = clr_yellow;
+    d.tile = TileId::vortex;
+    d.hp = 24;
+    d.spi = 12;
+    d.dmg_melee = min_dmg_to_wound + 3;
+    d.ability_vals.set_val(AbilityId::melee, 80);
+    d.natural_props[(size_t)PropId::flying] = true;
+    d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
+    d.natural_props[(size_t)PropId::r_poison] = true;
+    d.prevent_knockback = true;
+    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
+    d.actor_size = ActorSize::humanoid;
+    d.nr_turns_aware = 9;
+    d.is_auto_descr_allowed = true;
+    d.descr = "A spinning force of pure energy.";
+    d.wary_msg = d.name_the + " seems disturbed.";
+    d.aggro_msg_mon_hidden = "I hear a howling wind.";
+    d.can_be_summoned = true;
+    d.can_bleed = false;
+    d.can_leave_corpse = false;
+    d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
@@ -3229,7 +3409,7 @@ void init_data_list()
     d.corpse_name_a = "a Chthonian corpse";
     d.corpse_name_the = "the Chthonian corpse";
     d.id = ActorId::chthonian;
-    d.ai[(size_t)AiId::looks] = false;
+    d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = false;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
@@ -3243,14 +3423,14 @@ void init_data_list()
     d.hp = 200;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 10;
-    d.ability_vals.set_val(AbilityId::melee, 70);
+    d.ability_vals.set_val(AbilityId::melee, 80);
     d.natural_props[(size_t)PropId::burrowing] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
-    d.spawn_min_dlvl = 12;
+    d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.actor_size = ActorSize::giant;
-    d.nr_turns_aware = 5;
+    d.nr_turns_aware = 16;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3284,6 +3464,7 @@ void init_data_list()
     d.hp = 16;
     d.spi = 40;
     d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
@@ -3386,7 +3567,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 2;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
+    d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    1),
@@ -3539,7 +3720,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_skill = SpellSkill::expert;
     d.glyph = 'Y';
     d.color = clr_gray;
@@ -3604,8 +3785,8 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
-    d.ability_vals.set_val(AbilityId::melee, 80);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::melee, 85);
+    d.ability_vals.set_val(AbilityId::dodging, 25);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
