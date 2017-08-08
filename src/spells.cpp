@@ -2006,7 +2006,7 @@ std::vector<std::string> SpellSpellShield::descr_specific(
 
 bool SpellSpellShield::allow_mon_cast_now(Mon& mon) const
 {
-    return !mon.has_prop(PropId::spell_reflect);
+    return !mon.has_prop(PropId::r_spell);
 }
 
 // -----------------------------------------------------------------------------
