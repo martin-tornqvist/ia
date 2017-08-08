@@ -59,6 +59,7 @@ Gameplay
 * Gas masks now also protects against gas explosion traps
 * Insanity increases by random value within 12-18%, instead of a fixed 5%
 * Shock from carrying disturbing items reduced to 0.05% shock per turn (from 0.1%)
+* The Rogue background receives -25% passive shock (instead of -50%)
 * Reduced the penalty for each wound to -5% melee hit chance (instead of -10%), -5% dodging (instead of -10%), and no penalty to ranged attacks (instead of -5%)
 * The Survivalist trait completely removes the penalties to hit chance and dodging from wounds
 * Being Frenzied allows waiting in place (with "5" or ".")

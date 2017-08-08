@@ -1120,7 +1120,7 @@ void Player::on_actor_turn()
 
         if (player_bon::bg() == Bg::rogue)
         {
-            passive_shock_taken /= 2.0;
+            passive_shock_taken *= 0.75;
         }
 
         incr_shock(passive_shock_taken, ShockSrc::time);

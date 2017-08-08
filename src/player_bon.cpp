@@ -406,7 +406,7 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         break;
 
     case Bg::rogue:
-        put("The rate of shock received passively over time is halved");
+        put("Shock received passively over time is reduced by 25%");
         put("");
         put("Has acquired an artifact which can cloud the minds of all "
             "enemies, causing them to forget the presence of the user");
