@@ -524,7 +524,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::infected;
-    d.std_rnd_turns = Range(100, 200);
+    d.std_rnd_turns = Range(100, 100);
     d.name = "Infected";
     d.name_short = "Infected";
     d.descr = "A nasty infection, this should be treated immediately";
@@ -2287,17 +2287,24 @@ Prop* PropInfected::on_tick()
     ASSERT(!owning_actor_->prop_handler().has_prop(PropId::diseased));
 #endif // NDEBUG
 
-    const int max_turns_left_allow_disease = 50;
+    //
+    // Increase risk of disease the fewer turns left the infection has
+    //
+    const int allow_disease_below_turns_left = 85;
+
     const int apply_disease_one_in = nr_turns_left_ - 1;
 
-    if (nr_turns_left_ <= max_turns_left_allow_disease &&
-        rnd::one_in(apply_disease_one_in))
+    if ((nr_turns_left_ <= allow_disease_below_turns_left) &&
+        ((apply_disease_one_in <= 0) ||
+         rnd::one_in(apply_disease_one_in)))
     {
         PropHandler& prop_hlr = owning_actor_->prop_handler();
 
         prop_hlr.apply(new PropDiseased(PropTurns::indefinite));
 
+        //
         // NOTE: Disease ends infection, this property object is now deleted!
+        //
 
         msg_log::more_prompt();
 
