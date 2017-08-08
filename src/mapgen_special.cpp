@@ -254,11 +254,7 @@ bool mk_intro_lvl()
 
                     const std::string name = entry.name();
 
-                    const auto date_str_vector =
-                        text_format::space_separated_list(
-                            entry.date_and_time());
-
-                    const std::string date_str = date_str_vector[0];
+                    const std::string date_str = entry.date();
 
                     const std::string score_str = std::to_string(entry.score());
 

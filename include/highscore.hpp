@@ -13,7 +13,7 @@ class HighscoreEntry
 {
 public:
     HighscoreEntry(std::string game_summary_file_path,
-                   std::string entry_date_and_time,
+                   std::string entry_date,
                    std::string player_name,
                    int player_xp,
                    int player_lvl,
@@ -31,9 +31,9 @@ public:
         return game_summary_file_path_;
     }
 
-    std::string date_and_time() const
+    std::string date() const
     {
-        return date_and_time_;
+        return date_;
     }
 
     std::string name() const
@@ -73,7 +73,7 @@ public:
 
 private:
     std::string game_summary_file_path_;
-    std::string date_and_time_;
+    std::string date_;
     std::string name_;
     int xp_;
     int lvl_;

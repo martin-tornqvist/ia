@@ -17,7 +17,7 @@
 // Highscore entry
 // -----------------------------------------------------------------------------
 HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
-                               std::string entry_date_and_time,
+                               std::string date,
                                std::string player_name,
                                int player_xp,
                                int player_lvl,
@@ -26,7 +26,7 @@ HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
                                IsWin is_win,
                                Bg player_bg) :
     game_summary_file_path_ (game_summary_file_path),
-    date_and_time_          (entry_date_and_time),
+    date_                   (date),
     name_                   (player_name),
     xp_                     (player_xp),
     lvl_                    (player_lvl),
@@ -82,7 +82,7 @@ void write_file(std::vector<HighscoreEntry>& entries)
 
         file << entry.game_summary_file_path() << std::endl;
         file << win_str << std::endl;
-        file << entry.date_and_time() << std::endl;
+        file << entry.date() << std::endl;
         file << entry.name() << std::endl;
         file << entry.xp() << std::endl;
         file << entry.lvl() << std::endl;
@@ -314,7 +314,7 @@ void BrowseHighscore::draw()
     {
         const auto& entry = entries_[i];
 
-        const std::string date_and_time = entry.date_and_time();
+        const std::string date = entry.date();
         const std::string name = entry.name();
         const std::string bg = player_bon::bg_title(entry.bg());
         const std::string lvl = std::to_string(entry.lvl());
@@ -330,7 +330,7 @@ void BrowseHighscore::draw()
             clr_menu_highlight:
             clr_menu_drk;
 
-        io::draw_text(date_and_time, panel, P(x_date, y), clr);
+        io::draw_text(date, panel, P(x_date, y), clr);
         io::draw_text(name, panel, P(x_name, y), clr);
         io::draw_text(bg, panel, P(x_bg, y), clr);
         io::draw_text(lvl, panel, P(x_lvl, y), clr);
