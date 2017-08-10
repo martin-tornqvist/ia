@@ -500,50 +500,27 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     std::vector<Actor*> target_bucket;
 
     // When master, any creature that the caster is aware of can be targeted
-    if (skill == SpellSkill::master)
+    if (caster->is_player() &&
+        (skill == SpellSkill::master))
     {
-        if (caster == map::player)
+        for (Actor* const actor : game_time::actors)
         {
-            for (Actor* const actor : game_time::actors)
+            if (!actor->is_alive() ||
+                actor->is_player() ||
+                actor->is_actor_my_leader(map::player))
             {
-                if (!actor->is_alive() ||
-                    actor->is_player() ||
-                    actor->is_actor_my_leader(map::player))
-                {
-                    continue;
-                }
-
-                const Mon* const mon = static_cast<const Mon*>(actor);
-
-                if (mon->player_aware_of_me_counter_ > 0)
-                {
-                    target_bucket.push_back(actor);
-                }
+                continue;
             }
-        }
-        else // Caster is monster
-        {
-            //
-            // TODO: What about player-allied monsters casting darkbolt???
-            //
-            const Mon* const mon = static_cast<const Mon*>(caster);
 
-            if (mon->aware_of_player_counter_ > 0)
+            const Mon* const mon = static_cast<const Mon*>(actor);
+
+            if (mon->player_aware_of_me_counter_ > 0)
             {
-                target_bucket.push_back(map::player);
-
-                for (Actor* const actor : game_time::actors)
-                {
-                    if (!actor->is_alive() ||
-                        actor->is_actor_my_leader(map::player))
-                    {
-                        target_bucket.push_back(actor);
-                    }
-                }
+                target_bucket.push_back(actor);
             }
         }
     }
-    else // Not master skill
+    else // Not player, or not master skill
     {
         target_bucket = caster->seen_foes();
     }
