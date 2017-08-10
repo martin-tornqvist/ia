@@ -1105,6 +1105,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
     d.is_infra_visible = false;
+    d.can_be_summoned = true;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
@@ -1150,11 +1151,11 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
+    d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
-    d.can_be_summoned = true;
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1198,11 +1199,11 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
+    d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
-    d.can_be_summoned = true;
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1243,11 +1244,11 @@ void init_data_list()
     d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
+    d.can_be_summoned = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
     d.native_rooms.push_back(RoomType::ritual);
-    d.can_be_summoned = true;
     data[(size_t)d.id] = d;
     d.reset();
 
@@ -1788,7 +1789,7 @@ void init_data_list()
     d.spi = 6;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 35);
-    d.ability_vals.set_val(AbilityId::dodging, 40);
+    d.ability_vals.set_val(AbilityId::dodging, 50);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;

@@ -453,7 +453,7 @@ void Mon::act()
 
     // When unaware, move randomly
     if (data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
-        (!is_player_leader || rnd::one_in(4)))
+        (!is_player_leader || rnd::one_in(8)))
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {

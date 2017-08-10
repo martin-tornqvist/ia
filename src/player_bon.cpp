@@ -515,11 +515,13 @@ std::string trait_descr(const Trait id)
 
     case Trait::lesser_summoning:
         return
-            "Summoning spells are cast at expert level (Summoning, Pestilence)";
+            "Summoning spells are cast at expert level (Summon Creature, "
+            "Pestilence)";
 
     case Trait::greater_summoning:
         return
-            "Summoning spells are cast at master level (Summoning, Pestilence)";
+            "Summoning spells are cast at master level (Summon Creature, "
+            "Pestilence)";
 
     case Trait::lesser_clairv:
         return

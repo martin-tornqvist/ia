@@ -181,77 +181,6 @@ Range Spell::spi_cost(const SpellSkill skill, Actor* const caster) const
             }
         }
 
-        //
-        // Traits reducing the cost of specific spells
-        //
-
-        //
-        // TODO: Shouldn't this be done by calling virtual functions?
-        //
-        // bool is_warlock =
-        //     player_bon::traits[(size_t)Trait::warlock];
-
-        // bool is_seer =
-        //     player_bon::traits[(size_t)Trait::seer];
-
-        // bool is_summoner =
-        //     player_bon::traits[(size_t)Trait::summoner];
-
-        // switch (id())
-        // {
-        // case SpellId::darkbolt:
-        //     if (is_warlock)
-        //     {
-        //         --cost_max;
-        //     }
-        //     break;
-
-        // case SpellId::aza_wrath:
-        //     if (is_warlock)
-        //     {
-        //         --cost_max;
-        //     }
-        //     break;
-
-        // case SpellId::mayhem:
-        //     if (is_warlock)
-        //     {
-        //         cost_max -= 2;
-        //     }
-        //     break;
-
-        // case SpellId::searching:
-        //     if (is_seer)
-        //     {
-        //         cost_max -= 2;
-        //     }
-        //     break;
-
-        // case SpellId::summon:
-        //     if (is_summoner)
-        //     {
-        //         cost_max -= 2;
-        //     }
-        //     break;
-
-        // case SpellId::pest:
-        //     if (is_summoner)
-        //     {
-        //         cost_max -= 2;
-        //     }
-        //     break;
-
-        // case SpellId::pharaoh_staff:
-        //     if (is_summoner)
-        //     {
-        //         --cost_max;
-        //     }
-        //     break;
-
-        // default:
-        //     break;
-        // }
-
         const bool is_blood_sorc =
             player_bon::traits[(size_t)Trait::blood_sorc];
 
@@ -1510,11 +1439,11 @@ std::vector<std::string> SpellPharaohStaff::descr_specific(
     {
         "Summons a loyal Mummy servant which will fight for the caster.",
 
-            "If an allied Mummy is already present, this spell will instead "
-            "heal it.",
+        "If an allied Mummy is already present, this spell will instead "
+        "heal it.",
 
-            summon_warning_str
-            };
+        summon_warning_str
+    };
 }
 
 bool SpellPharaohStaff::allow_mon_cast_now(Mon& mon) const
@@ -2412,34 +2341,90 @@ void SpellSummonMon::run_effect(Actor* const caster,
 
     std::vector<ActorId> summon_bucket;
 
-    int max_dlvl_spawned =
-        (skill == SpellSkill::basic) ? dlvl_last_early_game :
-        (skill == SpellSkill::expert) ? dlvl_last_mid_game :
-        dlvl_last;
-
-    // If it's a monster doing the summoning, also don't allow a too far
-    // out of depth monsters to be spawned
-    if (!caster->is_player())
+    if (caster->is_player())
     {
+        // Player summong, pick from predefined lists
+        if ((skill == SpellSkill::basic) ||
+            (skill == SpellSkill::expert))
+        {
+            summon_bucket.push_back(ActorId::rat_thing);
+            summon_bucket.push_back(ActorId::floating_skull);
+            summon_bucket.push_back(ActorId::raven);
+            summon_bucket.push_back(ActorId::pit_viper);
+            summon_bucket.push_back(ActorId::wolf);
+            summon_bucket.push_back(ActorId::ooze_black);
+        }
+
+        if ((skill == SpellSkill::expert) ||
+            (skill == SpellSkill::master))
+        {
+            summon_bucket.push_back(ActorId::green_spider);
+            summon_bucket.push_back(ActorId::white_spider);
+            summon_bucket.push_back(ActorId::red_spider);
+            summon_bucket.push_back(ActorId::flying_polyp);
+            summon_bucket.push_back(ActorId::fire_hound);
+            summon_bucket.push_back(ActorId::giant_bat);
+            summon_bucket.push_back(ActorId::vampire_bat);
+            summon_bucket.push_back(ActorId::ooze_poison);
+            summon_bucket.push_back(ActorId::fire_vortex);
+        }
+
+        if (skill == SpellSkill::master)
+        {
+            summon_bucket.push_back(ActorId::leng_spider);
+            summon_bucket.push_back(ActorId::energy_hound);
+            summon_bucket.push_back(ActorId::energy_vortex);
+        }
+    }
+    else // Caster is monster
+    {
+        int max_dlvl_spawned =
+            (skill == SpellSkill::basic) ? dlvl_last_early_game :
+            (skill == SpellSkill::expert) ? dlvl_last_mid_game :
+            dlvl_last;
+
         const int nr_dlvls_ood_allowed = 3;
 
         max_dlvl_spawned =
             std::min(max_dlvl_spawned,
                      map::dlvl + nr_dlvls_ood_allowed);
-    }
 
-    for (int i = 0; i < (int)ActorId::END; ++i)
-    {
-        const ActorDataT& data = actor_data::data[i];
+        const int min_dlvl_spawned = max_dlvl_spawned - 10;
 
-        if (!data.can_be_summoned)
+        for (size_t i = 0; i < (size_t)ActorId::END; ++i)
         {
-            continue;
+            const ActorDataT& data = actor_data::data[i];
+
+            if (!data.can_be_summoned)
+            {
+                continue;
+            }
+
+            if ((data.spawn_min_dlvl <= max_dlvl_spawned) &&
+                (data.spawn_min_dlvl >= min_dlvl_spawned))
+            {
+                summon_bucket.push_back(ActorId(i));
+            }
         }
 
-        if (data.spawn_min_dlvl <= max_dlvl_spawned)
+        // If no monsters could be found which matched the level criteria,
+        // try again, but without the min level criterium
+        if (summon_bucket.empty())
         {
-            summon_bucket.push_back(ActorId(i));
+            for (size_t i = 0; i < (size_t)ActorId::END; ++i)
+            {
+                const ActorDataT& data = actor_data::data[i];
+
+                if (!data.can_be_summoned)
+                {
+                    continue;
+                }
+
+                if (data.spawn_min_dlvl <= max_dlvl_spawned)
+                {
+                    summon_bucket.push_back(ActorId(i));
+                }
+            }
         }
     }
 
@@ -2451,6 +2436,13 @@ void SpellSummonMon::run_effect(Actor* const caster,
 
         return;
     }
+
+#ifndef NDEBUG
+    for (const auto id : summon_bucket)
+    {
+        ASSERT(actor_data::data[(size_t)id].can_be_summoned);
+    }
+#endif // NDEBUG
 
     const ActorId mon_id = rnd::element(summon_bucket);
 

@@ -19,6 +19,7 @@ Gameplay
 * The Potion of Invisibility effect ends when attacking or casting spells, and has much shorter duration
 * Removed the "Sacrifice Life"/"Spirit" spells
 * Improved AI of player allied  monsters - they are now much more active in pursuing enemies
+* The spell "Summon Creature" picks more sensible monsters when cast by the player (e.g. a Wolf will not appear when cast at Master level)
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Added trait "Absorption" for Occultists - blocking a spell restores 1d6 Spirit
 * Added trait "Resistant" - halved damage from fire and electricity
