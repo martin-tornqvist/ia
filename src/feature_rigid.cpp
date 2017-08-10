@@ -2779,18 +2779,12 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
             if (rnd < 20)
             {
-                if (map::dlvl < dlvl_harder_traps)
-                {
-                    const Range dmg_range(8, 11);
+                const Range dmg_range(8, 11);
 
-                    prop = new PropPoisoned(
-                        PropTurns::specific,
-                        poison_dmg_n_turn * dmg_range.roll());
-                }
-                else
-                {
-                    prop = new PropPoisoned(PropTurns::std);
-                }
+                prop = new PropPoisoned(
+                    PropTurns::specific,
+                    poison_dmg_n_turn * dmg_range.roll());
+
 
                 fume_clr = clr_green_lgt;
             }
@@ -3324,56 +3318,67 @@ void Fountain::bump(Actor& actor_bumping)
         switch (fountain_effect_)
         {
         case FountainEffect::refreshing:
+        {
             msg_log::add("It's very refreshing.");
             map::player->restore_hp(1, false, Verbosity::silent);
             map::player->restore_spi(1, false, Verbosity::silent);
             map::player->restore_shock(5, true);
-            break;
+        }
+        break;
 
         case FountainEffect::xp:
+        {
             msg_log::add("I feel more powerful!");
             game::incr_player_xp(1);
-            break;
+        }
+        break;
 
         case FountainEffect::curse:
+        {
             prop_hlr.apply(new PropCursed(PropTurns::std));
-            break;
+        }
+        break;
 
         case FountainEffect::disease:
+        {
             prop_hlr.apply(new PropDiseased(PropTurns::std));
-            break;
+        }
+        break;
 
         case FountainEffect::poison:
-            if (map::dlvl < dlvl_harder_traps)
-            {
-                const Range dmg_range(8, 11);
+        {
+            const Range dmg_range(8, 11);
 
-                prop_hlr.apply(
-                    new PropPoisoned(
-                        PropTurns::specific,
-                        poison_dmg_n_turn * dmg_range.roll()));
-            }
-            else
-            {
-                prop_hlr.apply(new PropPoisoned(PropTurns::std));
-            }
-            break;
+            prop_hlr.apply(
+                new PropPoisoned(
+                    PropTurns::specific,
+                    poison_dmg_n_turn * dmg_range.roll()));
+        }
+        break;
 
         case FountainEffect::frenzy:
+        {
             prop_hlr.apply(new PropFrenzied(PropTurns::std));
-            break;
+        }
+        break;
 
         case FountainEffect::paralyze:
+        {
             prop_hlr.apply(new PropParalyzed(PropTurns::std));
-            break;
+        }
+        break;
 
         case FountainEffect::blind:
+        {
             prop_hlr.apply(new PropBlind(PropTurns::std));
-            break;
+        }
+        break;
 
         case FountainEffect::faint:
+        {
             prop_hlr.apply(new PropFainted(PropTurns::specific, 10));
-            break;
+        }
+        break;
 
         case FountainEffect::START_OF_BAD_EFFECTS:
         case FountainEffect::END:
