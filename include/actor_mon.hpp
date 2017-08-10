@@ -119,6 +119,7 @@ public:
     bool is_roaming_allowed_;
     Actor* leader_;
     Actor* tgt_;
+    bool is_tgt_seen_;
     bool waiting_;
 
 protected:

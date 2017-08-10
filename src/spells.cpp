@@ -523,6 +523,9 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         }
         else // Caster is monster
         {
+            //
+            // TODO: What about player-allied monsters casting darkbolt???
+            //
             const Mon* const mon = static_cast<const Mon*>(caster);
 
             if (mon->aware_of_player_counter_ > 0)
@@ -786,12 +789,12 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
 bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 {
     //
-    // NOTE: Monsters with master spell skill level could cast this spell
+    // NOTE: Monsters with master spell skill level COULD cast this spell
     //       without LOS to the player, but we do not allow the AI to do this,
     //       since it would probably be very hard and/or annoying for the player
     //       to deal with
     //
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -944,7 +947,7 @@ std::vector<std::string> SpellAzaWrath::descr_specific(
 
 bool SpellAzaWrath::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -1141,8 +1144,8 @@ std::vector<std::string> SpellMayhem::descr_specific(
 bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 {
     return
-        (mon.aware_of_player_counter_) > 0 &&
-        (mon.tgt_ || rnd::one_in(20));
+        mon.tgt_ &&
+        (mon.is_tgt_seen_ || rnd::one_in(20));
 }
 
 // -----------------------------------------------------------------------------
@@ -1258,8 +1261,9 @@ std::vector<std::string> SpellPest::descr_specific(
 
 bool SpellPest::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_ &&
-           (mon.tgt_ || rnd::one_in(30));
+    return
+        mon.tgt_ &&
+        (mon.is_tgt_seen_ || rnd::one_in(30));
 }
 
 // -----------------------------------------------------------------------------
@@ -2108,8 +2112,7 @@ bool SpellRes::allow_mon_cast_now(Mon& mon) const
 
     return
         (!has_rfire || !has_relec) &&
-        mon.tgt_ &&
-        rnd::coin_toss();
+        mon.tgt_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2123,10 +2126,18 @@ void SpellKnockBack::run_effect(Actor* const caster,
     ASSERT(!caster->is_player());
 
     Clr msg_clr = clr_msg_good;
+
     std::string target_str = "me";
+
     Actor* caster_used = caster;
-    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+
+    auto* const mon = static_cast<Mon*>(caster_used);
+
+    Actor* target = mon->tgt_;
+
     ASSERT(target);
+
+    ASSERT(mon->is_tgt_seen_);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -2173,7 +2184,7 @@ void SpellKnockBack::run_effect(Actor* const caster,
 
 bool SpellKnockBack::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2294,7 +2305,7 @@ std::vector<std::string> SpellEnfeeble::descr_specific(
 
 bool SpellEnfeeble::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2308,7 +2319,14 @@ void SpellDisease::run_effect(Actor* const caster,
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
-    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+
+    auto* const mon = static_cast<Mon*>(caster_used);
+
+    Actor* target = mon->tgt_;
+
+    ASSERT(target);
+
+    ASSERT(mon->is_tgt_seen_);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -2353,7 +2371,7 @@ void SpellDisease::run_effect(Actor* const caster,
 
 bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2529,13 +2547,9 @@ std::vector<std::string> SpellSummonMon::descr_specific(
 
 bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
 {
-    //
-    // NOTE: Checking awareness instead of target, to allow summoning even with
-    //       broken LOS
-    //
     return
-        (mon.aware_of_player_counter_ > 0) &&
-        (mon.tgt_ || rnd::one_in(23));
+        mon.tgt_ &&
+        (mon.is_tgt_seen_ || rnd::one_in(20));
 }
 
 // -----------------------------------------------------------------------------
@@ -2620,9 +2634,14 @@ void SpellMiGoHypno::run_effect(Actor* const caster,
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
-    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+
+    auto* const mon = static_cast<Mon*>(caster_used);
+
+    Actor* target = mon->tgt_;
 
     ASSERT(target);
+
+    ASSERT(mon->is_tgt_seen_);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -2670,6 +2689,7 @@ bool SpellMiGoHypno::allow_mon_cast_now(Mon& mon) const
 {
     return
         mon.tgt_ &&
+        mon.is_tgt_seen_ &&
         mon.tgt_->is_player();
 }
 
@@ -2682,9 +2702,14 @@ void SpellBurn::run_effect(Actor* const caster,
     ASSERT(!caster->is_player());
 
     Actor* caster_used = caster;
-    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+
+    auto* const mon = static_cast<Mon*>(caster_used);
+
+    Actor* target = mon->tgt_;
 
     ASSERT(target);
+
+    ASSERT(mon->is_tgt_seen_);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -2731,7 +2756,7 @@ void SpellBurn::run_effect(Actor* const caster,
 
 bool SpellBurn::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------
@@ -2744,9 +2769,13 @@ void SpellDeafen::run_effect(Actor* const caster,
 
     Actor* caster_used = caster;
 
-    Actor* target = static_cast<Mon*>(caster_used)->tgt_;
+    auto* const mon = static_cast<Mon*>(caster_used);
+
+    Actor* target = mon->tgt_;
 
     ASSERT(target);
+
+    ASSERT(mon->is_tgt_seen_);
 
     // Spell resistance?
     if (target->has_prop(PropId::r_spell))
@@ -2781,7 +2810,7 @@ void SpellDeafen::run_effect(Actor* const caster,
 
 bool SpellDeafen::allow_mon_cast_now(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && mon.is_tgt_seen_;
 }
 
 // -----------------------------------------------------------------------------

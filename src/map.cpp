@@ -344,7 +344,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         return actors[0];
     }
 
-    //Find distance to nearest actor(s)
+    // Find distance to nearest actor(s)
     int dist_to_nearest = INT_MAX;
 
     for (Actor* actor : actors)

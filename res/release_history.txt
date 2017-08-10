@@ -18,6 +18,7 @@ Gameplay
 * Removed Potion of Clairvoyance
 * The Potion of Invisibility effect ends when attacking or casting spells, and has much shorter duration
 * Removed the "Sacrifice Life"/"Spirit" spells
+* Improved AI of player allied  monsters - they are now much more active in pursuing enemies
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Added trait "Absorption" for Occultists - blocking a spell restores 1d6 Spirit
 * Added trait "Resistant" - halved damage from fire and electricity

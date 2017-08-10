@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cstring>
+#include <algorithm>
 
 #include "init.hpp"
 #include "rl_utils.hpp"
@@ -29,6 +30,7 @@
 #include "popup.hpp"
 #include "fov.hpp"
 #include "text_format.hpp"
+#include "feature_door.hpp"
 
 Mon::Mon() :
     Actor(),
@@ -41,6 +43,7 @@ Mon::Mon() :
     is_roaming_allowed_             (true),
     leader_                         (nullptr),
     tgt_                            (nullptr),
+    is_tgt_seen_                    (false),
     waiting_                        (false)
 {
     for (size_t i = 0; i < (size_t)SpellId::END; ++i)
@@ -67,13 +70,10 @@ void Mon::on_actor_turn()
     }
 }
 
-//
-// TODO: Some of the things done in this function should probably be moved to
-//       "on_actor_turn()" instead. The purpose of this function ("act()") is
-//       only to tell the actor to "do something".
-//
 void Mon::act()
 {
+    const bool is_player_leader = is_actor_my_leader(map::player);
+
 #ifndef NDEBUG
     // Sanity check - verify that monster is not outside the map
     if (!map::is_pos_inside_map(pos, false))
@@ -85,7 +85,7 @@ void Mon::act()
     // Sanity check - verify that monster's leader does not have a leader
     // (never allowed)
     if (leader_ &&                              // Has leader?
-        !is_actor_my_leader(map::player) &&     // Leader is monster?
+        !is_player_leader &&                    // Leader is monster?
         static_cast<Mon*>(leader_)->leader_)    // Leader has a leader?
     {
         TRACE << "Two (or more) steps of leader is never allowed" << std::endl;
@@ -95,7 +95,7 @@ void Mon::act()
 
     if ((wary_of_player_counter_ <= 0) &&
         (aware_of_player_counter_ <= 0) &&
-        !is_actor_my_leader(map::player))
+        !is_player_leader)
     {
         waiting_ = !waiting_;
 
@@ -110,11 +110,17 @@ void Mon::act()
         waiting_ = false;
     }
 
+    //
     // Pick a target
+    //
     std::vector<Actor*> tgt_bucket;
 
     if (has_prop(PropId::conflict))
     {
+        //
+        // TODO: The targetting system has changed, consider the code below
+        //
+
         // Monster is conflicted (e.g. by player ring/amulet)
         tgt_bucket = game_time::actors;
 
@@ -144,17 +150,102 @@ void Mon::act()
     {
         tgt_bucket = seen_foes();
 
-        // If not aware, remove player from target bucket
-        if (aware_of_player_counter_ <= 0)
+        if (tgt_bucket.empty())
         {
-            for (auto it = begin(tgt_bucket); it != end(tgt_bucket); ++it)
+            // There are no seen foes
+            is_tgt_seen_ = false;
+
+            // Check if we are aware of foes instead
+            if (is_player_leader)
             {
-                if (*it == map::player)
+                // Only consider monsters which we can actually move towards
+
+                //
+                // TODO: This prevents player-allied monsters from casting
+                //       spells on unreachable hostile monsters - but it
+                //       probably doesn't matter for now
+                //
+
+                bool blocked[map_w][map_h];
+
+                map_parsers::BlocksActor(*this, ParseActors::no)
+                    .run(blocked);
+
+                // Do not consider doors blocking, if this is not a metal door,
+                // and we can open or bash doors
+                for (int x = 0; x < map_w; ++x)
                 {
-                    tgt_bucket.erase(it);
-                    break;
+                    for (int y = 0; y < map_h; ++y)
+                    {
+                        const auto* const f = map::cells[x][y].rigid;
+
+                        if (f->id() != FeatureId::door)
+                        {
+                            continue;
+                        }
+
+                        const auto* const door = static_cast<const Door*>(f);
+
+                        if (door->type() == DoorType::metal)
+                        {
+                            continue;
+                        }
+
+                        const auto& d = data();
+
+                        if (d.can_open_doors ||
+                            d.can_bash_doors)
+                        {
+                            blocked[x][y] = false;
+                        }
+                    }
+                }
+
+                int flood[map_w][map_h];
+
+                floodfill(pos,
+                          blocked,
+                          flood);
+
+                // Player is my leader; all player-hostile monsters which the
+                // player is aware of are candidates
+                for (Actor* const actor : game_time::actors)
+                {
+                    const P& p = actor->pos;
+
+                    if (!actor->is_player() &&
+                        !actor->is_actor_my_leader(map::player) &&
+                        (flood[p.x][p.y] > 0))
+                    {
+                        auto* const mon = static_cast<Mon*>(actor);
+
+                        if (mon->player_aware_of_me_counter_ > 0)
+                        {
+                            tgt_bucket.push_back(actor);
+                        }
+                    }
                 }
             }
+            // Player is not my leader, are we aware of the player?
+            else if (aware_of_player_counter_ > 0)
+            {
+                // The player is a candidate
+                tgt_bucket.push_back(map::player);
+
+                // All player-allied creatures are candidates
+                for (Actor* const actor : game_time::actors)
+                {
+                    if (!actor->is_player() &&
+                        actor->is_actor_my_leader(map::player))
+                    {
+                        tgt_bucket.push_back(actor);
+                    }
+                }
+            }
+        }
+        else // There are seen foes
+        {
+            is_tgt_seen_ = true;
         }
     }
 
@@ -165,11 +256,13 @@ void Mon::act()
     {
         is_roaming_allowed_ = true;
 
-        if (leader_ && leader_->is_alive())
+        // Does the monster have a living leader?
+        if (leader_ &&
+            leader_->is_alive())
         {
             // If monster is aware of hostile player, make leader also aware
             if (aware_of_player_counter_ > 0 &&
-                !is_actor_my_leader(map::player))
+                !is_player_leader)
             {
                 // Make leader aware
                 Mon* const leader_mon = static_cast<Mon*>(leader_);
@@ -219,8 +312,9 @@ void Mon::act()
     //
 
     if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
-        (leader_ != map::player) &&
+        !is_player_leader &&
         (tgt_ == map::player) &&
+        is_tgt_seen_ &&
         rnd::coin_toss())
     {
         if (ai::action::make_room_for_friend(*this))
@@ -240,7 +334,9 @@ void Mon::act()
         }
     }
 
-    if (data_->ai[(size_t)AiId::attacks] && tgt_)
+    if (data_->ai[(size_t)AiId::attacks] &&
+        tgt_ &&
+        is_tgt_seen_)
     {
         const bool did_attack = try_attack(*tgt_);
 
@@ -269,14 +365,14 @@ void Mon::act()
     }
 
     // Move less erratically if allied to player
-    if (is_actor_my_leader(map::player))
+    if (is_player_leader)
     {
         erratic_move_pct /= 2;
     }
 
     // Move more erratically if confused
     if (has_prop(PropId::confused) &&
-        erratic_move_pct > 0)
+        (erratic_move_pct > 0))
     {
         erratic_move_pct += 50;
     }
@@ -306,19 +402,16 @@ void Mon::act()
 
     std::vector<P> path;
 
-    if (data_->ai[(size_t)AiId::paths_to_tgt_when_aware] &&
-        leader_ != map::player &&
+    if ((data_->ai[(size_t)AiId::paths_to_tgt_when_aware] ||
+         is_player_leader) &&
         !is_terrified)
     {
-        ai::info::find_path_to_player(*this, path);
+        path = ai::info::find_path_to_tgt(*this);
     }
 
-    if (leader_ != map::player)
+    if (ai::action::handle_closed_blocking_door(*this, path))
     {
-        if (ai::action::handle_closed_blocking_door(*this, path))
-        {
-            return;
-        }
+        return;
     }
 
     if (ai::action::step_path(*this, path))
@@ -326,9 +419,11 @@ void Mon::act()
         return;
     }
 
-    if (data_->ai[(size_t)AiId::moves_to_leader] && !is_terrified)
+    if ((data_->ai[(size_t)AiId::moves_to_leader] ||
+         is_player_leader) &&
+        !is_terrified)
     {
-        ai::info::find_path_to_leader(*this, path);
+        path = ai::info::find_path_to_leader(*this);
 
         if (ai::action::step_path(*this, path))
         {
@@ -337,8 +432,8 @@ void Mon::act()
     }
 
     if (data_->ai[(size_t)AiId::moves_to_lair]  &&
-        leader_ != map::player &&
-        (tgt_ == nullptr || tgt_ == map::player))
+        !is_player_leader &&
+        (!tgt_ || tgt_->is_player()))
     {
         if (ai::action::step_to_lair_if_los(*this, lair_pos_))
         {
@@ -347,7 +442,7 @@ void Mon::act()
         else // No LOS to lair
         {
             // Try to use pathfinder to travel to lair
-            ai::info::find_path_to_lair_if_no_los(*this, path, lair_pos_);
+            path = ai::info::find_path_to_lair_if_no_los(*this, lair_pos_);
 
             if (ai::action::step_path(*this, path))
             {
@@ -357,7 +452,8 @@ void Mon::act()
     }
 
     // When unaware, move randomly
-    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware])
+    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
+        (!is_player_leader || rnd::one_in(4)))
     {
         if (ai::action::move_to_random_adj_cell(*this))
         {
@@ -508,7 +604,8 @@ std::vector<Actor*> Mon::seen_foes() const
 
             const Mon* const mon = static_cast<const Mon*>(this);
 
-            if (is_enemy && mon->can_see_actor(*actor, blocked_los))
+            if (is_enemy &&
+                mon->can_see_actor(*actor, blocked_los))
             {
                 out.push_back(actor);
             }

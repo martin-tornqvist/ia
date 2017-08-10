@@ -42,13 +42,11 @@ namespace info
 
 bool look(Mon& mon);
 
-void find_path_to_lair_if_no_los(Mon& mon,
-                                 std::vector<P>& path,
-                                 const P& lair_p);
+std::vector<P> find_path_to_lair_if_no_los(Mon& mon, const P& lair_p);
 
-void find_path_to_leader(Mon& mon, std::vector<P>& path);
+std::vector<P> find_path_to_leader(Mon& mon);
 
-void find_path_to_player(Mon& mon, std::vector<P>& path);
+std::vector<P> find_path_to_tgt(Mon& mon);
 
 void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
 

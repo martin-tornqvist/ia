@@ -86,7 +86,8 @@ bool try_cast_random_spell(Mon& mon)
 
 bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
 {
-    if (!mon.is_alive() || path.empty())
+    if (!mon.is_alive() ||
+        path.empty())
     {
         return false;
     }
@@ -101,6 +102,8 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
 
         if (!door->can_move(mon))
         {
+            ASSERT(door->type() != DoorType::metal);
+
             const bool is_stuck = door->is_stuck();
 
             const bool mon_can_bash = mon.data().can_bash_doors;
@@ -108,9 +111,11 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
             const bool mon_can_open = mon.data().can_open_doors;
 
             // Open the door?
-            if (mon_can_open && !is_stuck)
+            if (mon_can_open &&
+                !is_stuck)
             {
                 door->try_open(&mon);
+
                 return true;
             }
 
@@ -122,7 +127,8 @@ bool handle_closed_blocking_door(Mon& mon, std::vector<P> path)
                 // awareness time (because monsters trying to bash down doors is
                 // a pretty central part of the game, and they should not give
                 // up so easily)
-                if (rnd::fraction(3, 5))
+                if (!mon.is_actor_my_leader(map::player) &&
+                    rnd::fraction(3, 5))
                 {
                     ++mon.aware_of_player_counter_;
                 }
@@ -206,13 +212,14 @@ bool is_pos_on_line(const P& p,
     return false;
 }
 
-// Returns all free positions around the acting monster that is further from the
+// Returns all free positions around the acting monster that is closer to the
 // player than the monster's current position
-void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
+std::vector<P> move_bucket(Mon& mon)
 {
-    dirs_to_mk.clear();
+    std::vector<P> bucket;
 
     const P& mon_p = mon.pos;
+
     const P& player_p = map::player->pos;
 
     bool blocked[map_w][map_h];
@@ -232,12 +239,14 @@ void move_bucket(Mon& mon, std::vector<P>& dirs_to_mk)
 
         const int tgt_dist_to_player = king_dist(tgt_p, player_p);
 
-        if (tgt_dist_to_player <= current_dist_to_player &&
+        if ((tgt_dist_to_player <= current_dist_to_player) &&
             !blocked[tgt_p.x][tgt_p.y])
         {
-            dirs_to_mk.push_back(tgt_p);
+            bucket.push_back(tgt_p);
         }
     }
+
+    return bucket;
 }
 
 } // namespace
@@ -312,8 +321,7 @@ bool make_room_for_friend(Mon& mon)
                 //       shoot at the player.
 
                 // Get a list of neighbouring free cells
-                std::vector<P> pos_bucket;
-                move_bucket(mon, pos_bucket);
+                auto pos_bucket = move_bucket(mon);
 
                 // Sort the list by distance to player
                 IsCloserToPos cmp(player_p);
@@ -444,28 +452,26 @@ bool move_to_random_adj_cell(Mon& mon)
 
 bool move_to_tgt_simple(Mon& mon)
 {
-    if (!mon.is_alive() || !mon.tgt_)
+    if (!mon.is_alive() ||
+        !mon.tgt_ ||
+        !mon.is_tgt_seen_)
     {
         return false;
     }
 
-    if (mon.aware_of_player_counter_ > 0 ||
-        map::player->is_leader_of(&mon))
+    const P offset = mon.tgt_->pos - mon.pos;
+    const P signs = offset.signs();
+
+    const P new_pos(mon.pos + signs);
+
+    const bool is_blocked =
+        map_parsers::BlocksActor(mon, ParseActors::yes)
+        .cell(new_pos);
+
+    if (!is_blocked)
     {
-        const P offset = mon.tgt_->pos - mon.pos;
-        const P signs = offset.signs();
-
-        const P new_pos(mon.pos + signs);
-
-        const bool is_blocked =
-            map_parsers::BlocksActor(mon, ParseActors::yes)
-            .cell(new_pos);
-
-        if (!is_blocked)
-        {
-            mon.move(dir_utils::dir(signs));
-            return true;
-        }
+        mon.move(dir_utils::dir(signs));
+        return true;
     }
 
     return false;
@@ -473,7 +479,8 @@ bool move_to_tgt_simple(Mon& mon)
 
 bool step_path(Mon& mon, std::vector<P>& path)
 {
-    if (mon.is_alive() && !path.empty())
+    if (mon.is_alive() &&
+        !path.empty())
     {
         const P delta = path.back() - mon.pos;
 
@@ -597,61 +604,63 @@ bool look(Mon& mon)
     return false;
 }
 
-void find_path_to_lair_if_no_los(Mon& mon,
-                                 std::vector<P>& path,
-                                 const P& lair_p)
+std::vector<P> find_path_to_lair_if_no_los(Mon& mon, const P& lair_p)
 {
-    if (mon.is_alive())
-    {
-        bool blocked[map_w][map_h];
+    std::vector<P> path;
 
-         const R fov_lmt = fov::get_fov_rect(mon.pos);
-
-        map_parsers::BlocksLos()
-            .run(blocked,
-                 MapParseMode::overwrite,
-                 fov_lmt);
-
-        const LosResult los = fov::check_cell(mon.pos,
-                                              lair_p,
-                                              blocked);
-
-        if (!los.is_blocked_hard)
-        {
-            path.clear();
-            return;
-        }
-
-        map_parsers::BlocksActor(mon, ParseActors::no)
-            .run(blocked);
-
-        map_parsers::LivingActorsAdjToPos(mon.pos)
-            .run(blocked,
-                 MapParseMode::append);
-
-        pathfind(mon.pos,
-                 lair_p,
-                 blocked,
-                 path);
-
-        return;
-    }
-
-    path.clear();
-}
-
-void find_path_to_leader(Mon& mon, std::vector<P>& path)
-{
     if (!mon.is_alive())
     {
-        return;
+        return path;
+    }
+
+    bool blocked[map_w][map_h];
+
+    const R fov_lmt = fov::get_fov_rect(mon.pos);
+
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             fov_lmt);
+
+    const LosResult los = fov::check_cell(mon.pos,
+                                          lair_p,
+                                          blocked);
+
+    if (!los.is_blocked_hard)
+    {
+        return path;
+    }
+
+    map_parsers::BlocksActor(mon, ParseActors::no)
+        .run(blocked);
+
+    map_parsers::LivingActorsAdjToPos(mon.pos)
+        .run(blocked,
+             MapParseMode::append);
+
+    pathfind(mon.pos,
+             lair_p,
+             blocked,
+             path);
+
+    return path;
+}
+
+std::vector<P> find_path_to_leader(Mon& mon)
+{
+    std::vector<P> path;
+
+    if (!mon.is_alive())
+    {
+        return path;
     }
 
     Actor* leader = mon.leader_;
 
-    if (!leader || !leader->is_alive())
+    if (!leader ||
+        !leader->is_alive())
     {
-        return;
+        return path;
     }
 
     bool blocked[map_w][map_h];
@@ -670,8 +679,7 @@ void find_path_to_leader(Mon& mon, std::vector<P>& path)
 
     if (!los.is_blocked_hard)
     {
-        path.clear();
-        return;
+        return path;
     }
 
     map_parsers::BlocksActor(mon, ParseActors::no)
@@ -685,70 +693,71 @@ void find_path_to_leader(Mon& mon, std::vector<P>& path)
              leader->pos,
              blocked,
              path);
-    return;
 
-    path.clear();
+    return path;;
 }
 
-void find_path_to_player(Mon& mon, std::vector<P>& path)
+std::vector<P> find_path_to_tgt(Mon& mon)
 {
-    if (!mon.is_alive() || mon.aware_of_player_counter_ <= 0)
+    std::vector<P> path;
+
+    if (!mon.is_alive() ||
+        !mon.tgt_)
     {
-        path.clear();
-        return;
+        return path;
     }
 
+    const auto& tgt = *mon.tgt_;
+
     //
-    // Monsters should not pathfind to the player if there is LOS, but they
-    // cannot see the player (e.g. the player is invisible).
+    // TODO: Seems like this function should not be concerned with the logic
+    //       below - it should just give a path to the target! It should
+    //       possibly be moved to the monster class instead.
     //
-    // If the player is invisible for example, we want pathfinding as long as
+
+    //
+    // Monsters should not pathfind to the target if there is LOS, but they
+    // cannot see the target (e.g. the target is invisible).
+    //
+    // If the target is invisible for example, we want pathfinding as long as
     // the monster is aware and is around a corner (i.e. they are guided by
     // sound or something else) - but when they come into LOS of an invisible
-    // player, they should not approach further.
+    // target, they should not approach further.
     //
     // This creates a pretty cool effect, where monsters appear a bit confused
     // that they cannot see anyone when they should have come into sight.
     //
     bool blocked[map_w][map_h];
 
-    const int los_x0 = std::min(map::player->pos.x, mon.pos.x);
-    const int los_y0 = std::min(map::player->pos.y, mon.pos.y);
-    const int los_x1 = std::max(map::player->pos.x, mon.pos.x);
-    const int los_y1 = std::max(map::player->pos.y, mon.pos.y);
+    const int los_x0 = std::min(tgt.pos.x, mon.pos.x);
+    const int los_y0 = std::min(tgt.pos.y, mon.pos.y);
+    const int los_x1 = std::max(tgt.pos.x, mon.pos.x);
+    const int los_y1 = std::max(tgt.pos.y, mon.pos.y);
 
     map_parsers::BlocksLos()
         .run(blocked,
              MapParseMode::overwrite,
              R(los_x0, los_y0, los_x1, los_y1));
 
-    const bool is_seeing_player =
-        mon.can_see_actor(*map::player, blocked);
-
-    if (!is_seeing_player)
+    if (!mon.is_tgt_seen_)
     {
         LosResult los_result =
             fov::check_cell(mon.pos,
-                            map::player->pos,
+                            tgt.pos,
                             blocked);
 
         if (!los_result.is_blocked_hard &&
             !los_result.is_blocked_by_drk)
         {
-            return;
+            return path;
         }
     }
 
-    // Monster does not have LOS to player - alright, let's go!
+    // Monster does not have LOS to target - alright, let's go!
 
-    const int x0 = 1;
-    const int y0 = 1;
-    const int x1 = map_w - 1;
-    const int y1 = map_h - 1;
-
-    for (int x = x0; x < x1; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = y0; y < y1; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             blocked[x][y] = false;
 
@@ -801,9 +810,11 @@ void find_path_to_player(Mon& mon, std::vector<P>& path)
 
     // Find a path
     pathfind(mon.pos,
-             map::player->pos,
+             tgt.pos,
              blocked,
              path);
+
+    return path;
 }
 
 void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h])

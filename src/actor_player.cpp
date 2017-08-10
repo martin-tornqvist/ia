@@ -2292,7 +2292,10 @@ bool Player::is_leader_of(const Actor* const actor) const
 
 bool Player::is_actor_my_leader(const Actor* const actor) const
 {
-    // Should never happen
     (void)actor;
+
+    // Should never happen
+    ASSERT(false);
+
     return false;
 }
