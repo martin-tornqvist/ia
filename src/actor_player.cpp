@@ -37,23 +37,27 @@
 #include "saving.hpp"
 #include "insanity.hpp"
 #include "reload.hpp"
+#include "drop.hpp"
 
 Player::Player() :
     Actor(),
-    thrown_item                     (),
-    active_medical_bag              (nullptr),
-    active_explosive                (nullptr),
-    tgt_                            (nullptr),
-    wait_turns_left                 (-1),
-    ins_                            (0),
-    shock_                          (0.0),
-    shock_tmp_                      (0.0),
-    perm_shock_taken_current_turn_  (0.0),
-    nr_turns_until_ins_             (-1),
-    nr_quick_move_steps_left_       (-1),
-    quick_move_dir_                 (Dir::END),
-    nr_turns_until_rspell_          (-1),
-    unarmed_wpn_                    (nullptr) {}
+    thrown_item                         (),
+    active_medical_bag                  (nullptr),
+    nr_turns_until_handle_armor_done    (0),
+    armor_putting_on_backpack_idx       (-1),
+    is_dropping_armor_from_body_slot    (false),
+    active_explosive                    (nullptr),
+    tgt_                                (nullptr),
+    wait_turns_left                     (-1),
+    ins_                                (0),
+    shock_                              (0.0),
+    shock_tmp_                          (0.0),
+    perm_shock_taken_current_turn_      (0.0),
+    nr_turns_until_ins_                 (-1),
+    nr_quick_move_steps_left_           (-1),
+    quick_move_dir_                     (Dir::END),
+    nr_turns_until_rspell_              (-1),
+    unarmed_wpn_                        (nullptr) {}
 
 Player::~Player()
 {
@@ -924,13 +928,15 @@ void Player::act()
         return;
     }
 
-    if (tgt_ && tgt_->state() != ActorState::alive)
+    if (tgt_ && (tgt_->state() != ActorState::alive))
     {
         tgt_ = nullptr;
     }
 
+    //
     // NOTE: We cannot just check for "seen_foes()" here, since the result is
     //       also used for setting player awareness below
+    //
     const auto my_seen_actors = seen_actors();
 
     for (Actor* const actor : my_seen_actors)
@@ -941,6 +947,49 @@ void Player::act()
     if (active_medical_bag)
     {
         active_medical_bag->continue_action();
+
+        return;
+    }
+
+    if (nr_turns_until_handle_armor_done > 0)
+    {
+        --nr_turns_until_handle_armor_done;
+
+        // Done handling armor?
+        if (nr_turns_until_handle_armor_done == 0)
+        {
+            // Putting on armor?
+            if (armor_putting_on_backpack_idx >= 0)
+            {
+                ASSERT(!inv_->slots_[(size_t)SlotId::body].item);
+
+                inv_->equip_backpack_item(armor_putting_on_backpack_idx,
+                                          SlotId::body);
+
+                armor_putting_on_backpack_idx = -1;
+            }
+            // Dropping armor?
+            else if (is_dropping_armor_from_body_slot)
+            {
+                item_drop::drop_item_from_inv(
+                    *map::player,
+                    InvType::slots,
+                    (size_t)SlotId::body);
+
+                is_dropping_armor_from_body_slot = false;
+            }
+            else // Taking off armor
+            {
+                ASSERT(inv_->slots_[(size_t)SlotId::body].item);
+
+                inv_->unequip_slot(SlotId::body);
+            }
+        }
+        else // Not done handling armor yet
+        {
+            game_time::tick();
+        }
+
         return;
     }
 
@@ -995,7 +1044,7 @@ void Player::act()
         }
     }
 
-    // If this point is reached - read input from player
+    // If this point is reached - read input
     if (config::is_bot_playing())
     {
         bot::act();
@@ -1044,8 +1093,9 @@ void Player::on_actor_turn()
             if (!mon.is_msg_mon_in_view_printed_)
             {
                 if (active_medical_bag ||
-                    wait_turns_left > 0 ||
-                    nr_quick_move_steps_left_ > 0)
+                    (nr_turns_until_handle_armor_done > 0) ||
+                    (wait_turns_left > 0) ||
+                    (nr_quick_move_steps_left_ > 0))
                 {
                     const std::string name_a =
                         text_format::first_to_upper(
@@ -1558,14 +1608,17 @@ void Player::on_std_turn()
 
 void Player::on_log_msg_printed()
 {
+    //
     // NOTE: There cannot be any calls to msg_log::add() in this function, as
-    // that would cause infinite recursion!
+    //       that would cause infinite recursion!
+    //
 
     // All messages abort waiting
     wait_turns_left = -1;
 
     // All messages abort quick move
     nr_quick_move_steps_left_ = -1;
+
     quick_move_dir_ = Dir::END;
 }
 
@@ -1578,11 +1631,67 @@ void Player::interrupt_actions()
         active_medical_bag = nullptr;
     }
 
+    // Abort putting on / taking off armor?
+    if (nr_turns_until_handle_armor_done > 0)
+    {
+        const std::string turns_left_str =
+            std::to_string(nr_turns_until_handle_armor_done);
+
+        std::string msg = "";
+
+        if (armor_putting_on_backpack_idx >= 0)
+        {
+            auto* const item = inv_->backpack_[armor_putting_on_backpack_idx];
+
+            const std::string armor_name =
+                item->name(ItemRefType::plain, ItemRefInf::yes);
+
+            msg =
+                "Continue putting on the " +
+                armor_name +
+                " (" +
+                turns_left_str +
+                " turns left)? [y/n]";
+        }
+        else // Taking off armor, or dropping from armor slot
+        {
+            auto* const item = inv_->item_in_slot(SlotId::body);
+
+            ASSERT(item);
+
+            const std::string armor_name =
+                item->name(ItemRefType::plain, ItemRefInf::yes);
+
+            msg =
+                "Continue taking off the " +
+                armor_name +
+                " (" +
+                turns_left_str +
+                " turns left)? [y/n]";
+        }
+
+        msg_log::add(msg, clr_white_lgt);
+
+        const auto should_continue = query::yes_or_no();
+
+        msg_log::clear();
+
+        if (should_continue == BinaryAnswer::no)
+        {
+            nr_turns_until_handle_armor_done = 0;
+
+            armor_putting_on_backpack_idx = -1;
+
+            is_dropping_armor_from_body_slot = false;
+        }
+    }
+
     // Abort waiting
     wait_turns_left = -1;
 
     // Abort quick move
     nr_quick_move_steps_left_ = -1;
+
     quick_move_dir_ = Dir::END;
 }
 
@@ -1648,6 +1757,7 @@ void Player::move(Dir dir)
         if (f->id() == FeatureId::trap)
         {
             TRACE << "Standing on trap, check if affects move" << std::endl;
+
             dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
         }
     }
@@ -1911,7 +2021,7 @@ void Player::move(Dir dir)
             }
         }
         // Player dids not wait in place
-        else if(player_bon::traits[(size_t)Trait::mobile])
+        else if (player_bon::traits[(size_t)Trait::mobile])
         {
             speed_pct_diff = 20;
         }

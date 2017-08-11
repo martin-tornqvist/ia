@@ -249,11 +249,11 @@ void Item::on_equip(const Verbosity verbosity)
     on_equip_hook(verbosity);
 }
 
-UnequipAllowed Item::on_unequip()
+void Item::on_unequip()
 {
     ASSERT(actor_carrying_);
 
-    return on_unequip_hook();
+    on_unequip_hook();
 }
 
 void Item::on_removed_from_inv()
@@ -696,11 +696,9 @@ void ArmorAsbSuit::on_equip_hook(const Verbosity verbosity)
     add_carrier_prop(new PropRElec(PropTurns::indefinite), Verbosity::silent);
 }
 
-UnequipAllowed ArmorAsbSuit::on_unequip_hook()
+void ArmorAsbSuit::on_unequip_hook()
 {
     clear_carrier_props();
-
-    return UnequipAllowed::yes;
 }
 
 void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
@@ -714,39 +712,6 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
 
         map::player->incr_shock(ShockLvl::terrifying,
                                 ShockSrc::use_strange_item);
-    }
-}
-
-UnequipAllowed ArmorMiGo::on_unequip_hook()
-{
-    if (actor_carrying_ != map::player)
-    {
-        return UnequipAllowed::yes;
-    }
-
-    msg_log::add("I attempt to tear off the armor, it rips my skin!",
-                 clr_msg_bad,
-                 false,
-                 MorePromptOnMsg::yes);
-
-    map::player->hit(rnd::range(1, 3), DmgType::pure);
-
-    if (rnd::coin_toss())
-    {
-        //
-        // NOTE: There is no need to print a message here, a message is always
-        //       printed when taking off armor.
-        //
-        return UnequipAllowed::yes;
-    }
-    else // Armor is stuck
-    {
-        msg_log::add("I fail to tear it off.",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
-        return UnequipAllowed::no;
     }
 }
 
@@ -1552,11 +1517,9 @@ void GasMask::on_equip_hook(const Verbosity verbosity)
     (void)verbosity;
 }
 
-UnequipAllowed GasMask::on_unequip_hook()
+void GasMask::on_unequip_hook()
 {
     clear_carrier_props();
-
-    return UnequipAllowed::yes;
 }
 
 void GasMask::decr_turns_left(Inventory& carrier_inv)

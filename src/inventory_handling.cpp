@@ -88,26 +88,31 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
                       done_inf_pos,
                       clr_white_lgt);
 
-        const int nr_to_drop = query::number(nr_query_pos,
-                                             clr_white_lgt,
-                                             0, 3,
-                                             item->nr_items_,
-                                             false);
+        const int nr_to_drop =
+            query::number(nr_query_pos,
+                          clr_white_lgt,
+                          0, 3,
+                          item->nr_items_,
+                          false);
 
         if (nr_to_drop <= 0)
         {
             TRACE << "Nr to drop <= 0, nothing to be done" << std::endl;
+
             TRACE_FUNC_END;
+
             return false;
         }
         else // Number to drop is at least one
         {
-            item_drop::try_drop_item_from_inv(*map::player,
-                                              inv_type,
-                                              idx,
-                                              nr_to_drop);
+            item_drop::drop_item_from_inv(
+                *map::player,
+                inv_type,
+                idx,
+                nr_to_drop);
 
             TRACE_FUNC_END;
+
             return true;
         }
     }
@@ -115,15 +120,18 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
     {
         TRACE << "Item not stackable, or only one item" << std::endl;
 
-        item_drop::try_drop_item_from_inv(*map::player,
-                                          inv_type,
-                                          idx);
+        item_drop::drop_item_from_inv(
+            *map::player,
+            inv_type,
+            idx);
 
         TRACE_FUNC_END;
+
         return true;
     }
 
     TRACE_FUNC_END;
+
     return false;
 }
 
@@ -748,40 +756,27 @@ void BrowseInv::update()
 
                 msg_log::clear();
 
-                const UnequipAllowed unequip_allowed =
-                    inv.try_unequip_slot(slot.id);
-
-                if (unequip_allowed == UnequipAllowed::yes)
+                if (slot.id == SlotId::body)
                 {
-                    game_time::tick();
+                    // Start taking off the armor
+                    map::player->nr_turns_until_handle_armor_done =
+                        nr_turns_to_handle_armor;
                 }
+                else // Not the body slot
+                {
+                    // Remove the item immediately
+                    inv.unequip_slot(slot.id);
+                }
+
+                game_time::tick();
 
                 return;
             }
             else // No item in slot
             {
-                // Forbid equipping armor while burning
-                if (slot.id == SlotId::body &&
-                    map::player->prop_handler().has_prop(PropId::burning))
-                {
-                    //
-                    // Exit screen
-                    //
-                    states::pop();
+                std::unique_ptr<State> equip(new Equip(slot, *this));
 
-                    msg_log::add("Not while burning.",
-                                 clr_white,
-                                 false,
-                                 MorePromptOnMsg::yes);
-
-                    return;
-                }
-                else
-                {
-                    std::unique_ptr<State> equip(new Equip(slot, *this));
-
-                    states::push(std::move(equip));
-                }
+                states::push(std::move(equip));
             }
         }
         else // In backpack inventory
@@ -817,7 +812,26 @@ void BrowseInv::update()
         //
         states::pop();
 
-        run_drop_query(inv_type_marked, idx);
+        if (idx == (size_t)SlotId::body)
+        {
+            // Start dropping the armor
+            map::player->nr_turns_until_handle_armor_done =
+                nr_turns_to_handle_armor;
+
+            map::player->is_dropping_armor_from_body_slot = true;
+
+            game_time::tick();
+        }
+        else // Not dropping from body slot
+        {
+            // Drop the item immediately
+            const bool did_drop = run_drop_query(inv_type_marked, idx);
+
+            if (did_drop)
+            {
+                game_time::tick();
+            }
+        }
 
         return;
     }
@@ -987,7 +1001,14 @@ void Apply::update()
             //
             states::pop();
 
-            run_drop_query(InvType::backpack, idx);
+            // Drop the item immediately
+            const bool did_drop = run_drop_query(InvType::backpack, idx);
+
+            if (did_drop)
+            {
+                game_time::tick();
+            }
+
             return;
         }
     }
@@ -1196,8 +1217,8 @@ void Equip::update()
     const auto input = io::get(false);
 
     if (filtered_backpack_indexes_.empty() ||
-        input.key == SDLK_SPACE ||
-        input.key == SDLK_ESCAPE)
+        (input.key == SDLK_SPACE) ||
+        (input.key == SDLK_ESCAPE))
     {
         //
         // Leave screen, and go back to inventory
@@ -1210,19 +1231,21 @@ void Equip::update()
     auto& inv = map::player->inv();
 
     const MenuAction action =
-        browser_.read(input,
-                      MenuInputMode::scrolling_and_letters);
+        browser_.read(input, MenuInputMode::scrolling_and_letters);
 
     switch (action)
     {
     case MenuAction::selected:
     {
-        const size_t idx =
-            filtered_backpack_indexes_[browser_.y()];
+        const size_t idx = filtered_backpack_indexes_[browser_.y()];
 
         const auto slot_id = slot_to_equip_.id;
 
         // Tell the inventory browsing screen that it's time to exit
+
+        //
+        // TODO: It would be better to pop a specific state ID instead
+        //
         browse_inv_state_.exit_screen();
 
         //
@@ -1230,7 +1253,26 @@ void Equip::update()
         //
         states::pop();
 
-        inv.equip_backpack_item(idx, slot_id);
+        if (slot_id == SlotId::body)
+        {
+            if (map::player->has_prop(PropId::burning))
+            {
+                msg_log::add("Not while burning.");
+
+                return;
+            }
+
+            // Start putting on armor
+            map::player->nr_turns_until_handle_armor_done =
+                nr_turns_to_handle_armor;
+
+            map::player->armor_putting_on_backpack_idx = idx;
+        }
+        else // Not the body slot
+        {
+            // Equip the item immediately
+            inv.equip_backpack_item(idx, slot_id);
+        }
 
         game_time::tick();
 
@@ -1250,7 +1292,12 @@ void Equip::update()
         //
         states::pop();
 
-        run_drop_query(InvType::backpack, idx);
+        const bool did_drop = run_drop_query(InvType::backpack, idx);
+
+        if (did_drop)
+        {
+            game_time::tick();
+        }
 
         return;
     }
@@ -1460,7 +1507,13 @@ void SelectThrow::update()
         //
         states::pop();
 
-        run_drop_query(inv_type_marked, relative_inv_idx);
+        const bool did_drop =
+            run_drop_query(inv_type_marked, relative_inv_idx);
+
+        if (did_drop)
+        {
+            game_time::tick();
+        }
 
         return;
     }

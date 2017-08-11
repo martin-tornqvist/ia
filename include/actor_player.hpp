@@ -131,6 +131,9 @@ public:
 
     Item* thrown_item;
     MedicalBag* active_medical_bag;
+    int nr_turns_until_handle_armor_done;
+    int armor_putting_on_backpack_idx;
+    bool is_dropping_armor_from_body_slot;
     Explosive* active_explosive;
     Actor* tgt_;
     int wait_turns_left;
@@ -149,7 +152,6 @@ private:
 
     double shock_taken_after_mods(const double base_shock,
                                   const ShockSrc shock_src) const;
-
 
     void add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters);
 

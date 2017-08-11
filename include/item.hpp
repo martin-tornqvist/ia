@@ -89,7 +89,7 @@ public:
     // "on_pickup()" should be called before this
     void on_equip(const Verbosity verbosity);
 
-    UnequipAllowed on_unequip();
+    void on_unequip();
 
     // This is the opposite of "on_pickup()". If this is a wielded item,
     // "on_unequip()" should be called first.
@@ -181,10 +181,7 @@ protected:
         (void)verbosity;
     }
 
-    virtual UnequipAllowed on_unequip_hook()
-    {
-        return UnequipAllowed::yes;
-    }
+    virtual void on_unequip_hook() {}
 
     virtual void on_removed_from_inv_hook() {}
 
@@ -242,11 +239,6 @@ public:
     void hit(const int dmg);
 
 protected:
-    virtual UnequipAllowed on_unequip_hook() override
-    {
-        return UnequipAllowed::yes;
-    }
-
     std::string name_inf() const override;
 
     int dur_;
@@ -263,7 +255,7 @@ public:
     void on_equip_hook(const Verbosity verbosity) override;
 
 private:
-    UnequipAllowed on_unequip_hook() override;
+    void on_unequip_hook() override;
 };
 
 class ArmorMiGo: public Armor
@@ -275,10 +267,6 @@ public:
     ~ArmorMiGo() {}
 
     void on_equip_hook(const Verbosity verbosity) override;
-
-private:
-
-    UnequipAllowed on_unequip_hook() override;
 };
 
 class Wpn: public Item
@@ -587,7 +575,7 @@ public:
 
     void on_equip_hook(const Verbosity verbosity) override;
 
-    UnequipAllowed on_unequip_hook() override;
+    void on_unequip_hook() override;
 
     void decr_turns_left(Inventory& carrier_inv);
 

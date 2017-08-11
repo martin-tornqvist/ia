@@ -288,10 +288,12 @@ void add_actor(Actor* actor)
         ASSERT(actor != old_actor);
 
         // Never insert an actor at the same position as another living actor
+
         //
         // NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately
         //       spawns a priest) so we check if BOTH actors are alive first
         //       before we panic.
+        //
         if (actor->is_alive() && old_actor->is_alive())
         {
             const P& new_actor_p = actor->pos;
@@ -346,7 +348,7 @@ void tick(const int speed_pct_diff)
             if (std_turn_delay_ == 0)
             {
                 // Increment the turn counter, and run standard turn events
-                // run_std_turn_events();
+
                 //
                 // NOTE: This will prune destroyed actors, which will decrease
                 //       the actor vector size.

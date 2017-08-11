@@ -51,8 +51,10 @@ public:
     void equip_backpack_item(const size_t backpack_idx,
                              const SlotId slot_id);
 
-    // Attempt to unequip item from slot
-    UnequipAllowed try_unequip_slot(const SlotId id);
+    void equip_backpack_item(const Item* const item,
+                             const SlotId slot_id);
+
+    size_t unequip_slot(const SlotId id);
 
     //
     // NOTE: The "put_in_*" functions should NEVER be called on items already in
@@ -132,7 +134,7 @@ private:
     void equip_from_backpack(const SlotId id,
                              const size_t backpack_idx);
 
-    UnequipAllowed try_move_from_slot_to_backpack(const SlotId id);
+    size_t move_from_slot_to_backpack(const SlotId id);
 
     // Checks if the item is stackable, and if so attempts to stack it with
     // another item of the same type in the backpack. The item pointer is still

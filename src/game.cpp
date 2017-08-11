@@ -337,13 +337,17 @@ void handle_player_input(const InputData& input)
 
         if (seen_mon.empty())
         {
+            //
             // NOTE: We should not print any "wait" message here, since it will
             //       look weird in some cases - e.g. when the waiting is
             //       immediately interrupted by a message from rearranging
             //       pistol magazines.
+            //
 
+            //
             // NOTE: Waiting with 's' merely performs "move" into the center
             //       position a number of turns (i.e. the same as pressing '5')
+            //
             const int turns_to_apply = 5;
 
             map::player->wait_turns_left = turns_to_apply - 1;
@@ -953,7 +957,7 @@ void handle_player_input(const InputData& input)
         const int idx = query::number(P(query_str.size(), 0),
                                       clr_white_lgt,
                                       0,
-                                      int(ActorId::END),
+                                      (int)ActorId::END,
                                       0,
                                       false);
 

@@ -58,6 +58,8 @@ const int audio_allocated_channels = 16;
 const size_t ms_delay_player_unable_act = 7;
 const size_t min_ms_between_same_sfx = 60;
 
+const int nr_turns_to_handle_armor = 7;
+
 const int player_start_hp = 14;
 const int player_start_spi = 4;
 
@@ -176,12 +178,6 @@ enum class PassTime
 };
 
 enum class ConsumeItem
-{
-    yes,
-    no
-};
-
-enum class UnequipAllowed
 {
     yes,
     no

@@ -467,7 +467,7 @@ void Inventory::decr_item(Item* const item)
     }
 }
 
-UnequipAllowed Inventory::try_move_from_slot_to_backpack(const SlotId id)
+size_t Inventory::move_from_slot_to_backpack(const SlotId id)
 {
     ASSERT(id != SlotId::END);
 
@@ -475,28 +475,33 @@ UnequipAllowed Inventory::try_move_from_slot_to_backpack(const SlotId id)
 
     Item* const item = slot.item;
 
-    auto unequip_allowed_result = UnequipAllowed::no;
-
     if (item)
     {
-        unequip_allowed_result = item->on_unequip();
+        item->on_unequip();
 
-        if (unequip_allowed_result == UnequipAllowed::yes)
+        slot.item = nullptr;
+
+        bool is_stacked = try_stack_in_backpack(item);
+
+        if (!is_stacked)
         {
-            slot.item = nullptr;
+            backpack_.push_back(item);
 
-            bool is_stacked = try_stack_in_backpack(item);
-
-            if (!is_stacked)
-            {
-                backpack_.push_back(item);
-
-                sort_backpack();
-            }
+            sort_backpack();
         }
     }
 
-    return unequip_allowed_result;
+    for (size_t i = 0; i < backpack_.size(); ++i)
+    {
+        if (item == backpack_[i])
+        {
+            return i;
+        }
+    }
+
+    ASSERT(false);
+
+    return 0;
 }
 
 void Inventory::equip_backpack_item(const size_t backpack_idx,
@@ -527,7 +532,21 @@ void Inventory::equip_backpack_item(const size_t backpack_idx,
     sort_backpack();
 }
 
-UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
+void Inventory::equip_backpack_item(const Item* const item,
+                                    const SlotId slot_id)
+{
+    for (size_t i = 0; i < backpack_.size(); ++i)
+    {
+        if (backpack_[i] == item)
+        {
+            equip_backpack_item(i, slot_id);
+        }
+    }
+
+    ASSERT(false);
+}
+
+size_t Inventory::unequip_slot(const SlotId id)
 {
     auto& slot = slots_[(size_t)id];
 
@@ -535,11 +554,9 @@ UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
 
     ASSERT(item);
 
-    auto unequip_allowed_result =
-        try_move_from_slot_to_backpack(slot.id);
+    const size_t item_backpack_idx = move_from_slot_to_backpack(slot.id);
 
-    if (owning_actor_->is_player() &&
-        unequip_allowed_result == UnequipAllowed::yes)
+    if (owning_actor_->is_player())
     {
         // The message should be of the form "... my [item]" - we never want the
         // name to be "A [item]". Therefore we use plural form for stacks, and
@@ -581,7 +598,7 @@ UnequipAllowed Inventory::try_unequip_slot(const SlotId id)
                      MorePromptOnMsg::yes);
     }
 
-    return unequip_allowed_result;
+    return item_backpack_idx;
 }
 
 void Inventory::swap_wielded_and_prepared()

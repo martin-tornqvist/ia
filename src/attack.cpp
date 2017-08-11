@@ -92,7 +92,12 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
     dodging_mod = 0;
 
-    if (is_defender_aware)
+    const bool player_is_handling_armor =
+        map::player->nr_turns_until_handle_armor_done > 0;
+
+    if (is_defender_aware &&
+        !(defender.is_player() &&
+          player_is_handling_armor))
     {
         dodging_mod -= defender.ability(AbilityId::dodging, true);
 
@@ -337,10 +342,17 @@ RangedAttData::RangedAttData(Actor* const attacker,
         const bool is_defender_aware =
             AttData::is_defender_aware(attacker, *defender);
 
-        dodging_mod =
-            is_defender_aware ?
-            -defender->ability(AbilityId::dodging, true) :
-            0;
+        dodging_mod = 0;
+
+        const bool player_is_handling_armor =
+            map::player->nr_turns_until_handle_armor_done > 0;
+
+        if (is_defender_aware &&
+            !(defender->is_player() &&
+              player_is_handling_armor))
+        {
+            dodging_mod = -defender->ability(AbilityId::dodging, true);
+        }
 
         const int dist_to_tgt = king_dist(attacker_origin, def_pos);
 
@@ -510,10 +522,17 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         const bool is_defender_aware =
             AttData::is_defender_aware(attacker, *defender);
 
-        dodging_mod =
-            is_defender_aware ?
-            -defender->ability(AbilityId::dodging, true) :
-            0;
+        dodging_mod = 0;
+
+        const bool player_is_handling_armor =
+            map::player->nr_turns_until_handle_armor_done > 0;
+
+        if (is_defender_aware &&
+            !(defender->is_player() &&
+              player_is_handling_armor))
+        {
+            dodging_mod = -defender->ability(AbilityId::dodging, true);
+        }
 
         const P& att_pos(attacker->pos);
         const P& def_pos(defender->pos);

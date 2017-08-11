@@ -23,10 +23,10 @@ void drop_all_characters_items(Actor& actor)
     actor.inv().drop_all_non_intrinsic(actor.pos);
 }
 
-void try_drop_item_from_inv(Actor& actor,
-                            const InvType inv_type,
-                            const size_t idx,
-                            const int nr_items_to_drop)
+void drop_item_from_inv(Actor& actor,
+                        const InvType inv_type,
+                        const size_t idx,
+                        const int nr_items_to_drop)
 {
     Inventory& inv = actor.inv();
 
@@ -69,11 +69,6 @@ void try_drop_item_from_inv(Actor& actor,
     {
         item_ref = item_to_drop->name(ItemRefType::plural);
 
-        //
-        // NOTE: If the item cannot be unequiped (e.g. a stuck Mi-go Bio-armor),
-        //       then a null pointer is returned - the item should print its own
-        //       message in this case
-        //
         item_to_drop = inv.remove_item(item_to_drop, false);
     }
     else // Only some items are dropped from a stack
@@ -118,8 +113,6 @@ void try_drop_item_from_inv(Actor& actor,
     }
 
     drop_item_on_map(actor.pos, *item_to_drop);
-
-    game_time::tick();
 }
 
 Item* drop_item_on_map(const P& intended_pos, Item& item)
