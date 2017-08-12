@@ -812,7 +812,8 @@ void BrowseInv::update()
         //
         states::pop();
 
-        if (idx == (size_t)SlotId::body)
+        if ((inv_type_marked == InvType::slots) &&
+            (idx == (size_t)SlotId::body))
         {
             // Start dropping the armor
             map::player->nr_turns_until_handle_armor_done =
