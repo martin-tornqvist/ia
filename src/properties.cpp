@@ -621,7 +621,7 @@ void init_data_list()
     d.name_short = "Blessed";
     d.descr =
         "Is generally more lucky, most actions are easier to perform, "
-        "-1% shock from casting spells";
+        "-2% shock from casting spells";
     d.msg[(size_t)PropMsg::start_player] = "I feel luckier.";
     d.msg[(size_t)PropMsg::end_player] = "I have normal luck.";
     d.is_making_mon_aware = false;
@@ -637,7 +637,7 @@ void init_data_list()
     d.name_short = "Cursed";
     d.descr =
         "Is generally more unlucky, and most actions are more difficult to "
-        "perform, +1% shock from casting spells";
+        "perform, +2% shock from casting spells";
     d.msg[(size_t)PropMsg::start_player] = "I feel misfortunate.";
     d.msg[(size_t)PropMsg::end_player] = "I feel more fortunate.";
     d.msg[(size_t)PropMsg::res_player] = "I resist misfortune.";

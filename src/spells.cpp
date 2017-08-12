@@ -611,11 +611,11 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
     // Skill  damage     avg
     // -----------------------
-    // 0       5  - 9     7.0
-    // 1       9  - 17   13.0
-    // 2      13  - 25   19.0
-    Range dmg_range(5 + (int)skill * 4,
-                    9 + (int)skill * 8);
+    // 0       4  - 9     6.5
+    // 1       8  - 15   11.5
+    // 2      12  - 21   16.5
+    Range dmg_range(4 + (int)skill * 4,
+                    9 + (int)skill * 6);
 
     // If a monster is casting, only do 50% damage to avoid making this spell
     // extremely dangerous for the player
@@ -665,8 +665,8 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
         "some will on its own - the caster cannot determine exactly which "
         "creature will be struck.");
 
-    const Range dmg_range(5 + (int)skill * 4,
-                          9 + (int)skill * 8);
+    const Range dmg_range(4 + (int)skill * 4,
+                          9 + (int)skill * 6);
 
     descr.push_back(
         "The impact does " +
@@ -782,15 +782,13 @@ void SpellAzaWrath::run_effect(Actor* const caster,
             msg_log::add(str_begin + " struck by a roaring blast!", msg_clr);
         }
 
-        // const int dmg = 5 + ((int)skill * 5);
-
         // Skill  damage     avg
         // -----------------------
-        // 0       3  - 7     5.0
-        // 1       5  - 11    8.0
-        // 2       7  - 15   11.0
-        Range dmg_range(3 + (int)skill * 2,
-                        7 + (int)skill * 4);
+        // 0      2  - 5     3.5
+        // 1      4  - 8     6.0
+        // 2      6  - 11    8.5
+        Range dmg_range(2 + (int)skill * 2,
+                        5 + (int)skill * 3);
 
         target->hit(dmg_range.roll(),
                     DmgType::physical,
@@ -829,8 +827,8 @@ std::vector<std::string> SpellAzaWrath::descr_specific(
     descr.push_back(
         "Channels the destructive force of Azathoth unto all visible enemies.");
 
-    const Range dmg_range(3 + (int)skill * 2,
-                          7 + (int)skill * 4);
+    Range dmg_range(2 + (int)skill * 2,
+                    5 + (int)skill * 3);
 
     descr.push_back(
         "The spell does " +
@@ -2161,10 +2159,10 @@ void SpellEnfeeble::run_effect(Actor* const caster,
 
         // Weakening lasts for a very long time by default, so we need to
         // set the number of turns to something non-overpowered here
-        const int nr_turns_weakned = 16;
+        const int nr_turns_weakend = 16;
 
         prop_handler.apply(
-            new PropWeakened(PropTurns::specific, nr_turns_weakned));
+            new PropWeakened(PropTurns::specific, nr_turns_weakend));
 
         if ((int)skill >= (int)SpellSkill::expert)
         {
@@ -2179,7 +2177,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
             //       applying a full standard paralyze here would probably be
             //       overpowered - just do a couple turns
             //
-            prop_handler.apply(new PropParalyzed(PropTurns::specific, 4));
+            prop_handler.apply(new PropParalyzed(PropTurns::specific, 2));
         }
     }
 }
