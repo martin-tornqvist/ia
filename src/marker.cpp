@@ -100,7 +100,12 @@ void MarkerState::draw()
 
 void MarkerState::update()
 {
-    const auto input = io::get(true);
+    InputData input;
+
+    if (!config::is_bot_playing())
+    {
+        input = io::get(true);
+    }
 
     msg_log::clear();
 
@@ -469,7 +474,19 @@ void Aiming::on_moved()
 
 void Aiming::handle_input(const InputData& input)
 {
-    switch (input.key)
+    int key = input.key;
+
+    // If the bot is playing, fire at a random position
+    if (config::is_bot_playing())
+    {
+        key = 'f';
+
+        pos_.set(
+            rnd::range(0, map_w - 1),
+            rnd::range(0, map_h - 1));
+    }
+
+    switch (key)
     {
     case SDLK_ESCAPE:
     case SDLK_SPACE:
@@ -493,11 +510,14 @@ void Aiming::handle_input(const InputData& input)
             }
 
             const P pos = pos_;
+
             Wpn* const wpn = &wpn_;
 
             states::pop();
 
+            //
             // NOTE: This object is now destroyed!
+            //
 
             attack::ranged(map::player,
                            map::player->pos,

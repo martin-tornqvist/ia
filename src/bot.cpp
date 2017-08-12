@@ -22,6 +22,7 @@
 #include "explosion.hpp"
 #include "io.hpp"
 #include "sdl_base.hpp"
+#include "item_factory.hpp"
 
 namespace bot
 {
@@ -206,9 +207,29 @@ void act()
         return;
     }
 
+    // Use an Incinerator as ranged weapon
+    {
+        auto& inv = map::player->inv();
+
+        auto* wpn_item = inv.item_in_slot(SlotId::wpn);
+
+        if (wpn_item && wpn_item->data().ranged.is_ranged_wpn)
+        {
+            delete inv.slots_[(size_t)SlotId::wpn].item;
+
+            inv.slots_[(size_t)SlotId::wpn].item = nullptr;
+
+            inv.put_in_slot(
+                SlotId::wpn,
+                item_factory::mk(ItemId::incinerator),
+                Verbosity::silent);
+        }
+    }
+
     PropHandler& prop_handler = map::player->prop_handler();
 
-    // Keep an allied Mi-go around to help getting out of sticky situations
+    // Keep an allied Mi-go around (to help getting out of sticky situations,
+    // and for some allied monster code exercise)
     bool has_allied_mon = false;
 
     for (const Actor* const actor : game_time::actors)
@@ -223,9 +244,9 @@ void act()
     if (!has_allied_mon)
     {
         actor_factory::spawn(map::player->pos,
-                              std::vector<ActorId>(1, ActorId::mi_go),
-                              MakeMonAware::yes,
-                              map::player);
+                             std::vector<ActorId>(1, ActorId::mi_go),
+                             MakeMonAware::yes,
+                             map::player);
     }
 
     // Occasionally apply rFear to avoid getting stuck on fear-causing monsters
@@ -256,6 +277,7 @@ void act()
     if (rnd::coin_toss())
     {
         game::handle_player_input(InputData(SDLK_TAB));
+
         return;
     }
 
@@ -263,7 +285,27 @@ void act()
     if (rnd::one_in(50))
     {
         game::handle_player_input(InputData('s'));
+
         return;
+    }
+
+    // Occasionally fire at a random position
+    if (rnd::one_in(5))
+    {
+        auto& inv = map::player->inv();
+
+        auto* wpn_item = inv.item_in_slot(SlotId::wpn);
+
+        if (wpn_item && wpn_item->data().ranged.is_ranged_wpn)
+        {
+            auto* wpn = static_cast<Wpn*>(wpn_item);
+
+            wpn->nr_ammo_loaded_ = wpn->data().ranged.max_ammo;
+
+            game::handle_player_input(InputData('f'));
+
+            return;
+        }
     }
 
     // Occasionally apply a random property (to exercise the prop code)
@@ -292,6 +334,7 @@ void act()
     if (rnd::one_in(50))
     {
         game::handle_player_input(InputData('z'));
+
         return;
     }
 
