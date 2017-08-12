@@ -579,7 +579,7 @@ void init_data_list()
     d.name = "Weakened";
     d.name_short = "Weakened";
     d.descr =
-        "Minimum melee damage, cannot bash doors or chests open, knock "
+        "Halved melee damage, cannot bash doors or chests open, knock "
         "heavy objects over, etc";
     d.msg[(size_t)PropMsg::start_player] = "I feel weaker.";
     d.msg[(size_t)PropMsg::start_mon] = "looks weaker.";

@@ -2157,12 +2157,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
             continue;
         }
 
-        // Weakening lasts for a very long time by default, so we need to
-        // set the number of turns to something non-overpowered here
-        const int nr_turns_weakend = 16;
-
-        prop_handler.apply(
-            new PropWeakened(PropTurns::specific, nr_turns_weakend));
+        prop_handler.apply(new PropWeakened(PropTurns::std));
 
         if ((int)skill >= (int)SpellSkill::expert)
         {
@@ -2189,7 +2184,7 @@ std::vector<std::string> SpellEnfeeble::descr_specific(
 
     descr.push_back("Physically enfeebles all visible hostile creatures.");
 
-    std::string str = "Causes weakening (minimum melee damage)";
+    std::string str = "Causes weakening (halved melee damage)";
 
     if (skill == SpellSkill::expert)
     {

@@ -230,23 +230,17 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     att_result = ability_roll::roll(hit_chance_tot);
 
     //
-    // Determine damage
+    // Roll the damage dice
     //
-    Dice dmg_dice = wpn.dmg(AttMode::melee, attacker);
+    {
+        Dice dmg_dice = wpn.dmg(AttMode::melee, attacker);
 
-    if (apply_undead_bane_bon)
-    {
-        dmg_dice.plus += 2;
-    }
+        if (apply_undead_bane_bon)
+        {
+            dmg_dice.plus += 2;
+        }
 
-    if (attacker && attacker->has_prop(PropId::weakened))
-    {
-        // Weak attack (min damage)
-        dmg = dmg_dice.min();
-        is_weak_attack = true;
-    }
-    else // Attacker not weakened, or not an actor attacking (e.g. a trap)
-    {
+        // Roll the damage dice
         if (att_result == ActionResult::success_critical)
         {
             // Critical hit (max damage)
@@ -256,29 +250,39 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         {
             dmg = std::max(1, dmg_dice.roll());
         }
+    }
 
-        if (attacker && !is_defender_aware)
+    if (attacker && attacker->has_prop(PropId::weakened))
+    {
+        // Weak attack (halved damage)
+        dmg /= 2;
+
+        dmg = std::max(1, dmg);
+
+        is_weak_attack = true;
+    }
+    // Attacker not weakened, or not an actor attacking (e.g. a trap)
+    else  if (attacker && !is_defender_aware)
+    {
+        // Backstab, +50% damage
+        int dmg_pct = 150;
+
+        // +150% if player is Vicious
+        if ((attacker == map::player) &&
+            player_bon::traits[(size_t)Trait::vicious])
         {
-            // Backstab, +50% damage
-            int dmg_pct = 150;
-
-            // +150% if player is Vicious
-            if ((attacker == map::player) &&
-                player_bon::traits[(size_t)Trait::vicious])
-            {
-                dmg_pct += 150;
-            }
-
-            // +300% damage if attacking with a dagger
-            if (wpn.data().id == ItemId::dagger)
-            {
-                dmg_pct += 300;
-            }
-
-            dmg = (dmg * dmg_pct) / 100;
-
-            is_backstab = true;
+            dmg_pct += 150;
         }
+
+        // +300% damage if attacking with a dagger
+        if (wpn.data().id == ItemId::dagger)
+        {
+            dmg_pct += 300;
+        }
+
+        dmg = (dmg * dmg_pct) / 100;
+
+        is_backstab = true;
     }
 }
 
