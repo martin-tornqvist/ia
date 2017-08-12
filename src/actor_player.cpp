@@ -94,6 +94,10 @@ void Player::mk_start_items()
         nr_molotov = 0;
         nr_throwing_knives = 0;
 
+        inv_->put_in_slot(SlotId::wpn,
+                          item_factory::mk(ItemId::hatchet),
+                          Verbosity::silent);
+
         inv_->put_in_slot(SlotId::body,
                           item_factory::mk(ItemId::armor_leather_jacket),
                           Verbosity::silent);
@@ -156,8 +160,11 @@ void Player::mk_start_items()
 
         // Rogue starts with a Rod of Cloud Minds
         Item* item = item_factory::mk(ItemId::rod_cloud_minds);
+
         static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
+
         item->give_xp_for_identify(Verbosity::silent);
+
         inv_->put_in_backpack(item);
 
         inv_->put_in_slot(SlotId::body,
@@ -175,6 +182,10 @@ void Player::mk_start_items()
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
         inv_->put_in_backpack(item_factory::mk(ItemId::flare, 2));
         inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
+
+        inv_->put_in_slot(SlotId::wpn,
+                          item_factory::mk(ItemId::machete),
+                          Verbosity::silent);
 
         inv_->put_in_slot(SlotId::body,
                           item_factory::mk(ItemId::armor_flak_jacket),
@@ -203,40 +214,6 @@ void Player::mk_start_items()
     // -------------------------------------------------------------------------
     // General setup
     // -------------------------------------------------------------------------
-    // Randomize a melee weapon if Occultist or War Veteran
-    if (bg == Bg::occultist || bg == Bg::war_vet)
-    {
-        const int weapon_choice = rnd::range(1, 5);
-        auto weapon_id = ItemId::dagger;
-
-        switch (weapon_choice)
-        {
-        case 1:
-            weapon_id = ItemId::dagger;
-            break;
-
-        case 2:
-            weapon_id = ItemId::hatchet;
-            break;
-
-        case 3:
-            weapon_id = ItemId::hammer;
-            break;
-
-        case 4:
-            weapon_id = ItemId::machete;
-            break;
-
-        case 5:
-            weapon_id = ItemId::axe;
-            break;
-        }
-
-        inv_->put_in_slot(SlotId::wpn,
-                          item_factory::mk(weapon_id),
-                          Verbosity::silent);
-    }
-
     // Unarmed attack
     if (player_bon::bg() == Bg::ghoul)
     {
