@@ -3392,7 +3392,6 @@ void init_data_list()
         "forms of damage, such as fire or electricity.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.is_auto_descr_allowed = true;
-    d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.is_infra_visible = false;
