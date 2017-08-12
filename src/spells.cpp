@@ -798,7 +798,7 @@ void SpellAzaWrath::run_effect(Actor* const caster,
         if (target->is_alive())
         {
             target->prop_handler().apply(
-                new PropParalyzed(PropTurns::specific, 2));
+                new PropParalyzed(PropTurns::specific, 1));
         }
 
         if ((skill == SpellSkill::master) &&
