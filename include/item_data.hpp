@@ -128,6 +128,7 @@ enum class ItemId
     mold_spores,
     mi_go_sting, mi_go_commander_sting,
     the_high_priest_claw,
+    high_priest_guard_ghoul_claw,
 
     armor_leather_jacket,
     armor_iron_suit,

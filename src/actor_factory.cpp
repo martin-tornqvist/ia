@@ -256,6 +256,15 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
+    case ActorId::high_priest_guard_war_vet:
+        return new HighPriestGuardWarVet();
+
+    case ActorId::high_priest_guard_rogue:
+        return new HighPriestGuardRogue();
+
+    case ActorId::high_priest_guard_ghoul:
+        return new HighPriestGuardGhoul();
+
     case ActorId::END:
         break;
     }

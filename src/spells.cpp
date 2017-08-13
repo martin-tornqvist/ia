@@ -956,9 +956,9 @@ void SpellMayhem::run_effect(Actor* const caster,
 
         for (int i = 0; i < nr_sweeps; ++i)
         {
-            for (int y = y0; y <= y1; ++y)
+            for (int x = x0; x <= x1; ++x)
             {
-                for (int x = x0; x <= x1; ++x)
+                for (int y = y0; y <= y1; ++y)
                 {
                     bool is_adj_to_walkable_cell = false;
 
@@ -1884,7 +1884,7 @@ bool SpellSeeInvis::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 int SpellSpellShield::max_spi_cost(const SpellSkill skill) const
 {
-    return 4 - (int)skill;
+    return 5 - (int)skill;
 }
 
 void SpellSpellShield::run_effect(Actor* const caster,
@@ -2354,7 +2354,6 @@ void SpellSummonMon::run_effect(Actor* const caster,
             summon_bucket.push_back(ActorId::green_spider);
             summon_bucket.push_back(ActorId::white_spider);
             summon_bucket.push_back(ActorId::red_spider);
-            summon_bucket.push_back(ActorId::flying_polyp);
             summon_bucket.push_back(ActorId::fire_hound);
             summon_bucket.push_back(ActorId::giant_bat);
             summon_bucket.push_back(ActorId::vampire_bat);

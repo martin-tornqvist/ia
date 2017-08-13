@@ -673,6 +673,8 @@ bool mk_boss_lvl()
 
     const P templ_dims = templ.dims();
 
+    Actor* high_priest = nullptr;
+
     for (int x = 0; x < templ_dims.x; ++x)
     {
         for (int y = 0; y < templ_dims.y; ++y)
@@ -684,7 +686,10 @@ bool mk_boss_lvl()
             switch (c)
             {
             case '@':
-            case 'M':
+            case 'P':
+            case 'W':
+            case 'R':
+            case 'G':
             case '.':
             {
                 map::put(new Floor(p));
@@ -693,9 +698,22 @@ bool mk_boss_lvl()
                 {
                     map::player->pos = p;
                 }
-                else if (c == 'M')
+                else if (c == 'P')
                 {
-                    actor_factory::mk(ActorId::the_high_priest, p);
+                    high_priest =
+                        actor_factory::mk(ActorId::the_high_priest, p);
+                }
+                else if (c == 'W')
+                {
+                    actor_factory::mk(ActorId::high_priest_guard_war_vet, p);
+                }
+                else if (c == 'R')
+                {
+                    actor_factory::mk(ActorId::high_priest_guard_rogue, p);
+                }
+                else if (c == 'G')
+                {
+                    actor_factory::mk(ActorId::high_priest_guard_ghoul, p);
                 }
             }
             break;
@@ -722,6 +740,18 @@ bool mk_boss_lvl()
             }
             break;
             }
+        }
+    }
+
+    ASSERT(high_priest);
+
+    // Make the High Priest leader of all other monsters
+    for (Actor* const actor : game_time::actors)
+    {
+        if (!actor->is_player() &&
+            (actor != high_priest))
+        {
+            static_cast<Mon*>(actor)->leader_ = high_priest;
         }
     }
 

@@ -1758,6 +1758,15 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
+    reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::high_priest_guard_ghoul_claw;
+    d.melee.att_msgs = {"", "claws me"};
+    set_dmg_from_mon_id(d, ActorId::high_priest_guard_ghoul);
+    d.melee.prop_applied =
+        ItemAttProp(new PropInfected(PropTurns::std));
+    d.melee.dmg_method = DmgMethod::slashing;
+    data[(size_t)d.id] = d;
+
     reset_data(d, ItemType::armor);
     d.id = ItemId::armor_leather_jacket;
     d.base_name = {"Leather Jacket", "", "a Leather Jacket"};

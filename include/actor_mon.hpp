@@ -415,6 +415,7 @@ public:
     {
         return name_the() + ": " + cultist_phrase();
     }
+
     std::string aggro_msg_mon_hidden() const override
     {
         return "Voice: " + cultist_phrase();
@@ -705,7 +706,7 @@ public:
 
     void mk_start_items() override;
 
-    void place_hook() override;
+    virtual void place_hook() override;
 
 private:
     DidAction on_act() override;
@@ -1018,6 +1019,36 @@ private:
     void on_std_turn_hook() override;
 
     bool has_greeted_player_;
+};
+
+class HighPriestGuardWarVet: public Mon
+{
+public:
+    HighPriestGuardWarVet() {}
+    ~HighPriestGuardWarVet() {}
+
+    void mk_start_items() override;
+};
+
+class HighPriestGuardRogue: public Mon
+{
+public:
+    HighPriestGuardRogue() {}
+    ~HighPriestGuardRogue() {}
+
+    void mk_start_items() override;
+};
+
+class HighPriestGuardGhoul: public Ghoul
+{
+public:
+    HighPriestGuardGhoul() {}
+    ~HighPriestGuardGhoul() {}
+
+    // Don't become allied to player Ghouls
+    void place_hook() override {}
+
+    void mk_start_items() override;
 };
 
 class AnimatedWpn: public Mon

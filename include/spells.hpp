@@ -308,7 +308,7 @@ public:
 
     int mon_cooldown() const override
     {
-        return 16;
+        return 21;
     }
 
     bool mon_can_learn() const override

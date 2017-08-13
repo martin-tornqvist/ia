@@ -2810,10 +2810,9 @@ void TheHighPriest::mk_start_items()
     spells_known_.push_back(new SpellSummonMon);
     spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellMiGoHypno);
     spells_known_.push_back(new SpellPest);
     spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellAzaWrath);
+    spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 }
@@ -2828,23 +2827,19 @@ void TheHighPriest::on_death()
     const P stair_pos(map_w - 2, 11);
 
     map::put(new Stairs(stair_pos));
+
     map::put(new RubbleLow(stair_pos - P(1, 0)));
 
     const size_t nr_snakes = rnd::range(4, 5);
 
-    actor_factory::spawn(pos,
-                         {nr_snakes, ActorId::pit_viper});
+    actor_factory::spawn(
+        pos,
+        {nr_snakes, ActorId::pit_viper});
 }
 
 void TheHighPriest::on_std_turn_hook()
 {
-    const int regen_every_n_turn = 3;
 
-    if (is_alive() &&
-        (game_time::turn_nr() % regen_every_n_turn == 0))
-    {
-        restore_hp(1, false, Verbosity::silent);
-    }
 }
 
 DidAction TheHighPriest::on_act()
@@ -2865,7 +2860,18 @@ DidAction TheHighPriest::on_act()
 
         has_greeted_player_ = true;
 
-        aware_of_player_counter_ += data_->nr_turns_aware;
+        become_aware_player(false);
+
+        for (auto* const actor : game_time::actors)
+        {
+            if (actor->is_player() ||
+                (actor == this))
+            {
+                continue;
+            }
+
+            static_cast<Mon*>(actor)->become_aware_player(false);
+        }
     }
 
     if (rnd::coin_toss())
@@ -2875,6 +2881,37 @@ DidAction TheHighPriest::on_act()
     }
 
     return DidAction::no;
+}
+
+void HighPriestGuardWarVet::mk_start_items()
+{
+    inv_->put_in_slot(
+        SlotId::wpn,
+        item_factory::mk(ItemId::machine_gun),
+        Verbosity::silent);
+
+    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
+    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
+    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
+    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
+}
+
+void HighPriestGuardRogue::mk_start_items()
+{
+    Item* const dagger = item_factory::mk(ItemId::dagger);
+
+    static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 3;
+
+    inv_->put_in_slot(
+        SlotId::wpn,
+        dagger,
+        Verbosity::silent);
+}
+
+void HighPriestGuardGhoul::mk_start_items()
+{
+    inv_->put_in_intrinsics(
+        item_factory::mk(ItemId::high_priest_guard_ghoul_claw));
 }
 
 AnimatedWpn::AnimatedWpn() :

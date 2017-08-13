@@ -77,6 +77,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::polyp_tentacle:
     case ItemId::greater_polyp_tentacle:
     case ItemId::ghoul_claw:
+    case ItemId::high_priest_guard_ghoul_claw:
     case ItemId::void_traveler_rip:
     case ItemId::elder_void_traveler_rip:
     case ItemId::shadow_claw:
@@ -394,7 +395,8 @@ Item* mk(const ItemId item_id, const int nr_items)
 
     // Sanity check number of items (non-stackable items should never be set to
     // anything other than one item)
-    if (!r->data().is_stackable && nr_items != 1)
+    if (!r->data().is_stackable &&
+        (nr_items != 1))
     {
         TRACE << "Specified number of items ("
               << nr_items

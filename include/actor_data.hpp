@@ -91,6 +91,9 @@ enum class ActorId
     gas_spore,
     death_fiend,
     the_high_priest,
+    high_priest_guard_war_vet,
+    high_priest_guard_rogue,
+    high_priest_guard_ghoul,
 
     END
 };

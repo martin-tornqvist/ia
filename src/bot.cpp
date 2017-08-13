@@ -213,7 +213,7 @@ void act()
 
         auto* wpn_item = inv.item_in_slot(SlotId::wpn);
 
-        if (wpn_item && wpn_item->data().ranged.is_ranged_wpn)
+        if (!wpn_item || wpn_item->data().ranged.is_ranged_wpn)
         {
             delete inv.slots_[(size_t)SlotId::wpn].item;
 
