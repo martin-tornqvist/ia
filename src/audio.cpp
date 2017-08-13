@@ -237,7 +237,7 @@ void cleanup()
     current_channel_ =  0;
     seconds_at_amb_played_ = -1;
 
-    // nr_files_loaded_ = 0;
+    nr_files_loaded_ = 0;
 
     TRACE_FUNC_END;
 }
