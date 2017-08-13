@@ -25,28 +25,18 @@ int seconds_at_amb_played_ = -1;
 
 int nr_files_loaded_ = 0;
 
-// Subtracting AMB_START
-const int nr_sfx_tot = (int)SfxId::END - 1;
-
 void load(const SfxId sfx, const std::string& filename)
 {
+    // Sound already loaded?
+    if (audio_chunks_[(size_t)sfx])
+    {
+        return;
+    }
+
     // Read events, so that we don't freeze the game while we loading sounds
     SDL_PumpEvents();
 
-    io::clear_screen();
-
     const std::string file_rel_path = "res/audio/" + filename;
-
-    const std::string nr_loaded_str =
-        std::to_string(nr_files_loaded_) + "/" +
-        std::to_string(nr_sfx_tot) ;
-
-    io::draw_text("Loading audio file " +
-                  nr_loaded_str +
-                  " (" + file_rel_path + ")...",
-                  Panel::screen,
-                  P(0, 0),
-                  clr_white);
 
     audio_chunks_[(size_t)sfx] = Mix_LoadWAV(file_rel_path.c_str());
 
@@ -58,46 +48,6 @@ void load(const SfxId sfx, const std::string& filename)
               << Mix_GetError()   << std::endl;
         ASSERT(false);
     }
-
-    // Draw a loading bar
-    const int pct_loaded = (nr_files_loaded_ * 100) / nr_sfx_tot;
-    const int bar_w_tot = 32;
-    const int bar_w_l = (bar_w_tot * pct_loaded) / 100;
-    const int bar_w_r = bar_w_tot - bar_w_l;
-
-    const P bar_p(1, 2);
-
-    if (bar_w_l > 0)
-    {
-        const std::string bar_l_str(bar_w_l, '#');
-
-        io::draw_text(bar_l_str,
-                      Panel::screen,
-                      bar_p,
-                      clr_green);
-    }
-
-    if (bar_w_r > 0)
-    {
-        const std::string bar_r_str(bar_w_r, '-');
-
-        io::draw_text(bar_r_str,
-                      Panel::screen,
-                      P(bar_p.x + bar_w_l, bar_p.y),
-                      clr_gray_drk);
-    }
-
-    io::draw_text("[",
-                  Panel::screen,
-                  P(bar_p.x - 1, bar_p.y),
-                  clr_white);
-
-    io::draw_text("]",
-                  Panel::screen,
-                  P(bar_p.x + bar_w_tot, bar_p.y),
-                  clr_white);
-
-    io::update_screen();
 
     ++nr_files_loaded_;
 }
@@ -136,6 +86,23 @@ int find_free_channel(const int from)
     return -1;
 }
 
+std::string amb_sfx_filename(const SfxId sfx)
+{
+    const int amb_nr = (int)sfx - (int)SfxId::AMB_START;
+
+    const std::string padding_str =
+        (amb_nr < 10) ? "00" :
+        (amb_nr < 100) ? "0" : "";
+
+    const std::string idx_str = std::to_string(amb_nr);
+
+    return
+        "amb_" +
+        padding_str +
+        idx_str +
+        ".ogg";
+}
+
 } // namespace
 
 void init()
@@ -151,7 +118,16 @@ void init()
         return;
     }
 
-    audio_chunks_.resize(size_t(SfxId::END));
+    audio_chunks_.resize((size_t)SfxId::END);
+
+    for (size_t i = 0; i < audio_chunks_.size(); ++i)
+    {
+        audio_chunks_[i] = nullptr;
+    }
+
+    //
+    // Pre-load the action sound effects (ambient sounds are loaded on demand)
+    //
 
     //
     // Monster sounds
@@ -222,44 +198,13 @@ void init()
     load(SfxId::menu_browse, "sfx_menu_browse.ogg");
     load(SfxId::menu_select, "sfx_menu_select.ogg");
 
-    //
-    // Ambient sounds
-    //
-    int a = 1;
-
-    const int first = (int)SfxId::AMB_START + 1;
-
-    const int last = (int)SfxId::END - 1;
-
-    for (int i = first; i <= last; ++i)
-    {
-        const std::string padding_str =
-            (a < 10) ? "00" :
-            (a < 100) ? "0" : "";
-
-        const std::string idx_str = std::to_string(a);
-
-        const std::string file_name =
-            "amb_" +
-            padding_str +
-            idx_str +
-            ".ogg";
-
-        load(SfxId(i), file_name);
-
-        ++a;
-    }
-
-    ASSERT(nr_files_loaded_ == nr_sfx_tot);
+    ASSERT(nr_files_loaded_ == (int)SfxId::AMB_START);
 
     //
     // Load music
     //
     mus_chunks_.resize((size_t)MusId::END);
 
-    //
-    // TOOD: Copy/pasted from the load function above - this needs refactoring
-    //
     mus_chunks_[(size_t)MusId::cthulhiana_madness] =
         Mix_LoadMUS("res/audio/musica_cthulhiana-fragment-madness.ogg");
 
@@ -292,7 +237,7 @@ void cleanup()
     current_channel_ =  0;
     seconds_at_amb_played_ = -1;
 
-    nr_files_loaded_ = 0;
+    // nr_files_loaded_ = 0;
 
     TRACE_FUNC_END;
 }
@@ -301,38 +246,47 @@ void play(const SfxId sfx,
           const int vol_pct_tot,
           const int vol_pct_l)
 {
-    if (!audio_chunks_.empty() &&
-        sfx != SfxId::AMB_START &&
-        sfx != SfxId::END &&
-        !config::is_bot_playing())
+    if (audio_chunks_.empty() ||
+        (sfx == SfxId::AMB_START) ||
+        (sfx == SfxId::END) ||
+        config::is_bot_playing())
     {
-        const int free_channel = find_free_channel(current_channel_);
+        return;
+    }
 
-        const size_t ms_now = SDL_GetTicks();
+    // Is this an ambient sound which has not yet been loaded?
+    if (((int)sfx > (int)SfxId::AMB_START) &&
+        !audio_chunks_[(size_t)sfx])
+    {
+        load(sfx, amb_sfx_filename(sfx));
+    }
 
-        size_t& ms_last = ms_at_sfx_played_[(size_t)sfx];
+    const int free_channel = find_free_channel(current_channel_);
 
-        const size_t ms_diff = ms_now - ms_last;
+    const size_t ms_now = SDL_GetTicks();
 
-        if ((free_channel >= 0) &&
-            (ms_diff >= min_ms_between_same_sfx))
-        {
-            current_channel_ = free_channel;
+    size_t& ms_last = ms_at_sfx_played_[(size_t)sfx];
 
-            const int vol_tot = (255 * vol_pct_tot) / 100;
-            const int vol_l = (vol_pct_l * vol_tot) / 100;
-            const int vol_r = vol_tot - vol_l;
+    const size_t ms_diff = ms_now - ms_last;
 
-            Mix_SetPanning(current_channel_,
-                           vol_l,
-                           vol_r);
+    if ((free_channel >= 0) &&
+        (ms_diff >= min_ms_between_same_sfx))
+    {
+        current_channel_ = free_channel;
 
-            Mix_PlayChannel(current_channel_,
-                            audio_chunks_[(size_t)sfx],
-                            0);
+        const int vol_tot = (255 * vol_pct_tot) / 100;
+        const int vol_l = (vol_pct_l * vol_tot) / 100;
+        const int vol_r = vol_tot - vol_l;
 
-            ms_last = SDL_GetTicks();
-        }
+        Mix_SetPanning(current_channel_,
+                       vol_l,
+                       vol_r);
+
+        Mix_PlayChannel(current_channel_,
+                        audio_chunks_[(size_t)sfx],
+                        0);
+
+        ms_last = SDL_GetTicks();
     }
 }
 
@@ -399,6 +353,11 @@ void play(const SfxId sfx,
 
 void try_play_amb(const int one_in_n_chance_to_play)
 {
+    //
+    // NOTE: The ambient sound effect will be loaded by play(), if not already
+    //       loaded (only the action sound effects are pre-loaded)
+    //
+
     if (!audio_chunks_.empty() &&
         rnd::one_in(one_in_n_chance_to_play))
     {
