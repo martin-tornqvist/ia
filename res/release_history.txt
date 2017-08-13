@@ -67,6 +67,7 @@ Gameplay
 * Being Frenzied allows waiting in place (with "5" or ".")
 * Added some new mid/late game monsters
 * Weakening now causes halved melee damage, instead of minimum melee damage
+* Removed the Wolves from the intro level
 
 Interface
 * Weapon names show average damage instead of dice rolls - melee weapons also show their "plus" damage bonus (not including any damage bonus from traits), e.g. "Machete 9.0 {+2} +0%" - the exact dice rolls can be seen in the detailed item description when viewing the item in the inventory

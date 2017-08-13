@@ -287,8 +287,6 @@ bool mk_intro_lvl()
         }
     }
 
-    populate_mon::populate_intro_lvl();
-
     return true;
 }
 

@@ -6,6 +6,6 @@ namespace populate_items
 
 void mk_items_on_floor();
 
-} //PopulateItems
+} // populate_items
 
-#endif
+#endif // POPULATE_ITEMS_HPP
