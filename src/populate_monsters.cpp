@@ -346,14 +346,14 @@ void populate_intro_lvl()
 
     const P& player_pos = map::player->pos;
 
-    const int X0 = std::max(0, player_pos.x - min_dist_from_player);
-    const int Y0 = std::max(0, player_pos.y - min_dist_from_player);
-    const int X1 = std::min(map_w - 1, player_pos.x + min_dist_from_player) - 1;
-    const int Y1 = std::min(map_h - 1, player_pos.y + min_dist_from_player) - 1;
+    const int x0 = std::max(0, player_pos.x - min_dist_from_player);
+    const int y0 = std::max(0, player_pos.y - min_dist_from_player);
+    const int x1 = std::min(map_w - 1, player_pos.x + min_dist_from_player) - 1;
+    const int y1 = std::min(map_h - 1, player_pos.y + min_dist_from_player) - 1;
 
-    for (int y = Y0; y <= Y1; ++y)
+    for (int y = y0; y <= y1; ++y)
     {
-        for (int x = X0; x <= X1; ++x)
+        for (int x = x0; x <= x1; ++x)
         {
             blocked[x][y] = true;
         }
@@ -431,9 +431,9 @@ void populate_std_lvl()
               blocked,
               flood);
 
-    for (int x = 0; x <= map_w; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y <= map_h; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             const int v = flood[x][y];
 
