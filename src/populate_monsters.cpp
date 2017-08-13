@@ -11,6 +11,7 @@
 #include "actor_player.hpp"
 #include "map_parsing.hpp"
 #include "game_time.hpp"
+#include "flood.hpp"
 
 namespace populate_mon
 {
@@ -417,37 +418,49 @@ void populate_std_lvl()
 
     bool blocked[map_w][map_h];
 
-    const int min_dist_from_player = fov_std_radi_int - 1;
+    const int min_dist_from_player = fov_std_radi_int + 2;
 
     map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
-    const P& player_pos = map::player->pos;
+    int flood[map_w][map_h];
 
-    const int X0 = std::max(0, player_pos.x - min_dist_from_player);
-    const int Y0 = std::max(0, player_pos.y - min_dist_from_player);
-    const int X1 = std::min(map_w - 1, player_pos.x + min_dist_from_player);
-    const int Y1 = std::min(map_h - 1, player_pos.y + min_dist_from_player);
+    const P& player_p = map::player->pos;
 
-    for (int x = X0; x <= X1; ++x)
+    floodfill(player_p,
+              blocked,
+              flood);
+
+    for (int x = 0; x <= map_w; ++x)
     {
-        for (int y = Y0; y <= Y1; ++y)
+        for (int y = 0; y <= map_h; ++y)
         {
-            blocked[x][y] = true;
+            const int v = flood[x][y];
+
+            if ((v > 0) &&
+                (v < min_dist_from_player))
+            {
+                blocked[x][y] = true;
+            }
         }
     }
+
+    blocked[player_p.x][player_p.y] = true;
 
     // First, attempt to populate all non-plain standard rooms
     for (Room* const room : map::room_list)
     {
-        if (room->type_ != RoomType::plain &&
+        if ((room->type_ != RoomType::plain) &&
             ((int)room->type_ < (int)RoomType::END_OF_STD_ROOMS))
         {
+            //
             // TODO: This is not a good method to calculate the number of room
             //       cells (the room may be irregularly shaped), parse the room
             //       map instead
+            //
             const int room_w = room->r_.p1.x - room->r_.p0.x + 1;
             const int room_h = room->r_.p1.y - room->r_.p0.y + 1;
+
             const int nr_cells_in_room = room_w * room_h;
 
             const int max_nr_groups_in_room = room->max_nr_mon_groups_spawned();
@@ -463,7 +476,8 @@ void populate_std_lvl()
                 {
                     for (int x = room->r_.p0.x; x <= room->r_.p1.x; ++x)
                     {
-                        if (map::room_map[x][y] == room && !blocked[x][y])
+                        if ((map::room_map[x][y] == room) &&
+                            !blocked[x][y])
                         {
                             origin_bucket.push_back(P(x, y));
                         }
@@ -482,17 +496,17 @@ void populate_std_lvl()
                 // Spawn monsters in room
                 if (nr_origin_candidates > 0)
                 {
-                    const int element = rnd::range(0, nr_origin_candidates - 1);
-                    const P& origin = origin_bucket[element];
+                    const P origin = rnd::element(origin_bucket);
 
                     const auto sorted_free_cells =
                         mk_sorted_free_cells(origin, blocked);
 
                     const bool did_make_group =
-                        mk_random_group_for_room(room->type_,
-                                                 sorted_free_cells,
-                                                 blocked,
-                                                 true);
+                        mk_random_group_for_room(
+                            room->type_,
+                            sorted_free_cells,
+                            blocked,
+                            true);
 
                     if (did_make_group)
                     {
@@ -513,7 +527,10 @@ void populate_std_lvl()
             {
                 for (int x = room->r_.p0.x; x <= room->r_.p1.x; ++x)
                 {
-                    blocked[x][y] = true;
+                    if (map::room_map[x][y] == room)
+                    {
+                        blocked[x][y] = true;
+                    }
                 }
             }
         }
@@ -527,13 +544,13 @@ void populate_std_lvl()
     {
         for (int x = 1; x < map_w - 1; ++x)
         {
-            if (map::room_map[x][y])
+            Room* const room = map::room_map[x][y];
+
+            if (!blocked[x][y] &&
+                room &&
+                (room->type_ == RoomType::plain))
             {
-                if (!blocked[x][y] &&
-                    map::room_map[x][y]->type_ == RoomType::plain)
-                {
-                    origin_bucket.push_back(P(x, y));
-                }
+                origin_bucket.push_back(P(x, y));
             }
         }
     }
@@ -542,17 +559,17 @@ void populate_std_lvl()
     {
         while (nr_groups_spawned < nr_groups_to_spawn)
         {
-            const int element = rnd::range(0, origin_bucket.size() - 1);
-            const P origin = origin_bucket[element];
+            const P origin = rnd::element(origin_bucket);
 
             const auto sorted_free_cells =
                 mk_sorted_free_cells(origin, blocked);
 
             const bool did_make_group =
-                mk_random_group_for_room(RoomType::plain,
-                                         sorted_free_cells,
-                                         blocked,
-                                         true);
+                mk_random_group_for_room(
+                    RoomType::plain,
+                    sorted_free_cells,
+                    blocked,
+                    true);
 
             if (did_make_group)
             {
