@@ -98,11 +98,11 @@ std::string InsScream::start_msg() const
     }
 }
 
-void InsBabbling::on_start_hook()
+void InsBabbling::babble() const
 {
     const std::string player_name = map::player->name_the();
 
-    for (int i = rnd::range(3, 5); i > 0; --i)
+    for (int i = rnd::range(1, 3); i > 0; --i)
     {
         msg_log::add(player_name + ": " + Cultist::cultist_phrase());
     }
@@ -118,9 +118,21 @@ void InsBabbling::on_start_hook()
     snd_emit::run(snd);
 }
 
+void InsBabbling::on_start_hook()
+{
+    babble();
+}
+
 void InsBabbling::on_new_player_turn(const std::vector<Actor*>& seen_foes)
 {
     (void)seen_foes;
+
+    const int babble_on_in_n = 200;
+
+    if (rnd::one_in(babble_on_in_n))
+    {
+        babble();
+    }
 }
 
 bool InsFaint::is_allowed() const

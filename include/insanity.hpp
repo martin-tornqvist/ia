@@ -22,7 +22,7 @@ enum class InsSymptId
     masoch,
     sadism,
     shadows,
-    paranoia, //Invisible stalker spawned
+    paranoia, // Invisible stalker spawned
     confusion,
     frenzy,
     strange_sensation,
@@ -156,10 +156,22 @@ public:
 
     bool is_permanent() const override
     {
-        return false;
+        return true;
     }
 
     void on_new_player_turn(const std::vector<Actor*>& seen_foes) override;
+
+    std::string char_descr_msg() const override
+    {
+        return "Tends to babble in a peculiar language";
+    }
+
+    std::string postmortem_msg() const override
+    {
+        return "Had a tendency to babble in a peculiar language";
+    }
+
+    void babble() const;
 
 protected:
     void on_start_hook() override;
@@ -174,9 +186,19 @@ protected:
         return "Babbling!";
     }
 
+    std::string end_msg() const override
+    {
+        return "I feel in control of my speech.";
+    }
+
     std::string history_msg() const override
     {
         return "Started babbling incoherently.";
+    }
+
+    std::string history_msg_end() const override
+    {
+        return "My strange babbling was cured.";
     }
 };
 

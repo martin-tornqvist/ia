@@ -206,6 +206,7 @@ void go_to_nxt()
         audio::try_play_amb(1);
     }
 
+    // Trigger phobia of deep places when descending
     if (insanity::has_sympt(InsSymptId::phobia_deep))
     {
         msg_log::add("I am plagued by my phobia of deep places!");
@@ -214,6 +215,15 @@ void go_to_nxt()
             new PropTerrified(PropTurns::std));
 
         return;
+    }
+
+    // Trigger babbling when descending
+    for (const auto* const sympt : insanity::active_sympts())
+    {
+        if (sympt->id() == InsSymptId::babbling)
+        {
+            static_cast<const InsBabbling*>(sympt)->babble();
+        }
     }
 
     TRACE_FUNC_END;
