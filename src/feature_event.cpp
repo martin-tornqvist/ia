@@ -475,7 +475,8 @@ void EventRatsInTheWallsDiscovery::on_new_turn()
 
         popup::show_msg(str, "A gruesome discovery...");
 
-        map::player->incr_shock(100, ShockSrc::misc);
+        map::player->incr_shock(ShockLvl::mind_shattering,
+                                ShockSrc::misc);
 
         for (Actor* const actor : game_time::actors)
         {
