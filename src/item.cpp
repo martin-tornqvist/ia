@@ -1076,9 +1076,9 @@ void MindLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         map::player->incr_shock(ShockLvl::mind_shattering,
                                 ShockSrc::misc);
 
-        // Add an attack cooldown, so things don't get too crazy
+        // Make the monster pause, so things don't get too crazy
         mon->prop_handler().apply(
-            new PropDisabledAttack(PropTurns::specific, 2));
+            new PropWaiting(PropTurns::specific, 2));
     }
 }
 
@@ -1103,9 +1103,9 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
 
     mon->restore_spi(1, false, Verbosity::silent);
 
-    // Add an attack cooldown, so things don't get too crazy
+    // Make the monster pause, so things don't get too crazy
     mon->prop_handler().apply(
-        new PropDisabledAttack(PropTurns::specific, 2));
+        new PropWaiting(PropTurns::specific, 2));
 }
 
 // -----------------------------------------------------------------------------
@@ -1129,9 +1129,9 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
 
     mon->restore_hp(1, false, Verbosity::silent);
 
-    // Add an attack cooldown, so things don't get too crazy
+    // Make the monster pause, so things don't get too crazy
     mon->prop_handler().apply(
-        new PropDisabledAttack(PropTurns::specific, 2));
+        new PropWaiting(PropTurns::specific, 2));
 }
 
 // -----------------------------------------------------------------------------
