@@ -237,7 +237,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::scroll_summon_mon:
     case ItemId::scroll_light:
     case ItemId::scroll_anim_wpns:
-    case ItemId::scroll_insight:
     case ItemId::scroll_transmut:
     case ItemId::scroll_heal:
     case ItemId::scroll_see_invis:
@@ -277,6 +276,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new PotionPoison(d);
         break;
 
+    case ItemId::potion_insight:
+        r = new PotionInsight(d);
+        break;
+
     case ItemId::potion_r_fire:
         r = new PotionRFire(d);
         break;
@@ -292,14 +295,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::potion_invis:
         r = new PotionInvis(d);
         break;
-
-    // case ItemId::scroll_sacr_life:
-    //     r = new PotionSacrLife(d);
-    //     break;
-
-    // case ItemId::scroll_sacr_spi:
-    //     r = new PotionSacrSpi(d);
-    //     break;
 
     case ItemId::device_blaster:
         r = new DeviceBlaster(d);

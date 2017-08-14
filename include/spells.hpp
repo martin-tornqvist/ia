@@ -36,7 +36,6 @@ enum class SpellId
     light,
     bless,
     anim_wpns,
-    insight,
     transmut,
 
     // Ghoul background
@@ -663,51 +662,6 @@ public:
     SpellId id() const override
     {
         return SpellId::bless;
-    }
-
-    SpellShock shock_type() const override
-    {
-        return SpellShock::mild;
-    }
-
-    std::vector<std::string> descr_specific(
-        const SpellSkill skill) const override;
-
-    void run_effect(Actor* const caster,
-                    const SpellSkill skill) const override;
-
-private:
-    int max_spi_cost(const SpellSkill skill) const override
-    {
-        (void)skill;
-
-        return 8;
-    }
-};
-
-class SpellInsight: public Spell
-{
-public:
-    SpellInsight() : Spell() {}
-
-    bool mon_can_learn() const override
-    {
-        return false;
-    }
-
-    bool player_can_learn() const override
-    {
-        return true;
-    }
-
-    std::string name() const override
-    {
-        return "Insight";
-    }
-
-    SpellId id() const override
-    {
-        return SpellId::insight;
     }
 
     SpellShock shock_type() const override

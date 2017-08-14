@@ -230,6 +230,34 @@ private:
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
+class PotionInsight: public Potion
+{
+public:
+    PotionInsight(ItemDataT* const item_data) :
+        Potion(item_data) {}
+    ~PotionInsight() {}
+
+    void quaff_impl(Actor& actor) override;
+
+    const std::string real_name() const override
+    {
+        return "Insight";
+    }
+
+private:
+    std::string descr_identified() const override
+    {
+        return "This strange concoction causes a sudden flash of intuition.";
+    }
+
+    void collide_hook(const P& pos, Actor* const actor) override
+    {
+        (void)pos;
+        (void)actor;
+    }
+};
+
+
 class PotionRFire: public Potion
 {
 public:

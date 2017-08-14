@@ -1986,11 +1986,6 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);
-    d.id = ItemId::scroll_insight;
-    d.spell_cast_from_scroll = SpellId::insight;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::scroll);
     d.id = ItemId::scroll_transmut;
     d.spell_cast_from_scroll = SpellId::transmut;
     data[(size_t)d.id] = d;
@@ -2046,6 +2041,11 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
+    d.id = ItemId::potion_insight;
+    mod_spawn_chance(d, 0.33);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::potion);
     d.id = ItemId::potion_r_fire;
     mod_spawn_chance(d, 0.33);
     data[(size_t)d.id] = d;
@@ -2063,16 +2063,6 @@ void init_data_list()
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_invis;
     data[(size_t)d.id] = d;
-
-    // reset_data(d, ItemType::potion);
-    // d.id = ItemId::potion_sacr_life;
-    // mod_spawn_chance(d, 0.33);
-    // data[(size_t)d.id] = d;
-
-    // reset_data(d, ItemType::potion);
-    // d.id = ItemId::potion_sacr_spi;
-    // mod_spawn_chance(d, 0.33);
-    // data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::device);
     d.id = ItemId::device_blaster;

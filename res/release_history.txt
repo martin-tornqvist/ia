@@ -10,7 +10,7 @@ Gameplay
 * Darkbolt and Azathoth's Wrath do random damage within a range, instead of a fixed number
 * Being Blessed/Cursed affects the shock cost of casting spells, instead of the spirit cost
 * The spell "Healing" is now also available for the player
-* The potions "See Invisible" and "Insight" are now spells instead
+* The potion "See Invisible" is now a spell instead
 * Added spell "Transmutation" (convert items)
 * Added spell "Subdue Weapons" - learned simultaneously as "Animate Weapons" (very cheap spell which drops all visible Animated Weapons)
 * Added spell "Spell Shield" - grants spell resistance until a spell is blocked (same effect as the spirit traits)

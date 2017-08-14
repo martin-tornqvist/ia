@@ -154,7 +154,6 @@ enum class ItemId
     scroll_light,
     scroll_bless,
     scroll_anim_wpns,
-    scroll_insight,
     scroll_transmut,
 
     potion_vitality,
@@ -165,12 +164,11 @@ enum class ItemId
     potion_r_elec,
     potion_conf,
     potion_poison,
+    potion_insight,
     potion_r_fire,
     potion_curing,
     potion_descent,
     potion_invis,
-    // potion_sacr_life,
-    // potion_sacr_spi,
 
     device_blaster,
     device_shockwave,
@@ -369,6 +367,6 @@ void cleanup();
 void save();
 void load();
 
-} //ItemData
+} // item_data
 
 #endif

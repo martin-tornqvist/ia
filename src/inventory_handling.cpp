@@ -1571,7 +1571,7 @@ void SelectIdentify::on_start()
     {
         const Item* const item = inv.backpack_[i];
 
-        if (item->id() != ItemId::scroll_insight)
+        if (item->id() != ItemId::potion_insight)
         {
             const ItemDataT& d = item->data();
 

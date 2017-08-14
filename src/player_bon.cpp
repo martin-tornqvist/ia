@@ -521,13 +521,13 @@ std::string trait_descr(const Trait id)
 
     case Trait::lesser_clairv:
         return
-            "Spells related to detection and information are cast at expert "
-            "level (Searching, Insight, See Invisible)";
+            "Spells related to detection are cast at expert level (Searching, "
+            "See Invisible)";
 
     case Trait::greater_clairv:
         return
             "Spells related to detection and information are cast at master "
-            "level (Searching, Insight, See Invisible)";
+            "level (Searching, See Invisible)";
 
     case Trait::lesser_ench:
         return
@@ -1223,7 +1223,6 @@ void pick_trait(const Trait id)
     case Trait::greater_clairv:
     {
         player_spells::incr_spell_skill(SpellId::searching);
-        player_spells::incr_spell_skill(SpellId::insight);
         player_spells::incr_spell_skill(SpellId::see_invis);
     }
     break;

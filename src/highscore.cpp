@@ -40,12 +40,15 @@ HighscoreEntry::~HighscoreEntry() {}
 int HighscoreEntry::score() const
 {
     const double dlvl_db = double(dlvl_);
+
     const double dlvl_last_db = double(dlvl_last);
+
     const double xp_db = double(xp_);
 
     const bool win = is_win_ == IsWin::yes;
 
     const double xp_factor = 1.0 + xp_db + (win ? (xp_db / 5.0) : 0.0);
+
     const double dlvl_factor = 1.0 + (dlvl_db / dlvl_last_db);
 
     return (int)(xp_factor * dlvl_factor);
