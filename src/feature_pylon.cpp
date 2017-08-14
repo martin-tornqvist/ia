@@ -308,7 +308,7 @@ void PylonBurning::on_new_turn_activated()
     // NOTE: The distance may also be limited by the number of turns which the
     //       Pylon remains active (it shuts itself down after a while)
     //
-    const int flood_max_dist = 25;
+    const int flood_max_dist = 10;
 
     const int flood_dist =
         std::min(
