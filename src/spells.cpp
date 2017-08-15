@@ -1084,6 +1084,11 @@ void SpellPest::run_effect(Actor* const caster,
             MakeMonAware::yes,
             leader);
 
+    if (mon_summoned.empty())
+    {
+        return;
+    }
+
     bool is_any_seen_by_player = false;
 
     for (Mon* const mon : mon_summoned)
@@ -1178,6 +1183,10 @@ void SpellAnimWpns::run_effect(Actor* const caster,
         return;
     }
 
+    Actor* actor_array[map_w][map_h];
+
+    map::mk_actor_array(actor_array);
+
     std::vector<P> positions_to_anim;
 
     {
@@ -1192,6 +1201,7 @@ void SpellAnimWpns::run_effect(Actor* const caster,
                 Item* const item = cell.item;
 
                 if (!cell.is_seen_by_player ||
+                    actor_array[x][y] ||
                     !item ||
                     (item->data().type != ItemType::melee_wpn))
                 {
@@ -1225,12 +1235,6 @@ void SpellAnimWpns::run_effect(Actor* const caster,
 
     for (const P& p : positions_to_anim)
     {
-        Cell& cell = map::cells[p.x][p.y];
-
-        Item* const item = cell.item;
-
-        cell.item = nullptr;
-
         const auto summoned =
             actor_factory::spawn(
                 p,
@@ -1238,9 +1242,18 @@ void SpellAnimWpns::run_effect(Actor* const caster,
                 MakeMonAware::no,
                 map::player);
 
-        ASSERT(summoned.size() == 1);
+        if (summoned.empty())
+        {
+            return;
+        }
 
         Mon* const anim_wpn = summoned[0];
+
+        Cell& cell = map::cells[p.x][p.y];
+
+        Item* const item = cell.item;
+
+        cell.item = nullptr;
 
         Inventory& inv = anim_wpn->inv();
 
@@ -2460,6 +2473,11 @@ void SpellSummonMon::run_effect(Actor* const caster,
                               {mon_id},
                               MakeMonAware::yes,
                               leader);
+
+    if (mon_summoned.empty())
+    {
+        return;
+    }
 
     Mon* const mon = mon_summoned[0];
 

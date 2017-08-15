@@ -328,6 +328,7 @@ void mk_actor_array(Actor* a[map_w][map_h])
     for (Actor* actor : game_time::actors)
     {
         const P& p = actor->pos;
+
         a[p.x][p.y] = actor;
     }
 }
