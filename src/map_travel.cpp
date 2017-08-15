@@ -164,7 +164,12 @@ void go_to_nxt()
 
     mk_lvl(map_data.type);
 
-    map::player->prop_handler().end_prop(PropId::descend, false);
+    if (map::player->has_prop(PropId::descend))
+    {
+        msg_log::add("My sinking feeling disappears.");
+
+        map::player->prop_handler().end_prop(PropId::descend, false);
+    }
 
     game_time::is_magic_descend_nxt_std_turn = false;
 
