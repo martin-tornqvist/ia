@@ -252,11 +252,6 @@ void Mon::act()
 
     tgt_ = map::random_closest_actor(pos, tgt_bucket);
 
-    if (tgt_)
-    {
-        std::cout << name_the() << ",  tgt_: " << tgt_->name_the() << std::endl;
-    }
-
     if (wary_of_player_counter_ > 0 ||
         aware_of_player_counter_ > 0)
     {
