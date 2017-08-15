@@ -486,8 +486,6 @@ void InsShadows::on_start_hook()
                               MakeMonAware::yes,
                               nullptr);
 
-    ASSERT(!summoned.empty());
-
     for (Mon* const mon : summoned)
     {
         mon->player_aware_of_me_counter_ = 0;
