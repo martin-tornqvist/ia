@@ -821,18 +821,20 @@ void Door::try_close(Actor* actor_trying)
     // Blocked?
     if (is_closable)
     {
-        bool isblocked_by_actor = false;
+        bool is_blocked_by_actor = false;
 
         for (Actor* actor : game_time::actors)
         {
-            if (actor->pos == pos_)
+            if ((actor->state() != ActorState::destroyed) &&
+                (actor->pos == pos_))
             {
-                isblocked_by_actor = true;
+                is_blocked_by_actor = true;
+
                 break;
             }
         }
 
-        if (isblocked_by_actor ||
+        if (is_blocked_by_actor ||
             map::cells[pos_.x][pos_.y].item)
         {
             is_closable = false;
