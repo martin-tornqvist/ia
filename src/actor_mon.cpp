@@ -136,7 +136,8 @@ void Mon::act()
         // Remove self and all unseen actors from vector
         for (auto it = begin(tgt_bucket); it != end(tgt_bucket);)
         {
-            if (*it == this || !can_see_actor(**it, hard_blocked_los))
+            if ((*it == this) ||
+                !can_see_actor(**it, hard_blocked_los))
             {
                 tgt_bucket.erase(it);
             }
@@ -250,6 +251,11 @@ void Mon::act()
     }
 
     tgt_ = map::random_closest_actor(pos, tgt_bucket);
+
+    if (tgt_)
+    {
+        std::cout << name_the() << ",  tgt_: " << tgt_->name_the() << std::endl;
+    }
 
     if (wary_of_player_counter_ > 0 ||
         aware_of_player_counter_ > 0)
@@ -468,7 +474,42 @@ void Mon::act()
 bool Mon::can_see_actor(const Actor& other,
                         const bool hard_blocked_los[map_w][map_h]) const
 {
-    if (this == &other || !other.is_alive())
+    const bool is_seeable = is_actor_seeable(other, hard_blocked_los);
+
+    if (!is_seeable)
+    {
+        return false;
+    }
+
+    if (is_actor_my_leader(map::player))
+    {
+        // Monster is allied to player
+
+        // Player-allied monster looking at the player?
+        if (other.is_player())
+        {
+            return true;
+        }
+        else // Player-allied monster looking at other monster
+        {
+            const auto* const other_mon = static_cast<const Mon*>(&other);
+
+            return other_mon->player_aware_of_me_counter_ > 0;
+        }
+    }
+    else // Monster is hostile to player
+    {
+        return aware_of_player_counter_ > 0;
+    }
+
+    return true;
+}
+
+bool Mon::is_actor_seeable(const Actor& other,
+                           const bool hard_blocked_los[map_w][map_h]) const
+{
+    if ((this == &other) ||
+        (!other.is_alive()))
     {
         return true;
     }
@@ -477,14 +518,6 @@ bool Mon::can_see_actor(const Actor& other,
     if (!fov::is_in_fov_range(pos, other.pos))
     {
         // Other actor is outside FOV range
-        return false;
-    }
-
-    // Monster allied to player looking at other monster which is hidden?
-    if (is_actor_my_leader(map::player) &&
-        !other.is_player() &&
-        (static_cast<const Mon*>(&other)->player_aware_of_me_counter_ <= 0))
-    {
         return false;
     }
 
@@ -558,7 +591,8 @@ std::vector<Actor*> Mon::seen_actors() const
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor != this && actor->is_alive())
+        if ((actor != this) &&
+            actor->is_alive())
         {
             const Mon* const mon = static_cast<const Mon*>(this);
 
@@ -590,13 +624,15 @@ std::vector<Actor*> Mon::seen_foes() const
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor != this && actor->is_alive())
+        if ((actor != this) &&
+            actor->is_alive())
         {
             const bool is_hostile_to_player =
                 !is_actor_my_leader(map::player);
 
             const bool is_other_hostile_to_player =
-                actor->is_player() ? false :
+                actor->is_player() ?
+                false :
                 !actor->is_actor_my_leader(map::player);
 
             const bool is_enemy =
@@ -606,6 +642,51 @@ std::vector<Actor*> Mon::seen_foes() const
 
             if (is_enemy &&
                 mon->can_see_actor(*actor, blocked_los))
+            {
+                out.push_back(actor);
+            }
+        }
+    }
+
+    return out;
+}
+
+std::vector<Actor*> Mon::seeable_foes() const
+{
+    std::vector<Actor*> out;
+
+    bool blocked_los[map_w][map_h];
+
+    R los_rect(std::max(0, pos.x - fov_std_radi_int),
+               std::max(0, pos.y - fov_std_radi_int),
+               std::min(map_w - 1, pos.x + fov_std_radi_int),
+               std::min(map_h - 1, pos.y + fov_std_radi_int));
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             los_rect);
+
+    for (Actor* actor : game_time::actors)
+    {
+        if ((actor != this) &&
+            actor->is_alive())
+        {
+            const bool is_hostile_to_player =
+                !is_actor_my_leader(map::player);
+
+            const bool is_other_hostile_to_player =
+                actor->is_player() ?
+                false :
+                !actor->is_actor_my_leader(map::player);
+
+            const bool is_enemy =
+                is_hostile_to_player != is_other_hostile_to_player;
+
+            const Mon* const mon = static_cast<const Mon*>(this);
+
+            if (is_enemy &&
+                mon->is_actor_seeable(*actor, blocked_los))
             {
                 out.push_back(actor);
             }

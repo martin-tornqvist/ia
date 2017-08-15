@@ -1038,7 +1038,7 @@ class SpellEnfeeble: public Spell
 public:
     SpellEnfeeble() : Spell() {}
 
-    virtual bool allow_mon_cast_now(Mon& mon) const override;
+    bool allow_mon_cast_now(Mon& mon) const override;
 
     int mon_cooldown() const override
     {

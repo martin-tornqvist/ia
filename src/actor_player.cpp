@@ -437,7 +437,7 @@ std::vector<Actor*> Player::seen_foes() const
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor != this &&
+        if ((actor != this) &&
             actor->is_alive() &&
             map::player->can_see_actor(*actor) &&
             !is_leader_of(actor))

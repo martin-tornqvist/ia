@@ -283,8 +283,10 @@ bool make_room_for_friend(Mon& mon)
             const bool is_other_adj =
                 is_pos_adj(mon.pos, other_mon->pos, false);
 
+            //
             // TODO: It's probably better to check LOS than vision here? We
             //       don't want to move out of the way for a blind monster.
+            //
             const bool is_other_seeing_player =
                 other_mon->can_see_actor(*map::player, blocked_los);
 
@@ -548,9 +550,9 @@ bool look(Mon& mon)
 
     const bool was_aware_before = mon.aware_of_player_counter_ > 0;
 
-    auto seen_foes = mon.seen_foes();
+    auto seeable_foes = mon.seeable_foes();
 
-    if (seen_foes.empty())
+    if (seeable_foes.empty())
     {
         return false;
     }
@@ -562,7 +564,7 @@ bool look(Mon& mon)
         return false;
     }
 
-    for (Actor* actor : seen_foes)
+    for (Actor* actor : seeable_foes)
     {
         if (actor->is_player())
         {

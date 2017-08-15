@@ -54,6 +54,11 @@ public:
 
     std::vector<Actor*> seen_foes() const override;
 
+    // Actors which are possible to see (i.e. not impossible due to
+    // invisibility, etc), but may or may not currently be seen due to
+    // (lack of) awareness
+    std::vector<Actor*> seeable_foes() const;
+
     bool is_sneaking() const;
 
     void act() override;
@@ -123,6 +128,12 @@ public:
     bool waiting_;
 
 protected:
+    // Return value 'true' means it is possible to see the other actor (i.e.
+    // it's not impossible due to invisibility, etc), but the actor may or may
+    // not currently be seen due to (lack of) awareness
+    bool is_actor_seeable(const Actor& other,
+                          const bool hard_blocked_los[map_w][map_h]) const;
+
     virtual void on_hit(int& dmg,
                         const DmgType dmg_type,
                         const DmgMethod method,
