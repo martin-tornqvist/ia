@@ -468,7 +468,7 @@ void init_data_list()
     d.spi = 25;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 50);
+    d.ability_vals.set_val(AbilityId::dodging, 60);
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
@@ -1469,12 +1469,12 @@ void init_data_list()
     d.hp = 9;
     d.spi = 12;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 60);
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
-    d.natural_props[(size_t)PropId::invis] = true;
+    d.natural_props[(size_t)PropId::cloaked] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::humanoid;
@@ -1515,7 +1515,7 @@ void init_data_list()
     d.hp = 15;
     d.spi = 30;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::melee, 70);
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -2591,7 +2591,7 @@ void init_data_list()
     d.glyph = 'M';
     d.color = clr_yellow;
     d.tile = TileId::shadow;
-    d.hp = 15;
+    d.hp = 18;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 80);
@@ -2602,14 +2602,14 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
-    d.spawn_max_dlvl = dlvl_last_mid_game;
+    d.spawn_max_dlvl = dlvl_last_early_game;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.nr_turns_aware = 32;
+    d.nr_turns_aware = 24;
     d.descr =
         "A mysterious humanoid figure stalking for prey. It is invisible to "
         "normal eyes.";
@@ -2621,6 +2621,7 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
+    d.native_rooms.push_back(RoomType::human);
     data[(size_t)d.id] = d;
     d.reset();
 

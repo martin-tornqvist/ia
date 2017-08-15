@@ -1459,7 +1459,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::ghost);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::std), 35);
+        ItemAttProp(new PropTerrified(PropTurns::std));
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1469,7 +1469,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "slices me with an ethereal sickle"};
     set_dmg_from_mon_id(d, ActorId::phantasm);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::std), 35);
+        ItemAttProp(new PropTerrified(PropTurns::std));
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;

@@ -538,6 +538,7 @@ class Ghost: public Mon
 {
 public:
     Ghost() : Mon() {}
+
     ~Ghost() {}
 
     virtual void mk_start_items() override;
@@ -547,7 +548,7 @@ public:
         return "The Ghost is put to rest.";
     }
 
-private:
+protected:
     DidAction on_act() override;
 };
 
@@ -555,20 +556,27 @@ class Phantasm: public Ghost
 {
 public:
     Phantasm() : Ghost() {}
+
     ~Phantasm() {}
+
     void mk_start_items() override;
 
     std::string death_msg() const override
     {
         return "The Phantasm is put to rest.";
     }
+
+private:
+    DidAction on_act() override;
 };
 
 class Wraith: public Ghost
 {
 public:
     Wraith() : Ghost() {}
+
     ~Wraith() {}
+
     void mk_start_items() override;
 
     std::string death_msg() const override

@@ -1614,7 +1614,7 @@ DidAction Ghost::on_act()
         msg_log::add(name + " reaches for me...");
 
         map::player->prop_handler().apply(
-            new PropSlowed(PropTurns::std));
+            new PropWeakened(PropTurns::std));
 
         game_time::tick();
 
@@ -1627,6 +1627,29 @@ DidAction Ghost::on_act()
 void Ghost::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::ghost_claw));
+}
+
+DidAction Phantasm::on_act()
+{
+    const auto ghost_act = Ghost::on_act();
+
+    if (ghost_act == DidAction::yes)
+    {
+        return DidAction::yes;
+    }
+
+    if (is_alive() &&
+        !has_prop(PropId::cloaked) &&
+        rnd::one_in(20))
+    {
+        prop_handler_->apply(new PropCloaked(PropTurns::indefinite));
+
+        game_time::tick();
+
+        return DidAction::yes;
+    }
+
+    return DidAction::no;
 }
 
 void Phantasm::mk_start_items()
