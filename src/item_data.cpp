@@ -508,6 +508,7 @@ void init_data_list()
     d.ranged.projectile_clr = clr_red_lgt;
     d.ranged.reload_sfx = SfxId::machine_gun_reload;
     d.spawn_std_range.min = dlvl_first_mid_game;
+    d.chance_to_incl_in_spawn_list = 35;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -529,7 +530,7 @@ void init_data_list()
     d.spawn_std_range.min = 5;
     d.max_stack_at_spawn = 1;
     d.ranged.max_ammo = data[(size_t)ItemId::incinerator].ranged.max_ammo;
-    d.chance_to_incl_in_spawn_list = 25;
+    d.chance_to_incl_in_spawn_list = 15;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -560,6 +561,7 @@ void init_data_list()
     d.ranged.makes_ricochet_snd = true;
     d.ranged.reload_sfx = SfxId::machine_gun_reload;
     d.spawn_std_range.min = 2;
+    d.chance_to_incl_in_spawn_list = 75;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -573,6 +575,7 @@ void init_data_list()
         "Ammunition used by Tommy Guns."
     };
     d.ranged.max_ammo = data[(size_t)ItemId::machine_gun].ranged.max_ammo;
+    d.chance_to_incl_in_spawn_list = 50;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -1380,7 +1383,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear a burst of flames.";
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.ranged.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std), 35);
+        ItemAttProp(new PropBurning(PropTurns::std), 50);
     d.ranged.projectile_clr = clr_red_lgt;
     d.ranged.projectile_glyph = '*';
     d.ranged.projectile_tile = TileId::blast1;
@@ -1405,7 +1408,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear a burst of lightning.";
     set_dmg_from_mon_id(d, ActorId::energy_hound);
     d.ranged.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 25);
+        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 50);
     d.ranged.projectile_clr = clr_yellow;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.dmg_type = DmgType::electric;
@@ -2003,13 +2006,13 @@ void init_data_list()
     d.id = ItemId::scroll_spell_shield;
     d.spell_cast_from_scroll = SpellId::spell_shield;
     data[(size_t)d.id] = d;
+
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_vitality;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_spirit;
-    mod_spawn_chance(d, 0.66);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
@@ -2026,12 +2029,10 @@ void init_data_list()
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_r_elec;
-    mod_spawn_chance(d, 0.33);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_conf;
-    mod_spawn_chance(d, 0.66);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
@@ -2046,12 +2047,10 @@ void init_data_list()
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_r_fire;
-    mod_spawn_chance(d, 0.33);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_curing;
-    mod_spawn_chance(d, 0.66);
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
@@ -2478,6 +2477,7 @@ void init_data_list()
     d.ranged.max_range = 3;
     d.max_stack_at_spawn = 1;
     d.main_att_mode = AttMode::thrown;
+    d.chance_to_incl_in_spawn_list = 35;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     data[(size_t)d.id] = d;

@@ -875,7 +875,7 @@ void init_data_list()
     d.spi = 50;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 2;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
@@ -1277,11 +1277,12 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
@@ -1330,11 +1331,12 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 2;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    1),
+        MonGroupSpawnRule(MonGroupSize::few,    3),
+        MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
     d.can_bash_doors = true;
@@ -1522,7 +1524,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
@@ -1561,7 +1563,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 12;
     d.descr =
@@ -1988,7 +1990,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 8;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  4),
@@ -2307,7 +2309,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::see_invis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.actor_size = ActorSize::giant;
     d.can_bash_doors = false;
     d.can_open_doors = false;
@@ -2650,7 +2652,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 24;
     d.descr = "A mummified human being, possibly dating back millennia.";
     d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
@@ -2723,7 +2725,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow + 10;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
@@ -2765,7 +2767,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow + 10;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
@@ -3736,7 +3738,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::infravis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 2;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.is_auto_descr_allowed = true;
@@ -3779,11 +3781,12 @@ void init_data_list()
     d.glyph = 'P';
     d.color = clr_red;
     d.tile = TileId::the_high_priest;
-    d.hp = 70;
+    d.hp = 110;
     d.spi = 999;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 25);
@@ -3823,13 +3826,13 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 10;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
     d.color = clr_green;
     d.tile = TileId::player_firearm;
-    d.hp = 85;
+    d.hp = 100;
     d.spi = 999;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
@@ -3870,19 +3873,19 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 10;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
     d.color = clr_cyan;
     d.tile = TileId::player_melee;
-    d.hp = 60;
+    d.hp = 80;
     d.spi = 999;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
-    d.ability_vals.set_val(AbilityId::melee, 80);
-    d.ability_vals.set_val(AbilityId::dodging, 35);
+    d.ability_vals.set_val(AbilityId::melee, 90);
+    d.ability_vals.set_val(AbilityId::dodging, 50);
     d.ability_vals.set_val(AbilityId::stealth, 120);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
@@ -3917,13 +3920,13 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 10;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
     d.color = clr_brown;
     d.tile = TileId::ghoul;
-    d.hp = 120;
+    d.hp = 140;
     d.spi = 999;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
