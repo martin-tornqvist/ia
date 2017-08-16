@@ -1230,7 +1230,9 @@ void PropHandler::apply(Prop* const prop,
 
                     if (!msg.empty())
                     {
-                        msg_log::add(msg, clr_text, true);
+                        msg_log::add(msg,
+                                     clr_text,
+                                     true);
                     }
                 }
                 else // Is a monster
@@ -1744,6 +1746,7 @@ std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
                     player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
+                    //
                     // NOTE: Since turns left are decremented before the actors
                     //       turn, and checked after the turn - "turns_left"
                     //       practically represents how many more times the

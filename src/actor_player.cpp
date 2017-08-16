@@ -1034,6 +1034,36 @@ void Player::act()
     }
 }
 
+bool Player::is_seeing_burning_feature() const
+{
+    const R fov_r = fov::get_fov_rect(pos);
+
+    bool is_fire_found = false;
+
+    for (int x = fov_r.p0.x; x <= fov_r.p1.x; ++x)
+    {
+        for (int y = fov_r.p0.y; y <= fov_r.p1.y; ++y)
+        {
+            const auto& cell = map::cells[x][y];
+
+            if (cell.is_seen_by_player &&
+                (cell.rigid->burn_state() == BurnState::burning))
+            {
+                is_fire_found = true;
+
+                break;
+            }
+        }
+
+        if (is_fire_found)
+        {
+            break;
+        }
+    }
+
+    return is_fire_found;
+}
+
 void Player::on_actor_turn()
 {
     reset_perm_shock_taken_current_turn();
@@ -1042,6 +1072,19 @@ void Player::on_actor_turn()
 
     // Set current temporary shock from darkness etc
     update_tmp_shock();
+
+    if (active_medical_bag ||
+        (nr_turns_until_handle_armor_done > 0) ||
+        (wait_turns_left > 0) ||
+        (nr_quick_move_steps_left_ > 0))
+    {
+        if (is_seeing_burning_feature())
+        {
+            msg_log::add(msg_fire_prevent_cmd,
+                         clr_text,
+                         true);
+        }
+    }
 
     for (Actor* actor : game_time::actors)
     {
@@ -1079,7 +1122,7 @@ void Player::on_actor_turn()
                             actor->name_a());
 
                     msg_log::add(name_a + " comes into my view.",
-                                 clr_white,
+                                 clr_text,
                                  true);
                 }
 
@@ -1123,7 +1166,7 @@ void Player::on_actor_turn()
                 }
             }
         }
-    }
+    } // actor loop
 
     mon_feeling();
 
@@ -1611,49 +1654,59 @@ void Player::interrupt_actions()
     // Abort putting on / taking off armor?
     if (nr_turns_until_handle_armor_done > 0)
     {
-        const std::string turns_left_str =
-            std::to_string(nr_turns_until_handle_armor_done);
+        bool should_continue = true;
 
-        std::string msg = "";
-
-        if (armor_putting_on_backpack_idx >= 0)
+        if (has_prop(PropId::burning))
         {
-            auto* const item = inv_->backpack_[armor_putting_on_backpack_idx];
-
-            const std::string armor_name =
-                item->name(ItemRefType::plain, ItemRefInf::yes);
-
-            msg =
-                "Continue putting on the " +
-                armor_name +
-                " (" +
-                turns_left_str +
-                " turns left)? [y/n]";
-        }
-        else // Taking off armor, or dropping from armor slot
-        {
-            auto* const item = inv_->item_in_slot(SlotId::body);
-
-            ASSERT(item);
-
-            const std::string armor_name =
-                item->name(ItemRefType::plain, ItemRefInf::yes);
-
-            msg =
-                "Continue taking off the " +
-                armor_name +
-                " (" +
-                turns_left_str +
-                " turns left)? [y/n]";
+            should_continue = false;
         }
 
-        msg_log::add(msg, clr_white_lgt);
+        if (should_continue)
+        {
+            const std::string turns_left_str =
+                std::to_string(nr_turns_until_handle_armor_done);
 
-        const auto should_continue = query::yes_or_no();
+            std::string msg = "";
 
-        msg_log::clear();
+            if (armor_putting_on_backpack_idx >= 0)
+            {
+                auto* const item = inv_->backpack_[armor_putting_on_backpack_idx];
 
-        if (should_continue == BinaryAnswer::no)
+                const std::string armor_name =
+                    item->name(ItemRefType::plain, ItemRefInf::yes);
+
+                msg =
+                    "Continue putting on the " +
+                    armor_name +
+                    " (" +
+                    turns_left_str +
+                    " turns left)? [y/n]";
+            }
+            else // Taking off armor, or dropping from armor slot
+            {
+                auto* const item = inv_->item_in_slot(SlotId::body);
+
+                ASSERT(item);
+
+                const std::string armor_name =
+                    item->name(ItemRefType::plain, ItemRefInf::yes);
+
+                msg =
+                    "Continue taking off the " +
+                    armor_name +
+                    " (" +
+                    turns_left_str +
+                    " turns left)? [y/n]";
+            }
+
+            msg_log::add(msg, clr_white_lgt);
+
+            should_continue = (query::yes_or_no() == BinaryAnswer::yes);
+
+            msg_log::clear();
+        }
+
+        if (!should_continue)
         {
             nr_turns_until_handle_armor_done = 0;
 

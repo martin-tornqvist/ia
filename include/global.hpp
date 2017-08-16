@@ -132,6 +132,8 @@ const std::string msg_disarm_no_trap = "I find nothing there to disarm.";
 
 const std::string msg_mon_prevent_cmd = "Not while an enemy is near.";
 
+const std::string msg_fire_prevent_cmd = "Fire is spreading!";
+
 const std::string spell_resist_msg = "The spell is resisted!";
 
 const std::string spell_reflect_msg = "The spell is reflected!";

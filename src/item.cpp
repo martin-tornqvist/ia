@@ -1266,8 +1266,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
 
         return ConsumeItem::no;
     }
-
-    if (map::player->has_prop(PropId::poisoned))
+    else if (map::player->has_prop(PropId::poisoned))
     {
         msg_log::add("Not while poisoned.");
 
@@ -1275,17 +1274,24 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
 
         return ConsumeItem::no;
     }
-
-    const auto seen_foes = map::player->seen_foes();
-
-    if (!seen_foes.empty())
+    else if (map::player->is_seeing_burning_feature())
     {
-        msg_log::add("Not while an enemy is near.");
+        msg_log::add(msg_fire_prevent_cmd);
 
         current_action_ = MedBagAction::END;
 
         return ConsumeItem::no;
     }
+    else if (!map::player->seen_foes().empty())
+    {
+        msg_log::add(msg_mon_prevent_cmd);
+
+        current_action_ = MedBagAction::END;
+
+        return ConsumeItem::no;
+    }
+
+    // OK, we are allowed to use the medical bag
 
     current_action_ = choose_action();
 
@@ -1626,7 +1632,9 @@ void Dynamite::on_std_turn_player_hold_ignited()
 
         fuse_msg += "***";
 
-        msg_log::add(fuse_msg, clr_yellow);
+        msg_log::add(fuse_msg,
+                     clr_yellow,
+                     true);
     }
     else // Fuse has run out
     {

@@ -333,9 +333,15 @@ void handle_player_input(const InputData& input)
     //
     case 's':
     {
-        const auto seen_mon = map::player->seen_foes();
-
-        if (seen_mon.empty())
+        if (map::player->is_seeing_burning_feature())
+        {
+            msg_log::add(msg_fire_prevent_cmd);
+        }
+        else if (!map::player->seen_foes().empty())
+        {
+            msg_log::add(msg_mon_prevent_cmd);
+        }
+        else // We are allowed to wait
         {
             //
             // NOTE: We should not print any "wait" message here, since it will
@@ -353,10 +359,6 @@ void handle_player_input(const InputData& input)
             map::player->wait_turns_left = turns_to_apply - 1;
 
             game_time::tick();
-        }
-        else // There are seen monsters
-        {
-            msg_log::add(msg_mon_prevent_cmd);
         }
     }
     break;
@@ -632,28 +634,26 @@ void handle_player_input(const InputData& input)
     //
     case 'e':
     {
-        const auto seen_mon = map::player->seen_foes();
-
-        if (!seen_mon.empty())
+        if (map::player->is_seeing_burning_feature())
         {
-            // Monster is seen, prevent quick move
+            msg_log::add(msg_fire_prevent_cmd);
+        }
+        else if (!map::player->seen_foes().empty())
+        {
             msg_log::add(msg_mon_prevent_cmd);
         }
         else if (!map::player->prop_handler().allow_see())
         {
-            // Player is blinded
             msg_log::add("Not while blind.");
         }
-        else // Can see
+        else // We are allowed to use auto-walk
         {
             if (map::player->has_prop(PropId::poisoned))
             {
-                // Player is poisoned
                 msg_log::add("Not while poisoned.");
             }
             else if (map::player->has_prop(PropId::confused))
             {
-                // Player is confused
                 msg_log::add("Not while confused.");
             }
             else
@@ -944,7 +944,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->prop_handler().apply(
-            new PropDescend(PropTurns::std));
+            new PropInfected(PropTurns::std));
     }
     break;
 

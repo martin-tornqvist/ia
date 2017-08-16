@@ -59,6 +59,8 @@ public:
 
     std::vector<Actor*> seen_foes() const override;
 
+    bool is_seeing_burning_feature() const;
+
     void act() override;
 
     void move(Dir dir) override;

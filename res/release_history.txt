@@ -85,6 +85,7 @@ Interface
 * You now also go to the postmortem menu after winning the game, and a game summary file is written
 * When browsing high scores, selecting an entry shows the game summary for that entry
 * The game no longer pre-loads the ambient sound effects (they are now only loaded on demand) - vastly reducing the program load time (should be nearly instant on most systems) and initial memory usage
+* Seeing fire on the map now interrupts actions such as waiting or using medical equipment
 
 Bug fixes
 * On some machines, the random number generator would have a fixed seed (apparently, the C++ std::random_device can silently fall back on this method if it cannot find a source of randomness...), resulting in deterministic map generation, etc - the RNG is now seeded with the current time instead
