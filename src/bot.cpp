@@ -207,10 +207,10 @@ void act()
         return;
     }
 
+    auto& inv = map::player->inv();
+
     // Use an Incinerator as ranged weapon
     {
-        auto& inv = map::player->inv();
-
         auto* wpn_item = inv.item_in_slot(SlotId::wpn);
 
         if (!wpn_item || wpn_item->data().ranged.is_ranged_wpn)
@@ -224,6 +224,16 @@ void act()
                 item_factory::mk(ItemId::incinerator),
                 Verbosity::silent);
         }
+    }
+
+    // If no armor, occasionally equip an asbesthos suite (helps not getting
+    // stuck on e.g. Energy Hounds)
+    if (!inv.slots_[(size_t)SlotId::body].item &&
+        rnd::one_in(20))
+    {
+        inv.put_in_slot(SlotId::body,
+                        item_factory::mk(ItemId::armor_asb_suit),
+                        Verbosity::silent);
     }
 
     PropHandler& prop_handler = map::player->prop_handler();
