@@ -523,7 +523,10 @@ void InsParanoia::on_start_hook()
                                   MakeMonAware::yes,
                                   nullptr);
 
-        ASSERT(summoned.size() == 1);
+        if (summoned.empty())
+        {
+            return;
+        }
 
         Mon* const mon = summoned[0];
 
