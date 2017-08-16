@@ -1610,7 +1610,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.spawn_max_dlvl = 999;
+    d.spawn_max_dlvl = dlvl_last - 2;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 12;
     d.descr =
@@ -2126,6 +2126,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 60);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 6;
+    d.spawn_max_dlvl = dlvl_last - 6;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  5),
@@ -2192,6 +2193,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 80);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 12;
+    d.spawn_max_dlvl = dlvl_last - 2;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
@@ -3064,6 +3066,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone, 2)
@@ -3383,6 +3386,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_blind] = true;
     d.natural_props[(size_t)PropId::infravis] = true;
     d.spawn_min_dlvl = 14;
+    d.spawn_max_dlvl = dlvl_last - 6;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 8;
     d.can_open_doors = false;

@@ -1273,7 +1273,7 @@ std::vector<RoomAutoFeatureRule> CaveRoom::auto_features_allowed() const
     return
     {
         {FeatureId::rubble_low, rnd::range(2, 4)},
-        {FeatureId::stalagmite, rnd::range(2, 12)}
+        {FeatureId::stalagmite, rnd::range(1, 4)}
     };
 }
 

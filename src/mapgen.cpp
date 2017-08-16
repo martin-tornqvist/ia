@@ -45,8 +45,10 @@ void connect_rooms()
 
     while (true)
     {
+        //
         // NOTE: Keep this counter at the top of the loop, since otherwise a
         //       continue statement could bypass it so we get stuck in the loop.
+        //
         --nr_tries_left;
 
         if (nr_tries_left == 0)
@@ -194,7 +196,8 @@ void allowed_stair_cells(bool out[map_w][map_h])
     {
         FeatureId::floor,
         FeatureId::carpet,
-        FeatureId::grass
+        FeatureId::grass,
+        FeatureId::rubble_low
     };
 
     map_parsers::AllAdjIsAnyOfFeatures(feat_ids_ok)

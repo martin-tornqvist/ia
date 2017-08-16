@@ -13,8 +13,14 @@ R Region::rnd_room_rect() const
     const P max_size(r.p1 - r.p0 + 1);
 
     // Set random width and height using binomial distribution
-    const double w_p = 0.40;
-    const double h_p = 0.75;
+    double w_p = 0.40;
+    double h_p = 0.75;
+
+    if (map::dlvl >= dlvl_first_late_game)
+    {
+        w_p /= 3.0;
+        h_p /= 3.0;
+    }
 
     const int w = rnd::range_binom(min_size.x,
                                    max_size.x,
