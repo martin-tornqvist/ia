@@ -117,35 +117,10 @@ void Mon::act()
 
     if (has_prop(PropId::conflict))
     {
-        //
-        // TODO: The targetting system has changed, consider the code below
-        //
+        // Monster is conflicted (e.g. by Horn of Malice)
+        tgt_bucket = seen_actors();
 
-        // Monster is conflicted (e.g. by player ring/amulet)
-        tgt_bucket = game_time::actors;
-
-        bool hard_blocked_los[map_w][map_h];
-
-        const R fov_rect = fov::get_fov_rect(pos);
-
-        map_parsers::BlocksLos()
-            .run(hard_blocked_los,
-                 MapParseMode::overwrite,
-                 fov_rect);
-
-        // Remove self and all unseen actors from vector
-        for (auto it = begin(tgt_bucket); it != end(tgt_bucket);)
-        {
-            if ((*it == this) ||
-                !can_see_actor(**it, hard_blocked_los))
-            {
-                tgt_bucket.erase(it);
-            }
-            else // Is a seen actor
-            {
-                ++it;
-            }
-        }
+        is_tgt_seen_ = !tgt_bucket.empty();
     }
     else // Not conflicted
     {
