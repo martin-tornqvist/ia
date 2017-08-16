@@ -869,13 +869,13 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::normal;
     d.spell_skill = SpellSkill::master;
     d.glyph = 'P';
-    d.color = clr_white;
+    d.color = clr_blue_lgt;
     d.tile = TileId::witch_or_warlock;
-    d.hp = 36;
+    d.hp = 40;
     d.spi = 50;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.spawn_min_dlvl = dlvl_first_late_game;
-    d.spawn_max_dlvl = dlvl_last - 2;
+    d.spawn_max_dlvl = dlvl_last - 1;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.can_open_doors = true;
@@ -1324,7 +1324,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 5;
     d.dmg_ranged = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 80);
-    d.ability_vals.set_val(AbilityId::ranged, 70);
+    d.ability_vals.set_val(AbilityId::ranged, 75);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_elec] = true;
     d.natural_props[(size_t)PropId::r_fire] = true;
@@ -2689,6 +2689,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.spawn_min_dlvl = dlvl_first_mid_game + 4;
+    d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  20),
