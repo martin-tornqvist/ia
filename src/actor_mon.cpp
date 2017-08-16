@@ -2213,7 +2213,7 @@ void Ooze::on_std_turn_hook()
     if (is_alive() &&
         !has_prop(PropId::burning))
     {
-        restore_hp(1, false, Verbosity::silent);
+        restore_hp(2, false, Verbosity::silent);
     }
 }
 

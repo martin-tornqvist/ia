@@ -1673,8 +1673,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "spews infected pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_putrid);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std),
-                    50);
+        ItemAttProp(new PropInfected(PropTurns::std));
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 

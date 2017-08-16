@@ -3250,7 +3250,7 @@ void init_data_list()
     d.glyph = 'o';
     d.color = clr_green;
     d.tile = TileId::ooze;
-    d.hp = 16;
+    d.hp = 18;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
