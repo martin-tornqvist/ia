@@ -2417,7 +2417,7 @@ Tomb::Tomb(const P& p) :
                                     nr_items_max));
 
     // Appearance
-    if (rnd::one_in(20))
+    if (rnd::one_in(12))
     {
         // Do not base appearance on items (random appearance)
         const int nr_app = (int)TombAppearance::END;
@@ -2940,7 +2940,8 @@ Chest::Chest(const P& p) :
     is_locked_              (false),
     matl_                   (ChestMatl::wood)
 {
-    if (map::dlvl >= 3 && rnd::coin_toss())
+    if (map::dlvl >= 3 &&
+        rnd::fraction(2, 3))
     {
         matl_ = ChestMatl::iron;
     }
