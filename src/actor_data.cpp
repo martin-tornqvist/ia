@@ -792,7 +792,7 @@ void init_data_list()
     d.hp = 6;
     d.spi = 30;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.spawn_min_dlvl = 4;
+    d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
@@ -854,11 +854,11 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "a Grand Wizard";
-    d.name_the = "the Grand Wizard";
-    d.corpse_name_a = "a Grand Wizard corpse";
-    d.corpse_name_the = "the Grand Wizard corpse";
-    d.id = ActorId::cultist_grand_wizard;
+    d.name_a = "an Arch Wizard";
+    d.name_the = "the Arch Wizard";
+    d.corpse_name_a = "an Arch Wizard corpse";
+    d.corpse_name_the = "the Arch Wizard corpse";
+    d.id = ActorId::cultist_arch_wizard;
     d.ai[(size_t)AiId::looks] = true;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = false;
@@ -882,7 +882,7 @@ void init_data_list()
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
     d.descr =
-        "A fanatic cultist of the Grand Wizard rank, madly gibbering in some "
+        "A fanatic cultist of the Arch Wizard rank, madly gibbering in some "
         "half-lost language.";
     d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "mutters incantations.";

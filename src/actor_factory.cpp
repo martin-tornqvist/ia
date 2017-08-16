@@ -127,8 +127,8 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::cultist_wizard:
         return new CultistWizard();
 
-    case ActorId::cultist_grand_wizard:
-        return new CultistGrandWizard();
+    case ActorId::cultist_arch_wizard:
+        return new CultistArchWizard();
 
     case ActorId::keziah_mason:
         return new KeziahMason();

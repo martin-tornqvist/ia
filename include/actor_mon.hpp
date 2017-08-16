@@ -459,11 +459,11 @@ public:
     void mk_start_items() override;
 };
 
-class CultistGrandWizard: public Cultist
+class CultistArchWizard: public Cultist
 {
 public:
-    CultistGrandWizard() : Cultist() {}
-    ~CultistGrandWizard() {}
+    CultistArchWizard() : Cultist() {}
+    ~CultistArchWizard() {}
     void mk_start_items() override;
 };
 

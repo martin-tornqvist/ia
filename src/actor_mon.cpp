@@ -1475,7 +1475,7 @@ void CultistWizard::mk_start_items()
     }
 }
 
-void CultistGrandWizard::mk_start_items()
+void CultistArchWizard::mk_start_items()
 {
     spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);

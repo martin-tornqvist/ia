@@ -24,7 +24,7 @@ enum class ActorId
     cultist,
     cultist_priest,
     cultist_wizard,
-    cultist_grand_wizard,
+    cultist_arch_wizard,
     bog_tcher,
     rat,
     rat_thing,
