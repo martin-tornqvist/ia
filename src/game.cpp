@@ -646,36 +646,33 @@ void handle_player_input(const InputData& input)
         {
             msg_log::add("Not while blind.");
         }
+        else if (map::player->has_prop(PropId::poisoned))
+        {
+            msg_log::add("Not while poisoned.");
+        }
+        else if (map::player->has_prop(PropId::confused))
+        {
+            msg_log::add("Not while confused.");
+        }
         else // We are allowed to use auto-walk
         {
-            if (map::player->has_prop(PropId::poisoned))
+            msg_log::add("Which direction?" + cancel_info_str,
+                         clr_white_lgt);
+
+            const Dir input_dir = query::dir(AllowCenter::no);
+
+            msg_log::clear();
+
+            if (input_dir == Dir::END || input_dir == Dir::center)
             {
-                msg_log::add("Not while poisoned.");
+                // Invalid direction
+                io::update_screen();
             }
-            else if (map::player->has_prop(PropId::confused))
+            else // Valid direction
             {
-                msg_log::add("Not while confused.");
+                map::player->set_quick_move(input_dir);
             }
-            else
-            {
-                msg_log::add("Which direction?" + cancel_info_str,
-                             clr_white_lgt);
 
-                const Dir input_dir = query::dir(AllowCenter::no);
-
-                msg_log::clear();
-
-                if (input_dir == Dir::END || input_dir == Dir::center)
-                {
-                    // Invalid direction
-                    io::update_screen();
-                }
-                else // Valid direction
-                {
-                    map::player->set_quick_move(input_dir);
-                }
-
-            }
         }
     }
     break;
@@ -1105,7 +1102,7 @@ void win_game()
 
     const int padding = 9;
 
-    const int X0 = padding;
+    const int x0 = padding;
 
     const int max_w = map_w - (padding * 2);
 
@@ -1120,10 +1117,10 @@ void win_game()
         for (const std::string& line : section_lines)
         {
             io::draw_text(line,
-                              Panel::screen,
-                              P(X0, y),
-                              clr_white,
-                              clr_black);
+                          Panel::screen,
+                          P(x0, y),
+                          clr_white,
+                          clr_black);
 
             io::update_screen();
 
@@ -1138,10 +1135,13 @@ void win_game()
 
     const std::string cmd_label = "[space/esc/enter] to continue";
 
-    io::draw_text(cmd_label,
-                  Panel::screen,
-                  P(X0, screen_h - 2),
-                  clr_menu_drk);
+    io::draw_text_center(
+        "[space/esc/enter] to continue",
+        Panel::screen,
+        P(map_w_half, screen_h - 2),
+        clr_menu_drk,
+        clr_black,
+        false);
 
     io::update_screen();
 
