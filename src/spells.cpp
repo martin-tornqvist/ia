@@ -883,135 +883,169 @@ void SpellMayhem::run_effect(Actor* const caster,
 
     const P& caster_pos = caster->pos;
 
+    const int destr_radi = fov_std_radi_int + (int)skill * 2;
+
+    const int x0 = std::max(1, caster_pos.x - destr_radi);
+    const int y0 = std::max(1, caster_pos.y - destr_radi);
+    const int x1 = std::min(map_w - 1, caster_pos.x + destr_radi) - 1;
+    const int y1 = std::min(map_h - 1, caster_pos.y + destr_radi) - 1;
+
     //
     // Run explosions
     //
+    std::vector<P> p_bucket;
+
+    const int expl_radi_diff = -1;
+
+    for (int x = x0; x <= x1; ++x)
     {
-        const int expl_area_radi = fov_std_radi_int + 2;
-
-        const int x0 = std::max(1, caster_pos.x - expl_area_radi);
-        const int y0 = std::max(1, caster_pos.y - expl_area_radi);
-        const int x1 = std::min(map_w - 1, caster_pos.x + expl_area_radi) - 1;
-        const int y1 = std::min(map_h - 1, caster_pos.y + expl_area_radi) - 1;
-
-        std::vector<P> p_bucket;
-
-        const int expl_radi_diff = -1;
-
         for (int y = y0; y <= y1; ++y)
         {
-            for (int x = x0; x <= x1; ++x)
+            const Rigid* const f = map::cells[x][y].rigid;
+
+            if (!f->can_move_common())
+            {
+                continue;
+            }
+
+            const P p(x, y);
+
+            const int dist = king_dist(caster_pos, p);
+
+            const int min_dist = expl_std_radi + 1 + expl_radi_diff;
+
+            if (dist >= min_dist)
+            {
+                p_bucket.push_back(p);
+            }
+        }
+    }
+
+    int nr_expl = 2 + (int)skill;
+
+    for (int i = 0; i < nr_expl; ++i)
+    {
+        if (p_bucket.empty())
+        {
+            return;
+        }
+
+        const size_t idx = rnd::range(0, p_bucket.size() - 1);
+
+        const P& p = rnd::element(p_bucket);
+
+        explosion::run(p,
+                       ExplType::expl,
+                       ExplSrc::misc,
+                       EmitExplSnd::yes,
+                       expl_radi_diff);
+
+        p_bucket.erase(p_bucket.begin() + idx);
+    }
+
+    //
+    // Explode braziers
+    //
+    for (int x = x0; x <= x1; ++x)
+    {
+        for (int y = y0; y <= y1; ++y)
+        {
+            const auto id = map::cells[x][y].rigid->id();
+
+            if (id == FeatureId::brazier)
             {
                 const P p(x, y);
 
-                const int dist = king_dist(caster_pos, p);
+                Snd snd("I hear an explosion!",
+                        SfxId::explosion_molotov,
+                        IgnoreMsgIfOriginSeen::yes,
+                        p,
+                        nullptr,
+                        SndVol::high,
+                        AlertsMon::yes);
 
-                const int min_dist = expl_std_radi + 1 + expl_radi_diff;
+                snd.run();
 
-                if (dist >= min_dist)
-                {
-                    p_bucket.push_back(p);
-                }
+                map::put(new RubbleLow(p));
+
+                explosion::run(p,
+                               ExplType::apply_prop,
+                               ExplSrc::misc,
+                               EmitExplSnd::yes,
+                               0,
+                               ExplExclCenter::yes,
+                               {new PropBurning(PropTurns::std)});
             }
-        }
-
-        int nr_expl = 2 + (int)skill;
-
-        for (int i = 0; i < nr_expl; ++i)
-        {
-            if (p_bucket.empty())
-            {
-                return;
-            }
-
-            const size_t idx = rnd::range(0, p_bucket.size() - 1);
-
-            const P& p = rnd::element(p_bucket);
-
-            explosion::run(p,
-                           ExplType::expl,
-                           ExplSrc::misc,
-                           EmitExplSnd::yes,
-                           expl_radi_diff);
-
-            p_bucket.erase(p_bucket.begin() + idx);
         }
     }
 
     //
     // Destroy the surrounding environment
     //
+    const int nr_sweeps = 2 + (int)skill;
+
+    for (int i = 0; i < nr_sweeps; ++i)
     {
-        const int nr_sweeps = 1 + (int)skill;
-
-        const int destr_radi = fov_std_radi_int + (int)skill * 2;
-
-        const int x0 = std::max(1, caster_pos.x - destr_radi);
-        const int y0 = std::max(1, caster_pos.y - destr_radi);
-        const int x1 = std::min(map_w - 1, caster_pos.x + destr_radi) - 1;
-        const int y1 = std::min(map_h - 1, caster_pos.y + destr_radi) - 1;
-
-        for (int i = 0; i < nr_sweeps; ++i)
+        for (int x = x0; x <= x1; ++x)
         {
-            for (int x = x0; x <= x1; ++x)
+            for (int y = y0; y <= y1; ++y)
             {
-                for (int y = y0; y <= y1; ++y)
+                if (!rnd::one_in(8))
                 {
-                    bool is_adj_to_walkable_cell = false;
+                    continue;
+                }
 
-                    for (int dx = -1; dx <= 1; ++dx)
+                bool is_adj_to_walkable_cell = false;
+
+                for (const P& d : dir_utils::dir_list)
+                {
+                    const P p_adj(P(x, y) + d);
+
+                    const Rigid* const f = map::cells[p_adj.x][p_adj.y].rigid;
+
+                    if (f->can_move_common())
                     {
-                        for (int dy = -1; dy <= 1; ++dy)
-                        {
-                            const Rigid* const f =
-                                map::cells[x + dx][y + dy].rigid;
-
-                            if (f->can_move_common())
-                            {
-                                is_adj_to_walkable_cell = true;
-                            }
-                        }
+                        is_adj_to_walkable_cell = true;
                     }
+                }
 
-                    if (is_adj_to_walkable_cell &&
-                        rnd::one_in(8))
-                    {
-                        map::cells[x][y].rigid->hit(
-                            1, // Damage (doesn't matter)
-                            DmgType::physical,
-                            DmgMethod::explosion,
-                            nullptr);
-                    }
+                if (is_adj_to_walkable_cell)
+                {
+                    map::cells[x][y].rigid->hit(
+                        1, // Damage (doesn't matter)
+                        DmgType::physical,
+                        DmgMethod::explosion,
+                        nullptr);
                 }
             }
         }
+    }
 
-        // Let's add some extra chaos - put blood, and set stuff on fire
+    // Put blood, and set stuff on fire
+    for (int x = x0; x <= x1; ++x)
+    {
         for (int y = y0; y <= y1; ++y)
         {
-            for (int x = x0; x <= x1; ++x)
+            auto* const f = map::cells[x][y].rigid;
+
+            if (f->can_have_blood() &&
+                rnd::one_in(10))
             {
-                auto* const f = map::cells[x][y].rigid;
+                f->mk_bloody();
 
-                if (f->can_have_blood() &&
-                    rnd::one_in(10))
+                if (rnd::one_in(3))
                 {
-                    f->mk_bloody();
-
-                    if (rnd::one_in(3))
-                    {
-                        f->try_put_gore();
-                    }
+                    f->try_put_gore();
                 }
+            }
 
-                if ((P(x, y) != caster->pos) &&
-                    rnd::one_in(6))
-                {
-                    f->hit(1, // Damage (doesn't matter)
-                           DmgType::fire,
-                           DmgMethod::elemental,
-                           nullptr);
-                }
+            if ((P(x, y) != caster->pos) &&
+                rnd::one_in(6))
+            {
+                f->hit(1, // Damage (doesn't matter)
+                       DmgType::fire,
+                       DmgMethod::elemental,
+                       nullptr);
             }
         }
     }

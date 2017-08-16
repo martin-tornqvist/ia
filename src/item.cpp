@@ -863,7 +863,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
                 AlertsMon::yes,
                 MorePromptOnMsg::no);
 
-        snd_emit::run(snd);
+        snd.run();
 
         map::player->on_feed();
     }
@@ -1700,7 +1700,7 @@ void Molotov::on_std_turn_player_hold_ignited()
                 SndVol::high,
                 AlertsMon::yes);
 
-        snd_emit::run(snd);
+        snd.run();
 
         explosion::run(player_pos,
                        ExplType::apply_prop,
@@ -1726,7 +1726,7 @@ void Molotov::on_thrown_ignited_landing(const P& p)
             SndVol::high,
             AlertsMon::yes);
 
-    snd_emit::run(snd);
+    snd.run();
 
     explosion::run(p,
                    ExplType::apply_prop,
@@ -1754,7 +1754,7 @@ void Molotov::on_player_paralyzed()
             SndVol::high,
             AlertsMon::yes);
 
-    snd_emit::run(snd);
+    snd.run();
 
     explosion::run(player_pos,
                    ExplType::apply_prop,
