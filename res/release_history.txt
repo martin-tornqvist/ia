@@ -17,24 +17,26 @@ Gameplay
 * Removed Potion of Clairvoyance
 * The Potion of Invisibility effect ends when attacking or casting spells, and has much shorter duration
 * Removed the "Sacrifice Life"/"Spirit" spells
-* Improved AI of player allied  monsters - they are now much more active in pursuing enemies
 * The spell "Summon Creature" picks more sensible monsters when cast by the player (e.g. a Wolf will not appear when cast at Master level)
+* Improved AI of player allied  monsters - they are now much more active in pursuing enemies
 * Added trait "Stout Spirit" (before "Strong"/"Mighty Spirit")
 * Added trait "Absorption" for Occultists - blocking a spell restores 1d6 Spirit
 * Added trait "Resistant" - halved damage from fire and electricity
-* Mind Eaters are not allowed to attack or feed for a few turns after feeding (to avoid locking the player), they now also move at normal speed, and have fewer Hit Points than before
+* Mind Eaters (now called Mind Leeches) can no longer paralyze the player
 * The "snake emerge" and "wall crumbling" events are much rarer
-* Reduced duration of Blindness from Raven attacks
 * "Snake pit" rooms now contains much fewer monsters (instead of filling the whole room)
-* Oozes have much shorter awareness duration, somewhat fewer hit points, and tend to spawn in smaller groups
+* Oozes have much shorter awareness duration and tend to spawn in smaller groups
 * Keziah Mason starts together with Brown Jenkin, instead of spending a turn to summon it when she sees the player
+* Monsters now attempt to detect the player by vision on standard turns, instead of on their own turns (to prevent very fast monsters from detecting the player too easily)
+* Ravens, Bats, and Vampire Bats no longer actively moves towards the player, but will attack if adjacent
+* Byakhees are slower
 * Ghoul characters have +10% speed and +1 natural Armor Point
 * Adjusted Potion of Poison duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damage is slower, but poisoning generally lasts longer
 * XP gained from Monoliths increased from 15% to 20%
 * Rod of Cloud Minds (which the Rogue starts with) now only requires 90 turns to recharge (or 45 with the Electrically Inclined trait)
 * Unidentified Rods do not display their recharge countdown - attempting to use an unidentified Rod before it's recharged wastes a turn (with the same message as if the effect is unknown), but does not reset the countdown
-* Removed the damage bonuses from the Marksman traits (it made ranged combat overpowered)
+* Removed the damage bonuses from the Marksman traits (it made ranged combat very overpowered)
 * Removed Armor Points bonus from Tough/Rugged traits
 * Added trait "Thick Skinned", which gives +1 Armor Point
 * Each melee trait gives +5% chance to evade melee attacks
@@ -47,19 +49,16 @@ Gameplay
 * The "auto move" command ("e") now also stops before hanging vines
 * Greatly reduced the ability penalties for wearing Iron Suit, and slightly reduced the penalties for the other armors
 * Putting on, taking off, or dropping armor now takes multiple turns
-* Properties applied from attacks (such as paralyzation or blindness) now have a certain percent chance to get applied, with a separate chance for each type of weapon or attack - many attacks still have 100% chance to apply their effect, but some now have a lower chance (especially very harsh effects like burning from Fire Hound breathing/biting, paralyzation from White Spider bites, or confusion from Mind Worms bites)
-* Paralyzation can now be re-applied while already active
-* Paralyzed actors always have 100% speed (so that very fast monsters like Bats doesn't immediately start moving again)
-* Monsters now attempt to detect the player by vision on standard turns, instead of on their own turns (to prevent very fast monsters from detecting the player too easily)
-* Ravens, Bats, and Vampire Bats no longer actively moves towards the player
-* Byakhees are slower
-* Much higher chances that monsters become "wary" instead of immediately detecting the player
+* Properties applied from monster attacks (such as paralyzation or blindness) have a certain percent chance to get applied - many attacks still have 100% chance to apply their effect, but some now have a lower chance (such as paralyzation from White Spider bites, or confusion from Mind Worms)
+* Paralyzation can be re-applied while already active
+* Paralyzed actors always have 100% speed, so that very fast monsters (such as  Bats) does not immediately start moving again
+* Much higher chances that monsters become "wary" first, instead of immediately detecting the player
 * When monsters detect the player due to sounds, they pause for one turn (just like they already did when detecing by vision)
 * Burning no longer completely prevents reading manuscripts or casting spells - instead there is a 50% chance to fail (wasting the manuscript or spirit upon failure)
 * Removed the regeneration aspect from the Orb of Life
 * The Horn of Banishment now also works on Major Clapham Lee's summoned "Tomb Legions"
 * Gas masks now also protects against gas explosion traps
-* Insanity increases by random value within 12-18%, instead of a fixed 5%
+* Insanity increases by random value within 12-18%, instead of 5%
 * Shock from carrying disturbing items reduced to 0.05% shock per turn (from 0.1%)
 * The Rogue background receives -25% passive shock (instead of -50%)
 * Reduced the penalty for each wound to -5% melee hit chance (instead of -10%), -5% dodging (instead of -10%), and no penalty to ranged attacks (instead of -5%)
