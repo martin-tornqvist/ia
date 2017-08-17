@@ -1474,6 +1474,10 @@ InputData get(const bool is_o_return)
             case SDL_WINDOWEVENT_RESTORED:
             {
                 io::update_screen();
+
+                clear_events();
+
+                sdl_base::sleep(100);
             }
             break;
 
@@ -1484,9 +1488,12 @@ InputData get(const bool is_o_return)
         break;
 
         case SDL_QUIT:
+        {
             ret = InputData(SDLK_ESCAPE);
+
             is_done = true;
-            break;
+        }
+        break;
 
         case SDL_KEYDOWN:
         {
