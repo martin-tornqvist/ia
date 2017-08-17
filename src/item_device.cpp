@@ -116,38 +116,33 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         const std::string hurt_msg  = "It hits me with a jolt of electricity!";
 
         bool is_effect_failed = false;
+
         bool is_cond_degrade = false;
+
         bool is_warning = false;
 
-        int bon = 0;
-
-        if (actor->has_prop(PropId::blessed))
-        {
-            bon += 2;
-        }
-
-        if (actor->has_prop(PropId::cursed))
-        {
-            bon -= 2;
-        }
+        int max = 8;
 
         if (actor->is_player() &&
             player_bon::traits[(size_t)Trait::elec_incl])
         {
-            bon += 2;
+            max += 2;
         }
 
-        const int rnd = rnd::range(1, 8 + bon);
+        const int rnd = rnd::range(1, max);
 
         switch (condition_)
         {
         case Condition::breaking:
         {
-            is_cond_degrade = rnd <= 2;
+            is_cond_degrade = (rnd <= 2);
 
-            is_effect_failed = rnd == 3 || rnd == 4;
+            is_effect_failed =
+                (rnd == 3) ||
+                (rnd == 4);
 
-            if (rnd == 5 || rnd == 6)
+            if ((rnd == 5) ||
+                (rnd == 6))
             {
                 msg_log::add(hurt_msg,
                              clr_msg_bad);
@@ -156,15 +151,17 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                            DmgType::electric);
             }
 
-            is_warning = rnd == 7 || rnd == 8;
+            is_warning =
+                (rnd == 7) ||
+                (rnd == 8);
         }
         break;
 
         case Condition::shoddy:
         {
-            is_cond_degrade = rnd <= 2;
+            is_cond_degrade = (rnd <= 2);
 
-            is_effect_failed = rnd == 3;
+            is_effect_failed = (rnd == 3);
 
             if (rnd == 4)
             {
@@ -175,15 +172,19 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                            DmgType::electric);
             }
 
-            is_warning = rnd == 5 || rnd == 6;
+            is_warning =
+                (rnd == 5) ||
+                (rnd == 6);
         }
         break;
 
         case Condition::fine:
         {
-            is_cond_degrade = rnd <= 2;
+            is_cond_degrade = (rnd <= 2);
 
-            is_warning = rnd == 3 || rnd == 4;
+            is_warning =
+                (rnd == 3) ||
+                (rnd == 4);
         }
         break;
         }
@@ -385,6 +386,9 @@ ConsumeItem DeviceRejuvenator::trigger_effect()
     }
 
     map::player->restore_hp(999);
+
+    map::player->incr_shock(ShockLvl::mind_shattering,
+                            ShockSrc::use_strange_item);
 
     return ConsumeItem::no;
 }

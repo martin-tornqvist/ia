@@ -102,7 +102,8 @@ private:
     {
         return
             "When activated, this device heals all wounds and physical "
-            "maladies.";
+            "maladies. The procedure is very painful and invasive "
+            "however, and causes great shock to the user.";
     }
 
     ConsumeItem trigger_effect() override;
