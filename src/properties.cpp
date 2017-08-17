@@ -1226,6 +1226,7 @@ void PropHandler::apply(Prop* const prop,
                 if (is_player)
                 {
                     std::string msg = "";
+
                     prop->msg(PropMsg::res_player, msg);
 
                     if (!msg.empty())
@@ -1356,7 +1357,12 @@ void PropHandler::apply(Prop* const prop,
 
             if (!msg.empty())
             {
-                msg_log::add(msg, clr_text, true);
+                const bool is_interrupting =
+                    (prop->alignment() != PropAlignment::good);
+
+                msg_log::add(msg,
+                             clr_text,
+                             is_interrupting);
             }
         }
         else // Is monster
