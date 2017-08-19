@@ -932,6 +932,7 @@ void trait_prereqs(const Trait trait,
 
     case Trait::imperceptible:
         traits_out.push_back(Trait::stealthy);
+        bg_out = Bg::rogue;
         break;
 
     case Trait::silent:

@@ -558,7 +558,7 @@ void init_data_list()
     d.hp = 4;
     d.spi = 12;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.ability_vals.set_val(AbilityId::ranged, 60);
+    d.ability_vals.set_val(AbilityId::ranged, 65);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
@@ -2341,7 +2341,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'L';
     d.color = clr_yellow_drk;
     d.tile = TileId::leech;
@@ -2390,7 +2390,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'L';
     d.color = clr_red_lgt;
     d.tile = TileId::leech;
@@ -2436,7 +2436,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'L';
     d.color = clr_violet;
     d.tile = TileId::leech;
@@ -2591,7 +2591,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'M';
     d.color = clr_yellow;
     d.tile = TileId::shadow;

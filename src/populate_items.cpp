@@ -20,7 +20,7 @@ namespace
 
 int nr_items()
 {
-    int nr = rnd::range(4, 5);
+    int nr = rnd::range(3, 5);
 
     if (player_bon::traits[(size_t)Trait::treasure_hunter])
     {

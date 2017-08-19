@@ -516,8 +516,9 @@ void StdRoom::place_auto_features()
 std::vector<RoomAutoFeatureRule> PlainRoom::auto_features_allowed() const
 {
     const int fountain_one_in_n =
-        (map::dlvl <= 4) ? 5 :
-        (map::dlvl <= dlvl_last_mid_game) ? 10 : 20;
+        (map::dlvl <= 4) ? 7 :
+        (map::dlvl <= dlvl_last_mid_game) ? 10 :
+        20;
 
     return
     {

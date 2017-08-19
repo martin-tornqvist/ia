@@ -663,7 +663,7 @@ void Player::incr_insanity()
 
     if (!config::is_bot_playing())
     {
-        const int ins_incr = rnd::range(12, 18);
+        const int ins_incr = rnd::range(10, 15);
 
         ins_ += ins_incr;
     }
@@ -1186,7 +1186,7 @@ void Player::on_actor_turn()
         //
         // Passive shock taken over time
         //
-        double passive_shock_taken = 0.09;
+        double passive_shock_taken = 0.1075;
 
         if (player_bon::bg() == Bg::rogue)
         {
@@ -1314,11 +1314,11 @@ void Player::add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters)
             break;
 
         case ShockLvl::frightening:
-            val += 0.375;
+            val += 0.3;
             break;
 
         case ShockLvl::terrifying:
-            val += 0.75;
+            val += 0.6;
             break;
 
         case ShockLvl::mind_shattering:

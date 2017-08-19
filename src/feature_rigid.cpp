@@ -3323,7 +3323,7 @@ void Fountain::bump(Actor& actor_bumping)
             msg_log::add("It's very refreshing.");
             map::player->restore_hp(1, false, Verbosity::silent);
             map::player->restore_spi(1, false, Verbosity::silent);
-            map::player->restore_shock(5, true);
+            map::player->restore_shock(2, true);
         }
         break;
 
