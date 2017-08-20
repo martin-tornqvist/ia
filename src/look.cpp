@@ -645,6 +645,12 @@ void print_location_info_msgs(const P& pos)
             }
         }
 
+        // Describe darkness
+        if (cell.is_dark && !cell.is_lit)
+        {
+            msg_log::add("It is very dark here.");
+        }
+
         // Describe item
         Item* item = cell.item;
 

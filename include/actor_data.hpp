@@ -192,7 +192,6 @@ struct ActorDataT
     int spawn_min_dlvl, spawn_max_dlvl;
     ActorSize actor_size;
     bool is_humanoid;
-    bool is_infra_visible;
     bool is_auto_descr_allowed;
     int nr_kills;
     bool has_player_seen;

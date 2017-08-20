@@ -31,6 +31,7 @@ Gameplay
 * Ravens, Bats, and Vampire Bats no longer actively moves towards the player, but will attack if adjacent
 * Byakhees are slower
 * Ghoul characters have +10% speed and +1 natural Armor Point
+* "Infravision" has been changed to the ability to see in darkness instead (this means Ghoul characters can fully see in dark rooms)
 * Adjusted Potion of Poison duration so that it's guaranteed to be non-lethal for any non-diseased player character with full hit points
 * Poison damage is slower, but poisoning generally lasts longer
 * XP gained from Monoliths increased from 15% to 20%

@@ -518,19 +518,11 @@ bool Mon::is_actor_seeable(const Actor& other,
         return false;
     }
 
-    bool has_infravis =
-        has_prop(PropId::infravis);
-
-    const bool is_other_infra_visible =
-        other.data().is_infra_visible;
-
-    const bool can_see_actor_with_infravis =
-        has_infravis &&
-        is_other_infra_visible;
+    bool has_darkvis = has_prop(PropId::darkvis);
 
     const bool can_see_other_in_drk =
         can_see_invis ||
-        can_see_actor_with_infravis;
+        has_darkvis;
 
     // Blocked by darkness, and not seeing actor with infravision?
     if (los.is_blocked_by_drk &&

@@ -381,19 +381,11 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Blocked by darkness, and not seeing monster with infravision?
-    const bool has_infravis =
-        prop_handler_->has_prop(PropId::infravis);
-
-    const bool is_other_infra_visible =
-        other.data().is_infra_visible;
-
-    const bool can_see_other_with_infravis =
-        has_infravis &&
-        is_other_infra_visible;
+    const bool has_darkvis = prop_handler_->has_prop(PropId::darkvis);
 
     const bool can_see_other_in_drk =
         can_see_invis ||
-        can_see_other_with_infravis;
+        has_darkvis;
 
     if (cell.player_los.is_blocked_by_drk &&
         !can_see_other_in_drk)
@@ -401,9 +393,7 @@ bool Player::can_see_actor(const Actor& other) const
         return false;
     }
 
-    // Monster is sneaking, and cannot be seen with infravision or magic seeing?
     if (mon->is_sneaking() &&
-        !can_see_other_with_infravis &&
         !can_see_invis)
     {
         return false;
@@ -1383,7 +1373,8 @@ void Player::update_tmp_shock()
             shock_tmp_ -= 20.0;
         }
         // Not lit - shock from darkness?
-        else if (cell.is_dark)
+        else if (cell.is_dark &&
+                 (player_bon::bg() != Bg::ghoul))
         {
             double shock_value = 20.0;
 
@@ -2264,6 +2255,8 @@ void Player::update_fov()
         }
     }
 
+    const bool has_darkvis = has_prop(PropId::darkvis);
+
     if (prop_handler_->allow_see())
     {
         bool hard_blocked[map_w][map_h];
@@ -2289,7 +2282,7 @@ void Player::update_fov()
 
                 cell.is_seen_by_player =
                     !los.is_blocked_hard &&
-                    !los.is_blocked_by_drk;
+                    (!los.is_blocked_by_drk || has_darkvis);
 
                 cell.player_los = los;
 
@@ -2364,9 +2357,14 @@ void Player::update_fov()
 
             Cell& cell = map::cells[x][y];
 
+            const bool allow_explore =
+                !cell.is_dark ||
+                is_blocking ||
+                has_darkvis;
+
             // Do not explore dark floor cells
             if (cell.is_seen_by_player &&
-                (!cell.is_dark || is_blocking))
+                allow_explore)
             {
                 cell.is_explored = true;
             }
@@ -2386,6 +2384,8 @@ void Player::fov_hack()
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
+    const bool has_darkvis = has_prop(PropId::darkvis);
+
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -2402,12 +2402,19 @@ void Player::fov_hack()
                     {
                         const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
 
+                        const bool allow_explore =
+                            (!adj_cell.is_dark ||
+                             adj_cell.is_lit ||
+                             has_darkvis) &&
+                            !blocked[p_adj.x][p_adj.y];
+
                         if (adj_cell.is_seen_by_player &&
-                            (!adj_cell.is_dark || adj_cell.is_lit) &&
-                            !blocked[p_adj.x][p_adj.y])
+                            allow_explore)
                         {
                             Cell& cell = map::cells[x][y];
+
                             cell.is_seen_by_player = true;
+
                             cell.player_los.is_blocked_hard = false;
 
                             break;

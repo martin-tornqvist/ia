@@ -52,7 +52,6 @@ void ActorDataT::reset()
     spawn_max_dlvl = dlvl_last - 2;
     actor_size = ActorSize::humanoid;
     is_humanoid = false;
-    is_infra_visible = true;
     is_auto_descr_allowed = true;
     nr_kills = 0;
     has_player_seen = false;
@@ -143,7 +142,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 7;
     d.descr =
@@ -197,7 +196,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::swarm,  1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 7;
     d.descr =
@@ -250,7 +249,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::few,    1)
     });
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 16;
     d.descr =
@@ -292,7 +291,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
     d.nr_turns_aware = 20;
     d.descr =
@@ -338,7 +337,7 @@ void init_data_list()
     d.spawn_min_dlvl = 4;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.nr_turns_aware = 20;
     d.descr =
         "Alan Halsey was the dean of the Miskatonic University in New "
@@ -378,7 +377,7 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -421,7 +420,7 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -472,7 +471,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::stealth, 90);
     d.nr_left_allowed_to_spawn = 1;
     d.is_unique = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 1;
     d.actor_size = ActorSize::floor;
@@ -516,7 +515,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = dlvl_last_early_game;
     d.actor_size = ActorSize::floor;
@@ -711,7 +710,7 @@ void init_data_list()
     d.is_auto_spawn_allowed = false;
     d.nr_left_allowed_to_spawn = 0;
     d.is_unique = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = data[(size_t)ActorId::keziah_mason].spawn_min_dlvl;
     d.actor_size = ActorSize::floor;
     d.descr =
@@ -760,7 +759,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 40);
     d.is_auto_spawn_allowed = false;
     d.is_unique = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.actor_size = ActorSize::humanoid;
     d.is_humanoid = true;
     d.descr = "[DESCRIPTION MISSING]";
@@ -922,7 +921,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.actor_size = ActorSize::humanoid;
     d.nr_turns_aware = 5;
     d.descr = "An enormous green spider.";
@@ -930,7 +929,6 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
@@ -964,7 +962,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous white spider.";
@@ -972,7 +970,6 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
@@ -1006,7 +1003,7 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::alone,  3),
         MonGroupSpawnRule(MonGroupSize::few,    1),
     });
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.descr = "An enormous red spider.";
@@ -1014,7 +1011,6 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.can_be_summoned = true;
     d.is_spider = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
@@ -1043,7 +1039,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    4),
@@ -1053,7 +1049,6 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.actor_size = ActorSize::humanoid;
     d.is_spider = true;
-    d.is_infra_visible = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.descr = "A faint shadow of a huge spider, lurking in the periphery.";
@@ -1089,7 +1084,7 @@ void init_data_list()
 //  d.ability_vals.set_val(AbilityId::ranged, 40);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::few,    4),
@@ -1104,7 +1099,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
-    d.is_infra_visible = false;
     d.can_be_summoned = true;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
@@ -1136,7 +1130,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr =
@@ -1148,7 +1142,6 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
     d.can_be_summoned = true;
@@ -1184,7 +1177,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr =
@@ -1196,7 +1189,6 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
     d.can_be_summoned = true;
@@ -1229,7 +1221,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 5;
     d.descr =
@@ -1241,7 +1233,6 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::hiss;
     d.aggro_sfx_mon_hidden = SfxId::hiss;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.is_infra_visible = false;
     d.is_snake = true;
     d.is_reptile = true;
     d.can_be_summoned = true;
@@ -1275,7 +1266,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
@@ -1329,7 +1320,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_elec] = true;
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.spawn_max_dlvl = dlvl_last - 2;
     d.group_sizes.assign(
@@ -1383,7 +1374,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_fear] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 13;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::humanoid;
@@ -1433,7 +1424,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -1445,7 +1436,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_ghost = true;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -1475,7 +1465,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.natural_props[(size_t)PropId::cloaked] = true;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -1490,7 +1480,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -1521,7 +1510,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::ethereal] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.spawn_max_dlvl = dlvl_last - 3;
@@ -1534,7 +1523,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -1577,7 +1565,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -1625,7 +1612,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
@@ -1657,7 +1643,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 30);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
@@ -1696,7 +1682,7 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 40);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = 3;
     d.group_sizes.assign(
@@ -1747,7 +1733,7 @@ void init_data_list()
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 0;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -1838,7 +1824,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 50);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -1888,7 +1874,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 60);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -1938,7 +1924,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
@@ -1988,7 +1974,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = dlvl_last - 3;
     d.group_sizes.assign(
@@ -2043,7 +2029,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::stealth, 20);
     d.ability_vals.set_val(AbilityId::dodging, 30);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 8;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
@@ -2052,7 +2038,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
@@ -2080,7 +2065,7 @@ void init_data_list()
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 30);
     d.natural_props[(size_t)PropId::flying] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 7;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -2095,7 +2080,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::none;
-    d.is_infra_visible = false;
     d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
     data[(size_t)d.id] = d;
@@ -2160,7 +2144,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
@@ -2205,7 +2188,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a droning voice.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::cave);
@@ -2267,7 +2249,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -2322,7 +2303,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a shrill whistling.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::mind_shattering;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -2369,7 +2349,6 @@ void init_data_list()
         "sound minds however - a strange or chaotic mind will cause them "
         "great distress.";
     d.wary_msg = d.name_the + " seems disturbed.";
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.native_rooms.push_back(RoomType::plain);
@@ -2415,7 +2394,6 @@ void init_data_list()
         "in a ghostly manner. They sustain themselves by consuming the life "
         "force of other beings.";
     d.wary_msg = d.name_the + " seems disturbed.";
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.native_rooms.push_back(RoomType::plain);
@@ -2461,7 +2439,6 @@ void init_data_list()
         "in a ghostly manner. They sustain themselves by consuming the Spirit "
         "of other beings.";
     d.wary_msg = d.name_the + " seems disturbed.";
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.native_rooms.push_back(RoomType::plain);
@@ -2495,7 +2472,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -2523,7 +2500,6 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
-    d.is_infra_visible = false;
     d.is_humanoid = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
@@ -2554,7 +2530,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2573,7 +2549,6 @@ void init_data_list()
     d.descr = "A living shadow.";
     d.wary_msg = d.name_the + " looks wary.";
     d.is_auto_descr_allowed = false;
-    d.is_infra_visible = false;
     d.is_humanoid = true;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -2603,7 +2578,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_early_game;
@@ -2619,7 +2594,6 @@ void init_data_list()
         "normal eyes.";
     d.wary_msg = d.name_the + " looks wary.";
     d.is_auto_descr_allowed = true;
-    d.is_infra_visible = false;
     d.is_humanoid = true;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -2662,7 +2636,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
@@ -2710,7 +2683,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_humanoid = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
@@ -2753,7 +2725,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     data[(size_t)d.id] = d;
     d.reset();
@@ -2799,7 +2770,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_humanoid = true;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     data[(size_t)d.id] = d;
@@ -2879,7 +2849,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 75);
     d.ability_vals.set_val(AbilityId::dodging, 20);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = dlvl_first_late_game;
     d.group_sizes.assign(
     {
@@ -2926,7 +2896,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 35);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;
     d.group_sizes.assign(
@@ -2969,7 +2939,7 @@ void init_data_list()
     d.spi = 2;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.group_sizes.assign(
@@ -3034,7 +3004,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
@@ -3153,7 +3122,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 1;
     d.group_sizes.assign(
@@ -3175,7 +3144,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
@@ -3210,7 +3178,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -3232,7 +3200,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.native_rooms.push_back(RoomType::plain);
@@ -3266,7 +3233,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -3290,7 +3257,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
@@ -3324,7 +3290,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 7;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
     d.group_sizes.assign(
@@ -3348,7 +3314,6 @@ void init_data_list()
     d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
@@ -3385,7 +3350,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 14;
     d.spawn_max_dlvl = dlvl_last - 6;
     d.actor_size = ActorSize::humanoid;
@@ -3402,7 +3367,6 @@ void init_data_list()
     d.is_auto_descr_allowed = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
@@ -3434,7 +3398,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.natural_props[(size_t)PropId::burrowing] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.actor_size = ActorSize::giant;
@@ -3491,7 +3455,6 @@ void init_data_list()
     d.nr_turns_aware = 16;
     d.aggro_msg_mon_seen = "";
     d.aggro_msg_mon_hidden = "";
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::unsettling;
     data[(size_t)d.id] = d;
@@ -3541,7 +3504,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
-    d.is_infra_visible = false;
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::flooded);
     d.native_rooms.push_back(RoomType::muddy);
@@ -3573,7 +3535,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.group_sizes.assign(
@@ -3595,7 +3557,6 @@ void init_data_list()
     d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::cave);
@@ -3652,7 +3613,6 @@ void init_data_list()
     d.spell_cast_msg = "makes buzzing sounds in peculiar frequencies.";
     d.aggro_msg_mon_seen = d.name_the + " makes a deep buzzing sound.";
     d.aggro_msg_mon_hidden = "I hear a deep buzzing sound.";
-    d.is_infra_visible = false;
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.native_rooms.push_back(RoomType::plain);
@@ -3686,7 +3646,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 40);
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
@@ -3740,7 +3700,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
-    d.natural_props[(size_t)PropId::infravis] = true;
+    d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = dlvl_last - 2;
@@ -3758,7 +3718,6 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
     d.can_be_summoned = false;
-    d.is_infra_visible = false;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";

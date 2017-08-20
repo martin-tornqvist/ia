@@ -713,13 +713,13 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::infravis;
+    d.id = PropId::darkvis;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "Infravision";
-    d.name_short = "Infravision";
-    d.descr = "Can see warm blooded creatures in the dark";
-    d.msg[(size_t)PropMsg::start_player] = "I have infravision.";
-    d.msg[(size_t)PropMsg::end_player] = "I no longer have infravision.";
+    d.name = "";
+    d.name_short = "";
+    d.descr = "";
+    d.msg[(size_t)PropMsg::start_player] = "";
+    d.msg[(size_t)PropMsg::end_player] = "";
     d.msg[(size_t)PropMsg::res_player] = "";
     d.msg[(size_t)PropMsg::res_mon] = "";
     d.is_making_mon_aware = false;
@@ -1162,8 +1162,8 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::radiant:
         return new PropRadiant(turns_init, nr_turns);
 
-    case PropId::infravis:
-        return new PropInfravis(turns_init, nr_turns);
+    case PropId::darkvis:
+        return new PropDarkvis(turns_init, nr_turns);
 
     case PropId::r_disease:
         return new PropRDisease(turns_init, nr_turns);

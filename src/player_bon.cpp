@@ -373,7 +373,7 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("");
         put("Is immune to Disease and Infections");
         put("");
-        put("Has Infravision");
+        put("Can see in darkness");
         put("");
         put("-50% shock taken from seeing monsters");
         put("");
@@ -1153,7 +1153,7 @@ void pick_bg(const Bg bg)
                      Verbosity::silent);
 
         map::player->prop_handler()
-            .apply(new PropInfravis(PropTurns::indefinite),
+            .apply(new PropDarkvis(PropTurns::indefinite),
                      PropSrc::intr,
                      true,
                      Verbosity::silent);

@@ -36,7 +36,7 @@ enum class PropId
     invis,
     cloaked,
     see_invis,
-    infravis,
+    darkvis,
     poisoned,
     paralyzed,
     terrified,
@@ -749,11 +749,11 @@ public:
     bool is_resisting_other_prop(const PropId prop_id) const override;
 };
 
-class PropInfravis: public Prop
+class PropDarkvis: public Prop
 {
 public:
-    PropInfravis(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::infravis, turns_init, nr_turns) {}
+    PropDarkvis(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::darkvis, turns_init, nr_turns) {}
 };
 
 class PropBlessed: public Prop
