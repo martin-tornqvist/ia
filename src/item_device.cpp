@@ -346,17 +346,17 @@ ConsumeItem DeviceShockwave::trigger_effect()
             msg_log::add(msg);
         }
 
-        actor->hit(rnd::dice(1, 8),
+        actor->hit(rnd::dice(2, 6),
                    DmgType::physical);
 
         // Surived the damage? Knock the monster back
         if (actor->is_alive())
         {
             knockback::run(*actor,
-                                       player_pos,
-                                       false,
-                                       Verbosity::verbose,
-                                       1); // 1 extra turn paralyzed
+                           player_pos,
+                           false,
+                           Verbosity::verbose,
+                           1); // 1 extra turn paralyzed
         }
     }
 
