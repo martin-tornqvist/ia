@@ -2959,7 +2959,7 @@ void HighPriestGuardRogue::mk_start_items()
 {
     Item* const dagger = item_factory::mk(ItemId::dagger);
 
-    static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 3;
+    static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 2;
 
     inv_->put_in_slot(
         SlotId::wpn,
