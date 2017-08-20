@@ -1408,6 +1408,8 @@ void init_data_list()
     d.ranged.prop_applied =
         ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 60);
     d.ranged.projectile_clr = clr_yellow;
+    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_tile = TileId::blast1;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.dmg_type = DmgType::electric;
     data[(size_t)d.id] = d;
