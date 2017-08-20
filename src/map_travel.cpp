@@ -195,21 +195,13 @@ void go_to_nxt()
     game::add_history_event("Reached dungeon level " +
                             std::to_string(map::dlvl));
 
-    if (!map::player->has_prop(PropId::deaf))
+    if ((map_data.is_main_dungeon == IsMainDungeon::yes) &&
+        (map::dlvl == (dlvl_last + 1)))
     {
-        if ((map_data.is_main_dungeon == IsMainDungeon::yes) &&
-            (map::dlvl == (dlvl_last - 1)))
-        {
-            msg_log::add("An ominous voice thunders in my ears.",
-                         clr_white,
-                         false,
-                         MorePromptOnMsg::yes);
-
-            audio::play(SfxId::boss_voice2);
-        }
-
-        audio::try_play_amb(1);
+        audio::play(SfxId::boss_voice1);
     }
+
+    audio::try_play_amb(1);
 
     // Trigger phobia of deep places when descending
     if (insanity::has_sympt(InsSymptId::phobia_deep))

@@ -1037,7 +1037,7 @@ private:
 
     void on_std_turn_hook() override;
 
-    bool has_greeted_player_;
+    bool has_become_aware_;
 };
 
 class HighPriestGuardWarVet: public Mon

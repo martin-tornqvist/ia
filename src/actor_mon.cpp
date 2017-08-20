@@ -2866,7 +2866,7 @@ void GasSpore::on_death()
 
 TheHighPriest::TheHighPriest() :
     Mon                 (),
-    has_greeted_player_ (false) {}
+    has_become_aware_   (false) {}
 
 void TheHighPriest::mk_start_items()
 {
@@ -2915,16 +2915,11 @@ DidAction TheHighPriest::on_act()
         return DidAction::no;
     }
 
-    if (!has_greeted_player_)
+    if (!has_become_aware_)
     {
-        msg_log::add("A booming voice echoes through the halls.",
-                     clr_white,
-                     false,
-                     MorePromptOnMsg::yes);
-
         audio::play(SfxId::boss_voice1);
 
-        has_greeted_player_ = true;
+        has_become_aware_ = true;
 
         become_aware_player(false);
 
