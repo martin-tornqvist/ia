@@ -200,8 +200,10 @@ void go_to_nxt()
     {
         audio::play(SfxId::boss_voice1);
     }
-
-    audio::try_play_amb(1);
+    else // Not the boss level
+    {
+        audio::try_play_amb(1);
+    }
 
     // Trigger phobia of deep places when descending
     if (insanity::has_sympt(InsSymptId::phobia_deep))
