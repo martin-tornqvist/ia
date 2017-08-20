@@ -78,8 +78,8 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 --------------------------------------------------------------------------------
 The following is an example of what the interface lines can look like:
 
-   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60%)    } M1911 Colt 9.5 +0% 5/7
-   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 4.5 +0%
+   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60%)    ) Sledgehammer 11.0 {+1} -15%
+   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 4.0 +10%
    Blind Diseased                                                         T:264
 
 From left to right, the first line displays:
@@ -87,7 +87,8 @@ From left to right, the first line displays:
    * Spirit Points (see "Spirit and spell casting")
    * Shock and Insanity (see "Insanity")
    * Character Level and remaining Experience Points until next level
-   * Your wielded weapon (average damage, accuracy modifier, ammo)
+   * Your wielded weapon (average damage with this weapon, weapon damage bonus,
+     weapon accuracy modifier)
 
 The second line displays:
    * Dungeon level
@@ -153,11 +154,11 @@ In addition to your physical and mental health, you have an "essence" - or Spiri
 Your Spirit Points are shown like this:
    SP:Current/Max
 
-Some characters have the ability to cast spells intrinsically without using external tools - the Occultist can learn spells from reading manuscripts for example. Casting spells "naturally" will drain some of your spirit.
+You can learn spells by first casting them from manuscripts. Casting spells "naturally" (without manuscripts) will drain some of your spirit.
 
-To cast intrinsic spells, press [x] to open a menu for selecting which spell to cast. In this menu you can see the Spirit cost per spell (the cost is a range of values, and the spirit drained is a random value in this range), and roughly how much Shock it will cause.
+To cast intrinsic spells, press [x] to open a menu for selecting which spell to cast. In this menu you can see the Spirit cost per spell (the cost is a range of values, and the spirit drained is a random value in this range), and your skill level for each spell (Occultist characters can learn to cast spells at higher levels by picking certain traits).
 
-When casting a spell, you will get a warning if the spell could potentially drain all your remaining Spirit. You can then press y/n to attempt casting or abort. Casting the spell in this situation is a gamble with death, but it could be worth it if you are desperate.
+When casting a spell, you will get a warning if the spell could potentially drain all your remaining Spirit. You can then press y/n to attempt casting or abort. Casting the spell in this situation is a gamble with death.
 
 There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
 
