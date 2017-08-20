@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-v19.1 *** WORK IN PROGRESS ***
+v19.1
 --------------------------------------------------------------
 Gameplay
 * Spells have basic/expert/master tiers instead of a skill percentage - higher tiers can be achieved by picking traits for various spell domains (e.g. "Lesser Invocation" to cast all attack spells at expert level)
