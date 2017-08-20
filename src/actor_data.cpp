@@ -3651,7 +3651,7 @@ void init_data_list()
     d.spawn_min_dlvl = dlvl_last - 6;
     d.spawn_max_dlvl = 999;
     d.actor_size = ActorSize::giant;
-    d.nr_turns_aware = 5;
+    d.nr_turns_aware = 10;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = true;
