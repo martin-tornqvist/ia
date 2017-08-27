@@ -163,7 +163,7 @@ void PostmortemMenu::on_start()
     {
         for (const InsSympt* const sympt : sympts)
         {
-            const std::string sympt_descr = sympt->char_descr_msg();
+            const std::string sympt_descr = sympt->postmortem_msg();
 
             if (!sympt_descr.empty())
             {
