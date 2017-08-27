@@ -1272,8 +1272,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    3),
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::few,    2),
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 12;
@@ -1325,8 +1324,7 @@ void init_data_list()
     d.group_sizes.assign(
     {
         MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    3),
-        MonGroupSpawnRule(MonGroupSize::pack,   1),
+        MonGroupSpawnRule(MonGroupSize::few,    2),
     });
     d.actor_size = ActorSize::floor;
     d.nr_turns_aware = 12;

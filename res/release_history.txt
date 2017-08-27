@@ -4,6 +4,7 @@ v19.2 *** WORK IN PROGRESS ***
 Gameplay
 * Increased minimum distance from player when spawning monsters (when entering a new map, or spawning over time)
 * Hounds can no longer bash doors
+* Reduced group sizes of Hounds
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity
