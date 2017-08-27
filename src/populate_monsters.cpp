@@ -19,6 +19,8 @@ namespace populate_mon
 namespace
 {
 
+const int min_dist_to_player = fov_std_radi_int + 4;
+
 int random_out_of_depth()
 {
     int nr_levels = 0;
@@ -280,8 +282,6 @@ void try_spawn_due_to_time_passed()
     map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
-    const int min_dist_to_player = fov_std_radi_int + 1;
-
     const P& player_pos = map::player->pos;
 
     const int x0 = std::max(0, player_pos.x - min_dist_to_player);
@@ -343,8 +343,6 @@ void populate_std_lvl()
 
     bool blocked[map_w][map_h];
 
-    const int min_dist_from_player = fov_std_radi_int + 2;
-
     map_parsers::BlocksMoveCommon(ParseActors::yes)
         .run(blocked);
 
@@ -363,7 +361,7 @@ void populate_std_lvl()
             const int v = flood[x][y];
 
             if ((v > 0) &&
-                (v < min_dist_from_player))
+                (v < min_dist_to_player))
             {
                 blocked[x][y] = true;
             }

@@ -1,4 +1,10 @@
 --------------------------------------------------------------
+v19.2 *** WORK IN PROGRESS ***
+--------------------------------------------------------------
+Gameplay
+* Increased minimum distance from player when spawning monsters (when entering a new map, or spawning over time)
+
+--------------------------------------------------------------
 v19.1 (August 20, 2017)
 --------------------------------------------------------------
 Gameplay
