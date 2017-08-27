@@ -108,6 +108,7 @@ bool mk_random_group_for_room(const RoomType room_type,
             if (!is_native)
             {
                 id_bucket.erase(id_bucket.begin() + i);
+
                 --i;
             }
         }
@@ -337,7 +338,7 @@ void populate_std_lvl()
 {
     TRACE_FUNC_BEGIN;
 
-    const int nr_groups_to_spawn = rnd::range(4, 7);
+    const int nr_groups_to_spawn = rnd::range(4, 6);
 
     int nr_groups_spawned = 0;
 

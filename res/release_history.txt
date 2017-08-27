@@ -5,6 +5,7 @@ Gameplay
 * Increased minimum distance from player when spawning monsters (when entering a new map, or spawning over time)
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds
+* Slightly fewer monsters are spawned on the map
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity
