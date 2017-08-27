@@ -1276,7 +1276,6 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
-    d.can_bash_doors = true;
     d.nr_turns_aware = 12;
     d.descr =
         "This extremely aggressive canine seems to be part corporeal and "
@@ -1330,7 +1329,6 @@ void init_data_list()
         MonGroupSpawnRule(MonGroupSize::pack,   1),
     });
     d.actor_size = ActorSize::floor;
-    d.can_bash_doors = true;
     d.nr_turns_aware = 12;
     d.descr =
         "This extremely aggressive canine seems to be part corporeal and "
