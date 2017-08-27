@@ -7,6 +7,7 @@ Gameplay
 * Reduced group sizes of Hounds
 * Slightly fewer monsters are spawned on the map
 * Removed the "Demolition Expert" trait
+* Monsters can no longer cast "See Invisible"
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity

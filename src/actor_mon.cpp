@@ -1376,7 +1376,6 @@ void CultistPriest::mk_start_items()
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
@@ -1416,7 +1415,6 @@ void CultistWizard::mk_start_items()
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellKnockBack);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
@@ -1450,7 +1448,6 @@ void CultistArchWizard::mk_start_items()
     spells_known_.push_back(new SpellKnockBack);
     spells_known_.push_back(new SpellAzaWrath);
     spells_known_.push_back(new SpellBurn);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 
     if (rnd::coin_toss())
@@ -1754,7 +1751,6 @@ void SentryDrone::mk_start_items()
     spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellBurn);
-    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void FlyingPolyp::mk_start_items()
@@ -1883,7 +1879,6 @@ void ElderVoidTraveler::mk_start_items()
     spells_known_.push_back(new SpellHeal);
     spells_known_.push_back(new SpellBurn);
     spells_known_.push_back(new SpellDeafen);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 }
 
@@ -2047,7 +2042,6 @@ void DeathFiend::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::death_fiend_claw));
 
     spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellSeeInvis);
 }
 
 void HuntingHorror::mk_start_items()
@@ -2095,7 +2089,6 @@ void KeziahMason::mk_start_items()
     spells_known_.push_back(new SpellDarkbolt);
     spells_known_.push_back(new SpellEnfeeble);
     spells_known_.push_back(new SpellDeafen);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 
     // Make some treasures to drop
@@ -2879,7 +2872,6 @@ void TheHighPriest::mk_start_items()
     spells_known_.push_back(new SpellPest);
     spells_known_.push_back(new SpellTeleport);
     spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellSeeInvis);
     spells_known_.push_back(new SpellSpellShield);
 }
 

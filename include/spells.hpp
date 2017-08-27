@@ -23,11 +23,11 @@ enum class SpellId
     teleport,
     summon,
     pest,
-    see_invis,
     heal,
     spell_shield,
 
     // Player only
+    see_invis,
     aza_wrath,
     mayhem,
     searching,
@@ -896,7 +896,7 @@ public:
 
     bool mon_can_learn() const override
     {
-        return true;
+        return false;
     }
 
     bool player_can_learn() const override
