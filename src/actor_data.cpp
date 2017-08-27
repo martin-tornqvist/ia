@@ -3076,6 +3076,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
+    d.natural_props[(size_t)PropId::r_elec] = true;
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.prevent_knockback = true;
