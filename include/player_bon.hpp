@@ -21,7 +21,6 @@ enum class Trait
     master_marksman,
     cool_headed,
     courageous,
-    dem_expert,
     dexterous,
     fearless,
     stealthy,

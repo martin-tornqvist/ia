@@ -2153,7 +2153,6 @@ void Brazier::on_hit(const int dmg,
 
             explosion::run(expl_pos,
                            ExplType::apply_prop,
-                           ExplSrc::misc,
                            EmitExplSnd::no,
                            expl_d,
                            ExplExclCenter::no,
@@ -2803,7 +2802,6 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
             explosion::run(pos_,
                            ExplType::apply_prop,
-                           ExplSrc::misc,
                            EmitExplSnd::no,
                            0,
                            ExplExclCenter::no,

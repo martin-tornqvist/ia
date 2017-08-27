@@ -81,12 +81,6 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
         // Cannot use Medial Bag
         return bg == Bg::ghoul;
 
-    case Trait::dem_expert:
-        // Too much character theme mismatch
-        return
-            (bg == Bg::occultist) ||
-            (bg == Bg::ghoul);
-
     case Trait::rapid_recoverer:
         // Cannot regen hp passively
         return bg == Bg::ghoul;
@@ -308,9 +302,6 @@ std::string trait_title(const Trait id)
     case Trait::treasure_hunter:
         return "Treasure Hunter";
 
-    case Trait::dem_expert:
-        return "Demolition Expert";
-
     case Trait::undead_bane:
         return "Bane of the Undead";
 
@@ -485,11 +476,6 @@ std::string trait_descr(const Trait id)
     case Trait::fast_shooter:
         return
             "+100% firing speed (not applicable to thrown weapons)";
-
-    case Trait::dem_expert:
-        return
-            "+1 radius for explosives, you are not harmed by your own "
-            "Molotov Cocktails, +100% speed when lighting explosives";
 
     case Trait::cool_headed:
         return
@@ -773,9 +759,6 @@ void trait_prereqs(const Trait trait,
         traits_out.push_back(Trait::expert_marksman);
         traits_out.push_back(Trait::dexterous);
         bg_out = Bg::war_vet;
-        break;
-
-    case Trait::dem_expert:
         break;
 
     case Trait::cool_headed:

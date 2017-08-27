@@ -659,13 +659,7 @@ void ThrowingExplosive::on_draw()
         id == ItemId::molotov  ||
         id == ItemId::smoke_grenade)
     {
-        const int radi_d =
-            player_bon::traits[(size_t)Trait::dem_expert] ?
-            1 : 0;
-
-        const int radi = expl_std_radi + radi_d;
-
-        const R expl_area = explosion::explosion_area(pos_, radi);
+        const R expl_area = explosion::explosion_area(pos_, expl_std_radi);
 
         Clr clr_bg = clr_red;
 

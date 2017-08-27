@@ -146,12 +146,10 @@ Clr Smoke::clr() const
 // -----------------------------------------------------------------------------
 void LitDynamite::on_new_turn()
 {
-    nr_turns_left_--;
+    --nr_turns_left_;
 
     if (nr_turns_left_ <= 0)
     {
-        const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
-
         const P p(pos_);
 
         //Removing the dynamite before the explosion, so it can't be rendered
@@ -162,9 +160,7 @@ void LitDynamite::on_new_turn()
 
         explosion::run(p,
                        ExplType::expl,
-                       ExplSrc::misc,
-                       EmitExplSnd::yes,
-                       d);
+                       EmitExplSnd::yes);
     }
 }
 

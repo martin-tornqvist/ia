@@ -1609,12 +1609,7 @@ void Dynamite::on_player_ignite() const
 {
     msg_log::add("I light a dynamite stick.");
 
-    const int speed_pct_diff =
-        player_bon::traits[(size_t)Trait::dem_expert] ?
-        100 :
-        0;
-
-    game_time::tick(speed_pct_diff);
+    game_time::tick();
 }
 
 void Dynamite::on_std_turn_player_hold_ignited()
@@ -1680,12 +1675,7 @@ void Molotov::on_player_ignite() const
 {
     msg_log::add("I light a Molotov Cocktail.");
 
-    const int speed_pct_diff =
-        player_bon::traits[(size_t)Trait::dem_expert] ?
-        100 :
-        0;
-
-    game_time::tick(speed_pct_diff);
+    game_time::tick();
 }
 
 void Molotov::on_std_turn_player_hold_ignited()
@@ -1712,7 +1702,6 @@ void Molotov::on_std_turn_player_hold_ignited()
 
         explosion::run(player_pos,
                        ExplType::apply_prop,
-                       ExplSrc::misc,
                        EmitExplSnd::no,
                        0,
                        ExplExclCenter::no,
@@ -1724,8 +1713,6 @@ void Molotov::on_std_turn_player_hold_ignited()
 
 void Molotov::on_thrown_ignited_landing(const P& p)
 {
-    const int d = player_bon::traits[(size_t)Trait::dem_expert] ? 1 : 0;
-
     Snd snd("I hear an explosion!",
             SfxId::explosion_molotov,
             IgnoreMsgIfOriginSeen::yes,
@@ -1738,9 +1725,8 @@ void Molotov::on_thrown_ignited_landing(const P& p)
 
     explosion::run(p,
                    ExplType::apply_prop,
-                   ExplSrc::player_use_moltv_intended,
                    EmitExplSnd::no,
-                   d,
+                   0,
                    ExplExclCenter::no,
                    {new PropBurning(PropTurns::std)});
 }
@@ -1766,7 +1752,6 @@ void Molotov::on_player_paralyzed()
 
     explosion::run(player_pos,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    0,
                    ExplExclCenter::no,
@@ -1782,12 +1767,7 @@ void Flare::on_player_ignite() const
 {
     msg_log::add("I light a Flare.");
 
-    const int speed_pct_diff =
-        player_bon::traits[(size_t)Trait::dem_expert] ?
-        100 :
-        0;
-
-    game_time::tick(speed_pct_diff);
+    game_time::tick();
 }
 
 void Flare::on_std_turn_player_hold_ignited()
@@ -1833,23 +1813,14 @@ void SmokeGrenade::on_player_ignite() const
 {
     msg_log::add("I ignite a smoke grenade.");
 
-    const int speed_pct_diff =
-        player_bon::traits[(size_t)Trait::dem_expert] ?
-        100 :
-        0;
-
-    game_time::tick(speed_pct_diff);
+    game_time::tick();
 }
 
 void SmokeGrenade::on_std_turn_player_hold_ignited()
 {
     if (fuse_turns_ < std_fuse_turns() && rnd::coin_toss())
     {
-        const int d =
-            player_bon::traits[(size_t)Trait::dem_expert] ?
-            1 : 0;
-
-        explosion::run_smoke_explosion_at(map::player->pos, d);
+        explosion::run_smoke_explosion_at(map::player->pos);
     }
 
     --fuse_turns_;
@@ -1866,11 +1837,7 @@ void SmokeGrenade::on_std_turn_player_hold_ignited()
 
 void SmokeGrenade::on_thrown_ignited_landing(const P& p)
 {
-    const int d =
-        player_bon::traits[(size_t)Trait::dem_expert] ?
-        1 : 0;
-
-    explosion::run_smoke_explosion_at(p, d);
+    explosion::run_smoke_explosion_at(p, 0);
 }
 
 void SmokeGrenade::on_player_paralyzed()

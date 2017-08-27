@@ -16,10 +16,11 @@
 namespace
 {
 
-std::vector< std::vector<P> > cells_reached(const R& area,
-                                            const P& origin,
-                                            const ExplExclCenter exclude_center,
-                                            bool blocked[map_w][map_h])
+std::vector< std::vector<P> > cells_reached(
+    const R& area,
+    const P& origin,
+    const ExplExclCenter exclude_center,
+    bool blocked[map_w][map_h])
 {
     std::vector< std::vector<P> > out;
 
@@ -150,7 +151,6 @@ namespace explosion
 
 void run(const P& origin,
          const ExplType expl_type,
-         const ExplSrc expl_src,
          const EmitExplSnd emit_expl_snd,
          const int radi_change,
          const ExplExclCenter exclude_center,
@@ -219,8 +219,6 @@ void run(const P& origin,
         }
     }
 
-    const bool is_dem_exp = player_bon::traits[(size_t)Trait::dem_expert];
-
     const int nr_outer = pos_lists.size();
 
     for (int radi = 0; radi < nr_outer; ++radi)
@@ -287,15 +285,6 @@ void run(const P& origin,
 
                 if (living_actor == map::player)
                 {
-                    // Do not apply burning if this is player with Demolition
-                    // Expert trait, and intentionally throwing a Molotov
-                    if ((prop->id() == PropId::burning) &&
-                        is_dem_exp &&
-                        (expl_src == ExplSrc::player_use_moltv_intended))
-                    {
-                        should_apply_on_living_actor = false;
-                    }
-
                     // Do not apply effect if wearing Gas Mask, and this is a
                     // gas explosion
                     const Item* const head_item =

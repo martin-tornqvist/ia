@@ -876,7 +876,6 @@ void TrapGasConfusion::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
@@ -907,7 +906,6 @@ void TrapGasParalyzation::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
@@ -939,7 +937,6 @@ void TrapGasFear::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
@@ -961,7 +958,6 @@ void TrapBlindingFlash::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
@@ -982,7 +978,6 @@ void TrapDeafening::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
@@ -1271,7 +1266,6 @@ void TrapFire::trigger()
 
     explosion::run(pos_,
                    ExplType::apply_prop,
-                   ExplSrc::misc,
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,

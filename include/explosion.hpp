@@ -15,12 +15,6 @@ enum class ExplType
     apply_prop
 };
 
-enum class ExplSrc
-{
-    misc,
-    player_use_moltv_intended
-};
-
 enum class EmitExplSnd
 {
     no,
@@ -49,7 +43,6 @@ namespace explosion
 //
 void run(const P& origin,
          const ExplType expl_type,
-         const ExplSrc expl_src = ExplSrc::misc,
          const EmitExplSnd emit_expl_snd = EmitExplSnd::yes,
          const int radi_change = 0,
          const ExplExclCenter exclude_center = ExplExclCenter::no,

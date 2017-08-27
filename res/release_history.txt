@@ -6,6 +6,7 @@ Gameplay
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds
 * Slightly fewer monsters are spawned on the map
+* Removed the "Demolition Expert" trait
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity

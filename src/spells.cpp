@@ -936,7 +936,6 @@ void SpellMayhem::run_effect(Actor* const caster,
 
         explosion::run(p,
                        ExplType::expl,
-                       ExplSrc::misc,
                        EmitExplSnd::yes,
                        expl_radi_diff);
 
@@ -970,7 +969,6 @@ void SpellMayhem::run_effect(Actor* const caster,
 
                 explosion::run(p,
                                ExplType::apply_prop,
-                               ExplSrc::misc,
                                EmitExplSnd::yes,
                                0,
                                ExplExclCenter::yes,
@@ -1843,7 +1841,6 @@ void SpellLight::run_effect(Actor* const caster,
 
         explosion::run(caster->pos,
                        ExplType::apply_prop,
-                       ExplSrc::misc,
                        EmitExplSnd::no,
                        0,
                        ExplExclCenter::yes,
