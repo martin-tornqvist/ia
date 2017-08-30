@@ -181,7 +181,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.glyph = '}';
         d.clr = clr_white;
         d.melee.is_melee_wpn = true;
-        d.melee.dmg = Dice(1, 4);
+        d.melee.dmg = Dice(1, 3);
         d.main_att_mode = AttMode::ranged;
         d.ranged.is_ranged_wpn = true;
         d.ranged.projectile_glyph = '/';
