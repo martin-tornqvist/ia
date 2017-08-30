@@ -629,15 +629,19 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
     if (target->is_alive())
     {
+        const int paralyze_duration = rnd::range(1, 2);
+
         target->prop_handler().apply(
-            new PropParalyzed(PropTurns::specific, 2));
+            new PropParalyzed(PropTurns::specific, paralyze_duration));
     }
 
     if ((skill == SpellSkill::master) &&
         target->is_alive())
     {
+        const int burn_duration = rnd::range(2, 3);
+
         target->prop_handler().apply(
-            new PropBurning(PropTurns::specific, 3));
+            new PropBurning(PropTurns::specific, burn_duration));
     }
 
     Snd snd("",
