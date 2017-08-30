@@ -39,6 +39,18 @@ struct AiAvailAttacksData
     bool is_reload_needed, is_melee;
 };
 
+struct MonSpell
+{
+    MonSpell() :
+        spell       (nullptr),
+        skill       ((SpellSkill)0),
+        cooldown    (-1) {}
+
+    Spell* spell;
+    SpellSkill skill;
+    int cooldown;
+};
+
 class Wpn;
 
 class Mon: public Actor
@@ -119,13 +131,13 @@ public:
     bool is_msg_mon_in_view_printed_;
     bool is_player_feeling_msg_allowed_;
     Dir last_dir_moved_;
-    std::vector<Spell*> spells_known_;
-    int spell_cooldowns_[(size_t)SpellId::END];
     bool is_roaming_allowed_;
     Actor* leader_;
     Actor* tgt_;
     bool is_tgt_seen_;
     bool waiting_;
+
+    std::vector<MonSpell> spells_;
 
 protected:
     // Return value 'true' means it is possible to see the other actor (i.e.
@@ -145,6 +157,10 @@ protected:
     }
 
     virtual void on_std_turn_hook() {}
+
+    void add_spell(SpellSkill skill, Spell* const spell);
+    void add_spell(SpellSkill skill, SpellId id);
+    void add_random_spell(SpellSkill skill);
 
     int nr_mon_in_group();
 };

@@ -38,8 +38,6 @@ void ActorDataT::reset()
 
     ability_vals.reset();
 
-    spell_skill = SpellSkill::basic;
-
     for (size_t i = 0; i < (size_t)AiId::END; ++i)
     {
         ai[i] = false;
@@ -459,7 +457,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fastest;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'z';
     d.color = clr_magenta;
     d.tile = TileId::crawling_hand;
@@ -550,7 +547,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.ranged_cooldown_turns = 1;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'P';
     d.color = clr_gray;
     d.tile = TileId::cultist_firearm;
@@ -594,7 +590,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal + 10;
     d.ranged_cooldown_turns = 1;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'p';
     d.color = clr_brown_drk;
     d.tile = TileId::bog_tcher;
@@ -644,7 +639,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::expert;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::witch_or_warlock;
@@ -697,7 +691,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal + 20;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'r';
     d.color = clr_magenta;
     d.tile = TileId::rat_thing;
@@ -749,7 +742,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::slow;
-    d.spell_skill = SpellSkill::master;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::leng_elder;
@@ -784,7 +776,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'P';
     d.color = clr_cyan_lgt;
     d.tile = TileId::cultist_dagger;
@@ -825,7 +816,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::expert;
     d.glyph = 'P';
     d.color = clr_yellow;
     d.tile = TileId::witch_or_warlock;
@@ -866,7 +856,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::master;
     d.glyph = 'P';
     d.color = clr_blue_lgt;
     d.tile = TileId::witch_or_warlock;
@@ -1495,7 +1484,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'G';
     d.color = clr_red;
     d.tile = TileId::wraith;
@@ -1588,7 +1576,6 @@ void init_data_list()
     d.tile = TileId::void_traveler;
     d.hp = 70;
     d.spi = 30;
-    d.spell_skill = SpellSkill::expert;
     d.dmg_melee = min_dmg_to_wound + 5;
     d.ability_vals.set_val(AbilityId::melee, 90);
     d.ability_vals.set_val(AbilityId::dodging, 30);
@@ -2095,7 +2082,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 4;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'E';
     d.color = clr_brown_drk;
     d.tile = TileId::mi_go;
@@ -2161,7 +2147,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 3;
-    d.spell_skill = SpellSkill::basic;
     d.glyph = 'E';
     d.color = clr_green;
     d.tile = TileId::mi_go;
@@ -2612,7 +2597,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::slow + 10;
-    d.spell_skill = SpellSkill::expert;
     d.glyph = 'P';
     d.color = clr_magenta;
     d.tile = TileId::mummy;
@@ -2624,7 +2608,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 24;
+    d.nr_turns_aware = 999;
     d.descr = "A mummified human being, possibly dating back millennia.";
     d.wary_msg = d.name_the + " looks wary.";
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";
@@ -2697,7 +2681,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
@@ -2738,7 +2721,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::expert;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
     d.glyph = 'P';
@@ -3389,7 +3371,7 @@ void init_data_list()
     d.glyph = 'W';
     d.color = clr_brown_drk;
     d.tile = TileId::chthonian;
-    d.hp = 200;
+    d.hp = 250;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 10;
     d.ability_vals.set_val(AbilityId::melee, 80);
@@ -3399,7 +3381,7 @@ void init_data_list()
     d.prevent_knockback = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.actor_size = ActorSize::giant;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 24;
     d.is_auto_descr_allowed = true;
     d.can_open_doors = false;
     d.can_bash_doors = false;
@@ -3578,7 +3560,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal + 20;
     d.ranged_cooldown_turns = 3;
-    d.spell_skill = SpellSkill::expert;
     d.glyph = 'T';
     d.color = clr_red;
     d.tile = TileId::device2;
@@ -3686,7 +3667,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
-    d.spell_skill = SpellSkill::expert;
     d.glyph = 'Y';
     d.color = clr_gray;
     d.tile = TileId::fiend;
@@ -3736,7 +3716,6 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal + 10;
-    d.spell_skill = SpellSkill::master;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';

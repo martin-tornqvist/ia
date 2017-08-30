@@ -44,19 +44,17 @@ Mon::Mon() :
     leader_                         (nullptr),
     tgt_                            (nullptr),
     is_tgt_seen_                    (false),
-    waiting_                        (false)
+    waiting_                        (false),
+    spells_                         ()
 {
-    for (size_t i = 0; i < (size_t)SpellId::END; ++i)
-    {
-        spell_cooldowns_[i] = -1;
-    }
+
 }
 
 Mon::~Mon()
 {
-    for (Spell* const spell : spells_known_)
+    for (auto& spell : spells_)
     {
-        delete spell;
+        delete spell.spell;
     }
 }
 
@@ -676,13 +674,13 @@ bool Mon::is_sneaking() const
 void Mon::on_std_turn()
 {
     // Countdown all spell cooldowns
-    for (size_t i = 0; i < (size_t)SpellId::END; ++i)
+    for (auto& spell : spells_)
     {
-        int& cd = spell_cooldowns_[i];
+        int& cooldown = spell.cooldown;
 
-        if (cd > 0)
+        if (cooldown > 0)
         {
-            --cd;
+            --cooldown;
         }
     }
 
@@ -801,7 +799,17 @@ SpellSkill Mon::spell_skill(const SpellId id) const
 {
     (void)id;
 
-    return data_->spell_skill;
+    for (const auto& spell : spells_)
+    {
+        if (spell.spell->id() == id)
+        {
+            return spell.skill;
+        }
+    }
+
+    ASSERT(false);
+
+    return SpellSkill::basic;
 }
 
 void Mon::hear_sound(const Snd& snd)
@@ -1179,6 +1187,45 @@ int Mon::nr_mon_in_group()
     return ret;
 }
 
+void Mon::add_spell(SpellSkill skill, Spell* const spell)
+{
+    const bool is_new =
+        std::find_if(begin(spells_),
+                     end(spells_),
+                     [spell](MonSpell& spell_entry)
+                     {
+                         return spell_entry.spell->id() == spell->id();
+                     }) == end(spells_);
+
+    if (!is_new)
+    {
+        delete spell;
+
+        return;
+    }
+
+    MonSpell spell_entry;
+
+    spell_entry.spell = spell;
+
+    spell_entry.skill = skill;
+
+    spells_.push_back(spell_entry);
+}
+
+void Mon::add_spell(SpellSkill skill, SpellId id)
+{
+    auto* const spell = spell_handling::mk_spell_from_id(id);
+
+    add_spell(skill, spell);
+}
+
+void  Mon::add_random_spell(SpellSkill skill)
+{
+    auto* spell = spell_handling::random_spell_for_mon();
+
+    add_spell(skill, spell);
+}
 
 // -----------------------------------------------------------------------------
 // Specific monsters
@@ -1339,11 +1386,11 @@ void Cultist::mk_start_items()
 
     if (rnd::one_in(12))
     {
-        spells_known_.push_back(spell_handling::random_spell_for_mon());
+        add_random_spell(SpellSkill::basic);
 
         if (rnd::coin_toss())
         {
-            spells_known_.push_back(spell_handling::random_spell_for_mon());
+            add_random_spell(SpellSkill::basic);
         }
     }
 }
@@ -1372,25 +1419,25 @@ void BogTcher::mk_start_items()
 
 void CultistPriest::mk_start_items()
 {
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellKnockBack);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::basic, SpellId::heal);
+    add_spell(SpellSkill::basic, SpellId::darkbolt);
+    add_spell(SpellSkill::basic, SpellId::enfeeble);
+    add_spell(SpellSkill::basic, SpellId::knockback);
+    add_spell(SpellSkill::basic, SpellId::spell_shield);
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellTeleport);
+        add_spell(SpellSkill::basic, SpellId::teleport);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellSummonMon);
+        add_spell(SpellSkill::basic, SpellId::summon);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellPest);
+        add_spell(SpellSkill::basic, SpellId::pest);
     }
 
     Item* item = item_factory::mk(ItemId::dagger);
@@ -1411,25 +1458,26 @@ void CultistPriest::mk_start_items()
 
 void CultistWizard::mk_start_items()
 {
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellKnockBack);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::expert, SpellId::heal);
+    add_spell(SpellSkill::expert, SpellId::darkbolt);
+    add_spell(SpellSkill::expert, SpellId::knockback);
+    add_spell(SpellSkill::expert, SpellId::spell_shield);
+
+    add_spell(SpellSkill::basic, SpellId::enfeeble);
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellTeleport);
+        add_spell(SpellSkill::expert, SpellId::teleport);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellSummonMon);
+        add_spell(SpellSkill::expert, SpellId::summon);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellPest);
+        add_spell(SpellSkill::expert, SpellId::pest);
     }
 
     // Make some treasures to drop
@@ -1442,27 +1490,27 @@ void CultistWizard::mk_start_items()
 
 void CultistArchWizard::mk_start_items()
 {
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellKnockBack);
-    spells_known_.push_back(new SpellAzaWrath);
-    spells_known_.push_back(new SpellBurn);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::master, SpellId::heal);
+    add_spell(SpellSkill::master, SpellId::darkbolt);
+    add_spell(SpellSkill::master, SpellId::knockback);
+    add_spell(SpellSkill::master, SpellId::burn);
+    add_spell(SpellSkill::master, SpellId::spell_shield);
+
+    add_spell(SpellSkill::expert, SpellId::enfeeble);
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellTeleport);
+        add_spell(SpellSkill::master, SpellId::teleport);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellSummonMon);
+        add_spell(SpellSkill::master, SpellId::summon);
     }
 
     if (rnd::coin_toss())
     {
-        spells_known_.push_back(new SpellPest);
+        add_spell(SpellSkill::master, SpellId::pest);
     }
 
     // Make some treasures to drop
@@ -1701,8 +1749,8 @@ void Wraith::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::wraith_claw));
 
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    add_random_spell(SpellSkill::basic);
+    add_random_spell(SpellSkill::basic);
 }
 
 void MiGo::mk_start_items()
@@ -1734,23 +1782,14 @@ void MiGo::mk_start_items()
         }
     }
 
-    spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellMiGoHypno);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellSpellShield);
-
-    if (rnd::coin_toss())
-    {
-        spells_known_.push_back(spell_handling::random_spell_for_mon());
-    }
+    add_spell(SpellSkill::expert, SpellId::mi_go_hypno);
 }
 
 void SentryDrone::mk_start_items()
 {
-    spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellBurn);
+    add_spell(SpellSkill::expert, SpellId::heal);
+    add_spell(SpellSkill::expert, SpellId::darkbolt);
+    add_spell(SpellSkill::expert, SpellId::burn);
 }
 
 void FlyingPolyp::mk_start_items()
@@ -1796,7 +1835,7 @@ void BrownJenkin::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::brown_jenkin_bite));
 
-    spells_known_.push_back(new SpellTeleport);
+    add_spell(SpellSkill::basic, SpellId::teleport);
 }
 
 void Shadow::mk_start_items()
@@ -1875,28 +1914,17 @@ void ElderVoidTraveler::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::elder_void_traveler_rip));
 
-    spells_known_.push_back(new SpellDisease);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellBurn);
-    spells_known_.push_back(new SpellDeafen);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::expert, SpellId::heal);
+    add_spell(SpellSkill::expert, SpellId::burn);
+    add_spell(SpellSkill::expert, SpellId::deafen);
+    add_spell(SpellSkill::expert, SpellId::spell_shield);
 }
 
 void Mummy::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
 
-    spells_known_.push_back(new SpellDisease);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellSpellShield);
-
-    const int nr_spells = 3;
-
-    for (int i = 0; i < nr_spells; ++i)
-    {
-        spells_known_.push_back(spell_handling::random_spell_for_mon());
-    }
+    add_spell(SpellSkill::expert, SpellId::disease);
 }
 
 DidAction Mummy::on_act()
@@ -1914,14 +1942,13 @@ void MummyUnique::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::mummy_maul));
 
-    spells_known_.push_back(new SpellDisease);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::expert, SpellId::darkbolt);
+    add_spell(SpellSkill::expert, SpellId::disease);
+    add_spell(SpellSkill::expert, SpellId::heal);
+    add_spell(SpellSkill::expert, SpellId::spell_shield);
+    add_spell(SpellSkill::expert, SpellId::summon);
 
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
-    spells_known_.push_back(spell_handling::random_spell_for_mon());
+    add_spell(SpellSkill::basic, SpellId::enfeeble);
 }
 
 DidAction Khephren::on_act()
@@ -2041,7 +2068,7 @@ void DeathFiend::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::death_fiend_claw));
 
-    spells_known_.push_back(new SpellEnfeeble);
+    add_spell(SpellSkill::expert, SpellId::enfeeble);
 }
 
 void HuntingHorror::mk_start_items()
@@ -2082,14 +2109,15 @@ DidAction KeziahMason::on_act()
 
 void KeziahMason::mk_start_items()
 {
-    spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellSummonMon);
-    spells_known_.push_back(new SpellPest);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellDeafen);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::expert, SpellId::teleport);
+    add_spell(SpellSkill::expert, SpellId::heal);
+    add_spell(SpellSkill::expert, SpellId::summon);
+    add_spell(SpellSkill::expert, SpellId::pest);
+    add_spell(SpellSkill::expert, SpellId::darkbolt);
+    add_spell(SpellSkill::expert, SpellId::deafen);
+    add_spell(SpellSkill::expert, SpellId::spell_shield);
+
+    add_spell(SpellSkill::basic, SpellId::enfeeble);
 
     // Make some treasures to drop
     for (int i = rnd::range(2, 3); i > 0; --i)
@@ -2762,7 +2790,7 @@ void Thing::mk_start_items()
     inv_->put_in_intrinsics(
         item_factory::mk(ItemId::thing_strangle));
 
-    spells_known_.push_back(new SpellTeleport);
+    add_spell(SpellSkill::basic, SpellId::teleport);
 }
 
 void FloatingSkull::mk_start_items()
@@ -2865,14 +2893,16 @@ void TheHighPriest::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::the_high_priest_claw));
 
-    spells_known_.push_back(new SpellHeal);
-    spells_known_.push_back(new SpellSummonMon);
-    spells_known_.push_back(new SpellBurn);
-    spells_known_.push_back(new SpellEnfeeble);
-    spells_known_.push_back(new SpellPest);
-    spells_known_.push_back(new SpellTeleport);
-    spells_known_.push_back(new SpellDarkbolt);
-    spells_known_.push_back(new SpellSpellShield);
+    add_spell(SpellSkill::master, SpellId::darkbolt);
+    add_spell(SpellSkill::master, SpellId::heal);
+    add_spell(SpellSkill::master, SpellId::summon);
+    add_spell(SpellSkill::master, SpellId::burn);
+    add_spell(SpellSkill::master, SpellId::pest);
+    add_spell(SpellSkill::master, SpellId::teleport);
+    add_spell(SpellSkill::master, SpellId::spell_shield);
+    add_spell(SpellSkill::master, SpellId::disease);
+
+    add_spell(SpellSkill::expert, SpellId::enfeeble);
 }
 
 void TheHighPriest::on_death()

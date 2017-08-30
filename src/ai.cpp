@@ -23,61 +23,59 @@ bool try_cast_random_spell(Mon& mon)
     const auto& prop_handler = mon.prop_handler();
 
     if (!mon.is_alive() ||
-        mon.spells_known_.empty() ||
+        mon.spells_.empty() ||
         !prop_handler.allow_cast_intr_spell_absolute(Verbosity::silent))
     {
         return false;
     }
 
-    rnd::shuffle(mon.spells_known_);
+    rnd::shuffle(mon.spells_);
 
-    for (Spell* const spell : mon.spells_known_)
+    for (auto& spell : mon.spells_)
     {
-        int& current_cooldown =
-            mon.spell_cooldowns_[(size_t)spell->id()];
+        int& cooldown = spell.cooldown;
 
-        if ((current_cooldown <= 0) &&
-            spell->allow_mon_cast_now(mon))
+        if ((cooldown > 0) ||
+            !spell.spell->allow_mon_cast_now(mon))
         {
-            const auto skill = mon.spell_skill(spell->id());
+            continue;
+        }
 
-            const int current_spi = mon.spi();
+        const int current_spi = mon.spi();
 
-            const int spell_max_spi = spell->spi_cost(skill, &mon).max;
+        const int spell_max_spi = spell.spell->spi_cost(spell.skill, &mon).max;
 
-            const int current_hp = mon.hp();
-            const int max_hp = mon.hp_max(true);
+        const int current_hp = mon.hp();
 
-            const bool has_spi = spell_max_spi < current_spi;
+        const int max_hp = mon.hp_max(true);
 
-            const bool is_hostile_player = !map::player->is_leader_of(&mon);
+        const bool has_spi = spell_max_spi < current_spi;
 
-            const bool is_low_hp = current_hp < (max_hp / 3);
+        const bool is_hostile_player = !map::player->is_leader_of(&mon);
 
-            // Only cast the spell if monster has enough spirit - or sometimes
-            // try anyway if the monster has low HP and is hostile to the player
-            if (has_spi ||
-                (is_hostile_player &&
-                 is_low_hp &&
-                 rnd::one_in(20)))
+        const bool is_low_hp = current_hp < (max_hp / 3);
+
+        // Only cast the spell if monster has enough spirit - or sometimes
+        // try anyway if the monster has low HP and is hostile to the player
+        if (has_spi ||
+            (is_hostile_player &&
+             is_low_hp &&
+             rnd::one_in(20)))
+        {
+            if (!has_spi &&
+                map::player->can_see_actor(mon))
             {
-                if (!has_spi &&
-                    map::player->can_see_actor(mon))
-                {
-                    const std::string mon_name_the =
-                        text_format::first_to_upper(mon.name_the());
+                const std::string mon_name_the =
+                    text_format::first_to_upper(mon.name_the());
 
-                    msg_log::add(mon_name_the + " looks desperate.");
-                }
-
-                current_cooldown = spell->mon_cooldown();
-
-                spell->cast(&mon,
-                            skill,
-                            IsIntrinsic::yes);
-
-                return true;
+                msg_log::add(mon_name_the + " looks desperate.");
             }
+
+            cooldown = spell.spell->mon_cooldown();
+
+            spell.spell->cast(&mon, spell.skill, IsIntrinsic::yes);
+
+            return true;
         }
     }
 

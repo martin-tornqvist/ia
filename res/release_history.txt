@@ -8,6 +8,7 @@ Gameplay
 * Slightly fewer monsters are spawned on the map
 * Removed the "Demolition Expert" trait
 * Monsters can no longer cast "See Invisible"
+* Some monsters now have more specialized spell selections
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity
