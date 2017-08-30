@@ -68,7 +68,7 @@ void ViewActorDescr::on_start()
         ++p.y;
     }
 
-    p.y += 3;
+    p.y += 2;
 
     // Hit chances
     const std::string indent = "   ";
@@ -313,6 +313,76 @@ void ViewActorDescr::on_start()
     put_text(" * Attacks can always critically fail or succeed (2% chance each)",
              p,
              clr_gray);
+
+    p.y += 3;
+
+    put_text("Current properties",
+             p,
+             clr_white_lgt);
+
+    p.y += 1;
+
+    auto prop_list = actor_.prop_handler().props_list();
+
+    // Remove all natural properties (properties which all monsters of this type
+    // starts with)
+    for (auto it = begin(prop_list); it != end(prop_list);)
+    {
+        const auto id = it->prop->id();
+
+        const bool is_natural_prop = actor_.data().natural_props[(size_t)id];
+
+        if (is_natural_prop)
+        {
+            it = prop_list.erase(it);
+        }
+        else // Not a natural property
+        {
+            ++it;
+        }
+    }
+
+    const std::string offset = "   ";
+
+    if (prop_list.empty())
+    {
+        put_text(
+            offset + "None",
+            p,
+            clr_white);
+
+        p.y += 1;
+    }
+    else // Has properties
+    {
+        const int max_w_descr = (map_w * 3) / 4;
+
+        for (const auto& e : prop_list)
+        {
+            const auto& title = e.title;
+
+            put_text(offset + title.str,
+                     p,
+                     e.title.clr);
+
+            p.y += 1;
+
+            const auto descr_formatted =
+                text_format::split(e.descr,
+                                   max_w_descr);
+
+            for (const auto& descr_line : descr_formatted)
+            {
+                put_text(offset + descr_line,
+                         p,
+                         clr_gray);
+
+                p.y += 1;
+            }
+
+            p.y += 1;
+        }
+    }
 
     // Add a single empty line at the end (looks better)
     lines_.resize(lines_.size() + 1);

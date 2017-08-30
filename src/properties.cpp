@@ -1413,6 +1413,19 @@ Prop* PropHandler::prop(const PropId id) const
     return nullptr;
 }
 
+bool PropHandler::has_any_negative_prop() const
+{
+    for (const auto* const prop : props_)
+    {
+        if (prop->alignment() == PropAlignment::bad)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void PropHandler::remove_props_for_item(const Item* const item)
 {
     for (size_t i = 0; i < props_.size(); /* No increment */)
@@ -1719,9 +1732,9 @@ std::vector<StrAndClr> PropHandler::props_line() const
 // TODO: Lots of copy paste from the function above (props_line), some
 //       refactoring needed here
 //
-std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
+std::vector<PropListEntry> PropHandler::props_list() const
 {
-    std::vector< std::pair<StrAndClr, std::string> > list;
+    std::vector<PropListEntry> list;
 
     for (Prop* prop : props_)
     {
@@ -1805,11 +1818,13 @@ std::vector< std::pair<StrAndClr, std::string> > PropHandler::props_list() const
 
         auto& entry = list[new_size - 1];
 
-        entry.first.str = title;
+        entry.title.str = title;
 
-        entry.first.clr = clr;
+        entry.title.clr = clr;
 
-        entry.second = descr;
+        entry.descr = descr;
+
+        entry.prop = prop;
     }
 
     return list;

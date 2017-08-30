@@ -13,6 +13,10 @@ Bug fixes
 * Energy Vortexes were not resistant to electricity
 * In the game summary, insanity symptoms were written in the wrong format (e.g. "Phobia of spiders", instead of "Had a phobia of spiders")
 
+Interface
+* Monsters are drawn with magenta background when they have negative temporary properties (such as paralyzation)
+* When viewing monster descriptions, temporary properties are shown (not properties which are intrinsic to the monster type)
+
 --------------------------------------------------------------
 v19.1 (August 20, 2017)
 --------------------------------------------------------------

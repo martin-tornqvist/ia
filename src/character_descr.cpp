@@ -39,8 +39,7 @@ void CharacterDescr::on_start()
 
     const Clr& clr_text_dark = clr_gray;
 
-    lines_.push_back(
-        StrAndClr("Current properties", clr_heading));
+    lines_.push_back(StrAndClr("Current properties", clr_heading));
 
     const auto prop_list = map::player->prop_handler().props_list();
 
@@ -56,14 +55,14 @@ void CharacterDescr::on_start()
     {
         for (const auto& e : prop_list)
         {
-            const auto& title = e.first;
+            const auto& title = e.title;
 
             lines_.push_back(
                 StrAndClr(offset + title.str,
                           title.clr));
 
             const auto descr_formatted =
-                text_format::split(e.second,
+                text_format::split(e.descr,
                                    max_w_descr);
 
             for (const auto& descr_line : descr_formatted)

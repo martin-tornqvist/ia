@@ -1588,9 +1588,19 @@ void GameState::draw_map()
                     }
                     else // Player is not leader of monster
                     {
+                        // If monster is unaware of the monster, draw it with a
+                        // colored background
                         if (mon->aware_of_player_counter_ <= 0)
                         {
                             render_data->clr_bg = clr_blue;
+                        }
+                        // Monster is aware of player
+                        //
+                        // If the monster has any negative properties, draw it
+                        // with a colored background
+                        else if (mon->prop_handler().has_any_negative_prop())
+                        {
+                            render_data->clr_bg = clr_magenta;
                         }
                     }
                 }

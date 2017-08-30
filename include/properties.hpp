@@ -8,6 +8,11 @@
 #include "rl_utils.hpp"
 #include "global.hpp"
 
+class Actor;
+class Wpn;
+class Prop;
+class Item;
+
 enum class PropId
 {
     r_phys,
@@ -164,6 +169,20 @@ struct DmgResistData
     std::string resist_msg_mon;
 };
 
+struct PropListEntry
+{
+    PropListEntry() :
+        title   (),
+        descr   (),
+        prop    (nullptr) {}
+
+    StrAndClr title;
+
+    std::string descr;
+
+    const Prop* prop;
+};
+
 namespace prop_data
 {
 
@@ -172,11 +191,6 @@ extern PropDataT data[(size_t)PropId::END];
 void init();
 
 } // prop_data
-
-class Actor;
-class Wpn;
-class Prop;
-class Item;
 
 // Each actor has an instance of this
 class PropHandler
@@ -215,6 +229,8 @@ public:
         return active_props_info_[(size_t)id] > 0;
     }
 
+    bool has_any_negative_prop() const;
+
     Prop* prop(const PropId id) const;
 
     bool end_prop(const PropId id,
@@ -224,7 +240,7 @@ public:
     std::vector<StrAndClr> props_line() const;
 
     // A list of properties names of the full form, with descriptions
-    std::vector< std::pair<StrAndClr, std::string> > props_list() const;
+    std::vector<PropListEntry> props_list() const;
 
     Prop* mk_prop(const PropId id,
                   PropTurns turns_init,
