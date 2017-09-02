@@ -11,6 +11,7 @@ Gameplay
 * Some monsters now have more specialized spell selections
 * The "Transmute" spell costs much less spirit to cast
 * The Horn of Banishment now also works on Khephren's summoned Locusts
+* Using Rods causes less shock
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)
