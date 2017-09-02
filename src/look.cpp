@@ -324,15 +324,20 @@ void ViewActorDescr::on_start()
 
     auto prop_list = actor_.prop_handler().props_list();
 
-    // Remove all natural properties (properties which all monsters of this type
-    // starts with)
+    // Remove all non-negative properties (we should not show temporary spell
+    // resistance for example), and all natural properties (properties which all
+    // monsters of this type starts with)
     for (auto it = begin(prop_list); it != end(prop_list);)
     {
-        const auto id = it->prop->id();
+        auto* const prop = it->prop;
+
+        const auto id = prop->id();
 
         const bool is_natural_prop = actor_.data().natural_props[(size_t)id];
 
-        if (is_natural_prop)
+        if (is_natural_prop ||
+            (prop->turns_init_type() == PropTurns::indefinite) ||
+            (prop->alignment() != PropAlignment::bad))
         {
             it = prop_list.erase(it);
         }
