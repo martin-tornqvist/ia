@@ -1944,9 +1944,8 @@ void MummyUnique::mk_start_items()
 
     add_spell(SpellSkill::expert, SpellId::darkbolt);
     add_spell(SpellSkill::expert, SpellId::disease);
-    add_spell(SpellSkill::expert, SpellId::heal);
     add_spell(SpellSkill::expert, SpellId::spell_shield);
-    add_spell(SpellSkill::expert, SpellId::summon);
+    add_spell(SpellSkill::expert, SpellId::burn);
 
     add_spell(SpellSkill::basic, SpellId::enfeeble);
 }

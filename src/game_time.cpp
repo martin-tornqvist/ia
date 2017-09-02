@@ -121,9 +121,12 @@ void run_std_turn_events()
         f->on_new_turn();
     }
 
+    // TODO: This should only happen on standard levels, not in Egypt, ...
+#error
     // Spawn more monsters?
     // (If an unexplored cell is selected, the spawn is canceled)
-    if (map::dlvl >= 1 && map::dlvl <= dlvl_last)
+    if ((map::dlvl >= 1) &&
+        (map::dlvl <= dlvl_last))
     {
         const int spawn_n_turns = 300;
 
