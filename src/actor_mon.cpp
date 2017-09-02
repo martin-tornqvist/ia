@@ -2984,13 +2984,13 @@ void HighPriestGuardWarVet::mk_start_items()
 
 void HighPriestGuardRogue::mk_start_items()
 {
-    Item* const dagger = item_factory::mk(ItemId::dagger);
+    Item* const machete = item_factory::mk(ItemId::machete);
 
-    static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 2;
+    static_cast<Wpn*>(machete)->melee_dmg_plus_ = 1;
 
     inv_->put_in_slot(
         SlotId::wpn,
-        dagger,
+        machete,
         Verbosity::silent);
 }
 
