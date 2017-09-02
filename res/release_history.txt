@@ -10,14 +10,15 @@ Gameplay
 * Monsters can no longer cast "See Invisible"
 * Some monsters now have more specialized spell selections
 * The "Transmute" spell costs much less spirit to cast
-
-Bug fixes
-* Energy Vortexes were not resistant to electricity
-* In the game summary, insanity symptoms were written in the wrong format (e.g. "Phobia of spiders", instead of "Had a phobia of spiders")
+* The Horn of Banishment now also works on Khephren's summoned Locusts
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)
 * When viewing monster descriptions, temporary negative properties are listed
+
+Bug fixes
+* Energy Vortexes were not resistant to electricity
+* In the game summary, insanity symptoms were written in the wrong format (e.g. "Phobia of spiders", instead of "Had a phobia of spiders")
 
 --------------------------------------------------------------
 v19.1 (August 20, 2017)

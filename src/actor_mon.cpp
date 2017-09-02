@@ -1984,10 +1984,16 @@ DidAction Khephren::on_act()
 
     const size_t nr_of_spawns = 15;
 
-    actor_factory::spawn(pos,
-                         {nr_of_spawns, ActorId::locust},
-                         MakeMonAware::yes,
-                         actor_to_set_as_leader);
+    const auto summoned =
+        actor_factory::spawn(pos,
+                             {nr_of_spawns, ActorId::locust},
+                             MakeMonAware::yes,
+                             actor_to_set_as_leader);
+
+    for (auto* const mon : summoned)
+    {
+        mon->prop_handler().apply(new PropSummoned(PropTurns::indefinite));
+    }
 
     has_summoned_locusts = true;
 
