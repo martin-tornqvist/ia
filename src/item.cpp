@@ -766,15 +766,13 @@ void Wpn::set_random_melee_plus()
     // Element corresponds to plus damage value (+0, +1, +2, etc)
     const std::vector<int> weights =
     {
-        //     Plus     Running Total   Percent chance
-        //     ---------------------------------------
-        25, // +0       25              21.4 %
-        50, // +1       75              42.7 %
-        25, // +2       100             21.4 %
-        10, // +3       110             8.5  %
-        4,  // +4       114             3.4  %
-        2,  // +5       116             1.7  %
-        1   // +6       117             0.9  %
+        50,     // +0
+        75,     // +1
+        50,     // +2
+        20,     // +3
+        4,      // +4
+        2,      // +5
+        1       // +6
     };
 
     melee_dmg_plus_ = rnd::weighted_choice(weights);
