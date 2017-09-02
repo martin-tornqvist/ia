@@ -725,7 +725,7 @@ private:
     {
         (void)skill;
 
-        return 8;
+        return 4;
     }
 };
 

@@ -9,6 +9,7 @@ Gameplay
 * Removed the "Demolition Expert" trait
 * Monsters can no longer cast "See Invisible"
 * Some monsters now have more specialized spell selections
+* The "Transmute" spell costs much less spirit to cast
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity
