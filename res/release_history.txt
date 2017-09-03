@@ -12,6 +12,7 @@ Gameplay
 * The "Transmute" spell costs much less spirit to cast
 * The Horn of Banishment now also works on Khephren's summoned Locusts
 * Using Rods causes less shock
+* The "Silent" trait also prevents alerting monsters when wading through liquid
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

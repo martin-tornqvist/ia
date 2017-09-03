@@ -1284,18 +1284,21 @@ void LiquidShallow::bump(Actor& actor_bumping)
             "water" :
             "mud";
 
-        const std::string msg =
-            "I wade slowly through the knee high " + type_str + ".";
+        msg_log::add("I wade slowly through the knee high " + type_str + ".");
 
-        Snd snd(msg,
-                SfxId::END,
-                IgnoreMsgIfOriginSeen::no,
-                actor_bumping.pos,
-                &actor_bumping,
-                SndVol::low,
-                AlertsMon::yes);
+        // Make a sound, unless the player is Silent
+        if (!player_bon::traits[(size_t)Trait::silent])
+        {
+            Snd snd("",
+                    SfxId::END,
+                    IgnoreMsgIfOriginSeen::no,
+                    actor_bumping.pos,
+                    &actor_bumping,
+                    SndVol::low,
+                    AlertsMon::yes);
 
-        snd_emit::run(snd);
+            snd_emit::run(snd);
+        }
     }
 }
 
