@@ -229,8 +229,6 @@ public:
         return active_props_info_[(size_t)id] > 0;
     }
 
-    bool has_any_negative_prop() const;
-
     Prop* prop(const PropId id) const;
 
     bool end_prop(const PropId id,
@@ -245,6 +243,10 @@ public:
     Prop* mk_prop(const PropId id,
                   PropTurns turns_init,
                   const int nr_turns = -1) const;
+
+    // Used for monster description property list
+    std::vector<PropListEntry> temporary_negative_prop_list();
+    bool has_temporary_negative_prop_mon();
 
     //--------------------------------------------------------------------------
     // Hooks called from various places
@@ -295,6 +297,8 @@ public:
                           const Verbosity verbosity) const;
 
 private:
+    bool is_temporary_negative_prop_mon(const Prop& prop);
+
     bool is_resisting_prop(const PropId id) const;
 
     // This prints messages, updates FOV, etc, and also calls the on_end()

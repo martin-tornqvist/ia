@@ -1413,19 +1413,6 @@ Prop* PropHandler::prop(const PropId id) const
     return nullptr;
 }
 
-bool PropHandler::has_any_negative_prop() const
-{
-    for (const auto* const prop : props_)
-    {
-        if (prop->alignment() == PropAlignment::bad)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void PropHandler::remove_props_for_item(const Item* const item)
 {
     for (size_t i = 0; i < props_.size(); /* No increment */)
@@ -1658,6 +1645,62 @@ void PropHandler::on_turn_end()
             ++i;
         }
     }
+}
+
+bool PropHandler::is_temporary_negative_prop_mon(const Prop& prop)
+{
+    ASSERT(owning_actor_ != map::player);
+
+    const auto id = prop.id();
+
+    const bool is_natural_prop =
+        owning_actor_->data().natural_props[(size_t)id];
+
+    return
+        !is_natural_prop &&
+        (prop.turns_init_type() != PropTurns::indefinite) &&
+        (prop.alignment() == PropAlignment::bad);
+}
+
+std::vector<PropListEntry> PropHandler::temporary_negative_prop_list()
+{
+    ASSERT(owning_actor_ != map::player);
+
+    auto prop_list = owning_actor_->prop_handler().props_list();
+
+    // Remove all non-negative properties (we should not show temporary spell
+    // resistance for example), and all natural properties (properties which all
+    // monsters of this type starts with)
+    for (auto it = begin(prop_list); it != end(prop_list);)
+    {
+        auto* const prop = it->prop;
+
+        if (is_temporary_negative_prop_mon(*prop))
+        {
+            ++it;
+        }
+        else // Not a temporary negative property
+        {
+            it = prop_list.erase(it);
+        }
+    }
+
+    return prop_list;
+}
+
+bool PropHandler::has_temporary_negative_prop_mon()
+{
+    ASSERT(owning_actor_ != map::player);
+
+    for (const auto* const prop: props_)
+    {
+        if (is_temporary_negative_prop_mon(*prop))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 std::vector<StrAndClr> PropHandler::props_line() const

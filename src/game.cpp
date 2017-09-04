@@ -1594,13 +1594,18 @@ void GameState::draw_map()
                         {
                             render_data->clr_bg = clr_blue;
                         }
-                        // Monster is aware of player
-                        //
-                        // If the monster has any negative properties, draw it
-                        // with a colored background
-                        else if (mon->prop_handler().has_any_negative_prop())
+                        else // Monster is aware of player
                         {
-                            render_data->clr_bg = clr_magenta;
+                            // If the monster has any negative properties, draw
+                            // it with a colored background
+                            const bool has_temporary_negative_prop =
+                                actor->prop_handler()
+                                .has_temporary_negative_prop_mon();
+
+                            if (has_temporary_negative_prop)
+                            {
+                                render_data->clr_bg = clr_magenta;
+                            }
                         }
                     }
                 }

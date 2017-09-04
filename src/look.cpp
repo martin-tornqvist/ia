@@ -322,7 +322,7 @@ void ViewActorDescr::on_start()
 
     p.y += 1;
 
-    auto prop_list = actor_.prop_handler().props_list();
+    auto prop_list = actor_.prop_handler().temporary_negative_prop_list();
 
     // Remove all non-negative properties (we should not show temporary spell
     // resistance for example), and all natural properties (properties which all
