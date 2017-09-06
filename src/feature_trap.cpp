@@ -257,6 +257,12 @@ void Trap::trigger_start(const Actor* actor)
 
             if (actor == map::player)
             {
+                if (map::player->has_prop(PropId::deaf))
+                {
+                    msg_log::add(
+                        "I feel the ground shifting slightly under my foot.");
+                }
+
                 msg_log::more_prompt();
             }
         }
@@ -264,6 +270,7 @@ void Trap::trigger_start(const Actor* actor)
 
     // Get a randomized value for number of remaining turns
     const Range turns_range = trap_impl_->nr_turns_range_to_trigger();
+
     const int rnd_nr_turns = turns_range.roll();
 
     // Set number of remaining turns to the randomized value if number of turns
