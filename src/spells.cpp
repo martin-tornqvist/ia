@@ -2041,10 +2041,10 @@ std::vector<std::string> SpellRes::descr_specific(
 {
     std::vector<std::string> descr;
 
-    int nr_turns = 10 + (int)skill * 50;
-
     descr.push_back(
         "The caster is completely shielded from fire and electricity.");
+
+    const int nr_turns = 15 + (int)skill * 35;
 
     descr.push_back(
         "The spell lasts " +
