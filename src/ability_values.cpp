@@ -159,11 +159,7 @@ int AbilityVals::val(const AbilityId id,
         }
     }
 
-    //
-    // NOTE: Do *NOT* clamp the returned skill value here, we must be able to
-    //       return e.g. negative dodging due to wearing armor (and possibly
-    //       also become positive again due to melee traits)
-    //
+    // NOTE: Do NOT clamp the returned skill value here
 
     return ret;
 }
@@ -212,12 +208,10 @@ ActionResult roll(const int skill_value)
 
     const int roll = rnd::range(1, 100);
 
-    //
     // NOTE: We check critical success and fail first, since they should
     //       be completely unaffected by skill values - they can always
     //       happen, and always have the same chance to happen, regardless
     //       of skills
-    //
     if (roll <= succ_cri_lmt)
     {
         return ActionResult::success_critical;

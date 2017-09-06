@@ -100,25 +100,6 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
           player_is_handling_armor))
     {
         dodging_mod -= defender.ability(AbilityId::dodging, true);
-
-        // Evasion bonus to melee attacks from melee traits?
-        if (defender.is_player())
-        {
-            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
-            {
-                dodging_mod -= 10;
-            }
-
-            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
-            {
-                dodging_mod -= 10;
-            }
-
-            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
-            {
-                dodging_mod -= 10;
-            }
-        }
     }
 
     // Attacker gets a penalty against unseen targets
@@ -1936,17 +1917,17 @@ void melee(Actor* const attacker,
         {
             if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
             {
-                speed_pct_diff += 5;
+                speed_pct_diff += 10;
             }
 
             if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
             {
-                speed_pct_diff += 5;
+                speed_pct_diff += 10;
             }
 
             if (player_bon::traits[(size_t)Trait::master_melee_fighter])
             {
-                speed_pct_diff += 5;
+                speed_pct_diff += 10;
             }
         }
 
