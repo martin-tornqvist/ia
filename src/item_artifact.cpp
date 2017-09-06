@@ -89,7 +89,7 @@ void HornOfMaliceHeard::run(Actor& actor) const
 
 HornOfMalice::HornOfMalice(ItemDataT* const item_data) :
     Item(item_data),
-    charges_(rnd::range(12, 18))
+    charges_(rnd::range(4, 6))
 {
 
 }
@@ -231,7 +231,7 @@ void HornOfBanishmentHeard::run(Actor& actor) const
 
 HornOfBanishment::HornOfBanishment(ItemDataT* const item_data) :
     Item(item_data),
-    charges_(rnd::range(12, 18))
+    charges_(rnd::range(4, 6))
 {
 
 }
@@ -289,7 +289,7 @@ ConsumeItem HornOfBanishment::activate(Actor* const actor)
 // -----------------------------------------------------------------------------
 Clockwork::Clockwork(ItemDataT* const item_data) :
     Item(item_data),
-    charges_(rnd::range(6, 12))
+    charges_(rnd::range(4, 6))
 {
 
 }
