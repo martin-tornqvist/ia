@@ -353,7 +353,7 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::paralyzed;
-    d.std_rnd_turns = Range(5, 7);
+    d.std_rnd_turns = Range(3, 5);
     d.name = "Paralyzed";
     d.name_short = "Paralyzed";
     d.descr = "Cannot move";
