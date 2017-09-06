@@ -254,6 +254,11 @@ void Trap::trigger_start(const Actor* actor)
                     alerts);
 
             snd_emit::run(snd);
+
+            if (actor == map::player)
+            {
+                msg_log::more_prompt();
+            }
         }
     }
 
