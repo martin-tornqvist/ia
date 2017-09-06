@@ -78,6 +78,15 @@ void mk_lvl(const MapType& map_type)
             map_ok = mapgen::mk_boss_lvl();
             break;
         }
+
+        if (map_ok)
+        {
+            map_templates::on_map_ok();
+        }
+        else // The map is invalid
+        {
+            map_templates::on_map_discarded();
+        }
     }
 
 #ifndef NDEBUG
@@ -86,7 +95,7 @@ void mk_lvl(const MapType& map_type)
     const double duration =
         std::chrono::duration<double, std::milli>(diff_time).count();
 
-    TRACE << "map built after   " << nr_attempts << " attempt(s). " << std::endl
+    TRACE << "Map built after " << nr_attempts << " attempt(s). " << std::endl
           << "Total time taken: " <<  duration << " ms" << std::endl;
 #endif
 

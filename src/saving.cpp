@@ -65,6 +65,7 @@ void save_modules()
     actor_data::save();
     game_time::save();
     player_spells::save();
+    map_templates::save();
 
     TRACE_FUNC_END;
 }
@@ -79,8 +80,9 @@ void load_modules()
 
     ASSERT(!player_name.empty());
 
-    map::player->data().name_a      = player_name;
-    map::player->data().name_the    = player_name;
+    map::player->data().name_a = player_name;
+
+    map::player->data().name_the = player_name;
 
     game::load();
     scroll_handling::load();
@@ -96,6 +98,7 @@ void load_modules()
     actor_data::load();
     game_time::load();
     player_spells::load();
+    map_templates::load();
 
     TRACE_FUNC_END;
 }

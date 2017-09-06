@@ -85,7 +85,7 @@ bool mk_random_group_for_room(const RoomType room_type,
     for (size_t i = 0; i < id_bucket.size(); ++i)
     {
         // Ocassionally allow any monster type, to mix things up a bit
-        const int allow_any_one_in_n = 11;
+        const int allow_any_one_in_n = 20;
 
         if (!rnd::one_in(allow_any_one_in_n))
         {

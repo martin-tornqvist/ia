@@ -14,6 +14,7 @@ Gameplay
 * Using Rods causes less shock
 * The "Silent" trait also prevents alerting monsters when wading through liquid
 * Melee traits no longer improves chance to evade melee attacks
+* Room templates (loaded from file) are now considered unique, each type may only appear once per game
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

@@ -483,7 +483,7 @@ void StdRoom::place_auto_features()
 
             const FeatureDataT& d = feature_data::data(id);
 
-            TRACE << "Placing feature" << std::endl;
+            TRACE_VERBOSE << "Placing feature" << std::endl;
 
             ASSERT(map::is_pos_inside_map(p, false));
 

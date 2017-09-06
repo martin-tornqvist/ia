@@ -14,7 +14,9 @@ namespace
 
 Array2<char> level_templates_[(size_t)LevelTemplId::END];
 
-std::vector< RoomTempl > room_templates_;
+std::vector<RoomTempl> room_templates_;
+
+std::vector<RoomTemplStatus> room_templ_status_;
 
 // Space and tab
 const std::string whitespace_chars = " \t";
@@ -250,6 +252,8 @@ void load_room_templates()
 
     room_templates_.clear();
 
+    room_templ_status_.clear();
+
     std::map<std::string, RoomType> name_2_room_type;
 
     name_2_room_type["plain"] = RoomType::plain;
@@ -283,6 +287,8 @@ void load_room_templates()
     const char type_symbol = '$';
 
     RoomTempl templ;
+
+    size_t current_base_templ_idx = 0;
 
     for (size_t line_idx = 0; line_idx < lines_read.size(); ++line_idx)
     {
@@ -367,12 +373,24 @@ void load_room_templates()
                 }
             }
 
+            templ.base_templ_idx = current_base_templ_idx;
+
             mk_room_templ_variants(templ);
 
             template_buffer.clear();
+
+            ++current_base_templ_idx;
         }
 
     } // for
+
+    room_templ_status_.resize(current_base_templ_idx, RoomTemplStatus::unused);
+
+    TRACE << "Number of room templates loaded from template file: "
+          << current_base_templ_idx
+          << std::endl
+          << "Total variants: " << room_templates_.size()
+          << std::endl;
 
     TRACE_FUNC_END;
 }
@@ -390,6 +408,30 @@ void init()
     TRACE_FUNC_END;
 }
 
+void save()
+{
+    TRACE_FUNC_BEGIN;
+
+    for (auto status : room_templ_status_)
+    {
+        saving::put_int((int)status);
+    }
+
+    TRACE_FUNC_END;
+}
+
+void load()
+{
+    TRACE_FUNC_BEGIN;
+
+    for (size_t i = 0; i < room_templ_status_.size(); ++i)
+    {
+        room_templ_status_[i] = (RoomTemplStatus)saving::get_int();
+    }
+
+    TRACE_FUNC_END;
+}
+
 const Array2<char>& level_templ(LevelTemplId id)
 {
     ASSERT(id != LevelTemplId::END);
@@ -401,10 +443,17 @@ RoomTempl* random_room_templ(const P& max_dims)
 {
     ASSERT(!room_templates_.empty());
 
-    std::vector< RoomTempl* > bucket;
+    std::vector<RoomTempl*> bucket;
 
     for (auto& templ : room_templates_)
     {
+        const auto status = room_templ_status_[templ.base_templ_idx];
+
+        if (status != RoomTemplStatus::unused)
+        {
+            continue;
+        }
+
         const P templ_dims(templ.symbols.dims());
 
         if (templ_dims.x <= max_dims.x &&
@@ -414,6 +463,12 @@ RoomTempl* random_room_templ(const P& max_dims)
         }
     }
 
+    TRACE << "Attempting to find valid room template, for max dimensions: "
+          << max_dims.x << "x" << max_dims.y
+          << std::endl
+          << "Number of candidates found: " << bucket.size()
+          << std::endl;
+
     if (bucket.empty())
     {
         return nullptr;
@@ -422,6 +477,50 @@ RoomTempl* random_room_templ(const P& max_dims)
     const size_t idx = rnd::range(0, bucket.size() - 1);
 
     return bucket[idx];
+}
+
+void clear_base_room_templates_used()
+{
+    std::fill(begin(room_templ_status_),
+              end(room_templ_status_),
+              RoomTemplStatus::unused);
+}
+
+void on_base_room_template_placed(const RoomTempl& templ)
+{
+    ASSERT(templ.base_templ_idx < room_templ_status_.size());
+
+    ASSERT(room_templ_status_[templ.base_templ_idx] == RoomTemplStatus::unused);
+
+    room_templ_status_[templ.base_templ_idx] = RoomTemplStatus::placed;
+}
+
+void on_map_discarded()
+{
+    // "Placed" -> "unused"
+    for (size_t i = 0; i < room_templ_status_.size(); ++i)
+    {
+        auto& status = room_templ_status_[i];
+
+        if (status == RoomTemplStatus::placed)
+        {
+            status = RoomTemplStatus::unused;
+        }
+    }
+}
+
+void on_map_ok()
+{
+    // "Placed" -> "used"
+    for (size_t i = 0; i < room_templ_status_.size(); ++i)
+    {
+        auto& status = room_templ_status_[i];
+
+        if (status == RoomTemplStatus::placed)
+        {
+            status = RoomTemplStatus::used;
+        }
+    }
 }
 
 } // map_templates
