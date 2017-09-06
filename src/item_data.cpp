@@ -2053,6 +2053,8 @@ void init_data_list()
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_descent;
     mod_spawn_chance(d, 0.15);
+    // The potion is unusable past this level:
+    d.spawn_std_range.max = dlvl_last - 2;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);

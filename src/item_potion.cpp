@@ -517,7 +517,7 @@ void PotionDescent::quaff_impl(Actor& actor)
 {
     (void)actor;
 
-    if (map::dlvl < dlvl_last - 1)
+    if (map::dlvl < (dlvl_last - 1))
     {
         if (!map::player->has_prop(PropId::descend))
         {
