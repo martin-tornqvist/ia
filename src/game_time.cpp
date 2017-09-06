@@ -122,14 +122,15 @@ void run_std_turn_events()
     }
 
     // Spawn more monsters?
-    // (If an unexplored cell is selected, the spawn is canceled)
-    if ((map::dlvl >= 1) &&
-        (map::dlvl <= dlvl_last))
+    const auto map_data = map_travel::current_map_data();
+
+    if (map_data.allow_spawn_mon_over_time == AllowSpawnMonOverTime::yes)
     {
-        const int spawn_n_turns = 300;
+        const int spawn_n_turns = 275;
 
         if (turn_nr_ % spawn_n_turns == 0)
         {
+            // NOTE: If an unexplored cell is selected, the spawn is canceled
             populate_mon::try_spawn_due_to_time_passed();
         }
     }
@@ -400,7 +401,9 @@ void update_light_map()
     }
 
     // Do not add light on Leng
-    if (map_travel::map_type() == MapType::leng)
+    // TODO: This is a hard coded hack, specify if the map should be lit in the
+    //       data instead.
+    if (map_travel::current_map_data().type == MapType::leng)
     {
         return;
     }
@@ -425,9 +428,7 @@ void update_light_map()
 
     // Copy the temp values to the real light map
 
-    //
     // NOTE: Must be done separately - it cannot be done in the map loop above
-    //
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)

@@ -8,7 +8,13 @@
 
 // This includes forest intro level, rats in the walls level, etc (every level
 // that increments the dlvl number).
-enum IsMainDungeon
+enum class IsMainDungeon
+{
+    no,
+    yes
+};
+
+enum class AllowSpawnMonOverTime
 {
     no,
     yes
@@ -16,17 +22,23 @@ enum IsMainDungeon
 
 struct MapData
 {
-    MapData(MapType type, IsMainDungeon is_main_dungeon) :
-        type(type),
-        is_main_dungeon(is_main_dungeon) {}
+    MapData(MapType type ,
+            IsMainDungeon is_main_dungeon,
+            AllowSpawnMonOverTime allow_spawn_mon_over_time) :
+        type                        (type),
+        is_main_dungeon             (is_main_dungeon),
+        allow_spawn_mon_over_time   (allow_spawn_mon_over_time) {}
 
     MapData() :
-        type(MapType::std),
-        is_main_dungeon(IsMainDungeon::yes) {}
+        type                        (MapType::std),
+        is_main_dungeon             (IsMainDungeon::yes),
+        allow_spawn_mon_over_time   (AllowSpawnMonOverTime::yes) {}
 
     MapType type;
 
     IsMainDungeon is_main_dungeon;
+
+    AllowSpawnMonOverTime allow_spawn_mon_over_time;
 };
 
 namespace map_travel
@@ -43,7 +55,7 @@ void try_use_down_stairs();
 
 void go_to_nxt();
 
-MapType map_type();
+MapData current_map_data();
 
 } // map_travel
 

@@ -21,6 +21,7 @@ Interface
 Bug fixes
 * Energy Vortexes were not resistant to electricity
 * In the game summary, insanity symptoms were written in the wrong format (e.g. "Phobia of spiders", instead of "Had a phobia of spiders")
+* Monsters no longer spawn over time on special levels (e.g. the "Egypt" level)
 
 --------------------------------------------------------------
 v19.1 (August 20, 2017)

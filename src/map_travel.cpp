@@ -100,12 +100,22 @@ void init()
     // Forest + dungeon + boss + trapezohedron
     const size_t nr_lvl_tot = dlvl_last + 3;
 
-    const MapData default_map_data = MapData(MapType::std, IsMainDungeon::yes);
+    const MapData default_map_data =
+    {
+        MapType::std,
+        IsMainDungeon::yes,
+        AllowSpawnMonOverTime::yes
+    };
 
     map_list = std::vector<MapData>(nr_lvl_tot, default_map_data);
 
     // Forest intro level
-    map_list[0] = MapData(MapType::intro, IsMainDungeon::yes);
+    map_list[0] =
+    {
+        MapType::intro,
+        IsMainDungeon::yes,
+        AllowSpawnMonOverTime::no
+    };
 
     // Occasionally set rats-in-the-walls level as intro to late game
     if (rnd::one_in(3))
@@ -113,15 +123,32 @@ void init()
         map_list[dlvl_first_late_game - 1] =
         {
             MapType::rat_cave,
-            IsMainDungeon::yes
+            IsMainDungeon::yes,
+            AllowSpawnMonOverTime::no
         };
     }
 
     // "Pharaoh chamber" is the first late game level
-    map_list[dlvl_first_late_game] = {MapType::egypt, IsMainDungeon::yes};
+    map_list[dlvl_first_late_game] =
+    {
+        MapType::egypt,
+        IsMainDungeon::yes,
+        AllowSpawnMonOverTime::no
+    };
 
-    map_list[dlvl_last + 1] = {MapType::boss, IsMainDungeon::yes};
-    map_list[dlvl_last + 2] = {MapType::trapez, IsMainDungeon::yes};
+    map_list[dlvl_last + 1] =
+    {
+        MapType::boss,
+        IsMainDungeon::yes,
+        AllowSpawnMonOverTime::no
+    };
+
+    map_list[dlvl_last + 2] =
+    {
+        MapType::trapez,
+        IsMainDungeon::yes,
+        AllowSpawnMonOverTime::no
+    };
 }
 
 void save()
@@ -228,9 +255,9 @@ void go_to_nxt()
     TRACE_FUNC_END;
 }
 
-MapType map_type()
+MapData current_map_data()
 {
-    return map_list.front().type;
+    return map_list.front();
 }
 
 } // map_travel
