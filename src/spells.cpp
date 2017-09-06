@@ -2028,7 +2028,7 @@ std::vector<std::string> SpellTeleport::descr_specific(
 void SpellRes::run_effect(Actor* const caster,
                           const SpellSkill skill) const
 {
-    int nr_turns = 10 + (int)skill * 50;
+    int nr_turns = 15 + (int)skill * 35;
 
     PropHandler& prop_hlr = caster->prop_handler();
 
