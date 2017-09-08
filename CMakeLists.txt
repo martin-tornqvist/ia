@@ -243,7 +243,7 @@ set_target_properties(ia-debug  PROPERTIES OUTPUT_NAME ia-debug)
 
 # GNU gcc and Clang specific compiler flags
 if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-  
+
   set(COMMON_COMPILE_FLAGS
     -std=c++14
     -fno-rtti
@@ -302,6 +302,9 @@ if(WIN32)
   if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     target_link_libraries(ia -mwindows)
   endif()
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    target_link_libraries(ia -static-libgcc -static-libstdc++)
+  endif()
 endif()
 
 # Copy all resource files to the build directory.
@@ -313,24 +316,26 @@ file(COPY res DESTINATION .)
 # ------------------------------------------------------------------------------
 if(WIN32)
 
-    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
-        message(STATUS "Assuming 32 bit architecture")
+    if (NOT DEFINED ARCH)
 
-        set(ARCH 32bit)
+        if("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+            message(STATUS "Assuming 32 bit architecture")
+            set(ARCH 32bit)
+        elseif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+            message(STATUS "Assuming 64 bit architecture")
+            set(ARCH 64bit)
+        endif()
 
-    elseif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-        message(STATUS "Assuming 64 bit architecture")
+    endif()
 
-        set(ARCH 64bit)
-
-    else()
+    if (NOT DEFINED ARCH OR ((NOT "${ARCH}" EQUAL "32bit") AND (NOT "${ARCH}" EQUAL "64bit")))
         message(FATAL_ERROR "Unknown architecture")
     endif()
 
     set(SDL_BASE_DIR ${CMAKE_SOURCE_DIR}/SDL)
 
     if(MSVC)
-    
+
         if("${ARCH}" EQUAL "32bit")
             set(SDL_ARCH_DIR x86)
         else()
