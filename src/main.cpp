@@ -13,12 +13,15 @@ int main(int argc, char** argv)
 {
     TRACE_FUNC_BEGIN;
 
-#ifndef NDEBUG
+#ifdef NDEBUG
+    (void)argc;
+    (void)argv;
+#else // NDEBUG
     for (int arg_nr = 0; arg_nr < argc; ++arg_nr)
     {
-        const std::string arg = std::string(argv[arg_nr]);
+        const std::string arg_str = std::string(argv[arg_nr]);
 
-        if (arg == "--demo-mapgen")
+        if (arg_str == "--demo-mapgen")
         {
             init::is_demo_mapgen = true;
         }
