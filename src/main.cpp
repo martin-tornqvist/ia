@@ -9,12 +9,21 @@
 #ifdef _WIN32
 #undef main
 #endif
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     TRACE_FUNC_BEGIN;
 
-    (void)argc;
-    (void)argv;
+#ifndef NDEBUG
+    for (int arg_nr = 0; arg_nr < argc; ++arg_nr)
+    {
+        const std::string arg = std::string(argv[arg_nr]);
+
+        if (arg == "--demo-mapgen")
+        {
+            init::is_demo_mapgen = true;
+        }
+    }
+#endif // NDEBUG
 
     rnd::seed();
 

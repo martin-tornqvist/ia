@@ -15,9 +15,9 @@
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 
-#ifdef DEMO_MODE
+#ifndef NDEBUG
 #include "sdl_base.hpp"
-#endif // DEMO_MODE
+#endif // NDEBUG
 
 Cell::Cell() :
     is_explored         (false),
@@ -192,26 +192,29 @@ Rigid* put(Rigid* const f)
 
     cell.rigid = f;
 
-#ifdef DEMO_MODE
-    if (f->id() == FeatureId::floor)
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
     {
-        for (int x = 0; x < map_w; ++x)
+        if (f->id() == FeatureId::floor)
         {
-            for (int y = 0; y < map_h; ++y)
+            for (int x = 0; x < map_w; ++x)
             {
-                map::cells[x][y].is_seen_by_player =
-                    map::cells[x][y].is_explored = true;
+                for (int y = 0; y < map_h; ++y)
+                {
+                    map::cells[x][y].is_seen_by_player =
+                        map::cells[x][y].is_explored = true;
+                }
             }
+
+            states::draw();
+            io::draw_glyph('X', Panel::map, p, clr_yellow);
+            io::update_screen();
+
+            // NOTE: Delay must be > 1 for user input to be read
+            sdl_base::sleep(3);
         }
-
-        states::draw();
-        io::draw_glyph('X', Panel::map, p, clr_yellow);
-        io::update_screen();
-
-        // NOTE: Delay must be > 1 for user input to be read
-        sdl_base::sleep(10);
     }
-#endif // DEMO_MODE
+#endif // NDEBUG
 
     return f;
 }

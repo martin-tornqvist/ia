@@ -23,11 +23,11 @@
 #include "gods.hpp"
 #include "rl_utils.hpp"
 
-#ifdef DEMO_MODE
+#ifndef NDEBUG
 #include "io.hpp"
 #include "sdl_base.hpp"
 #include "query.hpp"
-#endif // DEMO_MODE
+#endif // NDEBUG
 
 namespace mapgen
 {
@@ -55,16 +55,19 @@ void connect_rooms()
         {
             mapgen::is_map_valid = false;
 
-#ifdef DEMO_MODE
-            io::cover_panel(Panel::log);
-            states::draw();
-            io::draw_text("Failed to connect map",
-                          Panel::screen,
-                          P(0, 0),
-                          clr_red_lgt);
-            io::update_screen();
-            sdl_base::sleep(8000);
-#endif // DEMO_MODE
+#ifndef NDEBUG
+            if (init::is_demo_mapgen)
+            {
+                io::cover_panel(Panel::log);
+                states::draw();
+                io::draw_text("Failed to connect map",
+                              Panel::screen,
+                              P(0, 0),
+                              clr_red_lgt);
+                io::update_screen();
+                sdl_base::sleep(8000);
+            }
+#endif // NDEBUG
             break;
         }
 
@@ -244,16 +247,19 @@ P mk_stairs()
         TRACE << "Nr available cells to place stairs too low "
               << "(" << nr_ok_cells << "), discarding map" << std:: endl;
         is_map_valid = false;
-#ifdef DEMO_MODE
-        io::cover_panel(Panel::log);
-        states::draw();
-        io::draw_text("To few cells to place stairs",
-                      Panel::screen,
-                      P(0, 0),
-                      clr_red_lgt);
-        io::update_screen();
-        sdl_base::sleep(8000);
-#endif // DEMO_MODE
+#ifndef NDEBUG
+        if (init::is_demo_mapgen)
+        {
+            io::cover_panel(Panel::log);
+            states::draw();
+            io::draw_text("To few cells to place stairs",
+                          Panel::screen,
+                          P(0, 0),
+                          clr_red_lgt);
+            io::update_screen();
+            sdl_base::sleep(8000);
+        }
+#endif // NDEBUG
         return P(-1, -1);
     }
 
@@ -414,7 +420,6 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Reserve regions for a "river"
     // -------------------------------------------------------------------------
-#ifndef DISABLE_MK_RIVER
     const int river_one_in_n = 12;
 
     if (map::dlvl >= dlvl_first_mid_game &&
@@ -427,19 +432,16 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif // MK_RIVER
 
     // -------------------------------------------------------------------------
     // Merge some regions
     // -------------------------------------------------------------------------
-#ifndef DISABLE_MERGED_REGIONS
     merge_regions(regions);
 
     if (!is_map_valid)
     {
         return false;
     }
-#endif // MK_MERGED_REGIONS
 
     // -------------------------------------------------------------------------
     // Make main rooms
@@ -467,17 +469,20 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Make auxiliary rooms
     // -------------------------------------------------------------------------
-#ifndef DISABLE_AUX_ROOMS
-#ifdef DEMO_MODE
-    io::cover_panel(Panel::log);
-    states::draw();
-    io::draw_text("Press any key to make aux rooms...",
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
+    {
+        io::cover_panel(Panel::log);
+        states::draw();
+        io::draw_text("Press any key to make aux rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    io::update_screen();
-    query::wait_for_key_press();
-#endif // DEMO_MODE
+        io::update_screen();
+        query::wait_for_key_press();
+        io::cover_panel(Panel::log);
+    }
+#endif // NDEBUG
 
     mk_aux_rooms(regions);
 
@@ -488,21 +493,23 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif // DISABLE_AUX_ROOMS
 
-#ifndef DISABLE_MK_SUB_ROOMS
     if (map::dlvl <= dlvl_last_mid_game)
     {
-#ifdef DEMO_MODE
-        io::cover_panel(Panel::log);
-        states::draw();
-        io::draw_text("Press any key to make sub rooms...",
+#ifndef NDEBUG
+        if (init::is_demo_mapgen)
+        {
+            io::cover_panel(Panel::log);
+            states::draw();
+            io::draw_text("Press any key to make sub rooms...",
                           Panel::screen,
                           P(0, 0),
                           clr_white);
-        io::update_screen();
-        query::wait_for_key_press();
-#endif // DEMO_MODE
+            io::update_screen();
+            query::wait_for_key_press();
+            io::cover_panel(Panel::log);
+        }
+#endif // NDEBUG
 
         mk_sub_rooms();
     }
@@ -511,7 +518,6 @@ bool mk_std_lvl()
     {
         return false;
     }
-#endif // DISABLE_MK_SUB_ROOMS
 
     TRACE << "Sorting the room list according to room type" << std:: endl;
     // NOTE: This allows common rooms to assume that they are rectangular and
@@ -546,16 +552,20 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     TRACE << "Running pre-connect functions for all rooms" << std:: endl;
 
-#ifdef DEMO_MODE
-    io::cover_panel(Panel::log);
-    states::draw();
-    io::draw_text("Press any key to run pre-connect functions on rooms...",
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
+    {
+        io::cover_panel(Panel::log);
+        states::draw();
+        io::draw_text("Press any key to run pre-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
                       clr_white);
-    io::update_screen();
-    query::wait_for_key_press();
-#endif // DEMO_MODE
+        io::update_screen();
+        query::wait_for_key_press();
+        io::cover_panel(Panel::log);
+    }
+#endif // NDEBUG
 
     gods::set_no_god();
 
@@ -572,16 +582,20 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Connect the rooms
     // -------------------------------------------------------------------------
-#ifdef DEMO_MODE
-    io::cover_panel(Panel::log);
-    states::draw();
-    io::draw_text("Press any key to connect rooms...",
-                  Panel::screen,
-                  P(0, 0),
-                  clr_white);
-    io::update_screen();
-    query::wait_for_key_press();
-#endif // DEMO_MODE
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
+    {
+        io::cover_panel(Panel::log);
+        states::draw();
+        io::draw_text("Press any key to connect rooms...",
+                      Panel::screen,
+                      P(0, 0),
+                      clr_white);
+        io::update_screen();
+        query::wait_for_key_press();
+        io::cover_panel(Panel::log);
+    }
+#endif // NDEBUG
 
     connect_rooms();
 
@@ -594,16 +608,20 @@ bool mk_std_lvl()
     }
 
     TRACE << "Running post-connect functions for all rooms" << std:: endl;
-#ifdef DEMO_MODE
-    io::cover_panel(Panel::log);
-    states::draw();
-    io::draw_text("Press any key to run post-connect functions on rooms...",
-                  Panel::screen,
-                  P(0, 0),
-                  clr_white);
-    io::update_screen();
-    query::wait_for_key_press();
-#endif // DEMO_MODE
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
+    {
+        io::cover_panel(Panel::log);
+        states::draw();
+        io::draw_text("Press any key to run post-connect functions on rooms...",
+                      Panel::screen,
+                      P(0, 0),
+                      clr_white);
+        io::update_screen();
+        query::wait_for_key_press();
+        io::cover_panel(Panel::log);
+    }
+#endif // NDEBUG
 
     for (Room* room : map::room_list)
     {
@@ -641,14 +659,12 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Decorate the map
     // -------------------------------------------------------------------------
-#ifndef DISABLE_DECORATE
     decorate();
 
     if (!is_map_valid)
     {
         return false;
     }
-#endif // DISABLE_DECORATE
 
     // -------------------------------------------------------------------------
     // Place the stairs

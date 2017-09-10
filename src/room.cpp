@@ -14,10 +14,10 @@
 #include "game_time.hpp"
 #include "populate_monsters.hpp"
 
-#ifdef DEMO_MODE
+#ifndef NDEBUG
 #include "io.hpp"
 #include "sdl_base.hpp"
-#endif // DEMO_MODE
+#endif // NDEBUG
 
 namespace
 {
@@ -1754,34 +1754,36 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         }
     }
 
-#ifdef DEMO_MODE
-    states::draw();
-
-    for (int y = 1; y < map_h - 1; ++y)
+#ifndef NDEBUG
+    if (init::is_demo_mapgen)
     {
-        for (int x = 1; x < map_w - 1; ++x)
+        states::draw();
+
+        for (int y = 1; y < map_h - 1; ++y)
         {
-            P p(x, y);
-
-            if (valid_room_entries0[x][y])
+            for (int x = 1; x < map_w - 1; ++x)
             {
-                io::draw_glyph('0', Panel::map, p, clr_red_lgt);
-            }
+                P p(x, y);
 
-            if (valid_room_entries1[x][y])
-            {
-                io::draw_glyph('1', Panel::map, p, clr_red_lgt);
-            }
+                if (valid_room_entries0[x][y])
+                {
+                    io::draw_glyph('0', Panel::map, p, clr_red_lgt);
+                }
 
-            if (valid_room_entries0[x][y] || valid_room_entries1[x][y])
-            {
-                io::update_screen();
-                sdl_base::sleep(100);
+                if (valid_room_entries1[x][y])
+                {
+                    io::draw_glyph('1', Panel::map, p, clr_red_lgt);
+                }
+
+                if (valid_room_entries0[x][y] || valid_room_entries1[x][y])
+                {
+                    io::update_screen();
+                    sdl_base::sleep(100);
+                }
             }
         }
     }
-
-#endif // DEMO_MODE
+#endif // NDEBUG
 
     std::vector<int> positions(is_hor ? map_w : map_h);
 
@@ -1882,13 +1884,16 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
         // Make the bridge if valid connection pairs found
         if (room_con0.x != -1 && room_con1.x != -1)
         {
-#ifdef DEMO_MODE
-            states::draw();
-            io::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
-            io::draw_glyph('1', Panel::map, room_con1, clr_yellow);
-            io::update_screen();
-            sdl_base::sleep(2000);
-#endif // DEMO_MODE
+#ifndef NDEBUG
+            if (init::is_demo_mapgen)
+            {
+                states::draw();
+                io::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
+                io::draw_glyph('1', Panel::map, room_con1, clr_yellow);
+                io::update_screen();
+                sdl_base::sleep(2000);
+            }
+#endif // NDEBUG
 
             TRACE << "Found valid connection pair at: "
                   << room_con0.x << "," << room_con0.y << " / "

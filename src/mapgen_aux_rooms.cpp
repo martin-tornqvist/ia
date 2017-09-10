@@ -91,7 +91,6 @@ bool try_mk_aux_room(const P& p,
             }
         }
 
-#ifndef DISABLE_CRUMBLE_ROOMS
         // Make a "crumble room"?
         if (rnd::one_in(20))
         {
@@ -104,7 +103,6 @@ bool try_mk_aux_room(const P& p,
                             door_p);
         }
         else // Not "crumble room"
-#endif // DISABLE_CRUMBLE_ROOMS
         {
             mk_room(aux_rect, IsSubRoom::no);
         }
