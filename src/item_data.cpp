@@ -281,7 +281,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.ranged.throw_hit_chance_mod = 15;
         d.ranged.throw_dmg = Dice(1, 3, 0);
         d.ranged.always_break_on_throw = true;
-        d.max_stack_at_spawn = 2;
+        d.max_stack_at_spawn = 1;
         d.land_on_hard_snd_msg = "";
         d.ranged.is_throwable_wpn = true;
         d.native_containers.push_back(FeatureId::chest);
