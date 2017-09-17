@@ -2332,6 +2332,8 @@ void ItemContainer::open(const P& feature_pos,
                 item_drop::drop_item_on_map(feature_pos, *item);
 
                 item->on_player_found();
+
+                msg_log::more_prompt();
             }
             else // Special key (unload in this case)
             {
