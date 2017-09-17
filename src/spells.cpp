@@ -2390,7 +2390,6 @@ void SpellSummonMon::run_effect(Actor* const caster,
             summon_bucket.push_back(ActorId::raven);
             summon_bucket.push_back(ActorId::pit_viper);
             summon_bucket.push_back(ActorId::wolf);
-            summon_bucket.push_back(ActorId::ooze_black);
         }
 
         if ((skill == SpellSkill::expert) ||
@@ -2402,7 +2401,6 @@ void SpellSummonMon::run_effect(Actor* const caster,
             summon_bucket.push_back(ActorId::fire_hound);
             summon_bucket.push_back(ActorId::giant_bat);
             summon_bucket.push_back(ActorId::vampire_bat);
-            summon_bucket.push_back(ActorId::ooze_poison);
             summon_bucket.push_back(ActorId::fire_vortex);
         }
 
