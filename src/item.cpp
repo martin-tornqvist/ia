@@ -762,9 +762,9 @@ void Wpn::set_random_melee_plus()
     // Element corresponds to plus damage value (+0, +1, +2, etc)
     const std::vector<int> weights =
     {
-        50,     // +0
-        75,     // +1
-        50,     // +2
+        100,    // +0
+        150,    // +1
+        100,    // +2
         20,     // +3
         4,      // +4
         2,      // +5
