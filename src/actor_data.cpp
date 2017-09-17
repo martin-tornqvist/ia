@@ -2547,7 +2547,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 10;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'M';
     d.color = clr_yellow;
     d.tile = TileId::shadow;
