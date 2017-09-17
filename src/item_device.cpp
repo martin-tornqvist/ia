@@ -41,7 +41,7 @@ void Device::identify(const Verbosity verbosity)
 
             game::add_history_event("Comprehended " + name_after + ".");
 
-            give_xp_for_identify();
+            game::incr_player_xp(15);
         }
     }
 }

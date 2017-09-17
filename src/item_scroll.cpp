@@ -157,8 +157,6 @@ void Scroll::identify(const Verbosity verbosity)
         msg_log::add("I have identified " + name_after + ".");
 
         game::add_history_event("Identified " + name_after + ".");
-
-        give_xp_for_identify();
     }
 }
 

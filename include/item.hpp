@@ -29,7 +29,7 @@ public:
 
     ItemId id() const;
 
-    const ItemDataT& data() const;
+    ItemDataT& data() const;
 
     virtual Clr clr() const;
 
@@ -160,8 +160,6 @@ public:
     {
         return carrier_spells_;
     }
-
-    void give_xp_for_identify(const Verbosity verbosity = Verbosity::verbose);
 
     int nr_items_;
 

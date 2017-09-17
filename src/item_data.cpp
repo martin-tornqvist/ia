@@ -30,7 +30,7 @@ ItemDataT::ItemDataT() :
     is_identified                       (true),
     is_tried                            (false),
     is_found                            (false),
-    xp_on_identify                      (0),
+    xp_on_found                         (0),
     base_name                           (),
     glyph                               ('X'),
     clr                                 (clr_white),
@@ -250,7 +250,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_spawn_list = 40;
         d.weight = ItemWeight::none;
         d.is_identified = false;
-        d.xp_on_identify = 10;
+        d.xp_on_found = 10;
         d.glyph = '?';
         d.clr = clr_white;
         d.tile = TileId::scroll;
@@ -275,7 +275,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_spawn_list = 55;
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 10;
+        d.xp_on_found = 10;
         d.glyph = '!';
         d.tile = TileId::potion;
         d.ranged.throw_hit_chance_mod = 15;
@@ -310,7 +310,6 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 15;
         d.glyph = '%';
         d.tile = TileId::device1;
         d.is_stackable = false;
@@ -333,7 +332,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.xp_on_identify = 15;
+        d.xp_on_found = 15;
         d.glyph = '%';
         d.tile = TileId::rod;
         d.is_stackable = false;
@@ -2209,6 +2208,7 @@ void init_data_list()
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2234,6 +2234,7 @@ void init_data_list()
     d.tile = TileId::amulet;
     d.glyph = '"';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2259,6 +2260,7 @@ void init_data_list()
     d.tile = TileId::amulet;
     d.glyph = '"';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2283,6 +2285,7 @@ void init_data_list()
     d.tile = TileId::amulet;
     d.glyph = '"';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2309,6 +2312,7 @@ void init_data_list()
     d.tile = TileId::clockwork;
     d.glyph = '%';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
@@ -2336,6 +2340,7 @@ void init_data_list()
     d.tile = TileId::horn;
     d.glyph = '%';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
@@ -2362,6 +2367,7 @@ void init_data_list()
     d.tile = TileId::horn;
     d.glyph = '%';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
@@ -2387,6 +2393,7 @@ void init_data_list()
     d.tile = TileId::horn;
     d.glyph = '%';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
@@ -2422,6 +2429,7 @@ void init_data_list()
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2445,6 +2453,7 @@ void init_data_list()
     d.tile = TileId::orb;
     d.glyph = '"';
     d.is_unique = true;
+    d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;

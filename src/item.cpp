@@ -69,7 +69,7 @@ ItemId Item::id() const
     return data_->id;
 }
 
-const ItemDataT& Item::data() const
+ItemDataT& Item::data() const
 {
     return *data_;
 }
@@ -265,8 +265,7 @@ void Item::on_removed_from_inv()
 
 void Item::on_player_found()
 {
-    if ((data_->value == ItemValue::major_treasure) &&
-        data_->is_unique &&
+    if ((data_->xp_on_found > 0) &&
         !data_->is_found)
     {
         const std::string item_name =
@@ -277,12 +276,12 @@ void Item::on_player_found()
 
         msg_log::add("I have found " + item_name + "!");
 
-        game::incr_player_xp(5, Verbosity::verbose);
-
-        data_->is_found = true;
+        game::incr_player_xp(data_->xp_on_found, Verbosity::verbose);
 
         game::add_history_event("Found " + item_name + ".");
     }
+
+    data_->is_found = true;
 }
 
 std::string Item::name(const ItemRefType ref_type,
@@ -584,12 +583,6 @@ void Item::clear_carrier_spells()
     }
 
     carrier_spells_.clear();
-}
-
-void Item::give_xp_for_identify(const Verbosity verbosity)
-{
-    game::incr_player_xp(data_->xp_on_identify,
-                         verbosity);
 }
 
 // -----------------------------------------------------------------------------

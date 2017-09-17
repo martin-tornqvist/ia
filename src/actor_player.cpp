@@ -105,13 +105,18 @@ void Player::mk_start_items()
         // Occultist starts with some spells and a potion
 
         // Spirit potion
-        Item* spi_pot = item_factory::mk(ItemId::potion_spirit);
+        {
+            Item* spi_pot = item_factory::mk(ItemId::potion_spirit);
 
-        spi_pot->identify(Verbosity::silent);
+            spi_pot->identify(Verbosity::silent);
 
-        spi_pot->give_xp_for_identify(Verbosity::silent);
+            game::incr_player_xp(spi_pot->data().xp_on_found,
+                                 Verbosity::silent);
 
-        inv_->put_in_backpack(spi_pot);
+            spi_pot->data().is_found = true;
+
+            inv_->put_in_backpack(spi_pot);
+        }
 
         // Learn the Darkbolt spell
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
@@ -119,24 +124,30 @@ void Player::mk_start_items()
         // Learn the Searching spell
         player_spells::learn_spell(SpellId::searching, Verbosity::silent);
 
-        // Identify the Darkbolt scroll
+        // Find and identify the Darkbolt scroll
         {
-            std::unique_ptr<Item> darkbolt_scroll(
+            std::unique_ptr<Item> scroll(
                 item_factory::mk(ItemId::scroll_darkbolt));
 
-            darkbolt_scroll->identify(Verbosity::silent);
+            scroll->identify(Verbosity::silent);
 
-            darkbolt_scroll->give_xp_for_identify(Verbosity::silent);
+            game::incr_player_xp(scroll->data().xp_on_found,
+                                 Verbosity::silent);
+
+            scroll->data().is_found = true;
         }
 
-        // Identify the Searching scroll
+        // Find and identify the Searching scroll
         {
-            std::unique_ptr<Item> searching_scroll(
+            std::unique_ptr<Item> scroll(
                 item_factory::mk(ItemId::scroll_searching));
 
-            searching_scroll->identify(Verbosity::silent);
+            scroll->identify(Verbosity::silent);
 
-            searching_scroll->give_xp_for_identify(Verbosity::silent);
+            game::incr_player_xp(scroll->data().xp_on_found,
+                                 Verbosity::silent);
+
+            scroll->data().is_found = true;
         }
     }
     break;
@@ -155,6 +166,10 @@ void Player::mk_start_items()
                           dagger,
                           Verbosity::silent);
 
+        inv_->put_in_slot(SlotId::body,
+                          item_factory::mk(ItemId::armor_leather_jacket),
+                          Verbosity::silent);
+
         // Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
 
@@ -163,13 +178,12 @@ void Player::mk_start_items()
 
         static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
 
-        item->give_xp_for_identify(Verbosity::silent);
+        game::incr_player_xp(item->data().xp_on_found,
+                             Verbosity::silent);
+
+        item->data().is_found = true;
 
         inv_->put_in_backpack(item);
-
-        inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_leather_jacket),
-                          Verbosity::silent);
     }
     break;
 
@@ -1958,14 +1972,21 @@ void Player::move(Dir dir)
 
             if (item)
             {
-                std::string item_name =
-                    item->name(ItemRefType::plural,
-                               ItemRefInf::yes,
-                               ItemRefAttInf::wpn_main_att_mode);
+                // Only print the item name if the item will not be "found" by
+                // stepping on it, otherwise there would be redundant messages,
+                // e.g. "A Muddy Potion." -> "I have found a Muddy Potion!"
+                if ((item->data().xp_on_found <= 0) ||
+                    item->data().is_found)
+                {
+                    std::string item_name =
+                        item->name(ItemRefType::plural,
+                                   ItemRefInf::yes,
+                                   ItemRefAttInf::wpn_main_att_mode);
 
-                item_name = text_format::first_to_upper(item_name);
+                    item_name = text_format::first_to_upper(item_name);
 
-                msg_log::add(item_name + ".");
+                    msg_log::add(item_name + ".");
+                }
 
                 item->on_player_found();
             }

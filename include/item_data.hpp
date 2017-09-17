@@ -253,7 +253,7 @@ public:
     bool                        is_identified;
     bool                        is_tried;
     bool                        is_found; // Was seen on map or in inventory
-    int                         xp_on_identify;
+    int                         xp_on_found;
     ItemName                    base_name;
     ItemName                    base_name_un_id;
     std::vector<std::string>    base_descr;

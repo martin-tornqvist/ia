@@ -566,19 +566,6 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
 
             lines.push_back(StrAndClr(pct_str, clr_green));
         }
-
-        // ---------------------------------------------------------------------
-        // XP for identifying
-        // ---------------------------------------------------------------------
-        if (!d.is_identified && (d.xp_on_identify > 0))
-        {
-            const std::string xp_id_str =
-                "Identifying grants +" +
-                std::to_string(d.xp_on_identify) +
-                "% XP.";
-
-            lines.push_back(StrAndClr(xp_id_str, clr_msg_good));
-        }
     }
 
     // We draw the description box regardless of whether the lines are empty or
