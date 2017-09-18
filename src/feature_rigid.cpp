@@ -3391,7 +3391,12 @@ void Fountain::bump(Actor& actor_bumping)
 
         const int dry_one_in_n = 3;
 
-        if (rnd::one_in(dry_one_in_n))
+        const bool is_bad =
+            (int)fountain_effect_ >
+            (int)FountainEffect::START_OF_BAD_EFFECTS;
+
+        if (is_bad ||
+            rnd::one_in(dry_one_in_n))
         {
             has_drinks_left_ = false;
 

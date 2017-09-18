@@ -18,6 +18,7 @@ Gameplay
 * The "Silent" trait also prevents alerting monsters when wading through liquid
 * Melee traits no longer improves chance to evade melee attacks
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
+* Fountains with bad effects always dry up on the first quaff
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)
