@@ -1129,11 +1129,9 @@ void SpellPest::run_effect(Actor* const caster,
 
     for (Mon* const mon : mon_summoned)
     {
-        mon->prop_handler().apply(
-            new PropSummoned(PropTurns::indefinite));
+        mon->prop_handler().apply(new PropSummoned(PropTurns::std));
 
-        mon->prop_handler().apply(
-            new PropWaiting(PropTurns::specific, 2));
+        mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
 
         if (map::player->can_see_actor(*mon))
         {
@@ -1453,8 +1451,9 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
 
     Mon* const mon = summoned_mon[0];
 
-    mon->prop_handler().apply(
-        new PropWaiting(PropTurns::specific, 2));
+    mon->prop_handler().apply(new PropSummoned(PropTurns::std));
+
+    mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
 
     if (map::player->can_see_actor(*mon))
     {
@@ -2514,11 +2513,9 @@ void SpellSummonMon::run_effect(Actor* const caster,
 
     Mon* const mon = mon_summoned[0];
 
-    mon->prop_handler().apply(
-        new PropSummoned(PropTurns::indefinite));
+    mon->prop_handler().apply(new PropSummoned(PropTurns::std));
 
-    mon->prop_handler().apply(
-        new PropWaiting(PropTurns::specific, 2));
+    mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
 
     if (map::player->can_see_actor(*mon))
     {

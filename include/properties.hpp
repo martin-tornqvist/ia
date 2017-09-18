@@ -81,7 +81,7 @@ enum class PropId
     wound,
     r_spell,
     clockwork_hasted, // For the Arcane Clockwork artifact
-    summoned, // Will be unsommed by Horn of Banishment
+    summoned,
 
     END
 };
@@ -1131,6 +1131,8 @@ class PropSummoned: public Prop
 public:
     PropSummoned(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::summoned, turns_init, nr_turns) {}
+
+    void on_end() override;
 };
 
 class PropFrenzied: public Prop

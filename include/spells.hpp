@@ -466,7 +466,7 @@ public:
 
     virtual std::string name() const override
     {
-        return "Summon Mummy servant";
+        return "Summon Mummy Servant";
     }
 
     virtual SpellId id() const override
@@ -495,7 +495,7 @@ protected:
     {
         (void)skill;
 
-        return 7;
+        return 6;
     }
 };
 
@@ -1190,7 +1190,7 @@ private:
     {
         (void)skill;
 
-        return 7;
+        return 6;
     }
 };
 

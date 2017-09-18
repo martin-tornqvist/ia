@@ -480,6 +480,8 @@ void init_data_list()
     add_prop_data(d);
 
     d.id = PropId::summoned;
+    d.std_rnd_turns = Range(40, 80);
+    d.msg[(size_t)PropMsg::end_mon] = "suddenly disappears.";
     d.name = "Summoned";
     d.descr = "Was magically summoned here";
     d.alignment = PropAlignment::neutral;
@@ -2346,6 +2348,11 @@ void PropSlowed::on_start()
 void PropHasted::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::slowed, false);
+}
+
+void PropSummoned::on_end()
+{
+    owning_actor_->destroy_silent();
 }
 
 Prop* PropInfected::on_tick()
