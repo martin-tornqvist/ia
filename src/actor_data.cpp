@@ -2561,7 +2561,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::darkvis] = true;
-    d.prevent_knockback = true;
+    d.prevent_knockback = false;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = dlvl_last_early_game;
     d.actor_size = ActorSize::humanoid;
