@@ -87,11 +87,9 @@ void Player::mk_start_items()
     {
     case Bg::occultist:
     {
-        // Occultist starts with one less cartridge, and no explosives or
-        // throwing knives.
         --nr_cartridges;
-        nr_dynamite = 0;
-        nr_molotov = 0;
+        --nr_dynamite;
+        --nr_molotov;
         nr_throwing_knives = 0;
 
         inv_->put_in_slot(SlotId::wpn,
@@ -101,8 +99,6 @@ void Player::mk_start_items()
         inv_->put_in_slot(SlotId::body,
                           item_factory::mk(ItemId::armor_leather_jacket),
                           Verbosity::silent);
-
-        // Occultist starts with some spells and a potion
 
         // Spirit potion
         {
@@ -124,7 +120,7 @@ void Player::mk_start_items()
         // Learn the Searching spell
         player_spells::learn_spell(SpellId::searching, Verbosity::silent);
 
-        // Find and identify the Darkbolt scroll
+        // Discover and identify the Darkbolt scroll
         {
             std::unique_ptr<Item> scroll(
                 item_factory::mk(ItemId::scroll_darkbolt));
@@ -137,7 +133,7 @@ void Player::mk_start_items()
             scroll->data().is_found = true;
         }
 
-        // Find and identify the Searching scroll
+        // Discover and identify the Searching scroll
         {
             std::unique_ptr<Item> scroll(
                 item_factory::mk(ItemId::scroll_searching));
@@ -154,10 +150,8 @@ void Player::mk_start_items()
 
     case Bg::rogue:
     {
-        // Rogue starts with extra throwing knives
         nr_throwing_knives += 6;
 
-        // Rogue starts with a +1 dagger
         auto* const dagger = item_factory::mk(ItemId::dagger);
 
         static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
@@ -170,10 +164,8 @@ void Player::mk_start_items()
                           item_factory::mk(ItemId::armor_leather_jacket),
                           Verbosity::silent);
 
-        // Rogue starts with some iron spikes (useful tool)
         inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
 
-        // Rogue starts with a Rod of Cloud Minds
         Item* item = item_factory::mk(ItemId::rod_cloud_minds);
 
         static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
@@ -189,8 +181,6 @@ void Player::mk_start_items()
 
     case Bg::war_vet:
     {
-        // War Veteran starts with an extra cartridge, some smoke grenades,
-        // flares, and a gas mask
         ++nr_cartridges;
 
         inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
