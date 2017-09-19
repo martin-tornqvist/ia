@@ -2364,7 +2364,7 @@ Prop* PropInfected::on_tick()
     //
     // Increase risk of disease the fewer turns left the infection has
     //
-    const int allow_disease_below_turns_left = 85;
+    const int allow_disease_below_turns_left = 50;
 
     const int apply_disease_one_in = nr_turns_left_ - 1;
 
