@@ -653,6 +653,7 @@ std::vector<RoomAutoFeatureRule> RitualRoom::auto_features_allowed() const
     return
     {
         {FeatureId::altar, 1},
+        {FeatureId::alchemist_bench, rnd::one_in(4) ? 1 : 0},
         {FeatureId::brazier, rnd::range(2, 4)},
         {FeatureId::chains, rnd::one_in(7) ? rnd::range(1, 2) : 0}
     };
