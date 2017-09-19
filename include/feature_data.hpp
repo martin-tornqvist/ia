@@ -33,6 +33,7 @@ enum class FeatureId
     chest,
     cabinet,
     bookshelf,
+    alchemist_bench,
     fountain,
     monolith,
     pylon,

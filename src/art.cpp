@@ -301,6 +301,8 @@ P column_and_row_tile(const TileId tile)
     case TileId::popup_ver_l:                   return P(12, 10);
     case TileId::stalagmite:                    return P(13, 10);
     case TileId::trap_general:                  return P(14, 10);
+    case TileId::alchemist_bench_full:          return P(15, 10);
+    case TileId::alchemist_bench_empty:         return P(16, 10);
     case TileId::heart:                         return P(0, 11);
     case TileId::brain:                         return P(1, 11);
     case TileId::weight:                        return P(2, 11);

@@ -3199,12 +3199,18 @@ std::string Chest::name(const Article article) const
 
 TileId Chest::tile() const
 {
-    return is_open_ ? TileId::chest_open : TileId::chest_closed;
+    return
+        is_open_ ?
+        TileId::chest_open :
+        TileId::chest_closed;
 }
 
 Clr Chest::clr_default() const
 {
-    return matl_ == ChestMatl::wood ? clr_brown_drk : clr_gray;
+    return
+        (matl_ == ChestMatl::wood) ?
+        clr_brown_drk :
+        clr_gray;
 }
 
 // -----------------------------------------------------------------------------
@@ -3637,6 +3643,120 @@ TileId Bookshelf::tile() const
 Clr Bookshelf::clr_default() const
 {
     return clr_brown_drk;
+}
+
+// -----------------------------------------------------------------------------
+// AlchemistBench
+// -----------------------------------------------------------------------------
+AlchemistBench::AlchemistBench(const P& p) :
+    Rigid       (p),
+    is_looted_  (false)
+{
+    // Contained items
+    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+
+    int nr_items_max = 1;
+
+    int incr_max_items_one_in = 12;
+
+    if (player_bon::traits[(size_t)Trait::treasure_hunter])
+    {
+        incr_max_items_one_in /= 2;
+    }
+
+    if (rnd::one_in(incr_max_items_one_in))
+    {
+        ++nr_items_max;
+    }
+
+    item_container_.init(FeatureId::alchemist_bench,
+                         rnd::range(nr_items_min,
+                                    nr_items_max));
+}
+
+void AlchemistBench::on_hit(const int dmg,
+                       const DmgType dmg_type,
+                       const DmgMethod dmg_method,
+                       Actor* const actor)
+{
+    (void)dmg;
+    (void)dmg_type;
+    (void)dmg_method;
+    (void)actor;
+}
+
+void AlchemistBench::bump(Actor& actor_bumping)
+{
+    if (actor_bumping.is_player())
+    {
+        if (item_container_.items_.empty() && is_looted_)
+        {
+            msg_log::add("The bench is empty.");
+        }
+        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        {
+            msg_log::add("There is a wooden bench here.");
+        }
+        // Can see
+        else  if (!is_looted_)
+        {
+            player_loot();
+        }
+    }
+}
+
+void AlchemistBench::player_loot()
+{
+    msg_log::add("I search the alchemist's workbench.",
+                 clr_text,
+                 false,
+                 MorePromptOnMsg::yes);
+
+    is_looted_ = true;
+
+    if (item_container_.items_.empty())
+    {
+        msg_log::add("There is nothing of interest.");
+    }
+    else
+    {
+        item_container_.open(pos_, map::player);
+    }
+}
+
+std::string AlchemistBench::name(const Article article) const
+{
+    std::string a =
+        (article == Article::a) ?
+        "a " :
+        "the ";
+
+    std::string mod = "";
+
+    if (burn_state() == BurnState::burning)
+    {
+        if (article == Article::a)
+        {
+            a = "an ";
+        }
+
+        mod = "burning ";
+    }
+
+    return a + mod + "alchemist's workbench";
+}
+
+TileId AlchemistBench::tile() const
+{
+    return
+        is_looted_ ?
+        TileId::alchemist_bench_empty :
+        TileId::alchemist_bench_full;
+}
+
+Clr AlchemistBench::clr_default() const
+{
+    return clr_brown;
 }
 
 // -----------------------------------------------------------------------------

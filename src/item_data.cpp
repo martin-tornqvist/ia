@@ -287,6 +287,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.native_containers.push_back(FeatureId::chest);
         d.native_containers.push_back(FeatureId::tomb);
         d.native_containers.push_back(FeatureId::cabinet);
+        d.native_containers.push_back(FeatureId::alchemist_bench);
         d.native_containers.push_back(FeatureId::cocoon);
         break;
 

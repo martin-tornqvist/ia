@@ -556,11 +556,12 @@ std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
     return
     {
-        {FeatureId::chest,      rnd::range(1, 2)},
-        {FeatureId::cabinet,    rnd::range(0, 2)},
-        {FeatureId::bookshelf,  rnd::range(0, 2)},
-        {FeatureId::brazier,    rnd::range(0, 2)},
-        {FeatureId::statue,     rnd::range(0, 3)}
+        {FeatureId::chest,              rnd::range(1, 2)},
+        {FeatureId::cabinet,            rnd::range(0, 2)},
+        {FeatureId::bookshelf,          rnd::range(0, 2)},
+        {FeatureId::alchemist_bench,    rnd::range(0, 1)},
+        {FeatureId::brazier,            rnd::range(0, 2)},
+        {FeatureId::statue,             rnd::range(0, 3)}
     };
 }
 

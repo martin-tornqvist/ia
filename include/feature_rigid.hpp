@@ -1061,6 +1061,37 @@ private:
     bool is_looted_;
 };
 
+class AlchemistBench: public Rigid
+{
+public:
+    AlchemistBench(const P& pos);
+    AlchemistBench() = delete;
+    ~AlchemistBench() {}
+
+    FeatureId id() const override
+    {
+        return FeatureId::alchemist_bench;
+    }
+
+    std::string name(const Article article) const override;
+
+    TileId tile() const override;
+
+    void bump(Actor& actor_bumping) override;
+
+private:
+    Clr clr_default() const override;
+
+    void on_hit(const int dmg,
+                const DmgType dmg_type,
+                const DmgMethod dmg_method,
+                Actor* const actor) override;
+
+    void player_loot();
+
+    bool is_looted_;
+};
+
 enum class FountainEffect
 {
     refreshing,

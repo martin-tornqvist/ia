@@ -538,6 +538,24 @@ void init_data_list()
     d.auto_spawn_placement = FeaturePlacement::adj_to_walls;
     add_to_list_and_reset(d);
 
+    d.id = FeatureId::alchemist_bench;
+    d.mk_obj = [](const P & p)
+    {
+        return new AlchemistBench(p);
+    };
+    d.glyph = '7';
+    d.tile = TileId::alchemist_bench_full;
+    d.is_projectile_passable = false;
+    d.is_los_passable = true;
+    d.can_have_blood = false;
+    d.can_have_gore = false;
+    d.can_have_corpse = false;
+    d.can_have_rigid = false;
+    d.can_have_item = false;
+    d.matl_type = Matl::wood;
+    d.auto_spawn_placement = FeaturePlacement::either;
+    add_to_list_and_reset(d);
+
     d.id = FeatureId::fountain;
     d.mk_obj = [](const P & p)
     {

@@ -130,6 +130,8 @@ enum class TileId
     monolith,
     bookshelf_full,
     bookshelf_empty,
+    alchemist_bench_full,
+    alchemist_bench_empty,
     brazier,
     altar,
     web,
