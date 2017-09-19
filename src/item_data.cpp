@@ -272,7 +272,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
             "A small glass bottle containing a mysterious concoction."
         };
         d.value = ItemValue::minor_treasure;
-        d.chance_to_incl_in_spawn_list = 55;
+        d.chance_to_incl_in_spawn_list = 60;
         d.weight = ItemWeight::light;
         d.is_identified = false;
         d.xp_on_found = 10;
@@ -2038,7 +2038,8 @@ void init_data_list()
 
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_insight;
-    mod_spawn_chance(d, 0.33);
+    d.chance_to_incl_in_spawn_list = 100;
+    d.spawn_std_range.max = dlvl_last_mid_game;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
@@ -2052,8 +2053,7 @@ void init_data_list()
     reset_data(d, ItemType::potion);
     d.id = ItemId::potion_descent;
     mod_spawn_chance(d, 0.15);
-    // The potion is unusable past this level:
-    d.spawn_std_range.max = dlvl_last - 2;
+    d.spawn_std_range.max = dlvl_last_mid_game;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::potion);
