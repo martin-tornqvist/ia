@@ -1148,6 +1148,10 @@ void TrapSummonMon::trigger()
 
         Mon* const mon = summoned[0];
 
+        mon->prop_handler().apply(new PropSummoned(PropTurns::std));
+
+        mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
+
         if (map::player->can_see_actor(*mon))
         {
             mon->set_player_aware_of_me();

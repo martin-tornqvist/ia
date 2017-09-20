@@ -13,7 +13,8 @@ Gameplay
 * The "Transmute" spell costs much less spirit to cast
 * Monsters spawned from the spells "Summon Creature", "Pestilence", and "Summon Mummy Servant" only remains temporarily
 * The spells "Summon Creature" and "Summon Mummy Servant" costs one less spirit to cast
-* The Horn of Banishment now also works on Khephren's summoned Locusts
+* The Horn of Banishment now also works on Khephren's summoned Locusts, and on monsters spawned from traps
+* Monsters spawned from traps now wait a bit before acting
 * Using Rods causes less shock
 * The "Silent" trait also prevents alerting monsters when wading through liquid
 * Melee traits no longer improves chance to evade melee attacks
