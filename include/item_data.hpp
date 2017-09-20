@@ -81,7 +81,7 @@ enum class ItemId
     white_spider_bite,
     red_spider_bite,
     shadow_spider_bite,
-    leng_spider_bite,
+    leng_spider_bite, leng_spider_bola,
     pit_viper_bite,
     spitting_cobra_bite,
     spitting_cobra_spit,

@@ -61,6 +61,7 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::red_spider_bite:
     case ItemId::shadow_spider_bite:
     case ItemId::leng_spider_bite:
+    case ItemId::leng_spider_bola:
     case ItemId::pit_viper_bite:
     case ItemId::spitting_cobra_bite:
     case ItemId::black_mamba_bite:

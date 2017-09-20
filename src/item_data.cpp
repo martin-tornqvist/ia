@@ -89,7 +89,7 @@ ItemDataT::ItemRangedData::ItemRangedData() :
     hit_chance_mod                      (0),
     throw_hit_chance_mod                (0),
     always_break_on_throw               (false),
-    effective_range                     (3),
+    effective_range                     (6),
     max_range                           (fov_std_radi_int * 2),
     knocks_back                         (false),
     ammo_item_id                        (ItemId::END),
@@ -1335,6 +1335,17 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::leng_spider);
     data[(size_t)d.id] = d;
 
+    reset_data(d, ItemType::ranged_wpn_intr);
+    d.id = ItemId::leng_spider_bola;
+    d.ranged.att_msgs = {"", "shoots a web bola at me"};
+    set_dmg_from_mon_id(d, ActorId::leng_spider);
+    d.ranged.snd_msg = "";
+    d.ranged.projectile_clr = clr_white_lgt;
+    d.ranged.projectile_tile = TileId::blast1;
+    d.ranged.projectile_glyph = '*';
+    d.ranged.snd_vol = SndVol::low;
+    data[(size_t)d.id] = d;
+
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::pit_viper_bite;
     d.melee.att_msgs = {"", "bites me"};
@@ -1726,7 +1737,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::mold);
     d.melee.prop_applied =
         ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 2));
+                                     poison_dmg_n_turn * 3));
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 

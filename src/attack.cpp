@@ -95,11 +95,17 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     const bool player_is_handling_armor =
         map::player->nr_turns_until_handle_armor_done > 0;
 
-    if (is_defender_aware &&
+    const int dodging_ability = defender.ability(AbilityId::dodging, true);
+
+    const bool allow_positive_doge =
+        is_defender_aware &&
         !(defender.is_player() &&
-          player_is_handling_armor))
+          player_is_handling_armor);
+
+    if (allow_positive_doge ||
+        (dodging_ability < 0))
     {
-        dodging_mod -= defender.ability(AbilityId::dodging, true);
+        dodging_mod -= dodging_ability;
     }
 
     // Attacker gets a penalty against unseen targets
@@ -332,9 +338,15 @@ RangedAttData::RangedAttData(Actor* const attacker,
         const bool player_is_handling_armor =
             map::player->nr_turns_until_handle_armor_done > 0;
 
-        if (is_defender_aware &&
+        const bool allow_positive_doge =
+            is_defender_aware &&
             !(defender->is_player() &&
-              player_is_handling_armor))
+              player_is_handling_armor);
+
+        const int dodging_ability = defender->ability(AbilityId::dodging, true);
+
+        if (allow_positive_doge ||
+            (dodging_ability < 0))
         {
             dodging_mod = -defender->ability(AbilityId::dodging, true);
         }
@@ -512,9 +524,15 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
         const bool player_is_handling_armor =
             map::player->nr_turns_until_handle_armor_done > 0;
 
-        if (is_defender_aware &&
+        const int dodging_ability = defender->ability(AbilityId::dodging, true);
+
+        const bool allow_positive_doge =
+            is_defender_aware &&
             !(defender->is_player() &&
-              player_is_handling_armor))
+              player_is_handling_armor);
+
+        if (allow_positive_doge ||
+            (dodging_ability < 0))
         {
             dodging_mod = -defender->ability(AbilityId::dodging, true);
         }

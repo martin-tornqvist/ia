@@ -2313,6 +2313,7 @@ void ShadowSpider::mk_start_items()
 void LengSpider::mk_start_items()
 {
     inv_->put_in_intrinsics(item_factory::mk(ItemId::leng_spider_bite));
+    inv_->put_in_intrinsics(item_factory::mk(ItemId::leng_spider_bola));
 }
 
 void PitViper::mk_start_items()

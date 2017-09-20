@@ -375,6 +375,7 @@ void init_data_list()
     d.spi = 8;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, -10);
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 2;
@@ -902,7 +903,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -943,7 +944,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -984,7 +985,7 @@ void init_data_list()
     d.hp = 16;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::dodging, 20);
+    d.ability_vals.set_val(AbilityId::dodging, 10);
     d.spawn_min_dlvl = dlvl_first_mid_game - 2;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
     d.group_sizes.assign(
@@ -1020,10 +1021,10 @@ void init_data_list()
     d.glyph = 'a';
     d.color = clr_gray;
     d.tile = TileId::giant_spider;
-    d.hp = 8;
+    d.hp = 6;
     d.dmg_melee = min_dmg_to_wound;
     d.ability_vals.set_val(AbilityId::melee, 70);
-    d.ability_vals.set_val(AbilityId::stealth, 95);
+    d.ability_vals.set_val(AbilityId::stealth, 97);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::lgt_sens] = true;
     d.spawn_min_dlvl = 4;
@@ -1063,14 +1064,15 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = true;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
+    d.ranged_cooldown_turns = 3;
     d.glyph = 'A';
     d.color = clr_magenta;
     d.tile = TileId::giant_spider;
     d.hp = 32;
     d.dmg_melee = min_dmg_to_wound + 3;
-//  d.dmg_ranged = 1;
+    d.dmg_ranged = min_dmg_to_wound + 1;
     d.ability_vals.set_val(AbilityId::melee, 80);
-//  d.ability_vals.set_val(AbilityId::ranged, 40);
+    d.ability_vals.set_val(AbilityId::ranged, 70);
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.natural_props[(size_t)PropId::darkvis] = true;
@@ -1628,6 +1630,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 30);
+    d.ability_vals.set_val(AbilityId::dodging, -20);
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
@@ -2548,13 +2551,13 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'M';
     d.color = clr_yellow;
     d.tile = TileId::shadow;
     d.hp = 18;
     d.spi = 12;
-    d.dmg_melee = min_dmg_to_wound - 1;
+    d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 80);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::invis] = true;
@@ -2875,6 +2878,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::dodging, -20);
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 1;
     d.spawn_max_dlvl = dlvl_last_early_game;
@@ -2918,6 +2922,7 @@ void init_data_list()
     d.spi = 2;
     d.dmg_melee = 3;
     d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, -10);
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 6;
     d.spawn_max_dlvl = dlvl_last_mid_game;
@@ -3099,6 +3104,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, -10);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -3155,6 +3161,7 @@ void init_data_list()
     d.dmg_melee = min_dmg_to_wound - 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
     d.ability_vals.set_val(AbilityId::stealth, 95);
+    d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -3210,6 +3217,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, -10);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -3267,6 +3275,7 @@ void init_data_list()
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
+    d.ability_vals.set_val(AbilityId::dodging, -10);
     d.natural_props[(size_t)PropId::ooze] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
@@ -3459,6 +3468,7 @@ void init_data_list()
     d.spi = 1;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 50);
+    d.ability_vals.set_val(AbilityId::dodging, -50);
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
@@ -3471,7 +3481,7 @@ void init_data_list()
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::moves_to_random_when_unaware] = false;
     d.prevent_knockback = true;
-    d.nr_turns_aware = 5;
+    d.nr_turns_aware = 10;
     d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 5;
     d.actor_size = ActorSize::floor;
