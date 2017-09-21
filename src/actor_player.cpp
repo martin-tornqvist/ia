@@ -1173,7 +1173,7 @@ void Player::on_actor_turn()
         game::on_mon_seen(*actor);
     }
 
-    add_shock_from_seen_monsters(my_seen_foes);
+    add_shock_from_seen_monsters();
 
     if (prop_handler_->allow_act())
     {
@@ -1286,7 +1286,7 @@ void Player::on_actor_turn()
     insanity::on_new_player_turn(my_seen_foes);
 }
 
-void Player::add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters)
+void Player::add_shock_from_seen_monsters()
 {
     if (!prop_handler_->allow_see())
     {
@@ -1295,13 +1295,38 @@ void Player::add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters)
 
     double val = 0.0;
 
-    for (Actor* actor : seen_monsters)
+    for (Actor* actor : game_time::actors)
     {
+        if (actor->is_player())
+        {
+            continue;
+        }
+
         Mon* mon = static_cast<Mon*>(actor);
 
-        const ActorDataT& mon_data = mon->data();
+        if (mon->player_aware_of_me_counter_ <= 0)
+        {
+            continue;
+        }
 
-        switch (mon_data.mon_shock_lvl)
+        ShockLvl shock_lvl = ShockLvl::none;
+
+        if (can_see_actor(*mon))
+        {
+            shock_lvl = mon->data().mon_shock_lvl;
+        }
+        else // Monster cannot be seen
+        {
+            const P mon_p = mon->pos;
+
+            if (map::cells[mon_p.x][mon_p.y].is_seen_by_player)
+            {
+                // There is an invisible monster here! How scary!
+                shock_lvl = ShockLvl::terrifying;
+            }
+        }
+
+        switch (shock_lvl)
         {
         case ShockLvl::unsettling:
             val += 0.05;

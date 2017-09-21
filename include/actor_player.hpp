@@ -155,7 +155,7 @@ private:
     double shock_taken_after_mods(const double base_shock,
                                   const ShockSrc shock_src) const;
 
-    void add_shock_from_seen_monsters(std::vector<Actor*> seen_monsters);
+    void add_shock_from_seen_monsters();
 
     void update_tmp_shock();
 
