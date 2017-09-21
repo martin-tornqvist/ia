@@ -2223,7 +2223,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 5;
+    d.nr_turns_aware = 7;
     d.descr =
         "Flying polyps are a horrible elder race of half polypous, utterly "
         "alien entities. They are only partly material and have the power of "
@@ -2256,13 +2256,13 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'E';
     d.color = clr_cyan_lgt;
     d.tile = TileId::polyp;
     d.hp = 70;
     d.spi = 30;
-    d.dmg_melee = min_dmg_to_wound + 5;
+    d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 90);
     //
     // NOTE: Polyps should be resistant against all damage except electricity
@@ -2284,7 +2284,7 @@ void init_data_list()
     d.actor_size = ActorSize::giant;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 5;
+    d.nr_turns_aware = 7;
     d.descr = data[(size_t)ActorId::flying_polyp].descr;
     d.wary_msg = d.name_the + " looks wary.";
     d.aggro_msg_mon_seen = d.name_the + " makes shrill whistling sounds.";
