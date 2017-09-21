@@ -1528,12 +1528,9 @@ void init_data_list()
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::polyp_tentacle;
-    d.melee.att_msgs = {"", "grips me with a tentacle"};
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 1),
-                    75);
+    d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::flying_polyp);
-    d.melee.dmg_method = DmgMethod::blunt;
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1560,12 +1557,9 @@ void init_data_list()
 
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::greater_polyp_tentacle;
-    d.melee.att_msgs = {"", "grips me with a tentacle"};
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 1),
-                    75);
+    d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::greater_polyp);
-    d.melee.dmg_method = DmgMethod::blunt;
+    d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);

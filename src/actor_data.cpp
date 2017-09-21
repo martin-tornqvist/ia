@@ -2193,9 +2193,9 @@ void init_data_list()
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
-    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow;
+    d.speed_pct = (int)ActorSpeed::normal - 10;
     d.glyph = 'E';
     d.color = clr_magenta;
     d.tile = TileId::polyp;
@@ -2254,7 +2254,7 @@ void init_data_list()
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
-    d.ai[(size_t)AiId::moves_to_lair] = true;
+    d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'E';

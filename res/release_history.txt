@@ -23,6 +23,7 @@ Gameplay
 * Added map feature "Alchemist's workbench", similar to bookshelf but may contain potions
 * Some monsters such as Molds or common Rats have negative doding ability (i.e. they are extra easy to hit)
 * Leng Spiders have a ranged attack
+* Flying Polyps and Greater Polyps attacks no longer causes paralysis
 * Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
 
 Interface
