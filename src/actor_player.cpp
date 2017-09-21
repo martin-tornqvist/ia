@@ -1297,7 +1297,8 @@ void Player::add_shock_from_seen_monsters()
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor->is_player())
+        if (actor->is_player() ||
+            !actor->is_alive())
         {
             continue;
         }
