@@ -2657,7 +2657,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 999;
     d.descr =
         "A grotesque mummified hybrid creature, with the body of a human and "
         "the head of a crocodile. It is wielding a spear.";
