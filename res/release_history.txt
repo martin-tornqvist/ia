@@ -9,13 +9,13 @@ Gameplay
 * Slightly fewer monsters are spawned on the map
 * Removed the "Demolition Expert" trait
 * Monsters can no longer cast "See Invisible"
-* Some monsters now have more specialized spell selections
+* Some monsters now have more specialized spell selections (too many monsters could cast too many different spells)
 * The "Transmute" spell costs much less spirit to cast
 * Monsters spawned from the spells "Summon Creature", "Pestilence", and "Summon Mummy Servant" only remains temporarily
 * The spells "Summon Creature" and "Summon Mummy Servant" costs one less spirit to cast
 * The Horn of Banishment now also works on Khephren's summoned Locusts, and on monsters spawned from traps
 * Monsters spawned from traps now wait a bit before acting
-* Using Rods causes less shock
+* Using Rods causes less shock than before
 * The "Silent" trait also prevents alerting monsters when wading through liquid
 * Melee traits no longer improves chance to evade melee attacks
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
@@ -26,6 +26,7 @@ Gameplay
 * Flying Polyps and Greater Polyps attacks no longer causes paralysis
 * Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
 * The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
+* While the player is using the Medical Bag, infections cannot turn into disease, and the infection turn count is frozen
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

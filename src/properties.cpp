@@ -2361,9 +2361,15 @@ Prop* PropInfected::on_tick()
     ASSERT(!owning_actor_->prop_handler().has_prop(PropId::diseased));
 #endif // NDEBUG
 
-    //
+    // Don't trigger the effect if the player is currently treating the infction
+    if (map::player->active_medical_bag)
+    {
+        ++nr_turns_left_;
+
+        return this;
+    }
+
     // Increase risk of disease the fewer turns left the infection has
-    //
     const int allow_disease_below_turns_left = 50;
 
     const int apply_disease_one_in = nr_turns_left_ - 1;
