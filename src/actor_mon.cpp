@@ -963,7 +963,7 @@ void Mon::set_player_aware_of_me(int duration_factor)
 {
     int nr_turns = 2 * duration_factor;
 
-    if (player_bon::bg() == Bg::rogue)
+    if (player_bon::has_trait(Trait::observant))
     {
         nr_turns *= 8;
     }

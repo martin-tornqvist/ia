@@ -113,6 +113,8 @@ void trait_prereqs(const Trait id,
 
 Bg bg();
 
+bool has_trait(const Trait id);
+
 std::string trait_title(const Trait id);
 std::string trait_descr(const Trait id);
 

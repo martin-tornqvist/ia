@@ -17,6 +17,7 @@ Gameplay
 * Monsters spawned from traps now wait a bit before acting
 * Using Rods causes less shock than before
 * The "Silent" trait also prevents alerting monsters when wading through liquid
+* The Rogue's bonus to remain aware of creatures longer is now part of the "Observant" trait instead
 * Melee traits no longer improves chance to evade melee attacks
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
 * Fountains with bad effects always dry up on the first quaff

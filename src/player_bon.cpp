@@ -398,8 +398,6 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("Has acquired an artifact which can cloud the minds of all "
             "enemies, causing them to forget the presence of the user");
         put("");
-        put("Remains aware of the presence of other creatures much longer");
-        put("");
         put_trait(Trait::observant);
         put("");
         put_trait(Trait::stealthy);
@@ -596,9 +594,10 @@ std::string trait_descr(const Trait id)
 
     case Trait::observant:
         return
-            "+10% chance to spot hidden monsters, doors, and traps, and 80% "
+            "+10% chance to spot hidden monsters, doors, and traps, 80% "
             "chance to sense unique monsters or artifacts (when entering a "
-            "new level, or when new monsters appear)";
+            "new level, or when new monsters appear), you remain aware of the "
+            "presence of other creatures longer";
 
     case Trait::vigilant:
         return
@@ -996,6 +995,11 @@ void trait_prereqs(const Trait trait,
 Bg bg()
 {
     return bg_;
+}
+
+bool has_trait(const Trait id)
+{
+    return traits[(size_t)id];
 }
 
 std::vector<Bg> pickable_bgs()
