@@ -25,6 +25,7 @@ Gameplay
 * Leng Spiders have a ranged attack
 * Flying Polyps and Greater Polyps attacks no longer causes paralysis
 * Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
+* The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

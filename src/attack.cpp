@@ -262,7 +262,10 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         }
 
         // +300% damage if attacking with a dagger
-        if (wpn.data().id == ItemId::dagger)
+        const auto id = wpn.data().id;
+
+        if ((id == ItemId::dagger) ||
+            (id == ItemId::spirit_dagger))
         {
             dmg_pct += 300;
         }

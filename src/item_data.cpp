@@ -2419,7 +2419,10 @@ void init_data_list()
         "A black dagger with elaborate ornaments. The blade appears blurry, as "
         "if perpetually covered in a dark haze. On a succesful attack, 1 "
         "Spirit Point is drained from the victim and transfered to the "
-        "attacker, in addition to doing normal physical damage."
+        "attacker, in addition to doing normal physical damage.",
+
+        "Attacking an unaware opponent with a dagger does +300% damage "
+        "(in addition to the normal +50% damage from stealth attacks).",
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::dagger;
