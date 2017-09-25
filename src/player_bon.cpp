@@ -601,9 +601,8 @@ std::string trait_descr(const Trait id)
 
     case Trait::vigilant:
         return
-            "You cannot be backstabbed - monsters that you are unaware of get "
-            "no melee attack bonus against you, and their attacks can be "
-            "evaded";
+            "You are always aware of creatures inside your view, even if they "
+            "are hidden or invisible";
 
     case Trait::rapid_recoverer:
         return

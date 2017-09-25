@@ -47,9 +47,7 @@ bool AttData::is_defender_aware(const Actor* const attacker,
         {
             const auto* const mon = static_cast<const Mon*>(attacker);
 
-            is_aware =
-                (mon->player_aware_of_me_counter_ > 0) ||
-                player_bon::traits[(size_t)Trait::vigilant];
+            is_aware = mon->player_aware_of_me_counter_ > 0;
         }
         else // No attacker actor (e.g. a trap)
         {

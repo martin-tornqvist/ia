@@ -39,6 +39,26 @@
 #include "reload.hpp"
 #include "drop.hpp"
 
+namespace
+{
+
+void print_aware_invis_mon_msg(const Mon& mon)
+{
+    const ActorDataT& d = mon.data();
+
+    const std::string mon_ref =
+        d.is_ghost ? "some foul entity" :
+        d.is_humanoid ? "someone" :
+        "a creature";
+
+    msg_log::add("There is " + mon_ref + " here!",
+                 clr_msg_note,
+                 false,
+                 MorePromptOnMsg::yes);
+}
+
+} // namespace
+
 Player::Player() :
     Actor(),
     thrown_item                         (),
@@ -1098,67 +1118,88 @@ void Player::on_actor_turn()
 
         if (is_mon_seen)
         {
-            // Never print a feeling for a monster that has already been seen
             mon.is_player_feeling_msg_allowed_ = false;
 
-            //
-            // Monster comes into view and interrupts actions?
-            //
-            if (!mon.is_msg_mon_in_view_printed_)
+            if (mon.is_msg_mon_in_view_printed_)
             {
-                if (active_medical_bag ||
-                    (nr_turns_until_handle_armor_done > 0) ||
-                    (wait_turns_left > 0) ||
-                    (nr_quick_move_steps_left_ > 0))
-                {
-                    const std::string name_a =
-                        text_format::first_to_upper(
-                            actor->name_a());
-
-                    msg_log::add(name_a + " comes into my view.",
-                                 clr_text,
-                                 true);
-                }
-
-                mon.is_msg_mon_in_view_printed_ = true;
+                continue;
             }
+
+            if (active_medical_bag ||
+                (nr_turns_until_handle_armor_done > 0) ||
+                (wait_turns_left > 0) ||
+                (nr_quick_move_steps_left_ > 0))
+            {
+                const std::string name_a =
+                    text_format::first_to_upper(
+                        actor->name_a());
+
+                msg_log::add(name_a + " comes into my view.",
+                             clr_text,
+                             true);
+            }
+
+            mon.is_msg_mon_in_view_printed_ = true;
         }
         else // Monster is not seen
         {
             mon.is_msg_mon_in_view_printed_ = false;
 
+            if (!map::cells[mon.pos.x][mon.pos.y].is_seen_by_player)
+            {
+                continue;
+            }
+
             const bool is_mon_invis =
                 mon.has_prop(PropId::invis) ||
                 mon.has_prop(PropId::cloaked);
 
-            if (map::cells[mon.pos.x][mon.pos.y].is_seen_by_player &&
-                (!is_mon_invis ||
-                 has_prop(PropId::see_invis)))
+            const bool can_player_see_invis =
+                has_prop(PropId::see_invis);
+
+            // If the monster is invisible, and the player cannot see
+            // invisible monsters, being Vigilant will make the player aware
+            // of the monster
+            if (player_bon::has_trait(Trait::vigilant) &&
+                is_mon_invis &&
+                !can_player_see_invis)
             {
-                //
-                // Monster is sneaking? Try to spot it
-                //
-                if (mon.is_sneaking())
+                if (mon.player_aware_of_me_counter_ <= 0)
                 {
-                    const auto sneak_result = mon.roll_sneak(*this);
-
-                    if (sneak_result <= ActionResult::fail)
-                    {
-                        mon.set_player_aware_of_me();
-
-                        const std::string mon_name = mon.name_a();
-
-                        msg_log::add("I spot " + mon_name + "!",
-                                     clr_msg_note,
-                                     true,
-                                     MorePromptOnMsg::yes);
-                    }
+                    print_aware_invis_mon_msg(mon);
                 }
-                else // Not sneaking, just mark that player is aware
+
+                mon.set_player_aware_of_me();
+            }
+            else if (mon.is_sneaking())
+            {
+                auto sneak_result = ActionResult::success;
+
+                if (player_bon::has_trait(Trait::vigilant))
+                {
+                    sneak_result = ActionResult::fail;
+                }
+                else // Player is not Vigilant
+                {
+                    sneak_result = mon.roll_sneak(*this);
+                }
+
+                if (sneak_result <= ActionResult::fail)
                 {
                     mon.set_player_aware_of_me();
+
+                    const std::string mon_name = mon.name_a();
+
+                    msg_log::add("I spot " + mon_name + "!",
+                                 clr_msg_note,
+                                 true,
+                                 MorePromptOnMsg::yes);
                 }
             }
+            // else // Monster is not sneaking
+            // {
+            //     mon.set_player_aware_of_me();
+            // }
         }
     } // actor loop
 
@@ -1910,17 +1951,7 @@ void Player::move(Dir dir)
                     // Cell is not blocked, reveal monster here and return
                     mon->set_player_aware_of_me();
 
-                    const ActorDataT& d = mon->data();
-
-                    const std::string mon_ref =
-                        d.is_ghost ? "some foul entity" :
-                        d.is_humanoid ? "someone" :
-                        "a creature";
-
-                    msg_log::add("There is " + mon_ref + " here!",
-                                 clr_msg_note,
-                                 false,
-                                 MorePromptOnMsg::yes);
+                    print_aware_invis_mon_msg(*mon);
 
                     return;
                 }
