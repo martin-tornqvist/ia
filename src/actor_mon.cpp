@@ -2665,10 +2665,8 @@ void Zombie::on_death()
 
 void Zombie::on_destroyed()
 {
-    //
     // Occasionally make Zombie Dust
-    //
-    const int mk_dust_one_in_n = 7;
+    const int mk_dust_one_in_n = 9;
 
     if (!map::cells[pos.x][pos.y].rigid->is_bottomless() &&
         rnd::one_in(mk_dust_one_in_n))
@@ -2677,11 +2675,16 @@ void Zombie::on_destroyed()
     }
 }
 
+void WretchedCarcass::mk_start_items()
+{
+    auto* item = item_factory::mk(ItemId::wretched_carcass_claw);
+
+    inv_->put_in_intrinsics(item);
+}
+
 void ZombieClaw::mk_start_items()
 {
-    Item* item = nullptr;
-
-    item = item_factory::mk(ItemId::zombie_claw);
+    auto* item = item_factory::mk(ItemId::zombie_claw);
 
     inv_->put_in_intrinsics(item);
 }

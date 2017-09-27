@@ -98,7 +98,7 @@ enum class ItemId
     zuul_bite,
     raven_peck,
     giant_bat_bite, vampire_bat_bite, abaxu_bite,
-    zombie_axe, zombie_claw,
+    wretched_carcass_claw, zombie_axe, zombie_claw,
     bloated_zombie_punch, bloated_zombie_spit,
     crawling_intestines_strangle,
     crawling_hand_strangle, thing_strangle,

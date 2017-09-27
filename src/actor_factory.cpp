@@ -25,6 +25,9 @@ Actor* mk_actor_from_id(const ActorId id)
     case ActorId::player:
         return new Player();
 
+    case ActorId::wretched_carcass:
+        return new WretchedCarcass();
+
     case ActorId::zombie:
         return new ZombieClaw();
 

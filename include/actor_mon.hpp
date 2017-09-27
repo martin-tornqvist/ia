@@ -287,6 +287,14 @@ protected:
     bool has_resurrected;
 };
 
+class WretchedCarcass: public Zombie
+{
+public:
+    WretchedCarcass() : Zombie() {}
+    ~WretchedCarcass() {}
+    void mk_start_items() override;
+};
+
 class ZombieClaw: public Zombie
 {
 public:

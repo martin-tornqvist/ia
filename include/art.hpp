@@ -80,6 +80,7 @@ enum class TileId
     flare_lit,
     orb,
     zombie_dust,
+    wretched_carcass,
     dagger,
     crowbar,
     rod,
