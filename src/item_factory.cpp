@@ -43,7 +43,6 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::player_kick:
     case ItemId::player_stomp:
     case ItemId::player_punch:
-    case ItemId::wretched_carcass_claw:
     case ItemId::zombie_axe:
     case ItemId::zombie_claw:
     case ItemId::bloated_zombie_punch:

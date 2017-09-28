@@ -195,7 +195,6 @@ P column_and_row_tile(const TileId tile)
     case TileId::flare_lit:                     return P(12, 3);
     case TileId::orb:                           return P(13, 3);
     case TileId::zombie_dust:                   return P(14, 3);
-    case TileId::wretched_carcass:              return P(15, 3);
     case TileId::dagger:                        return P(0, 4);
     case TileId::crowbar:                       return P(3, 4);
     case TileId::rod:                           return P(6, 4);

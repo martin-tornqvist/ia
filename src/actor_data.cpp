@@ -110,59 +110,6 @@ void init_data_list()
     data[(size_t)d.id] = d;
     d.reset();
 
-    d.name_a = "a Wretched Carcass";
-    d.name_the = "the Wretched Carcass";
-    d.corpse_name_a = "a lifeless gruesome corpse";
-    d.corpse_name_the = "the lifeless gruesome corpse";
-    d.id = ActorId::wretched_carcass;
-    d.ai[(size_t)AiId::looks] = true;
-    d.ai[(size_t)AiId::makes_room_for_friend] = true;
-    d.ai[(size_t)AiId::attacks] = true;
-    d.ai[(size_t)AiId::paths_to_tgt_when_aware] = false;
-    d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
-    d.ai[(size_t)AiId::moves_to_lair] = false;
-    d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::slow - 10;
-    d.glyph = 'Z';
-    d.color = clr_red_lgt;
-    d.tile = TileId::wretched_carcass;
-    d.hp = 7;
-    d.dmg_melee = min_dmg_to_wound - 2;
-    d.ability_vals.set_val(AbilityId::melee, 40);
-    d.ability_vals.set_val(AbilityId::dodging, -20);
-    d.spawn_min_dlvl = 1;
-    d.spawn_max_dlvl = dlvl_last_early_game;
-    d.group_sizes.assign(
-    {
-        MonGroupSpawnRule(MonGroupSize::alone,  1),
-        MonGroupSpawnRule(MonGroupSize::few,    5),
-        MonGroupSpawnRule(MonGroupSize::pack,   20),
-        MonGroupSpawnRule(MonGroupSize::swarm,  5)
-    });
-    d.actor_size = ActorSize::humanoid;
-    d.natural_props[(size_t)PropId::darkvis] = true;
-    d.can_bash_doors = false;
-    d.nr_turns_aware = 7;
-    d.descr =
-        "This rotting thing appears to be the victim of some failed attempt "
-        "at reanimation of the dead. It looks horribly decrepit and loathsome.";
-    d.wary_msg = d.name_the + " looks wary.";
-    d.aggro_msg_mon_seen = d.name_the + " growls.";
-    d.aggro_msg_mon_hidden = "I hear a growling voice.";
-    d.aggro_sfx_mon_seen = SfxId::zombie_growl;
-    d.aggro_sfx_mon_hidden = SfxId::zombie_growl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.mon_shock_lvl = ShockLvl::frightening;
-    d.is_undead = true;
-    d.is_humanoid = true;
-    d.prio_corpse_bash = true;
-    d.native_rooms.push_back(RoomType::plain);
-    d.native_rooms.push_back(RoomType::monster);
-    d.native_rooms.push_back(RoomType::crypt);
-    d.native_rooms.push_back(RoomType::jail);
-    data[(size_t)d.id] = d;
-    d.reset();
-
     d.name_a = "a Reanimated Corpse";
     d.name_the = "the Reanimated Corpse";
     d.corpse_name_a = "a lifeless gruesome corpse";

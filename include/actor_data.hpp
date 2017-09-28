@@ -14,7 +14,6 @@
 enum class ActorId
 {
     player,
-    wretched_carcass,
     zombie,
     zombie_axe,
     bloated_zombie,
