@@ -147,8 +147,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                 msg_log::add(hurt_msg,
                              clr_msg_bad);
 
-                actor->hit(rnd::dice(2, 4),
-                           DmgType::electric);
+                actor->hit(rnd::range(1, 3), DmgType::electric);
             }
 
             is_warning =
@@ -168,8 +167,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
                 msg_log::add(hurt_msg,
                              clr_msg_bad);
 
-                actor->hit(rnd::dice(1, 4),
-                           DmgType::electric);
+                actor->hit(1, DmgType::electric);
             }
 
             is_warning =
