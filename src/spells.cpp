@@ -26,13 +26,6 @@
 #include "text_format.hpp"
 #include "item_factory.hpp"
 
-namespace
-{
-
-const int summon_hostile_one_in_n = 10;
-
-} // namespace
-
 namespace spell_handling
 {
 
@@ -1095,13 +1088,9 @@ void SpellPest::run_effect(Actor* const caster,
 
     Actor* leader = nullptr;
 
-    bool did_player_summon_hostile = false;
-
     if (caster->is_player())
     {
-        did_player_summon_hostile = rnd::one_in(summon_hostile_one_in_n);
-
-        leader = did_player_summon_hostile ? nullptr : caster;
+        leader = caster;
     }
     else // Caster is monster
     {
@@ -1167,14 +1156,6 @@ void SpellPest::run_effect(Actor* const caster,
         }
 
         msg_log::add("Rats appear around " + caster_str + "!");
-
-        if (did_player_summon_hostile)
-        {
-            msg_log::add("They are hostile!",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
-        }
     }
 }
 
@@ -1193,8 +1174,6 @@ std::vector<std::string> SpellPest::descr_specific(
     {
         descr.push_back("The rats are Hasted (+100% speed).");
     }
-
-    descr.push_back(summon_warning_str);
 
     return descr;
 }
@@ -1417,16 +1396,9 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
     // This point reached means no mummy controlled, summon a new one
     Actor* leader = nullptr;
 
-    bool did_player_summon_hostile = false;
-
     if (caster->is_player())
     {
-        did_player_summon_hostile = rnd::one_in(summon_hostile_one_in_n);
-
-        leader =
-            did_player_summon_hostile ?
-            nullptr :
-            caster;
+        leader = caster;
     }
     else // Caster is monster
     {
@@ -1458,14 +1430,6 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
     if (map::player->can_see_actor(*mon))
     {
         msg_log::add(text_format::first_to_upper(mon->name_a()) + " appears!");
-
-        if (did_player_summon_hostile)
-        {
-            msg_log::add("It is hostile!",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
-        }
     }
     else // Player cannot see monster
     {
@@ -1483,9 +1447,7 @@ std::vector<std::string> SpellPharaohStaff::descr_specific(
         "Summons a loyal Mummy servant which will fight for the caster.",
 
         "If an allied Mummy is already present, this spell will instead "
-        "heal it.",
-
-        summon_warning_str
+        "heal it."
     };
 }
 
@@ -2429,7 +2391,7 @@ void SpellSummonMon::run_effect(Actor* const caster,
         {
             const ActorDataT& data = actor_data::data[i];
 
-            if (!data.can_be_summoned)
+            if (!data.can_be_summoned_by_mon)
             {
                 continue;
             }
@@ -2449,7 +2411,7 @@ void SpellSummonMon::run_effect(Actor* const caster,
             {
                 const ActorDataT& data = actor_data::data[i];
 
-                if (!data.can_be_summoned)
+                if (!data.can_be_summoned_by_mon)
                 {
                     continue;
                 }
@@ -2472,9 +2434,12 @@ void SpellSummonMon::run_effect(Actor* const caster,
     }
 
 #ifndef NDEBUG
-    for (const auto id : summon_bucket)
+    if (!caster->is_player())
     {
-        ASSERT(actor_data::data[(size_t)id].can_be_summoned);
+        for (const auto id : summon_bucket)
+        {
+            ASSERT(actor_data::data[(size_t)id].can_be_summoned_by_mon);
+        }
     }
 #endif // NDEBUG
 
@@ -2482,29 +2447,25 @@ void SpellSummonMon::run_effect(Actor* const caster,
 
     Actor* leader = nullptr;
 
-    bool did_player_summon_hostile = false;
-
     if (caster->is_player())
     {
-        did_player_summon_hostile = rnd::one_in(summon_hostile_one_in_n);
-
-        leader =
-            did_player_summon_hostile ?
-            nullptr :
-            caster;
+        leader = caster;
     }
     else // Caster is monster
     {
         Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
 
-        leader = caster_leader ? caster_leader : caster;
+        leader =
+            caster_leader ?
+            caster_leader :
+            caster;
     }
 
     const auto mon_summoned =
         actor_factory::spawn(summon_pos,
-                              {mon_id},
-                              MakeMonAware::yes,
-                              leader);
+                             {mon_id},
+                             MakeMonAware::yes,
+                             leader);
 
     if (mon_summoned.empty())
     {
@@ -2520,14 +2481,6 @@ void SpellSummonMon::run_effect(Actor* const caster,
     if (map::player->can_see_actor(*mon))
     {
         msg_log::add(text_format::first_to_upper(mon->name_a()) + " appears!");
-
-        if (did_player_summon_hostile)
-        {
-            msg_log::add("It is hostile!",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
-        }
     }
 
     // Player cannot see monster
@@ -2545,9 +2498,7 @@ std::vector<std::string> SpellSummonMon::descr_specific(
     return
     {
         "Summons a creature to do the caster's bidding. A more skilled "
-        "sorcerer summons beings of greater might and rarity.",
-
-        summon_warning_str
+        "sorcerer summons beings of greater might and rarity."
     };
 }
 
