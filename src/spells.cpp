@@ -602,10 +602,10 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     // Skill  damage     avg
     // -----------------------
     // 0       4  - 9     6.5
-    // 1       8  - 15   11.5
-    // 2      12  - 21   16.5
-    Range dmg_range(4 + (int)skill * 4,
-                    9 + (int)skill * 6);
+    // 1       7  - 14   10.5
+    // 2      10  - 19   14.5
+    Range dmg_range(4 + (int)skill * 3,
+                    9 + (int)skill * 5);
 
     // If a monster is casting, only do 50% damage to avoid making this spell
     // extremely dangerous for the player
@@ -659,8 +659,8 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
         "some will on its own - the caster cannot determine exactly which "
         "creature will be struck.");
 
-    const Range dmg_range(4 + (int)skill * 4,
-                          9 + (int)skill * 6);
+    const Range dmg_range(4 + (int)skill * 3,
+                          9 + (int)skill * 5);
 
     descr.push_back(
         "The impact does " +
