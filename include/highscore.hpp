@@ -18,6 +18,7 @@ public:
                    int player_xp,
                    int player_lvl,
                    int player_dlvl,
+                   int turn_count,
                    int player_insanity,
                    IsWin is_win,
                    Bg player_bg);
@@ -56,6 +57,11 @@ public:
         return dlvl_;
     }
 
+    int turn_count() const
+    {
+        return turn_count_;
+    }
+
     int ins() const
     {
         return ins_;
@@ -78,6 +84,7 @@ private:
     int xp_;
     int lvl_;
     int dlvl_;
+    int turn_count_;
     int ins_;
     IsWin is_win_;
     Bg bg_;

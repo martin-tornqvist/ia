@@ -105,7 +105,7 @@ void PostmortemMenu::on_start()
 
     info_lines_.push_back({name + " (" + bg + ")", clr_heading});
 
-    const int dlvl = map::dlvl;
+    const int dlvl = highscore_entry.dlvl();
 
     if (dlvl == 0)
     {
@@ -124,6 +124,14 @@ void PostmortemMenu::on_start()
         });
 
     }
+
+    const int turn_count = highscore_entry.turn_count();
+
+    info_lines_.push_back(
+    {
+        offset + "Spent " + std::to_string(turn_count) + " turns",
+        clr_info
+    });
 
     const int ins = highscore_entry.ins();
 

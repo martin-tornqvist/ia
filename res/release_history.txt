@@ -30,6 +30,7 @@ Gameplay
 * Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
 * The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
 * While the player is using the Medical Bag, infections cannot turn into disease, and the infection turn count is frozen
+* Updated the score formula to include turn count (lower turn counts give higher scores), also a winning game now guarantees higher score than a non-winning game
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

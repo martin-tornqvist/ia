@@ -22,6 +22,7 @@ HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
                                int player_xp,
                                int player_lvl,
                                int player_dlvl,
+                               int turn_count,
                                int player_insanity,
                                IsWin is_win,
                                Bg player_bg) :
@@ -31,6 +32,7 @@ HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
     xp_                     (player_xp),
     lvl_                    (player_lvl),
     dlvl_                   (player_dlvl),
+    turn_count_             (turn_count),
     ins_                    (player_insanity),
     is_win_                 (is_win),
     bg_                     (player_bg) {}
@@ -39,22 +41,41 @@ HighscoreEntry::~HighscoreEntry() {}
 
 int HighscoreEntry::score() const
 {
+    const double xp_db = (double)xp_;
     const double dlvl_db = (double)dlvl_;
     const double dlvl_last_db = (double)dlvl_last;
-    const double xp_db = (double)xp_;
+    const double turns_db = (double)turn_count_;
     const double ins_db = (double)ins_;
     const bool win = (is_win_ == IsWin::yes);
 
-    //
-    // Formula
-    //
-    const double xp_factor = 1.0 + xp_db + (win ? (xp_db / 5.0) : 0.0);
+    auto calc_turns_factor = [](const double turns_db)
+    {
+        return std::max(1.0, 3.0 - (turns_db / 10000.0));
+    };
+
+    auto calc_sanity_factor = [](const double ins_db)
+    {
+        return 2.0 - (ins_db / 100.0);
+    };
+
+    const double xp_factor = 1.0 + xp_db;
 
     const double dlvl_factor = 1.0 + (dlvl_db / dlvl_last_db);
 
-    const double sanity_factor = 2.0 - (ins_db / 100.0);
+    const double turns_factor = calc_turns_factor(turns_db);
 
-    return (int)(xp_factor * dlvl_factor * sanity_factor);
+    const double turns_factor_win = win ? calc_turns_factor(0.0) : 1.0;
+
+    const double sanity_factor = calc_sanity_factor(ins_db);
+
+    const double sanity_factor_win = win ? calc_sanity_factor(0.0) : 1.0;
+
+    return (int)(xp_factor *
+                 dlvl_factor *
+                 turns_factor *
+                 turns_factor_win *
+                 sanity_factor *
+                 sanity_factor_win);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,6 +114,7 @@ void write_file(std::vector<HighscoreEntry>& entries)
         file << entry.xp() << std::endl;
         file << entry.lvl() << std::endl;
         file << entry.dlvl() << std::endl;
+        file << entry.turn_count() << std::endl;
         file << entry.ins() << std::endl;
         file << (int)entry.bg() << std::endl;
     }
@@ -141,6 +163,9 @@ std::vector<HighscoreEntry> read_file()
         const int dlvl = to_int(line);
 
         getline(file, line);
+        const int turn_count = to_int(line);
+
+        getline(file, line);
         const int ins = to_int(line);
 
         getline(file, line);
@@ -153,6 +178,7 @@ std::vector<HighscoreEntry> read_file()
                            xp,
                            lvl,
                            dlvl,
+                           turn_count,
                            ins,
                            is_win,
                            bg));
@@ -190,6 +216,7 @@ HighscoreEntry mk_entry_from_current_game_data(
         game::xp_accumulated(),
         game::clvl(),
         map::dlvl,
+        game_time::turn_nr(),
         map::player->ins(),
         is_win,
         player_bon::bg());
@@ -286,18 +313,20 @@ void BrowseHighscore::draw()
 
     const int x_date = 0;
     const int x_name = x_date + 12;
-    const int x_bg = player_name_max_len + 14;
+    const int x_bg = x_name + player_name_max_len + 1;
     const int x_lvl = x_bg + 13;
     const int x_dlvl = x_lvl + 7;
-    const int x_ins = x_dlvl + 7;
-    const int x_win = x_ins + 10;
+    const int x_turns = x_dlvl + 7;
+    const int x_ins = x_turns + 7;
+    const int x_win = x_ins + 6;
     const int x_score = x_win + 5;
 
     const std::vector< std::pair<std::string, int> > labels
     {
         {"Level", x_lvl},
         {"Depth", x_dlvl},
-        {"Insanity", x_ins},
+        {"Turns", x_turns},
+        {"Ins", x_ins},
         {"Win", x_win},
         {"Score", x_score}
     };
@@ -325,6 +354,7 @@ void BrowseHighscore::draw()
         const std::string bg = player_bon::bg_title(entry.bg());
         const std::string lvl = std::to_string(entry.lvl());
         const std::string dlvl = std::to_string(entry.dlvl());
+        const std::string turns = std::to_string(entry.turn_count());
         const std::string ins = std::to_string(entry.ins());
         const std::string win = (entry.is_win() == IsWin::yes) ? "Yes" : "No";
         const std::string score = std::to_string(entry.score());
@@ -341,6 +371,7 @@ void BrowseHighscore::draw()
         io::draw_text(bg, panel, P(x_bg, y), clr);
         io::draw_text(lvl, panel, P(x_lvl, y), clr);
         io::draw_text(dlvl, panel, P(x_dlvl, y), clr);
+        io::draw_text(turns, panel, P(x_turns, y), clr);
         io::draw_text(ins + "%", panel, P(x_ins, y), clr);
         io::draw_text(win, panel, P(x_win, y), clr);
         io::draw_text(score, panel, P(x_score, y), clr);
