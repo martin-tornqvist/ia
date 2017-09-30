@@ -2346,10 +2346,7 @@ void SpellSummonMon::run_effect(Actor* const caster,
         if ((skill == SpellSkill::basic) ||
             (skill == SpellSkill::expert))
         {
-            summon_bucket.push_back(ActorId::rat_thing);
-            summon_bucket.push_back(ActorId::floating_skull);
             summon_bucket.push_back(ActorId::raven);
-            summon_bucket.push_back(ActorId::pit_viper);
             summon_bucket.push_back(ActorId::wolf);
         }
 
@@ -2358,18 +2355,13 @@ void SpellSummonMon::run_effect(Actor* const caster,
         {
             summon_bucket.push_back(ActorId::green_spider);
             summon_bucket.push_back(ActorId::white_spider);
-            summon_bucket.push_back(ActorId::red_spider);
-            summon_bucket.push_back(ActorId::fire_hound);
-            summon_bucket.push_back(ActorId::giant_bat);
-            summon_bucket.push_back(ActorId::vampire_bat);
-            summon_bucket.push_back(ActorId::fire_vortex);
         }
 
         if (skill == SpellSkill::master)
         {
             summon_bucket.push_back(ActorId::leng_spider);
             summon_bucket.push_back(ActorId::energy_hound);
-            summon_bucket.push_back(ActorId::energy_vortex);
+            summon_bucket.push_back(ActorId::fire_hound);
         }
     }
     else // Caster is monster
