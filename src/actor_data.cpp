@@ -74,7 +74,7 @@ void ActorDataT::reset()
     is_snake = false;
     is_reptile = false;
     is_amphibian = false;
-    can_be_summoned = false;
+    can_be_summoned_by_mon = false;
     can_bleed = true;
     can_leave_corpse = true;
     prio_corpse_bash = false;
@@ -390,7 +390,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " starts groping and feeling around.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
-    d.can_be_summoned = false;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
     d.is_undead = true;
@@ -436,7 +435,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::frightening;
-    d.can_be_summoned = false;
     d.is_auto_descr_allowed = false;
     d.can_leave_corpse = false;
     d.is_undead = true;
@@ -480,7 +478,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
-    d.can_be_summoned = false;
     d.can_leave_corpse = false;
     d.is_auto_descr_allowed = false;
     d.is_undead = true;
@@ -522,7 +519,7 @@ void init_data_list()
     d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_undead = true;
     d.is_auto_descr_allowed = false;
     d.can_bleed = false;
@@ -917,7 +914,7 @@ void init_data_list()
     d.descr = "An enormous green spider.";
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_spider = true;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
@@ -958,7 +955,7 @@ void init_data_list()
     d.descr = "An enormous white spider.";
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_spider = true;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
@@ -999,7 +996,7 @@ void init_data_list()
     d.descr = "An enormous red spider.";
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_spider = true;
     d.native_rooms.push_back(RoomType::spider);
     d.native_rooms.push_back(RoomType::forest);
@@ -1090,7 +1087,7 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems aggravated.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_spider = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::spider);
@@ -1135,7 +1132,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_snake = true;
     d.is_reptile = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1182,7 +1179,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_snake = true;
     d.is_reptile = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1226,7 +1223,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_snake = true;
     d.is_reptile = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::cave);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1279,7 +1276,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_canine = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
@@ -1332,7 +1329,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_canine = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
@@ -1381,7 +1378,6 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::never;
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.is_canine = true;
-    d.can_be_summoned = false;
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 1;
     d.native_rooms.push_back(RoomType::plain);
@@ -1425,7 +1421,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_undead = true;
     d.is_ghost = true;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
@@ -1469,7 +1464,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
@@ -1511,7 +1505,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.is_undead = true;
     d.is_ghost = true;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::plain);
@@ -1553,7 +1546,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::cave);
@@ -1599,7 +1591,6 @@ void init_data_list()
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.native_rooms.push_back(RoomType::cave);
@@ -1692,7 +1683,7 @@ void init_data_list()
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
     d.is_rat = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::monster);
     d.native_rooms.push_back(RoomType::human);
@@ -1739,7 +1730,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::wolf_howl;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.is_canine = true;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     data[(size_t)d.id] = d;
@@ -1783,7 +1774,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::none;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1833,7 +1824,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::unsettling;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1883,7 +1874,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::unsettling;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::chasm);
@@ -1989,7 +1980,7 @@ void init_data_list()
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::terrifying;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::chasm);
     data[(size_t)d.id] = d;
@@ -2026,7 +2017,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.mon_shock_lvl = ShockLvl::unsettling;
-    d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
     d.native_rooms.push_back(RoomType::forest);
     data[(size_t)d.id] = d;
@@ -2068,7 +2058,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " seems disturbed.";
     d.erratic_move_pct = ActorErraticFreq::very;
     d.mon_shock_lvl = ShockLvl::none;
-    d.can_be_summoned = false;
     d.native_rooms.push_back(RoomType::plain);
     data[(size_t)d.id] = d;
     d.reset();
@@ -2186,7 +2175,6 @@ void init_data_list()
     d.corpse_name_a = "a dead Polyp";
     d.corpse_name_the = "the dead Polyp";
     d.id = ActorId::flying_polyp;
-    d.can_be_summoned = true;
     d.can_bleed = false;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2247,7 +2235,6 @@ void init_data_list()
     d.corpse_name_a = "a dead Polyp";
     d.corpse_name_the = "the dead Polyp";
     d.id = ActorId::greater_polyp;
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.ai[(size_t)AiId::looks] = false;
     d.ai[(size_t)AiId::makes_room_for_friend] = true;
@@ -2527,7 +2514,6 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.nr_turns_aware = 7;
@@ -2570,7 +2556,6 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.can_open_doors = true;
-    d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.nr_turns_aware = 24;
@@ -2892,7 +2877,7 @@ void init_data_list()
     d.nr_turns_aware = 5;
     d.descr = "A slithering conglomeration of carnivorous worms.";
     d.wary_msg = d.name_the + " seems disturbed.";
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.can_bleed = true;
@@ -2938,7 +2923,7 @@ void init_data_list()
         "A slithering conglomeration of carnivorous worms. Their bite causes "
         "heavy disorientation.";
     d.wary_msg = d.name_the + " seems disturbed.";
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.is_auto_descr_allowed = true;
     d.erratic_move_pct = ActorErraticFreq::very;
     d.can_bleed = true;
@@ -2986,7 +2971,7 @@ void init_data_list()
     d.descr = "A spinning force of destruction.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear a howling wind.";
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3033,7 +3018,7 @@ void init_data_list()
     d.descr = "A spinning force of fire and destruction.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear a howling wind.";
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3076,7 +3061,7 @@ void init_data_list()
     d.descr = "A spinning force of pure energy.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "I hear a howling wind.";
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3130,7 +3115,7 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3187,7 +3172,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
-    d.can_be_summoned = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.mon_shock_lvl = ShockLvl::frightening;
@@ -3245,7 +3229,7 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3303,7 +3287,7 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a gurgling noise.";
     d.aggro_sfx_mon_seen = SfxId::ooze_gurgle;
     d.aggro_sfx_mon_hidden = SfxId::ooze_gurgle;
-    d.can_be_summoned = true;
+    d.can_be_summoned_by_mon = true;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3407,7 +3391,6 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
-    d.can_be_summoned = false;
     d.mon_shock_lvl = ShockLvl::terrifying;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
     d.native_rooms.push_back(RoomType::plain);
@@ -3548,7 +3531,6 @@ void init_data_list()
         "desire.";
     d.wary_msg = d.name_the + " seems disturbed.";
     d.aggro_msg_mon_hidden = "";
-    d.can_be_summoned = false;
     d.can_bleed = false;
     d.can_leave_corpse = false;
     d.erratic_move_pct = ActorErraticFreq::somewhat;
@@ -3659,7 +3641,6 @@ void init_data_list()
     d.aggro_sfx_mon_seen = SfxId::flapping_wings;
     d.aggro_sfx_mon_hidden = SfxId::flapping_wings;
     d.can_bleed = true;
-    d.can_be_summoned = false;
     d.mon_shock_lvl = ShockLvl::mind_shattering;
     d.native_rooms.push_back(RoomType::forest);
     d.native_rooms.push_back(RoomType::plain);
@@ -3709,7 +3690,6 @@ void init_data_list()
     d.wary_msg = d.name_the + " looks wary.";
     d.aggro_sfx_mon_seen = SfxId::END;
     d.aggro_sfx_mon_hidden = SfxId::END;
-    d.can_be_summoned = false;
     d.is_humanoid = true;
     d.can_leave_corpse = false;
     d.spell_cast_msg = "speaks incantations in a deep hollow voice.";

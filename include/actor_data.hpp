@@ -220,7 +220,7 @@ struct ActorDataT
     bool is_snake;
     bool is_reptile;
     bool is_amphibian;
-    bool can_be_summoned;
+    bool can_be_summoned_by_mon;
     bool can_bleed;
     bool can_leave_corpse;
     bool prio_corpse_bash;
