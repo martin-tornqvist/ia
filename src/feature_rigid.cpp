@@ -942,8 +942,10 @@ void GraveStone::bump(Actor& actor_bumping)
 
 std::string GraveStone::name(const Article article) const
 {
-    const std::string ret = article == Article::a ?
-        "a " : "the ";
+    const std::string ret =
+        article == Article::a ?
+        "a " :
+        "the ";
 
     return ret + "gravestone; " + inscr_;
 }

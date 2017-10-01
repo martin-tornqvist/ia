@@ -41,7 +41,7 @@ void mk_monoliths()
 
     const R fov_r(std::max(0,           player_p.x - r),
                   std::max(0,           player_p.y - r),
-                  std::min(map_w - 1,   player_p.y + r),
+                  std::min(map_w - 1,   player_p.x + r),
                   std::min(map_h - 1,   player_p.y + r));
 
     for (int x = fov_r.p0.x; x <= fov_r.p1.x; ++x)
@@ -51,6 +51,15 @@ void mk_monoliths()
             blocked[x][y] = true;
         }
     }
+
+    std::vector<P> spawn_weight_positions;
+
+    std::vector<int> spawn_weights;
+
+    mapgen::mk_explore_spawn_weights(
+        blocked,
+        spawn_weight_positions,
+        spawn_weights);
 
     for (int i = 0; i < nr_monoliths; ++i)
     {
@@ -63,16 +72,16 @@ void mk_monoliths()
             return;
         }
 
-        const P p = rnd::element(p_bucket);
+        const size_t spawn_p_idx = rnd::weighted_choice(spawn_weights);
+
+        const P p = spawn_weight_positions[spawn_p_idx];
+
+        spawn_weights.erase(begin(spawn_weights) + spawn_p_idx);
+
+        spawn_weight_positions.erase(
+            begin(spawn_weight_positions) + spawn_p_idx);
 
         map::cells[p.x][p.y].rigid = new Monolith(p);
-
-        for (const P& d : dir_utils::dir_list_w_center)
-        {
-            const P adj_p(p + d);
-
-            blocked[adj_p.x][adj_p.y] = true;
-        }
     }
 }
 
