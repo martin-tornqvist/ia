@@ -134,6 +134,11 @@ void Potion::on_actor_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
 
+    if (actor_carrying_ != map::player)
+    {
+        return;
+    }
+
     auto& d = data();
 
     if (d.is_alignment_known ||

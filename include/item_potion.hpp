@@ -19,9 +19,9 @@ public:
 
     virtual ~Potion() {}
 
-    void save();
+    void save() override;
 
-    void load();
+    void load() override;
 
     ConsumeItem activate(Actor* const actor) override final;
 
