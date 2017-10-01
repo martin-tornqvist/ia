@@ -279,9 +279,6 @@ void Item::on_player_found()
         game::incr_player_xp(data_->xp_on_found, Verbosity::verbose);
 
         game::add_history_event("Found " + item_name + ".");
-
-        map::player->incr_shock(ShockLvl::frightening,
-                                ShockSrc::use_strange_item);
     }
 
     data_->is_found = true;
