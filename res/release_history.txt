@@ -31,6 +31,7 @@ Gameplay
 * The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
 * While the player is using the Medical Bag, infections cannot turn into disease, and the infection turn count is frozen
 * Updated the score formula to include turn count (lower turn counts give higher scores), also a winning game now guarantees higher score than a non-winning game
+* The Rod of Purge Invisible is now a Strange Device instead
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

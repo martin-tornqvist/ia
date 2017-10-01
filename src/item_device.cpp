@@ -5,6 +5,7 @@
 
 #include "init.hpp"
 #include "actor_player.hpp"
+#include "actor_mon.hpp"
 #include "io.hpp"
 #include "game_time.hpp"
 #include "msg_log.hpp"
@@ -17,6 +18,7 @@
 #include "saving.hpp"
 #include "game.hpp"
 #include "text_format.hpp"
+#include "map_parsing.hpp"
 
 // -----------------------------------------------------------------------------
 // Device
@@ -144,8 +146,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
             if ((rnd == 5) ||
                 (rnd == 6))
             {
-                msg_log::add(hurt_msg,
-                             clr_msg_bad);
+                msg_log::add(hurt_msg, clr_msg_bad);
 
                 actor->hit(rnd::range(1, 3), DmgType::electric);
             }
@@ -164,8 +165,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
 
             if (rnd == 4)
             {
-                msg_log::add(hurt_msg,
-                             clr_msg_bad);
+                msg_log::add(hurt_msg, clr_msg_bad);
 
                 actor->hit(1, DmgType::electric);
             }
@@ -200,7 +200,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
         }
         else
         {
-            consumed = trigger_effect();
+            consumed = run_effect();
         }
 
         if (consumed == ConsumeItem::no)
@@ -270,7 +270,7 @@ std::string StrangeDevice::name_inf() const
 // -----------------------------------------------------------------------------
 // Blaster
 // -----------------------------------------------------------------------------
-ConsumeItem DeviceBlaster::trigger_effect()
+ConsumeItem DeviceBlaster::run_effect()
 {
     const auto tgt_bucket = map::player->seen_foes();
 
@@ -296,7 +296,7 @@ ConsumeItem DeviceBlaster::trigger_effect()
 // -----------------------------------------------------------------------------
 // Shock wave
 // -----------------------------------------------------------------------------
-ConsumeItem DeviceShockwave::trigger_effect()
+ConsumeItem DeviceShockwave::run_effect()
 {
     msg_log::add("It triggers a shock wave around me.");
 
@@ -364,7 +364,7 @@ ConsumeItem DeviceShockwave::trigger_effect()
 // -----------------------------------------------------------------------------
 // Rejuvenator
 // -----------------------------------------------------------------------------
-ConsumeItem DeviceRejuvenator::trigger_effect()
+ConsumeItem DeviceRejuvenator::run_effect()
 {
     msg_log::add("It repairs my body.");
 
@@ -394,7 +394,7 @@ ConsumeItem DeviceRejuvenator::trigger_effect()
 // -----------------------------------------------------------------------------
 // Translocator
 // -----------------------------------------------------------------------------
-ConsumeItem DeviceTranslocator::trigger_effect()
+ConsumeItem DeviceTranslocator::run_effect()
 {
     Player* const player = map::player;
 
@@ -421,9 +421,59 @@ ConsumeItem DeviceTranslocator::trigger_effect()
 }
 
 // -----------------------------------------------------------------------------
+// Purge invisible
+// -----------------------------------------------------------------------------
+ConsumeItem DevicePurgeInvis::run_effect()
+{
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksLos()
+        .run(blocked,
+             MapParseMode::overwrite,
+             fov::get_fov_rect(map::player->pos));
+
+    LosResult fov[map_w][map_h];
+
+    fov::run(map::player->pos, blocked, fov);
+
+    for (Actor* const actor : game_time::actors)
+    {
+        if (actor->is_player())
+        {
+            continue;
+        }
+
+        const P& p(actor->pos);
+
+        const LosResult& los = fov[p.x][p.y];
+
+        if (!los.is_blocked_hard)
+        {
+            // Reveal invisible monsters
+            if (actor->has_prop(PropId::invis) ||
+                actor->has_prop(PropId::cloaked))
+            {
+                actor->prop_handler().end_prop(PropId::invis);
+                actor->prop_handler().end_prop(PropId::cloaked);
+            }
+
+            // Reveal sneaking monsters
+            Mon* const mon = static_cast<Mon*>(actor);
+
+            if (mon->is_sneaking())
+            {
+                mon->set_player_aware_of_me();
+            }
+        }
+    }
+
+    return ConsumeItem::no;
+}
+
+// -----------------------------------------------------------------------------
 // Sentry drone
 // -----------------------------------------------------------------------------
-ConsumeItem DeviceSentryDrone::trigger_effect()
+ConsumeItem DeviceSentryDrone::run_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
 

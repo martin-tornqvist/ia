@@ -50,30 +50,6 @@ private:
     int nr_charge_turns_left_;
 };
 
-class RodPurgeInvis : public Rod
-{
-public:
-    RodPurgeInvis(ItemDataT* const item_data) :
-        Rod(item_data) {}
-
-    ~RodPurgeInvis() {}
-
-    const std::string real_name() const override
-    {
-        return "Purge Invisible";
-    }
-
-protected:
-    std::string descr_identified() const override
-    {
-        return
-            "When activated, this device reveals any hidden or invisible "
-            "creatures in the area around the user.";
-    }
-
-    void run_effect() override;
-};
-
 class RodCuring : public Rod
 {
 public:

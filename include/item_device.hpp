@@ -47,7 +47,7 @@ public:
 private:
     virtual std::string descr_identified() const = 0;
 
-    virtual ConsumeItem trigger_effect() = 0;
+    virtual ConsumeItem run_effect() = 0;
 };
 
 class DeviceBlaster : public StrangeDevice
@@ -66,7 +66,7 @@ private:
             "infernal power.";
     }
 
-    ConsumeItem trigger_effect() override;
+    ConsumeItem run_effect() override;
 };
 
 class DeviceShockwave : public StrangeDevice
@@ -86,7 +86,7 @@ private:
             "structures.";
     }
 
-    ConsumeItem trigger_effect() override;
+    ConsumeItem run_effect() override;
 };
 
 class DeviceRejuvenator : public StrangeDevice
@@ -106,7 +106,7 @@ private:
             "however, and causes great shock to the user.";
     }
 
-    ConsumeItem trigger_effect() override;
+    ConsumeItem run_effect() override;
 };
 
 class DeviceTranslocator : public StrangeDevice
@@ -125,7 +125,26 @@ private:
             "different locations.";
     }
 
-    ConsumeItem trigger_effect() override;
+    ConsumeItem run_effect() override;
+};
+
+class DevicePurgeInvis : public StrangeDevice
+{
+public:
+    DevicePurgeInvis(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
+
+    ~DevicePurgeInvis() {}
+
+private:
+    std::string descr_identified() const override
+    {
+        return
+            "When activated, this device reveals any hidden or invisible "
+            "creatures in the area around the user.";
+    }
+
+    ConsumeItem run_effect() override;
 };
 
 class DeviceSentryDrone : public StrangeDevice
@@ -144,7 +163,7 @@ private:
             "user.";
     }
 
-    ConsumeItem trigger_effect() override;
+    ConsumeItem run_effect() override;
 };
 
 enum class LanternWorkingState

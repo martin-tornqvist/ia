@@ -2116,6 +2116,21 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::device);
+    d.id = ItemId::device_purge_invis;
+    d.base_name =
+    {
+        "Invisibility Purge Device",
+        "Invisibility Purge Devices",
+        "an Invisibility Purge Device"
+    };
+    d.value = ItemValue::minor_treasure;
+    d.clr = clr_gray;
+    d.native_containers.push_back(FeatureId::chest);
+    d.native_containers.push_back(FeatureId::tomb);
+    d.native_containers.push_back(FeatureId::cocoon);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::device);
     d.id = ItemId::device_sentry_drone;
     d.base_name =
     {
@@ -2149,10 +2164,6 @@ void init_data_list()
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::rod);
-    d.id = ItemId::rod_purge_invis;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::rod);
