@@ -7,6 +7,7 @@ Contents:
 6. Spirit and spell casting
 7. Insanity
 8. Sneaking and backstabbing
+9. High scores and memorial files
 
 --------------------------------------------------------------------------------
 1. Command list
@@ -203,3 +204,21 @@ You can improve the search and sneak skills with traits (e.g. "Observant" and "S
 When you stay out of an aware monster's vision for a certain number of turns (and nothing else alerts it), it will "forget" about you. The number of turns this takes depends on the monster; A simple animal may only care for a couple of turns after it loses sight, while a human will remain aware longer.
 
 Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence. Medium and heavy melee weapons will make noise on attacks, so a light weapon might be more ideal for a stealthy combat approach. Some sounds are louder than others, for example firing a gun or kicking down a door is likely to attract some attention.
+
+--------------------------------------------------------------------------------
+9. High scores and memorial files
+--------------------------------------------------------------------------------
+Winning is not the sole purpose of Infra Arcana - there is also challenge and joy to be found in exploring further, gaining more abilities, discovering more items, or encountering stranger and more powerful monsters than in previous attempts.
+
+After each game is finished, information such as player name and dungeon level reached is stored in a "memorial file" on the disk, and a high score entry is added (unless you manually quit the game by pressing "Q"). The high score list can be viewed by selecting the main menu option "Graveyard". Selecting a high score entry on this screen will show the corresponding stored memorial file.
+
+In addition to this, the top high score entries show up as gravestones on the first level of the game (in the forest). Bumping a gravestone shows a short summary of the high score entry.
+
+Score values are calculated based on your Experience Points (including points gained after the maximum character level is reached), which is then multiplied by several factors.
+
+The factors contributing to a better score value are:
+   * Dungeon level reached
+   * Fewer turns spent
+   * Lower insanity
+
+Also, when winning the game, some large bonus factors are added. Every winning game is guaranteed to have a better score than any non-winning game.
