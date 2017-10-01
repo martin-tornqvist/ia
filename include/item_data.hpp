@@ -251,6 +251,7 @@ public:
     int                         chance_to_incl_in_spawn_list;
     bool                        is_stackable;
     bool                        is_identified;
+    bool                        is_alignment_known; // Used for Potions
     bool                        is_tried;
     bool                        is_found; // Was seen on map or in inventory
     int                         xp_on_found;

@@ -412,8 +412,8 @@ enum class ItemType
 struct ItemName
 {
     ItemName(const std::string& name,
-              const std::string& name_pl,
-              const std::string& name_a)
+             const std::string& name_pl,
+             const std::string& name_a)
     {
         names[(size_t)ItemRefType::plain] = name;
         names[(size_t)ItemRefType::plural] = name_pl;

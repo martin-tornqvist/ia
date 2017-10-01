@@ -17,6 +17,24 @@
 #include "item_factory.hpp"
 #include "saving.hpp"
 #include "game.hpp"
+#include "text_format.hpp"
+
+Potion::Potion(ItemDataT* const item_data) :
+    Item(item_data),
+    alignment_feeling_countdown_(rnd::range(100, 200))
+{
+
+}
+
+void Potion::save()
+{
+    saving::put_int(alignment_feeling_countdown_);
+}
+
+void Potion::load()
+{
+    alignment_feeling_countdown_ = saving::get_int();
+}
 
 ConsumeItem Potion::activate(Actor* const actor)
 {
@@ -69,19 +87,23 @@ ConsumeItem Potion::activate(Actor* const actor)
 
 void Potion::identify(const Verbosity verbosity)
 {
-    if (!data_->is_identified)
+    if (data_->is_identified)
     {
-        data_->is_identified = true;
+        return;
+    }
 
-        if (verbosity == Verbosity::verbose)
-        {
-            const std::string name_after =
-                name(ItemRefType::a, ItemRefInf::none);
+    data_->is_identified = true;
 
-            msg_log::add("I have identified " + name_after + ".");
+    data_->is_alignment_known = true;
 
-            game::add_history_event("Identified " + name_after + ".");
-        }
+    if (verbosity == Verbosity::verbose)
+    {
+        const std::string name_after =
+            name(ItemRefType::a, ItemRefInf::none);
+
+        msg_log::add("I have identified " + name_after + ".");
+
+        game::add_history_event("Identified " + name_after + ".");
     }
 }
 
@@ -97,6 +119,49 @@ std::vector<std::string> Potion::descr() const
     else // Not identified
     {
         return data_->base_descr;
+    }
+}
+
+std::string Potion::alignment_str() const
+{
+    return
+        (alignment() == PotionAlignment::good) ?
+        "Benign" :
+        "Malign";
+}
+
+void Potion::on_actor_turn_in_inv(const InvType inv_type)
+{
+    (void)inv_type;
+
+    auto& d = data();
+
+    if (d.is_alignment_known ||
+        d.is_identified)
+    {
+        return;
+    }
+
+    ASSERT(alignment_feeling_countdown_ > 0);
+
+    --alignment_feeling_countdown_;
+
+    if (alignment_feeling_countdown_ <= 0)
+    {
+        TRACE << "Potion alignment discovered" << std::endl;
+
+        const std::string name_plural =
+            d.base_name_un_id.names[(size_t)ItemRefType::plural];
+
+        const std::string align_str =
+            text_format::first_to_lower(alignment_str());
+
+        msg_log::add("I feel like " + name_plural  + " are " + align_str + ".",
+                     clr_text,
+                     false,
+                     MorePromptOnMsg::yes);
+
+        d.is_alignment_known = true;
     }
 }
 
@@ -151,7 +216,20 @@ void Potion::on_collide(const P& pos, Actor* const actor)
 
 std::string Potion::name_inf() const
 {
-    return (data_->is_tried && !data_->is_identified) ? "{Tried}" : "";
+    std::string str = "";
+
+    if (data().is_alignment_known &&
+        !data().is_identified)
+    {
+        const std::string align_str =
+            (alignment() == PotionAlignment::good) ?
+            "Benign" :
+            "Malign";
+
+        str = "{" + align_str + "}";
+    }
+
+    return str;
 }
 
 void PotionVitality::quaff_impl(Actor& actor)
@@ -454,26 +532,6 @@ void PotionRElec::quaff_impl(Actor& actor)
 }
 
 void PotionRElec::collide_hook(const P& pos, Actor* const actor)
-{
-    (void)pos;
-
-    if (actor)
-    {
-        quaff_impl(*actor);
-    }
-}
-
-void PotionRAcid::quaff_impl(Actor& actor)
-{
-    actor.prop_handler().apply(new PropRAcid(PropTurns::std));
-
-    if (map::player->can_see_actor(actor))
-    {
-        identify(Verbosity::verbose);
-    }
-}
-
-void PotionRAcid::collide_hook(const P& pos, Actor* const actor)
 {
     (void)pos;
 

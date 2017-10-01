@@ -6,13 +6,22 @@
 
 #include "item.hpp"
 
+enum class PotionAlignment
+{
+    good,
+    bad
+};
+
 class Potion: public Item
 {
 public:
-    Potion(ItemDataT* const item_data) :
-        Item(item_data) {}
+    Potion(ItemDataT* const item_data);
 
     virtual ~Potion() {}
+
+    void save();
+
+    void load();
 
     ConsumeItem activate(Actor* const actor) override final;
 
@@ -23,6 +32,8 @@ public:
 
     std::vector<std::string> descr() const override final;
 
+    void on_actor_turn_in_inv(const InvType inv_type) override;
+
     void on_collide(const P& pos, Actor* actor);
 
     void identify(const Verbosity verbosity) override final;
@@ -32,11 +43,18 @@ public:
 protected:
     virtual std::string descr_identified() const = 0;
 
+    virtual PotionAlignment alignment() const = 0;
+
     virtual void collide_hook(const P& pos, Actor* const actor) = 0;
 
     virtual void quaff_impl(Actor& actor) = 0;
 
     std::string name_inf() const override final;
+
+private:
+    std::string alignment_str() const;
+
+    int alignment_feeling_countdown_;
 };
 
 class PotionVitality: public Potion
@@ -62,6 +80,11 @@ private:
             "the consumers condition past normal levels.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -83,6 +106,11 @@ private:
     std::string descr_identified() const override
     {
         return "Restores the spirit.";
+    }
+
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;
@@ -108,6 +136,11 @@ private:
         return "Causes temporary loss of vision.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::bad;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -131,6 +164,11 @@ private:
         return "Causes paralysis.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::bad;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -152,6 +190,11 @@ private:
     std::string descr_identified() const override
     {
         return "This foul liquid causes a horrible disease.";
+    }
+
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::bad;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override
@@ -180,6 +223,11 @@ private:
         return "Causes confusion.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::bad;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -202,6 +250,11 @@ private:
     std::string descr_identified() const override
     {
         return "Gives the consumer complete peace of mind.";
+    }
+
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;
@@ -227,6 +280,11 @@ private:
         return "A deadly brew.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::bad;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -248,6 +306,11 @@ private:
     std::string descr_identified() const override
     {
         return "This strange concoction causes a sudden flash of intuition.";
+    }
+
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override
@@ -278,6 +341,11 @@ private:
         return "Protects the consumer from fire.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -303,6 +371,11 @@ private:
             "and restores the consumers health by a small amount.";
     }
 
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
+    }
+
     void collide_hook(const P& pos, Actor* const actor) override;
 };
 
@@ -326,27 +399,9 @@ private:
         return "Protects the consumer from electricity.";
     }
 
-    void collide_hook(const P& pos, Actor* const actor) override;
-};
-
-class PotionRAcid: public Potion
-{
-public:
-    PotionRAcid(ItemDataT* const item_data) :
-        Potion(item_data) {}
-    ~PotionRAcid() {}
-
-    void quaff_impl(Actor& actor) override;
-
-    const std::string real_name() const override
+    PotionAlignment alignment() const override
     {
-        return "Acid Resistance";
-    }
-
-private:
-    std::string descr_identified() const override
-    {
-        return "Protects the consumer from acid.";
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;
@@ -371,6 +426,12 @@ private:
     {
         return "A bizarre liquid that causes the consumer to dematerialize and sink "
                "through the ground.";
+    }
+
+    // TODO: Not sure about the alignment for this one...
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override
@@ -400,6 +461,11 @@ private:
         return
             "Makes the consumer invisible to normal vision for a brief time. "
             "Attacking or casting spells immediately reveals the consumer.";
+    }
+
+    PotionAlignment alignment() const override
+    {
+        return PotionAlignment::good;
     }
 
     void collide_hook(const P& pos, Actor* const actor) override;

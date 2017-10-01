@@ -28,6 +28,7 @@ ItemDataT::ItemDataT() :
     chance_to_incl_in_spawn_list        (100),
     is_stackable                        (true),
     is_identified                       (true),
+    is_alignment_known                  (true),
     is_tried                            (false),
     is_found                            (false),
     xp_on_found                         (0),
@@ -275,6 +276,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_spawn_list = 60;
         d.weight = ItemWeight::light;
         d.is_identified = false;
+        d.is_alignment_known = false;
         d.xp_on_found = 10;
         d.glyph = '!';
         d.tile = TileId::potion;
@@ -2548,6 +2550,7 @@ void save()
         const ItemDataT& d = data[i];
 
         saving::put_bool(d.is_identified);
+        saving::put_bool(d.is_alignment_known);
         saving::put_bool(d.is_tried);
         saving::put_bool(d.is_found);
         saving::put_bool(d.allow_spawn);
@@ -2561,6 +2564,7 @@ void load()
         ItemDataT& d = data[i];
 
         d.is_identified = saving::get_bool();
+        d.is_alignment_known = saving::get_bool();
         d.is_tried = saving::get_bool();
         d.is_found = saving::get_bool();
         d.allow_spawn = saving::get_bool();
