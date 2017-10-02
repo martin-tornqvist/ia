@@ -646,12 +646,11 @@ void init_data_list()
     d.ranged.dmg = Dice(2, 6, 0);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
-    d.ranged.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2));
     d.ranged.dmg_type = DmgType::electric;
     d.ranged.has_infinite_ammo = true;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.projectile_clr = clr_yellow;
+    d.ranged.knocks_back = true;
     d.melee.att_msgs = {"strike", "strikes me with a Mi-go Electric Gun"};
     d.ranged.att_msgs = {"fire", "fires a Mi-go Electric Gun"};
     d.ranged.snd_msg = "I hear a bolt of electricity.";
