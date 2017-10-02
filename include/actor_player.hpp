@@ -122,6 +122,8 @@ public:
 
     bool is_standing_in_cramped_place() const;
 
+    void on_new_dlvl_reached();
+
     // Randomly prints a message such as "I sense an object of great power here"
     // if there is a major treasure on the map (on the floor or in a container),
     // and the player is observant

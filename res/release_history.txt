@@ -3,7 +3,7 @@ v19.2 *** WORK IN PROGRESS ***
 --------------------------------------------------------------
 Gameplay
 * All items which gave XP on identification now instead gives XP when that item is found for the first time (except "Strange Devices") - the reason for this is to reduce the pressure to identify consumables as soon as possible, and also to have a more "natural" continuous stream of XP, rather than occasional bursts
-* After carrying a Potion for a while, you get a "feeling" for if the Potion is benign or malign
+* When carrying a Potion, you eventually get a "feeling" for if the Potion is benign or malign
 * Increased minimum distance from player when spawning monsters (when entering a new map, or spawning over time)
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds

@@ -837,6 +837,26 @@ void Player::item_feeling()
     } // x loop
 }
 
+void Player::on_new_dlvl_reached()
+{
+    mon_feeling();
+
+    item_feeling();
+
+    for (auto& slot: inv_->slots_)
+    {
+        if (slot.item)
+        {
+            slot.item->on_player_reached_new_dlvl();
+        }
+    }
+
+    for (auto* const item: inv_->backpack_)
+    {
+        item->on_player_reached_new_dlvl();
+    }
+}
+
 void Player::mon_feeling()
 {
     if (!player_bon::traits[(size_t)Trait::observant])

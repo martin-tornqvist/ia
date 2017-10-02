@@ -21,19 +21,22 @@
 
 Potion::Potion(ItemDataT* const item_data) :
     Item(item_data),
-    alignment_feeling_countdown_(rnd::range(100, 500))
+    alignment_feeling_dlvl_countdown_(rnd::range(1, 3)),
+    alignment_feeling_turn_countdown_(rnd::range(100, 500))
 {
 
 }
 
 void Potion::save()
 {
-    saving::put_int(alignment_feeling_countdown_);
+    saving::put_int(alignment_feeling_dlvl_countdown_);
+    saving::put_int(alignment_feeling_turn_countdown_);
 }
 
 void Potion::load()
 {
-    alignment_feeling_countdown_ = saving::get_int();
+    alignment_feeling_dlvl_countdown_ = saving::get_int();
+    alignment_feeling_turn_countdown_ = saving::get_int();
 }
 
 ConsumeItem Potion::activate(Actor* const actor)
@@ -130,6 +133,20 @@ std::string Potion::alignment_str() const
         "Malign";
 }
 
+void Potion::on_player_reached_new_dlvl()
+{
+    auto& d = data();
+
+    if (d.is_alignment_known ||
+        d.is_identified ||
+        (alignment_feeling_dlvl_countdown_ <= 0))
+    {
+        return;
+    }
+
+    --alignment_feeling_dlvl_countdown_;
+}
+
 void Potion::on_actor_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
@@ -141,17 +158,19 @@ void Potion::on_actor_turn_in_inv(const InvType inv_type)
 
     auto& d = data();
 
+    // Alignment already known, already ID'ed, or not yet reached required dlvl?
     if (d.is_alignment_known ||
-        d.is_identified)
+        d.is_identified ||
+        (alignment_feeling_dlvl_countdown_ > 0))
     {
         return;
     }
 
-    ASSERT(alignment_feeling_countdown_ > 0);
+    ASSERT(alignment_feeling_turn_countdown_ > 0);
 
-    --alignment_feeling_countdown_;
+    --alignment_feeling_turn_countdown_;
 
-    if (alignment_feeling_countdown_ <= 0)
+    if (alignment_feeling_turn_countdown_ <= 0)
     {
         TRACE << "Potion alignment discovered" << std::endl;
 

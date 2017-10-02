@@ -102,6 +102,8 @@ public:
     // * The item is found in an item container, but not picked up
     void on_player_found();
 
+    virtual void on_player_reached_new_dlvl() {}
+
     virtual void on_projectile_blocked(const P& pos, Actor* actor)
     {
         (void)pos;

@@ -224,9 +224,7 @@ void go_to_nxt()
     //
     game::incr_player_xp(5, Verbosity::verbose);
 
-    map::player->item_feeling();
-
-    map::player->mon_feeling();
+    map::player->on_new_dlvl_reached();
 
     game::add_history_event("Reached dungeon level " +
                             std::to_string(map::dlvl));

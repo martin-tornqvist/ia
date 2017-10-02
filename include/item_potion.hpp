@@ -32,6 +32,8 @@ public:
 
     std::vector<std::string> descr() const override final;
 
+    void on_player_reached_new_dlvl() override final;
+
     void on_actor_turn_in_inv(const InvType inv_type) override;
 
     void on_collide(const P& pos, Actor* actor);
@@ -54,7 +56,8 @@ protected:
 private:
     std::string alignment_str() const;
 
-    int alignment_feeling_countdown_;
+    int alignment_feeling_dlvl_countdown_;
+    int alignment_feeling_turn_countdown_;
 };
 
 class PotionVitality: public Potion
