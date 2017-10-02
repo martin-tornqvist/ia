@@ -2978,9 +2978,6 @@ void HighPriestGuardWarVet::mk_start_items()
         SlotId::wpn,
         item_factory::mk(ItemId::machine_gun),
         Verbosity::silent);
-
-    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
-    inv_->put_in_backpack(item_factory::mk(ItemId::drum_of_bullets));
 }
 
 void HighPriestGuardRogue::mk_start_items()
