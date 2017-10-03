@@ -76,12 +76,29 @@ void mk_monoliths()
 
         const P p = spawn_weight_positions[spawn_p_idx];
 
-        spawn_weights.erase(begin(spawn_weights) + spawn_p_idx);
-
-        spawn_weight_positions.erase(
-            begin(spawn_weight_positions) + spawn_p_idx);
-
         map::cells[p.x][p.y].rigid = new Monolith(p);
+
+        // Block this position and all adjacent positions
+        for (const P& d : dir_utils::cardinal_list_w_center)
+        {
+            const P p_adj(p + d);
+
+            blocked[p_adj.x][p_adj.y] = true;
+
+            for (size_t i = 0; i < spawn_weight_positions.size(); ++i)
+            {
+                if (spawn_weight_positions[i] == p_adj)
+                {
+                    spawn_weight_positions.erase(
+                        begin(spawn_weight_positions) + i);
+
+                    spawn_weights.erase(
+                        begin(spawn_weights) + i);
+                }
+            }
+        }
+
+        ASSERT(spawn_weights.size() == spawn_weight_positions.size());
     }
 }
 
