@@ -946,7 +946,6 @@ private:
 
     int push_lid_one_in_n_;
     TombAppearance appearance_;
-    bool is_random_appearance_;
     TombTrait trait_;
 };
 

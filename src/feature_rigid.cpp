@@ -2396,7 +2396,6 @@ Tomb::Tomb(const P& p) :
     is_trait_known_         (false),
     push_lid_one_in_n_      (rnd::range(4, 10)),
     appearance_             (TombAppearance::common),
-    is_random_appearance_   (false),
     trait_                  (TombTrait::END)
 {
     // Contained items
@@ -2420,19 +2419,14 @@ Tomb::Tomb(const P& p) :
                          rnd::range(nr_items_min,
                                     nr_items_max));
 
-    // Appearance
-    if (rnd::one_in(12))
+    // Set appearance - sometimes we set the appearance based on the value
+    // of the items, and sometimes we use a common appearance regardless of the
+    // contained items. If the tomb is nicer than "common", then it ALWAYS
+    // reflects the items (i.e. it is guaranteed to have valuable items).
+    if (rnd::one_in(4))
     {
-        // Do not base appearance on items (random appearance)
-        const int nr_app = (int)TombAppearance::END;
+        // Base appearance on value of contained items
 
-        appearance_ = (TombAppearance)rnd::range(0, nr_app - 1);
-
-        is_random_appearance_ = true;
-    }
-    else // Base appearance on value of contained items
-    {
-        // Appearance is based on items inside
         for (Item* item : item_container_.items_)
         {
             const ItemValue item_value = item->data().value;
@@ -2443,15 +2437,19 @@ Tomb::Tomb(const P& p) :
 
                 break;
             }
-            else if (item_value == ItemValue::minor_treasure)
+
+            if (item_value == ItemValue::minor_treasure)
             {
                 appearance_ = TombAppearance::ornate;
             }
         }
     }
+    else // Do not base appearance on items - use a common appearance
+    {
+        appearance_ = TombAppearance::common;
+    }
 
-    if ((appearance_ == TombAppearance::marvelous) &&
-        !is_random_appearance_)
+    if (appearance_ == TombAppearance::marvelous)
     {
         trait_ = TombTrait::ghost;
     }
@@ -2698,8 +2696,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     case TombTrait::ghost:
     {
         // Tomb contains major treasure?
-        if (appearance_ == TombAppearance::marvelous &&
-            !is_random_appearance_)
+        if (appearance_ == TombAppearance::marvelous)
         {
             id_to_spawn = ActorId::wraith;
         }
