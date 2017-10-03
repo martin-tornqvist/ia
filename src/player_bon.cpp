@@ -606,7 +606,7 @@ std::string trait_descr(const Trait id)
 
     case Trait::rapid_recoverer:
         return
-            "Four times faster Hit Point regeneration base rate";
+            "You regenerate 1 Hit Point every second turn";
 
     case Trait::survivalist:
         return
@@ -882,7 +882,6 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::survivalist:
-        traits_out.push_back(Trait::tough);
         traits_out.push_back(Trait::healer);
         break;
 
@@ -893,7 +892,7 @@ void trait_prereqs(const Trait trait,
 
     case Trait::self_aware:
         traits_out.push_back(Trait::stout_spirit);
-        traits_out.push_back(Trait::observant);
+        traits_out.push_back(Trait::cool_headed);
         break;
 
     case Trait::stout_spirit:

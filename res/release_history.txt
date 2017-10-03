@@ -23,6 +23,8 @@ Gameplay
 * The Rogue's bonus to remain aware of creatures longer is now part of the "Observant" trait instead
 * The "Vigilant" trait grants awareness of all creatures inside the player's view (instead of only preventing backstabs)
 * With the "Rapid Recoverer" trait, Hit Point regeneration is 1 HP every 2nd turn (previously it only regenerated 1 HP every 5th turn)
+* The "Survivalist" trait no longer has "Tough" as prerequisite
+* The "Self-aware" trait has "Cool-headed" as prerequisite instead of "Observant"
 * Melee traits no longer improves chance to evade melee attacks
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
 * Fountains with bad effects always dry up on the first quaff
