@@ -9,7 +9,6 @@ Gameplay
 * Reduced group sizes of Hounds
 * Hound bites cause physical damage instead of elemental (again) - this is to avoid players trivially becoming invincible against Hounds by casting the "Resistance" spell
 * Slightly fewer monsters are spawned on the map
-* Removed the "Demolition Expert" trait
 * Monsters can no longer cast "See Invisible"
 * Some monsters now have more specialized spell selections (too many monsters could cast too many different spells)
 * The "Transmute" spell costs much less spirit to cast
@@ -19,9 +18,11 @@ Gameplay
 * The Horn of Banishment now also works on Khephren's summoned Locusts, and on monsters spawned from traps
 * Monsters spawned from traps now wait a bit before acting
 * Using Rods causes less shock than before
+* Removed the "Demolition Expert" trait
 * The "Silent" trait also prevents alerting monsters when wading through liquid
 * The Rogue's bonus to remain aware of creatures longer is now part of the "Observant" trait instead
 * The "Vigilant" trait grants awareness of all creatures inside the player's view (instead of only preventing backstabs)
+* With the "Rapid Recoverer" trait, Hit Point regeneration is 1 HP every 2nd turn (previously it only regenerated 1 HP every 5th turn)
 * Melee traits no longer improves chance to evade melee attacks
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
 * Fountains with bad effects always dry up on the first quaff

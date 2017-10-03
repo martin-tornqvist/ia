@@ -1598,15 +1598,16 @@ void Player::on_std_turn()
     if (!has_prop(PropId::poisoned) &&
         player_bon::bg() != Bg::ghoul)
     {
-        int nr_turns_per_hp = 20;
+        int nr_turns_per_hp;
 
         // Rapid Recoverer trait affects hp regen?
-        const bool is_rapid_recover =
-            player_bon::traits[(size_t)Trait::rapid_recoverer];
-
-        if (is_rapid_recover)
+        if (player_bon::traits[(size_t)Trait::rapid_recoverer])
         {
-            nr_turns_per_hp /= 4;
+            nr_turns_per_hp = 2;
+        }
+        else
+        {
+            nr_turns_per_hp = 20;
         }
 
         // Wounds affect hp regen?
