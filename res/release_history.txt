@@ -7,6 +7,7 @@ Gameplay
 * Increased minimum distance from player when spawning monsters (when entering a new map, or spawning over time)
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds
+* Hound bites cause physical damage instead of elemental (again) - this is to avoid players trivially becoming invincible against Hounds by casting the "Resistance" spell
 * Slightly fewer monsters are spawned on the map
 * Removed the "Demolition Expert" trait
 * Monsters can no longer cast "See Invisible"

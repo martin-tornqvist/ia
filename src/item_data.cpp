@@ -1407,10 +1407,6 @@ void init_data_list()
     d.id = ItemId::fire_hound_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::fire_hound);
-    d.melee.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std));
-    d.melee.dmg_type = DmgType::fire;
-    d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1431,10 +1427,6 @@ void init_data_list()
     d.id = ItemId::energy_hound_bite;
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::energy_hound);
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 40);
-    d.melee.dmg_type = DmgType::electric;
-    d.melee.dmg_method = DmgMethod::elemental;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);

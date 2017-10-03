@@ -1273,7 +1273,7 @@ void init_data_list()
     d.aggro_msg_mon_hidden = "I hear a snarl.";
     d.aggro_sfx_mon_seen = SfxId::dog_snarl;
     d.aggro_sfx_mon_hidden = SfxId::dog_snarl;
-    d.erratic_move_pct = ActorErraticFreq::somewhat;
+    d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::frightening;
     d.is_canine = true;
     d.can_be_summoned_by_mon = true;
@@ -1294,7 +1294,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 2;
+    d.ranged_cooldown_turns = 3;
     d.glyph = 'd';
     d.color = clr_yellow;
     d.tile = TileId::hound;
