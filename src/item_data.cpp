@@ -1459,6 +1459,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::fire_vortex);
     d.melee.prop_applied =
         ItemAttProp(new PropBurning(PropTurns::std));
+    d.melee.dmg_type = DmgType::fire;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1468,6 +1469,7 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::energy_vortex);
     d.melee.prop_applied =
         ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 30);
+    d.melee.dmg_type = DmgType::electric;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
