@@ -1675,12 +1675,18 @@ void Molotov::on_std_turn_player_hold_ignited()
 
     if (fuse_turns_ == 2)
     {
-        msg_log::add("The Molotov Coctail will soon explode.");
+        msg_log::add("The Molotov Cocktail will soon explode.",
+                     clr_text,
+                     false,
+                     MorePromptOnMsg::yes);
     }
 
     if (fuse_turns_ == 1)
     {
-        msg_log::add("The Molotov Coctail is about to explode!");
+        msg_log::add("The Molotov Cocktail is about to explode!",
+                     clr_text,
+                     false,
+                     MorePromptOnMsg::yes);
     }
 
     if (fuse_turns_ <= 0)
