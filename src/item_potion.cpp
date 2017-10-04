@@ -22,7 +22,7 @@
 Potion::Potion(ItemDataT* const item_data) :
     Item(item_data),
     alignment_feeling_dlvl_countdown_(rnd::range(1, 3)),
-    alignment_feeling_turn_countdown_(rnd::range(100, 500))
+    alignment_feeling_turn_countdown_(rnd::range(100, 200))
 {
 
 }
