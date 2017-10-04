@@ -382,7 +382,8 @@ bool make_room_for_friend(Mon& mon)
 bool move_to_random_adj_cell(Mon& mon)
 {
     if (!mon.is_alive() ||
-        (!mon.is_roaming_allowed_ && (mon.aware_of_player_counter_ <= 0)))
+        ((mon.is_roaming_allowed_ == MonRoamingAllowed::no) &&
+         (mon.aware_of_player_counter_ <= 0)))
     {
         return false;
     }

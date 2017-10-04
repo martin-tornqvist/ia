@@ -294,6 +294,12 @@ enum class ShockLvl
     END
 };
 
+enum class MonRoamingAllowed
+{
+    no,
+    yes
+};
+
 enum class GameEntryMode
 {
     new_game,

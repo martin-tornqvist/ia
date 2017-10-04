@@ -361,7 +361,8 @@ bool mk_egypt_lvl()
                     Actor* const actor =
                         actor_factory::mk(actor_id, p);
 
-                    static_cast<Mon*>(actor)->is_roaming_allowed_ = false;
+                    static_cast<Mon*>(actor)->is_roaming_allowed_ =
+                        MonRoamingAllowed::no;
                 }
             }
             break;
@@ -649,7 +650,8 @@ bool mk_rat_cave_level()
     {
         if (!actor->is_player())
         {
-            static_cast<Mon*>(actor)->is_roaming_allowed_ = false;
+            static_cast<Mon*>(actor)->is_roaming_allowed_ =
+                MonRoamingAllowed::no;
         }
     }
 

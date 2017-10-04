@@ -131,7 +131,7 @@ public:
     bool is_msg_mon_in_view_printed_;
     bool is_player_feeling_msg_allowed_;
     Dir last_dir_moved_;
-    bool is_roaming_allowed_;
+    MonRoamingAllowed is_roaming_allowed_;
     Actor* leader_;
     Actor* tgt_;
     bool is_tgt_seen_;

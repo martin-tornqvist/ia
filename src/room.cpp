@@ -960,8 +960,8 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         populate_mon::mk_group_at(
             actor_id,
             sorted_free_cells,
-            blocked,    // New blocked cells (output)
-            true);      // Roaming allowed
+            blocked, // New blocked cells (output)
+            MonRoamingAllowed::yes);
     }
 }
 

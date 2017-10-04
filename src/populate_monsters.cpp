@@ -34,7 +34,9 @@ int random_out_of_depth()
     return nr_levels;
 }
 
-std::vector<ActorId> valid_auto_spawn_monsters(const int nr_lvls_out_of_depth)
+std::vector<ActorId> valid_auto_spawn_monsters(
+    const int nr_lvls_out_of_depth,
+    const AllowSpawnUniqueMon allow_spawn_unique)
 {
     std::vector<ActorId> ret;
 
@@ -56,15 +58,38 @@ std::vector<ActorId> valid_auto_spawn_monsters(const int nr_lvls_out_of_depth)
 
     for (const auto& d : actor_data::data)
     {
-        if (d.id != ActorId::player &&
-            d.is_auto_spawn_allowed &&
-            d.nr_left_allowed_to_spawn != 0 &&
-            effective_dlvl >= d.spawn_min_dlvl &&
-            effective_dlvl <= d.spawn_max_dlvl &&
-            !(d.is_unique && spawned_ids[(size_t)d.id]))
+        if (d.id == ActorId::player)
         {
-            ret.push_back(d.id);
+            continue;
         }
+
+        if (!d.is_auto_spawn_allowed)
+        {
+            continue;
+        }
+
+        if (d.nr_left_allowed_to_spawn == 0)
+        {
+            continue;
+        }
+
+        if ((effective_dlvl < d.spawn_min_dlvl) ||
+            (effective_dlvl > d.spawn_max_dlvl))
+        {
+            continue;
+        }
+
+        if (d.is_unique && spawned_ids[(size_t)d.id])
+        {
+            continue;
+        }
+
+        if (d.is_unique && (allow_spawn_unique == AllowSpawnUniqueMon::no))
+        {
+            continue;
+        }
+
+        ret.push_back(d.id);
     }
 
     return ret;
@@ -72,14 +97,14 @@ std::vector<ActorId> valid_auto_spawn_monsters(const int nr_lvls_out_of_depth)
 
 bool mk_random_group_for_room(const RoomType room_type,
                               const std::vector<P>& sorted_free_cells,
-                              bool blocked_out[map_w][map_h],
-                              const bool is_roaming_allowed)
+                              bool blocked_out[map_w][map_h])
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
     const int nr_lvls_out_of_depth_allowed = random_out_of_depth();
 
-    auto id_bucket = valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
+    auto id_bucket = valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed,
+                                               AllowSpawnUniqueMon::yes);
 
     // Remove monsters which do not belong in this room
     for (size_t i = 0; i < id_bucket.size(); ++i)
@@ -128,7 +153,7 @@ bool mk_random_group_for_room(const RoomType room_type,
         mk_group_at(id,
                     sorted_free_cells,
                     blocked_out,
-                    is_roaming_allowed);
+                    MonRoamingAllowed::yes);
 
         TRACE_FUNC_END_VERBOSE;
         return true;
@@ -138,10 +163,12 @@ bool mk_random_group_for_room(const RoomType room_type,
 void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
                            bool blocked_out[map_w][map_h],
                            const int nr_lvls_out_of_depth_allowed,
-                           const bool is_roaming_allowed)
+                           const MonRoamingAllowed is_roaming_allowed,
+                           const AllowSpawnUniqueMon allow_spawn_unique)
 {
     const auto id_bucket =
-        valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed);
+        valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed,
+                                  allow_spawn_unique);
 
     if (!id_bucket.empty())
     {
@@ -189,7 +216,7 @@ std::vector<P> mk_sorted_free_cells(const P& origin,
 void mk_group_at(const ActorId id,
                  const std::vector<P>& sorted_free_cells,
                  bool blocked_out[map_w][map_h],
-                 const bool is_roaming_allowed)
+                 const MonRoamingAllowed is_roaming_allowed)
 {
     const ActorDataT& d = actor_data::data[(size_t)id];
 
@@ -326,7 +353,8 @@ void try_spawn_due_to_time_passed()
                 mk_group_of_random_at(free_cells_vector,
                                       blocked,
                                       nr_ood,
-                                      true);
+                                      MonRoamingAllowed::yes,
+                                      AllowSpawnUniqueMon::no);
             }
         }
     }
@@ -429,8 +457,7 @@ void populate_std_lvl()
                         mk_random_group_for_room(
                             room->type_,
                             sorted_free_cells,
-                            blocked,
-                            true);
+                            blocked);
 
                     if (did_make_group)
                     {
@@ -492,8 +519,7 @@ void populate_std_lvl()
                 mk_random_group_for_room(
                     RoomType::plain,
                     sorted_free_cells,
-                    blocked,
-                    true);
+                    blocked);
 
             if (did_make_group)
             {

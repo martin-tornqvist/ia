@@ -482,7 +482,8 @@ void EventRatsInTheWallsDiscovery::on_new_turn()
         {
             if (!actor->is_player())
             {
-                static_cast<Mon*>(actor)->is_roaming_allowed_ = true;
+                static_cast<Mon*>(actor)->is_roaming_allowed_ =
+                    MonRoamingAllowed::yes;
             }
         }
 

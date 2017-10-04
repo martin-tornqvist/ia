@@ -40,7 +40,7 @@ Mon::Mon() :
     is_msg_mon_in_view_printed_     (false),
     is_player_feeling_msg_allowed_  (true),
     last_dir_moved_                 (Dir::center),
-    is_roaming_allowed_             (true),
+    is_roaming_allowed_             (MonRoamingAllowed::yes),
     leader_                         (nullptr),
     tgt_                            (nullptr),
     is_tgt_seen_                    (false),
@@ -228,7 +228,7 @@ void Mon::act()
     if (wary_of_player_counter_ > 0 ||
         aware_of_player_counter_ > 0)
     {
-        is_roaming_allowed_ = true;
+        is_roaming_allowed_ = MonRoamingAllowed::yes;
 
         // Does the monster have a living leader?
         if (leader_ &&

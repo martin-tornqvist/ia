@@ -5,13 +5,19 @@
 
 #include "actor_data.hpp"
 
+enum class AllowSpawnUniqueMon
+{
+    no,
+    yes
+};
+
 namespace populate_mon
 {
 
 void mk_group_at(const ActorId id,
                  const std::vector<P>& sorted_free_cells,
                  bool blocked_out[map_w][map_h],
-                 const bool is_roaming_allowed);
+                 const MonRoamingAllowed roaming_allowed);
 
 //
 // TODO: This is a very general function, it should not be here
