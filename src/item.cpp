@@ -1673,6 +1673,16 @@ void Molotov::on_std_turn_player_hold_ignited()
 {
     --fuse_turns_;
 
+    if (fuse_turns_ == 2)
+    {
+        msg_log::add("The Molotov Coctail will soon explode.");
+    }
+
+    if (fuse_turns_ == 1)
+    {
+        msg_log::add("The Molotov Coctail is about to explode!");
+    }
+
     if (fuse_turns_ <= 0)
     {
         msg_log::add("The Molotov Cocktail explodes in my hand!");
