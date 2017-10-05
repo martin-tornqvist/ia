@@ -74,7 +74,6 @@ Player::Player() :
     shock_tmp_                          (0.0),
     perm_shock_taken_current_turn_      (0.0),
     nr_turns_until_ins_                 (-1),
-    nr_quick_move_steps_left_           (-1),
     quick_move_dir_                     (Dir::END),
     nr_turns_until_rspell_              (-1),
     unarmed_wpn_                        (nullptr) {}
@@ -921,7 +920,7 @@ void Player::mon_feeling()
 
 void Player::set_quick_move(const Dir dir)
 {
-    nr_quick_move_steps_left_ = 10;
+    ASSERT(dir != Dir::END);
 
     quick_move_dir_ = dir;
 }
@@ -1014,45 +1013,67 @@ void Player::act()
     }
 
     // Quick move
-    if (nr_quick_move_steps_left_ > 0)
+    if (quick_move_dir_ != Dir::END)
     {
-        //
-        // NOTE: There is no need to check for items here, since the message
-        //       from stepping on an item will interrupt player actions.
-        //
+        auto is_p_adj_to_known_door = [](const P& p)
+        {
+            for (const P& d : dir_utils::dir_list_w_center)
+            {
+                const P p_adj(p + d);
 
-        const P tgt(pos + dir_utils::offset(quick_move_dir_));
+                const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
 
-        const Cell& tgt_cell = map::cells[tgt.x][tgt.y];
+                if (adj_cell.is_seen_by_player &&
+                    (adj_cell.rigid->id() == FeatureId::door) &&
+                    !static_cast<const Door*>(adj_cell.rigid)->is_secret())
+                {
+                    return true;
+                }
+            }
 
-        const Rigid* const tgt_rigid = tgt_cell.rigid;
+            return false;
+        };
 
-        const bool is_tgt_known_trap =
-            (tgt_rigid->id() == FeatureId::trap) &&
-            !static_cast<const Trap*>(tgt_rigid)->is_hidden();
+        const bool is_adj_to_known_door_before = is_p_adj_to_known_door(pos);
+
+        move(quick_move_dir_);
+
+        update_fov();
+
+        if (quick_move_dir_ == Dir::END)
+        {
+            return;
+        }
+
+        // Check if we should stop
+        const P next_p(pos + dir_utils::offset(quick_move_dir_));
+
+        const Cell& next_cell = map::cells[next_p.x][next_p.y];
+
+        const auto next_tgt_rigid_id = next_cell.rigid->id();
+
+        const bool is_next_tgt_known_trap =
+            next_cell.is_seen_by_player &&
+            (next_tgt_rigid_id == FeatureId::trap) &&
+            !static_cast<const Trap*>(next_cell.rigid)->is_hidden();
+
+        const bool is_adj_to_known_door_after = is_p_adj_to_known_door(pos);
 
         const bool should_abort =
-            !tgt_rigid->can_move_common() ||
-            is_tgt_known_trap ||
-            (tgt_rigid->id() == FeatureId::chains) ||
-            (tgt_rigid->id() == FeatureId::liquid_shallow) ||
-            (tgt_rigid->id() == FeatureId::vines) ||
-            (tgt_rigid->burn_state() == BurnState::burning);
+            !next_cell.rigid->can_move_common() ||
+            is_next_tgt_known_trap ||
+            (!is_adj_to_known_door_before && is_adj_to_known_door_after) ||
+            (next_tgt_rigid_id == FeatureId::chains) ||
+            (next_tgt_rigid_id == FeatureId::liquid_shallow) ||
+            (next_tgt_rigid_id == FeatureId::vines) ||
+            (next_cell.rigid->burn_state() == BurnState::burning);
 
         if (should_abort)
         {
-            nr_quick_move_steps_left_ = -1;
-
             quick_move_dir_ = Dir::END;
         }
-        else // Keep going!
-        {
-            --nr_quick_move_steps_left_;
 
-            move(quick_move_dir_);
-
-            return;
-        }
+        return;
     }
 
     // If this point is reached - read input
@@ -1110,7 +1131,7 @@ void Player::on_actor_turn()
     if (active_medical_bag ||
         (nr_turns_until_handle_armor_done > 0) ||
         (wait_turns_left > 0) ||
-        (nr_quick_move_steps_left_ > 0))
+        (quick_move_dir_ != Dir::END))
     {
         if (is_seeing_burning_feature())
         {
@@ -1148,7 +1169,7 @@ void Player::on_actor_turn()
             if (active_medical_bag ||
                 (nr_turns_until_handle_armor_done > 0) ||
                 (wait_turns_left > 0) ||
-                (nr_quick_move_steps_left_ > 0))
+                (quick_move_dir_ != Dir::END))
             {
                 const std::string name_a =
                     text_format::first_to_upper(
@@ -1720,8 +1741,6 @@ void Player::on_log_msg_printed()
     wait_turns_left = -1;
 
     // All messages abort quick move
-    nr_quick_move_steps_left_ = -1;
-
     quick_move_dir_ = Dir::END;
 }
 
@@ -1803,8 +1822,6 @@ void Player::interrupt_actions()
     wait_turns_left = -1;
 
     // Abort quick move
-    nr_quick_move_steps_left_ = -1;
-
     quick_move_dir_ = Dir::END;
 }
 
