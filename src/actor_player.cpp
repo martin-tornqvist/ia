@@ -75,6 +75,7 @@ Player::Player() :
     perm_shock_taken_current_turn_      (0.0),
     nr_turns_until_ins_                 (-1),
     quick_move_dir_                     (Dir::END),
+    has_taken_quick_move_step_          (false),
     nr_turns_until_rspell_              (-1),
     unarmed_wpn_                        (nullptr) {}
 
@@ -923,6 +924,8 @@ void Player::set_quick_move(const Dir dir)
     ASSERT(dir != Dir::END);
 
     quick_move_dir_ = dir;
+
+    has_taken_quick_move_step_ = false;
 }
 
 void Player::act()
@@ -1015,28 +1018,58 @@ void Player::act()
     // Quick move
     if (quick_move_dir_ != Dir::END)
     {
-        auto is_p_adj_to_known_door = [](const P& p)
+        const bool is_first_quick_move_step = !has_taken_quick_move_step_;
+
+        const P target = pos + dir_utils::offset(quick_move_dir_);
+
+        bool is_target_adj_to_unseen_cell = false;
+
+        for (const P& d : dir_utils::dir_list_w_center)
         {
-            for (const P& d : dir_utils::dir_list_w_center)
+            const P p_adj(target + d);
+
+            const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+
+            if (!adj_cell.is_seen_by_player)
             {
-                const P p_adj(p + d);
+                is_target_adj_to_unseen_cell = true;
 
-                const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
-
-                if (adj_cell.is_seen_by_player &&
-                    (adj_cell.rigid->id() == FeatureId::door) &&
-                    !static_cast<const Door*>(adj_cell.rigid)->is_secret())
-                {
-                    return true;
-                }
+                break;
             }
+        }
 
-            return false;
-        };
+        const Cell& target_cell = map::cells[target.x][target.y];
 
-        const bool is_adj_to_known_door_before = is_p_adj_to_known_door(pos);
+        bool should_abort = !target_cell.rigid->can_move(*this);
+
+        if (!should_abort &&
+            has_taken_quick_move_step_)
+        {
+            const auto target_rigid_id = target_cell.rigid->id();
+
+            const bool is_target_known_trap =
+                target_cell.is_seen_by_player &&
+                (target_rigid_id == FeatureId::trap) &&
+                !static_cast<const Trap*>(target_cell.rigid)->is_hidden();
+
+            should_abort =
+                is_target_known_trap ||
+                (target_rigid_id == FeatureId::chains) ||
+                (target_rigid_id == FeatureId::liquid_shallow) ||
+                (target_rigid_id == FeatureId::vines) ||
+                (target_cell.rigid->burn_state() == BurnState::burning);
+        }
+
+        if (should_abort)
+        {
+            quick_move_dir_ = Dir::END;
+
+            return;
+        }
 
         move(quick_move_dir_);
+
+        has_taken_quick_move_step_ = true;
 
         update_fov();
 
@@ -1045,32 +1078,37 @@ void Player::act()
             return;
         }
 
-        // Check if we should stop
-        const P next_p(pos + dir_utils::offset(quick_move_dir_));
+        bool is_adj_to_known_closed_door_after = false;
 
-        const Cell& next_cell = map::cells[next_p.x][next_p.y];
-
-        const auto next_tgt_rigid_id = next_cell.rigid->id();
-
-        const bool is_next_tgt_known_trap =
-            next_cell.is_seen_by_player &&
-            (next_tgt_rigid_id == FeatureId::trap) &&
-            !static_cast<const Trap*>(next_cell.rigid)->is_hidden();
-
-        const bool is_adj_to_known_door_after = is_p_adj_to_known_door(pos);
-
-        const bool should_abort =
-            !next_cell.rigid->can_move_common() ||
-            is_next_tgt_known_trap ||
-            (!is_adj_to_known_door_before && is_adj_to_known_door_after) ||
-            (next_tgt_rigid_id == FeatureId::chains) ||
-            (next_tgt_rigid_id == FeatureId::liquid_shallow) ||
-            (next_tgt_rigid_id == FeatureId::vines) ||
-            (next_cell.rigid->burn_state() == BurnState::burning);
-
-        if (should_abort)
+        for (const P& d : dir_utils::dir_list_w_center)
         {
-            quick_move_dir_ = Dir::END;
+            const P p_adj(pos + d);
+
+            const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+
+            if (adj_cell.is_seen_by_player &&
+                (adj_cell.rigid->id() == FeatureId::door))
+            {
+                const auto* const door =
+                    static_cast<const Door*>(adj_cell.rigid);
+
+                if (!door->is_secret() &&
+                    !door->is_open())
+                {
+                    is_adj_to_known_closed_door_after = true;
+                }
+            }
+        }
+
+        if (!is_first_quick_move_step)
+        {
+            if (is_target_adj_to_unseen_cell ||
+                is_adj_to_known_closed_door_after)
+            {
+                quick_move_dir_ = Dir::END;
+
+                return;
+            }
         }
 
         return;

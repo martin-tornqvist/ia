@@ -171,6 +171,7 @@ private:
     int nr_turns_until_ins_;
 
     Dir quick_move_dir_;
+    bool has_taken_quick_move_step_;
 
     int nr_turns_until_rspell_;
 
