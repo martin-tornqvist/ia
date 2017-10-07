@@ -570,7 +570,7 @@ protected:
 
     virtual Clr clr() const override
     {
-        return clr_yellow;
+        return clr_red_lgt;
     }
 
     virtual TileId tile() const override
