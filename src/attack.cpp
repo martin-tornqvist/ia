@@ -95,6 +95,17 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
     const int dodging_ability = defender.ability(AbilityId::dodging, true);
 
+    // Player gets melee dodging bonus from wielding a Pitchfork
+    if (defender.is_player())
+    {
+        const auto* const item = defender.inv().item_in_slot(SlotId::wpn);
+
+        if (item && (item->id() == ItemId::pitch_fork))
+        {
+            dodging_mod -= 15;
+        }
+    }
+
     const bool allow_positive_doge =
         is_defender_aware &&
         !(defender.is_player() &&
@@ -112,6 +123,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     // NOTE: The AI never attacks unseen targets, so in the case of a
     //       monster attacker, we can assume the target is seen. We only
     //       need to check if target is seen when player is attacking.
+    //
     bool can_attacker_see_tgt = true;
 
     if (attacker == map::player)

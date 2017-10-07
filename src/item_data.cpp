@@ -1067,8 +1067,10 @@ void init_data_list()
     d.base_name = {"Pitchfork", "Pitchforks", "a Pitchfork"};
     d.base_descr =
     {
-        "A long staff with a forked, four-pronged end. Victims can be pushed "
-        "away when stabbed, to keep them at bay."
+        "A long staff with a forked, four-pronged end.",
+
+        "Pitchforks are useful in keeping attackers at bay (+15% chance to "
+        "evade melee attacks, victims are pushed back when stabbed)."
     };
     d.weight = ItemWeight::heavy;
     d.tile = TileId::pitchfork;
@@ -1104,7 +1106,6 @@ void init_data_list()
     d.melee.hit_chance_mod = -15;
     d.melee.att_corpse = true;
     d.melee.att_rigid = true;
-    d.melee.knocks_back = true;
     d.melee.dmg_method = DmgMethod::blunt;
     d.melee.miss_sfx = SfxId::miss_heavy;
     d.ranged.throw_hit_chance_mod = -10;
