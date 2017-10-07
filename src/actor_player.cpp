@@ -1067,6 +1067,35 @@ void Player::act()
             return;
         }
 
+        auto adj_known_closed_doors = [](const P& p)
+        {
+            std::vector<const Door*> doors;
+
+            for (const P& d : dir_utils::dir_list_w_center)
+            {
+                const P p_adj(p + d);
+
+                const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+
+                if (adj_cell.is_seen_by_player &&
+                    (adj_cell.rigid->id() == FeatureId::door))
+                {
+                    const auto* const door =
+                        static_cast<const Door*>(adj_cell.rigid);
+
+                    if (!door->is_secret() &&
+                        !door->is_open())
+                    {
+                        doors.push_back(door);
+                    }
+                }
+            }
+
+            return doors;
+        };
+
+        const auto adj_known_closed_doors_before = adj_known_closed_doors(pos);
+
         move(quick_move_dir_);
 
         has_taken_quick_move_step_ = true;
@@ -1078,36 +1107,52 @@ void Player::act()
             return;
         }
 
-        bool is_adj_to_known_closed_door_after = false;
+        const auto adj_known_closed_doors_after = adj_known_closed_doors(pos);
 
-        for (const P& d : dir_utils::dir_list_w_center)
+        // bool is_adj_to_known_closed_door_after = false;
+
+        // for (const P& d : dir_utils::dir_list_w_center)
+        // {
+        //     const P p_adj(pos + d);
+
+        //     const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+
+        //     if (adj_cell.is_seen_by_player &&
+        //         (adj_cell.rigid->id() == FeatureId::door))
+        //     {
+        //         const auto* const door =
+        //             static_cast<const Door*>(adj_cell.rigid);
+
+        //         if (!door->is_secret() &&
+        //             !door->is_open())
+        //         {
+        //             is_adj_to_known_closed_door_after = true;
+        //         }
+        //     }
+        // }
+
+        bool is_new_known_adj_closed_door = false;
+
+        for (const auto* const door_after : adj_known_closed_doors_after)
         {
-            const P p_adj(pos + d);
+            is_new_known_adj_closed_door =
+                std::find(begin(adj_known_closed_doors_before),
+                          end(adj_known_closed_doors_before),
+                          door_after) ==
+                end(adj_known_closed_doors_before);
 
-            const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
-
-            if (adj_cell.is_seen_by_player &&
-                (adj_cell.rigid->id() == FeatureId::door))
+            if (is_new_known_adj_closed_door)
             {
-                const auto* const door =
-                    static_cast<const Door*>(adj_cell.rigid);
-
-                if (!door->is_secret() &&
-                    !door->is_open())
-                {
-                    is_adj_to_known_closed_door_after = true;
-                }
+                break;
             }
         }
 
         if (!is_first_quick_move_step)
         {
             if (is_target_adj_to_unseen_cell ||
-                is_adj_to_known_closed_door_after)
+                is_new_known_adj_closed_door)
             {
                 quick_move_dir_ = Dir::END;
-
-                return;
             }
         }
 
