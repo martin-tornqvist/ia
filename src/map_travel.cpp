@@ -127,7 +127,7 @@ void init()
     };
 
     // Occasionally set rats-in-the-walls level as intro to late game
-    if (rnd::one_in(3))
+    if (rnd::one_in(5))
     {
         map_list[dlvl_first_late_game - 1] =
         {
