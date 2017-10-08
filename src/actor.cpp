@@ -487,8 +487,34 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
     map::update_vision();
 
-    const auto player_seen_actors =
-        map::player->seen_actors();
+    // When the player teleports, remove awareness for all monsters not seeing
+    // the player after the teleport
+    if (is_player())
+    {
+        bool blocks_los[map_w][map_h];
+
+        const R r = fov::get_fov_rect(pos);
+
+        map_parsers::BlocksLos()
+            .run(blocks_los, MapParseMode::overwrite, r);
+
+        for (auto* const actor : game_time::actors)
+        {
+            if (actor == map::player)
+            {
+                continue;
+            }
+
+            auto* const mon = static_cast<Mon*>(actor);
+
+            if (!mon->can_see_actor(*this, blocks_los))
+            {
+                mon->aware_of_player_counter_ = 0;
+            }
+        }
+    }
+
+    const auto player_seen_actors = map::player->seen_actors();
 
     for (Actor* const actor : player_seen_actors)
     {

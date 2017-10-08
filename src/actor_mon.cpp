@@ -225,8 +225,8 @@ void Mon::act()
 
     tgt_ = map::random_closest_actor(pos, tgt_bucket);
 
-    if (wary_of_player_counter_ > 0 ||
-        aware_of_player_counter_ > 0)
+    if ((wary_of_player_counter_ > 0) ||
+        (aware_of_player_counter_ > 0))
     {
         is_roaming_allowed_ = MonRoamingAllowed::yes;
 
@@ -929,8 +929,7 @@ void Mon::become_wary_player()
     const int wary_counter_before = wary_of_player_counter_;
 
     wary_of_player_counter_=
-        std::max(nr_turns,
-                 wary_counter_before);
+        std::max(nr_turns, wary_counter_before);
 
     if (wary_counter_before <= 0)
     {
