@@ -3769,7 +3769,6 @@ void init_data_list()
     d.tile = TileId::player_firearm;
     d.hp = 100;
     d.spi = 999;
-    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.ability_vals.set_val(AbilityId::melee, 100);
@@ -3816,7 +3815,6 @@ void init_data_list()
     d.tile = TileId::player_melee;
     d.hp = 80;
     d.spi = 999;
-    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.ability_vals.set_val(AbilityId::melee, 90);
@@ -3863,7 +3861,6 @@ void init_data_list()
     d.tile = TileId::ghoul;
     d.hp = 140;
     d.spi = 999;
-    d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.dmg_melee = min_dmg_to_wound + 5;
