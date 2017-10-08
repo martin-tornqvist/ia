@@ -2900,11 +2900,9 @@ void TheHighPriest::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::the_high_priest_claw));
 
     add_spell(SpellSkill::master, SpellId::darkbolt);
-    add_spell(SpellSkill::master, SpellId::heal);
     add_spell(SpellSkill::master, SpellId::summon);
     add_spell(SpellSkill::master, SpellId::burn);
     add_spell(SpellSkill::master, SpellId::pest);
-    add_spell(SpellSkill::master, SpellId::teleport);
     add_spell(SpellSkill::master, SpellId::spell_shield);
     add_spell(SpellSkill::master, SpellId::disease);
 
