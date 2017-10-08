@@ -418,31 +418,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
     std::vector<Actor*> target_bucket;
 
-    // When master, any creature that the caster is aware of can be targeted
-    if (caster->is_player() &&
-        (skill == SpellSkill::master))
-    {
-        for (Actor* const actor : game_time::actors)
-        {
-            if (!actor->is_alive() ||
-                actor->is_player() ||
-                actor->is_actor_my_leader(map::player))
-            {
-                continue;
-            }
-
-            const Mon* const mon = static_cast<const Mon*>(actor);
-
-            if (mon->player_aware_of_me_counter_ > 0)
-            {
-                target_bucket.push_back(actor);
-            }
-        }
-    }
-    else // Not player, or not master skill
-    {
-        target_bucket = caster->seen_foes();
-    }
+    target_bucket = caster->seen_foes();
 
     bool blocked[map_w][map_h];
 
@@ -672,11 +648,6 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
     if (skill == SpellSkill::master)
     {
         descr.push_back("The target is paralyzed, and set aflame.");
-
-        descr.push_back("The caster does not have to see the target, the bolt "
-                        "will travel to any creature that the caster knows the "
-                        "position of - if the target is reachable. The bolt "
-                        "can travel up to 12 steps.");
     }
     else // Not master
     {
