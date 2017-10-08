@@ -2285,59 +2285,6 @@ bool SpellDisease::allow_mon_cast_now(Mon& mon) const
 void SpellSummonMon::run_effect(Actor* const caster,
                                 const SpellSkill skill) const
 {
-    // Try to summon a creature inside the player's FOV (inside the standard
-    // range), in a free visible cell. If no such cell is available, instead
-    // summon near the caster.
-
-    bool blocked[map_w][map_h];
-
-    map_parsers::BlocksMoveCommon(ParseActors::yes)
-        .run(blocked);
-
-    std::vector<P> free_cells_seen_by_player;
-
-    const int radi = fov_std_radi_int;
-
-    const P player_pos(map::player->pos);
-
-    const int x0 = std::max(0, player_pos.x - radi);
-    const int y0 = std::max(0, player_pos.y - radi);
-    const int x1 = std::min(map_w, player_pos.x + radi) - 1;
-    const int y1 = std::min(map_h, player_pos.y + radi) - 1;
-
-    for (int x = x0; x <= x1; ++x)
-    {
-        for (int y = y0; y <= y1; ++y)
-        {
-            if (!blocked[x][y] && map::cells[x][y].is_seen_by_player)
-            {
-                free_cells_seen_by_player.push_back(P(x, y));
-            }
-        }
-    }
-
-    P summon_pos(-1, -1);
-
-    if (free_cells_seen_by_player.empty())
-    {
-        // No free cells seen by player, instead summon near the caster.
-        auto free_cells_vector = to_vec(blocked, false);
-
-        if (!free_cells_vector.empty())
-        {
-            sort(free_cells_vector.begin(), free_cells_vector.end(),
-                 IsCloserToPos(caster->pos));
-            summon_pos = free_cells_vector[0];
-        }
-    }
-    else // There are free cells seen by the player available
-    {
-        const size_t idx =
-            rnd::range(0, free_cells_seen_by_player.size() - 1);
-
-        summon_pos = free_cells_seen_by_player[idx];
-    }
-
     std::vector<ActorId> summon_bucket;
 
     if (caster->is_player())
@@ -2454,7 +2401,7 @@ void SpellSummonMon::run_effect(Actor* const caster,
     }
 
     const auto mon_summoned =
-        actor_factory::spawn(summon_pos,
+        actor_factory::spawn(caster->pos,
                              {mon_id},
                              MakeMonAware::yes,
                              leader);
