@@ -14,6 +14,7 @@ Gameplay
 * The "Transmute" spell costs much less spirit to cast
 * Monsters spawned from summoning spells only remains temporarily
 * Summoning spells no longer have a risk to spawn hostile creatures
+* Monsters cannot summon other monsters near the player from a distance (summoned monsters always appear as near the summoner as possible)
 * The spells "Summon Creature" and "Summon Mummy Servant" costs one less spirit to cast
 * The Horn of Banishment now also works on Khephren's summoned Locusts, and on monsters spawned from traps
 * Monsters spawned from traps now wait a bit before acting
