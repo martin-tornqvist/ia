@@ -1040,31 +1040,33 @@ void Player::act()
 
         const Cell& target_cell = map::cells[target.x][target.y];
 
-        bool should_abort = !target_cell.rigid->can_move(*this);
-
-        if (!should_abort &&
-            has_taken_quick_move_step_)
         {
-            const auto target_rigid_id = target_cell.rigid->id();
+            bool should_abort = !target_cell.rigid->can_move(*this);
 
-            const bool is_target_known_trap =
-                target_cell.is_seen_by_player &&
-                (target_rigid_id == FeatureId::trap) &&
-                !static_cast<const Trap*>(target_cell.rigid)->is_hidden();
+            if (!should_abort &&
+                has_taken_quick_move_step_)
+            {
+                const auto target_rigid_id = target_cell.rigid->id();
 
-            should_abort =
-                is_target_known_trap ||
-                (target_rigid_id == FeatureId::chains) ||
-                (target_rigid_id == FeatureId::liquid_shallow) ||
-                (target_rigid_id == FeatureId::vines) ||
-                (target_cell.rigid->burn_state() == BurnState::burning);
-        }
+                const bool is_target_known_trap =
+                    target_cell.is_seen_by_player &&
+                    (target_rigid_id == FeatureId::trap) &&
+                    !static_cast<const Trap*>(target_cell.rigid)->is_hidden();
 
-        if (should_abort)
-        {
-            quick_move_dir_ = Dir::END;
+                should_abort =
+                    is_target_known_trap ||
+                    (target_rigid_id == FeatureId::chains) ||
+                    (target_rigid_id == FeatureId::liquid_shallow) ||
+                    (target_rigid_id == FeatureId::vines) ||
+                    (target_cell.rigid->burn_state() == BurnState::burning);
+            }
 
-            return;
+            if (should_abort)
+            {
+                quick_move_dir_ = Dir::END;
+
+                return;
+            }
         }
 
         auto adj_known_closed_doors = [](const P& p)
@@ -1107,53 +1109,47 @@ void Player::act()
             return;
         }
 
-        const auto adj_known_closed_doors_after = adj_known_closed_doors(pos);
+        bool should_abort = false;
 
-        // bool is_adj_to_known_closed_door_after = false;
-
-        // for (const P& d : dir_utils::dir_list_w_center)
-        // {
-        //     const P p_adj(pos + d);
-
-        //     const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
-
-        //     if (adj_cell.is_seen_by_player &&
-        //         (adj_cell.rigid->id() == FeatureId::door))
-        //     {
-        //         const auto* const door =
-        //             static_cast<const Door*>(adj_cell.rigid);
-
-        //         if (!door->is_secret() &&
-        //             !door->is_open())
-        //         {
-        //             is_adj_to_known_closed_door_after = true;
-        //         }
-        //     }
-        // }
-
-        bool is_new_known_adj_closed_door = false;
-
-        for (const auto* const door_after : adj_known_closed_doors_after)
+        if (map::cells[pos.x][pos.y].is_dark)
         {
-            is_new_known_adj_closed_door =
-                std::find(begin(adj_known_closed_doors_before),
-                          end(adj_known_closed_doors_before),
-                          door_after) ==
-                end(adj_known_closed_doors_before);
+            should_abort = true;
+        }
 
-            if (is_new_known_adj_closed_door)
+        if (!should_abort)
+        {
+            const auto adj_known_closed_doors_after =
+                adj_known_closed_doors(pos);
+
+            bool is_new_known_adj_closed_door = false;
+
+            for (const auto* const door_after : adj_known_closed_doors_after)
             {
-                break;
+                is_new_known_adj_closed_door =
+                    std::find(begin(adj_known_closed_doors_before),
+                              end(adj_known_closed_doors_before),
+                              door_after) ==
+                    end(adj_known_closed_doors_before);
+
+                if (is_new_known_adj_closed_door)
+                {
+                    break;
+                }
+            }
+
+            if (!is_first_quick_move_step)
+            {
+                if (is_target_adj_to_unseen_cell ||
+                    is_new_known_adj_closed_door)
+                {
+                    should_abort = true;
+                }
             }
         }
 
-        if (!is_first_quick_move_step)
+        if (should_abort)
         {
-            if (is_target_adj_to_unseen_cell ||
-                is_new_known_adj_closed_door)
-            {
-                quick_move_dir_ = Dir::END;
-            }
+            quick_move_dir_ = Dir::END;
         }
 
         return;
