@@ -162,7 +162,7 @@ enum class TileId
     projectile_std_dash,
     projectile_std_vertical_bar,
     vines,
-    grating,
+    grate,
     gore1,
     gore2,
     gore3,

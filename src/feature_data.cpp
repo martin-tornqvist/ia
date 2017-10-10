@@ -203,13 +203,13 @@ void init_data_list()
     d.auto_spawn_placement = FeaturePlacement::either;
     add_to_list_and_reset(d);
 
-    d.id = FeatureId::grating;
+    d.id = FeatureId::grate;
     d.mk_obj = [](const P & p)
     {
-        return new Grating(p);
+        return new Grate(p);
     };
     d.glyph = '#';
-    d.tile = TileId::grating;
+    d.tile = TileId::grate;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::burrowing);
     d.move_rules.set_prop_can_move(PropId::ooze);

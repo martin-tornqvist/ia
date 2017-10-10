@@ -251,7 +251,7 @@ P column_and_row_tile(const TileId tile)
     case TileId::projectile_std_dash:           return P(17, 7);
     case TileId::projectile_std_vertical_bar:   return P(18, 7);
     case TileId::vines:                         return P(19, 7);
-    case TileId::grating:                       return P(20, 7);
+    case TileId::grate:                         return P(20, 7);
     case TileId::gore1:                         return P(0, 8);
     case TileId::gore2:                         return P(1, 8);
     case TileId::gore3:                         return P(2, 8);

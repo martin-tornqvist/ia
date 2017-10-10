@@ -87,7 +87,7 @@ void put_templ_features(const Array2<char>& templ,
 
             case '=':
             {
-                map::put(new Grating(p));
+                map::put(new Grate(p));
             }
             break;
 

@@ -346,18 +346,18 @@ private:
                 Actor* const actor) override;
 };
 
-class Grating: public Rigid
+class Grate: public Rigid
 {
 public:
-    Grating(const P& p);
+    Grate(const P& p);
 
-    Grating() = delete;
+    Grate() = delete;
 
-    ~Grating() {}
+    ~Grate() {}
 
     FeatureId id() const override
     {
-        return FeatureId::grating;
+        return FeatureId::grate;
     }
 
     std::string name(const Article article) const override;

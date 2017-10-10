@@ -169,13 +169,13 @@ void decorate()
             else if (cell.rigid->id() == FeatureId::wall)
             {
                 //
-                // Convert some walls to gratings
+                // Convert some walls to grates
                 //
                 if (rnd::one_in(6))
                 {
                     bool is_allowed = true;
 
-                    // Never allow two gratings next to each other
+                    // Never allow two grates next to each other
                     for (int dx = -1; dx <= 1; ++dx)
                     {
                         for (int dy = -1; dy <= 1; ++dy)
@@ -185,7 +185,7 @@ void decorate()
                             auto adj_id =
                                 map::cells[p_adj.x][p_adj.y].rigid->id();
 
-                            if (adj_id == FeatureId::grating)
+                            if (adj_id == FeatureId::grate)
                             {
                                 is_allowed = false;
 
@@ -235,7 +235,7 @@ void decorate()
 
                     if (is_allowed)
                     {
-                        map::put(new Grating(p));
+                        map::put(new Grate(p));
                     }
                 }
             }

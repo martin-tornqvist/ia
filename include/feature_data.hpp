@@ -16,7 +16,7 @@ enum class FeatureId
     bush,
     vines,
     chains,
-    grating,
+    grate,
     stairs,
     lever,
     brazier,

@@ -1947,12 +1947,12 @@ void Chains::on_hit(const int dmg,
 }
 
 // -----------------------------------------------------------------------------
-// Grating
+// Grate
 // -----------------------------------------------------------------------------
-Grating::Grating(const P& p) :
+Grate::Grate(const P& p) :
     Rigid(p) {}
 
-void Grating::on_hit(const int dmg,
+void Grate::on_hit(const int dmg,
                      const DmgType dmg_type,
                      const DmgMethod dmg_method,
                      Actor* const actor)
@@ -1994,16 +1994,16 @@ void Grating::on_hit(const int dmg,
     }
 }
 
-std::string Grating::name(const Article article) const
+std::string Grate::name(const Article article) const
 {
     std::string ret =
         article == Article::a ?
         "a " : "the ";
 
-    return ret + "grating";
+    return ret + "grate";
 }
 
-Clr Grating::clr_default() const
+Clr Grate::clr_default() const
 {
     return clr_brown;
 }
