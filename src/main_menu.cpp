@@ -391,6 +391,26 @@ void MainMenuState::update()
             }
 #endif // NDEBUG
 
+#ifndef NDEBUG
+            if (!config::is_bot_playing())
+            {
+#endif // NDEBUG
+                if (saving::is_save_available())
+                {
+                    const int choice = popup::show_menu_msg(
+                        "Start a new game?",
+                        {"Yes", "No"},
+                        "A saved game exists");
+
+                    if (choice == 1)
+                    {
+                        return;
+                    }
+                }
+#ifndef NDEBUG
+            }
+#endif // NDEBUG
+
             audio::fade_out_music();
 
             init::init_session();

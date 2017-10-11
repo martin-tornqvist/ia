@@ -49,6 +49,7 @@ Interface
 * When viewing monster descriptions, temporary negative properties are listed
 * Added information on high scores and memorial files in the manual
 * The "auto move" feature stops at junctions etc (instead of after a fixed amount of steps)
+* When selecting "New Journey" from the main menu, and a saved game exists, the game asks if you really want to start a new game
 
 Bug fixes
 * Energy Vortexes were not resistant to electricity
