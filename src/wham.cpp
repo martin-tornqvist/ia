@@ -150,8 +150,14 @@ void run()
             static_cast<Wpn*>(
                 item_factory::mk(ItemId::player_kick)));
 
-    const auto* const wielded_wpn =
-        map::player->inv().item_in_slot(SlotId::wpn);
+    const auto* wpn = map::player->inv().item_in_slot(SlotId::wpn);
+
+    if (!wpn)
+    {
+        wpn = &map::player->unarmed_wpn();
+    }
+
+    ASSERT(wpn);
 
     if (corpse)
     {
@@ -166,32 +172,30 @@ void run()
         corpse_name = text_format::first_to_lower(corpse_name);
 
         // Decide if we should kick or use wielded weapon
-        const bool can_wpn_att_corpse =
-            wielded_wpn &&
-            wielded_wpn->data().melee.att_corpse;
+        const bool can_wpn_att_corpse = wpn->data().melee.att_corpse;
 
-        const auto* const wpn_used =
-            (wielded_wpn && can_wpn_att_corpse) ?
-            wielded_wpn :
+        const auto* const wpn_used_att_corpse =
+            can_wpn_att_corpse ?
+            wpn :
             kick_wpn.get();
 
         const std::string msg =
             "I " +
-            wpn_used->data().melee.att_msgs.player + " "  +
+            wpn_used_att_corpse->data().melee.att_msgs.player + " "  +
             corpse_name + ".";
 
         msg_log::add(msg);
 
         const Dice dmg_dice =
-            wpn_used->dmg(AttMode::melee, map::player);
+            wpn_used_att_corpse->dmg(AttMode::melee, map::player);
 
         const int dmg = dmg_dice.roll();
 
         corpse->hit(dmg,
                     DmgType::physical,
-                    wpn_used->data().melee.dmg_method);
+                    wpn_used_att_corpse->data().melee.dmg_method);
 
-        if (wpn_used == kick_wpn.get())
+        if (wpn_used_att_corpse == kick_wpn.get())
         {
             try_sprain_player();
         }
@@ -243,16 +247,11 @@ void run()
         // Decide if we should kick or use wielded weapon
         auto* const feature = map::cells[att_pos.x][att_pos.y].rigid;
 
-        bool allow_wielded_wpn_att_rigid =
-            wielded_wpn &&
-            wielded_wpn->data().melee.att_rigid;
+        bool allow_wpn_att_rigid = wpn->data().melee.att_rigid;
 
-        const auto wielded_wpn_dmg_method =
-            wielded_wpn ?
-            wielded_wpn->data().melee.dmg_method :
-            DmgMethod::END;
+        const auto wpn_dmg_method = wpn->data().melee.dmg_method;
 
-        if (allow_wielded_wpn_att_rigid)
+        if (allow_wpn_att_rigid)
         {
             switch (feature->id())
             {
@@ -266,43 +265,42 @@ void run()
                 {
                     // Only allow blunt weapons for gates (feels weird to attack
                     // a barred gate with an axe...)
-                    allow_wielded_wpn_att_rigid =
-                        wielded_wpn_dmg_method == DmgMethod::blunt;
+                    allow_wpn_att_rigid = (wpn_dmg_method == DmgMethod::blunt);
                 }
                 else // Not gate (i.e. wooden, metal)
                 {
-                    allow_wielded_wpn_att_rigid = true;
+                    allow_wpn_att_rigid = true;
                 }
             }
             break;
 
             case FeatureId::wall:
             {
-                allow_wielded_wpn_att_rigid = true;
+                allow_wpn_att_rigid = true;
             }
             break;
 
             default:
             {
-                allow_wielded_wpn_att_rigid = false;
+                allow_wpn_att_rigid = false;
             }
             break;
             }
         }
 
-        const auto* const wpn_used =
-            (wielded_wpn && allow_wielded_wpn_att_rigid) ?
-            wielded_wpn :
+        const auto* const wpn_used_att_feature =
+            allow_wpn_att_rigid ?
+            wpn :
             kick_wpn.get();
 
         const Dice dmg_dice =
-            wpn_used->dmg(AttMode::melee, map::player);
+            wpn_used_att_feature->dmg(AttMode::melee, map::player);
 
         const int dmg = dmg_dice.roll();
 
         feature->hit(dmg,
                      DmgType::physical,
-                     wpn_used->data().melee.dmg_method,
+                     wpn_used_att_feature->data().melee.dmg_method,
                      map::player);
 
         // Attacking ends cloaking

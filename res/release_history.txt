@@ -42,6 +42,7 @@ Gameplay
 * Pitchforks gives +15% chance to evade melee attacks
 * Sledgehammers no longer knocks the victim back
 * Monsters become unaware after the player teleports, if they cannot see the player at the new position
+* Ghoul characters can use their claws for destroying corpses (and cannot get sprains from this)
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)
