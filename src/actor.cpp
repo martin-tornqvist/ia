@@ -137,6 +137,17 @@ int Actor::hp_max(const bool with_modifiers) const
     return result;
 }
 
+int Actor::spi_max() const
+{
+    int result = spi_max_;
+
+    result = prop_handler_->affect_max_spi(result);
+
+    result = std::max(1, result);
+
+    return result;
+}
+
 int Actor::speed_pct() const
 {
     // Paralyzed actors always act at normal speed (otherwise paralysis will

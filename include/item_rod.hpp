@@ -68,8 +68,8 @@ protected:
     {
         return
             "When activated, this device cures blindness, poisoning, "
-            "infections, disease, and weakening, and restores the users "
-            "health by a small amount.";
+            "infections, disease, weakening, and life sapping, and restores "
+            "the user's health by a small amount.";
     }
 
     void run_effect() override;

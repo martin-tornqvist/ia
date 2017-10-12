@@ -82,6 +82,9 @@ enum class PropId
     r_spell,
     clockwork_hasted, // For the Arcane Clockwork artifact
     summoned,
+    hp_sap,
+    spi_sap,
+    mind_sap,
 
     END
 };
@@ -254,6 +257,8 @@ public:
     void affect_move_dir(const P& actor_pos, Dir& dir) const;
 
     int affect_max_hp(const int hp_max) const;
+    int affect_max_spi(const int spi_max) const;
+    int affect_ins(const int ins) const;
 
     bool allow_attack(const Verbosity verbosity) const;
     bool allow_attack_melee(const Verbosity verbosity) const;
@@ -421,7 +426,10 @@ public:
 
     virtual void on_start() {}
     virtual void on_end() {}
-    virtual void on_more() {}
+    virtual void on_more(const Prop& new_prop)
+    {
+        (void)new_prop;
+    }
 
     virtual void on_death(const bool is_player_see_owning_actor)
     {
@@ -431,6 +439,16 @@ public:
     virtual int affect_max_hp(const int hp_max) const
     {
         return hp_max;
+    }
+
+    virtual int affect_max_spi(const int spi_max) const
+    {
+        return spi_max;
+    }
+
+    virtual int affect_ins(const int ins) const
+    {
+        return ins;
     }
 
     virtual bool affect_actor_clr(Clr& clr) const
@@ -784,7 +802,7 @@ public:
 
     void on_start() override;
 
-    void on_more() override;
+    void on_more(const Prop& new_prop) override;
 
     int ability_mod(const AbilityId ability) const override
     {
@@ -812,7 +830,7 @@ public:
 
     void on_start() override;
 
-    void on_more() override;
+    void on_more(const Prop& new_prop) override;
 
     void on_end() override;
 
@@ -891,8 +909,10 @@ public:
 
     void affect_move_dir(const P& actor_pos, Dir& dir) override;
 
-    void on_more() override
+    void on_more(const Prop& new_prop) override
     {
+        (void)new_prop;
+
         ++nr_spikes_;
     }
 
@@ -925,7 +945,7 @@ public:
 
     int ability_mod(const AbilityId ability) const override;
 
-    void on_more() override;
+    void on_more(const Prop& new_prop) override;
 
     bool is_finished() const override
     {
@@ -943,6 +963,72 @@ public:
 
 private:
     int nr_wounds_;
+};
+
+class PropHpSap: public Prop
+{
+public:
+    PropHpSap(PropTurns turns_init, int nr_turns = -1);
+
+    void save() const override;
+
+    void load() override;
+
+    std::string name_short() const override
+    {
+        return "hp(" + std::to_string(nr_drained_) + ")";
+    }
+
+    void on_more(const Prop& new_prop) override;
+
+    int affect_max_hp(const int hp_max) const override;
+
+private:
+    int nr_drained_;
+};
+
+class PropSpiSap: public Prop
+{
+public:
+    PropSpiSap(PropTurns turns_init, int nr_turns = -1);
+
+    void save() const override;
+
+    void load() override;
+
+    std::string name_short() const override
+    {
+        return "spi(" + std::to_string(nr_drained_) + ")";
+    }
+
+    void on_more(const Prop& new_prop) override;
+
+    int affect_max_spi(const int spi_max) const override;
+
+private:
+    int nr_drained_;
+};
+
+class PropMindSap: public Prop
+{
+public:
+    PropMindSap(PropTurns turns_init, int nr_turns = -1);
+
+    void save() const override;
+
+    void load() override;
+
+    std::string name_short() const override
+    {
+        return "ins(" + std::to_string(nr_drained_) + ")";
+    }
+
+    void on_more(const Prop& new_prop) override;
+
+    int affect_ins(const int ins) const override;
+
+private:
+    int nr_drained_;
 };
 
 class PropWaiting: public Prop

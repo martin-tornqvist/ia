@@ -265,6 +265,7 @@ void PotionVitality::quaff_impl(Actor& actor)
         PropId::infected,
         PropId::diseased,
         PropId::weakened,
+        PropId::hp_sap,
         PropId::wound
     };
 
@@ -298,6 +299,8 @@ void PotionVitality::collide_hook(const P& pos, Actor* const actor)
 
 void PotionSpirit::quaff_impl(Actor& actor)
 {
+    actor.prop_handler().end_prop(PropId::spi_sap);
+
     // SPI is always restored at least up to maximum spi, but can go beyond
     const int spi = actor.spi();
     const int spi_max = actor.spi_max();
@@ -414,6 +417,8 @@ void PotionFortitude::quaff_impl(Actor& actor)
 
     prop_handler.end_prop(PropId::frenzied);
 
+    prop_handler.end_prop(PropId::mind_sap);
+
     // Remove a random insanity symptom if this is the player
     if (actor.is_player())
     {
@@ -514,6 +519,7 @@ void PotionCuring::quaff_impl(Actor& actor)
         PropId::infected,
         PropId::diseased,
         PropId::weakened,
+        PropId::hp_sap
     };
 
     bool is_noticable = false;

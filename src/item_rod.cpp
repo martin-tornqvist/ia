@@ -178,6 +178,7 @@ void RodCuring::run_effect()
         PropId::infected,
         PropId::diseased,
         PropId::weakened,
+        PropId::hp_sap
     };
 
     bool is_something_healed = false;

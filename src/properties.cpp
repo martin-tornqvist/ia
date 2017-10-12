@@ -511,13 +511,57 @@ void init_data_list()
 
     d.id = PropId::wound;
     d.name = "Wounded";
-    d.name_short = "Wound";
     d.descr =
         "For each wound: -5% melee hit chance, -5% chance to evade attacks, "
         "-10% Hit Points, and reduced Hit Point generation rate - also, "
         "walking takes extra turns if more than two wounds are received";
     d.msg[(size_t)PropMsg::start_player] = "I am wounded!";
     d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = PropAlignment::bad;
+    add_prop_data(d);
+
+    d.id = PropId::hp_sap;
+    d.name = "Life Sapped";
+    d.descr = "Fewer Hit Points";
+    d.msg[(size_t)PropMsg::start_player] = "My life force is sapped!";
+    d.msg[(size_t)PropMsg::start_mon] = "is sapped of life.";
+    d.msg[(size_t)PropMsg::end_player] = "My life force returns.";
+    d.msg[(size_t)PropMsg::end_mon] = "looks restored.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists sapping.";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = PropAlignment::bad;
+    add_prop_data(d);
+
+    d.id = PropId::spi_sap;
+    d.name = "Spirit Sapped";
+    d.descr = "Fewer Spirit Points";
+    d.msg[(size_t)PropMsg::start_player] = "My spirit is sapped!";
+    d.msg[(size_t)PropMsg::start_mon] = "is sapped of spirit.";
+    d.msg[(size_t)PropMsg::end_player] = "My spirit returns.";
+    d.msg[(size_t)PropMsg::end_mon] = "looks restored.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
+    d.msg[(size_t)PropMsg::res_mon] = "resists sapping.";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = PropAlignment::bad;
+    add_prop_data(d);
+
+    d.id = PropId::mind_sap;
+    d.name = "Mind Sapped";
+    d.descr = "Increased Insanity";
+    d.msg[(size_t)PropMsg::start_player] = "My mind is sapped!";
+    d.msg[(size_t)PropMsg::end_player] = "My sanity returns.";
+    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
     d.update_vision_when_start_or_end = false;
@@ -1194,6 +1238,15 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::see_invis:
         return new PropSeeInvis(turns_init, nr_turns);
 
+    case PropId::hp_sap:
+        return new PropHpSap(turns_init, nr_turns);
+
+    case PropId::spi_sap:
+        return new PropSpiSap(turns_init, nr_turns);
+
+    case PropId::mind_sap:
+        return new PropMindSap(turns_init, nr_turns);
+
     case PropId::END:
         break;
     }
@@ -1312,7 +1365,7 @@ void PropHandler::apply(Prop* const prop,
                 //     }
                 // }
 
-                old_prop->on_more();
+                old_prop->on_more(*prop);
 
                 const bool is_turns_nr_indefinite =
                     (turns_left_old < 0) ||
@@ -1965,6 +2018,30 @@ int PropHandler::affect_max_hp(const int hp_max) const
     return new_hp_max;
 }
 
+int PropHandler::affect_max_spi(const int spi_max) const
+{
+    int new_spi_max = spi_max;
+
+    for (Prop* prop : props_)
+    {
+        new_spi_max = prop->affect_max_spi(new_spi_max);
+    }
+
+    return new_spi_max;
+}
+
+int PropHandler::affect_ins(const int ins) const
+{
+    int new_ins = ins;
+
+    for (Prop* prop : props_)
+    {
+        new_ins = prop->affect_ins(new_ins);
+    }
+
+    return new_ins;
+}
+
 void PropHandler::affect_move_dir(const P& actor_pos, Dir& dir) const
 {
     for (Prop* prop : props_)
@@ -2229,8 +2306,10 @@ void PropBlessed::on_start()
     bless_adjacent();
 }
 
-void PropBlessed::on_more()
+void PropBlessed::on_more(const Prop& new_prop)
 {
+    (void)new_prop;
+
     bless_adjacent();
 }
 
@@ -2285,8 +2364,10 @@ void PropCursed::on_start()
     }
 }
 
-void PropCursed::on_more()
+void PropCursed::on_more(const Prop& new_prop)
 {
+    (void)new_prop;
+
     curse_adjacent();
 }
 
@@ -2696,11 +2777,85 @@ void PropWound::heal_one_wound()
     }
 }
 
-void PropWound::on_more()
+void PropWound::on_more(const Prop& new_prop)
 {
+    (void)new_prop;
+
     const int max_nr_wounds = 5;
 
     nr_wounds_ = std::min(max_nr_wounds, nr_wounds_ + 1);
+}
+
+PropHpSap::PropHpSap(PropTurns turns_init, int nr_turns) :
+    Prop        (PropId::hp_sap, turns_init, nr_turns),
+    nr_drained_ (rnd::range(1, 3)) {}
+
+void PropHpSap::save() const
+{
+    saving::put_int(nr_drained_);
+}
+
+void PropHpSap::load()
+{
+    nr_drained_ = saving::get_int();
+}
+
+int PropHpSap::affect_max_hp(const int hp_max) const
+{
+    return (hp_max - nr_drained_);
+}
+
+void PropHpSap::on_more(const Prop& new_prop)
+{
+    nr_drained_ += static_cast<const PropHpSap*>(&new_prop)->nr_drained_;
+}
+
+PropSpiSap::PropSpiSap(PropTurns turns_init, int nr_turns) :
+    Prop        (PropId::spi_sap, turns_init, nr_turns),
+    nr_drained_ (1) {}
+
+void PropSpiSap::save() const
+{
+    saving::put_int(nr_drained_);
+}
+
+void PropSpiSap::load()
+{
+    nr_drained_ = saving::get_int();
+}
+
+int PropSpiSap::affect_max_spi(const int spi_max) const
+{
+    return (spi_max - nr_drained_);
+}
+
+void PropSpiSap::on_more(const Prop& new_prop)
+{
+    nr_drained_ += static_cast<const PropSpiSap*>(&new_prop)->nr_drained_;
+}
+
+PropMindSap::PropMindSap(PropTurns turns_init, int nr_turns) :
+    Prop        (PropId::mind_sap, turns_init, nr_turns),
+    nr_drained_ (rnd::range(10, 15)) {}
+
+void PropMindSap::save() const
+{
+    saving::put_int(nr_drained_);
+}
+
+void PropMindSap::load()
+{
+    nr_drained_ = saving::get_int();
+}
+
+int PropMindSap::affect_ins(const int ins) const
+{
+    return (ins + nr_drained_);
+}
+
+void PropMindSap::on_more(const Prop& new_prop)
+{
+    nr_drained_ += static_cast<const PropMindSap*>(&new_prop)->nr_drained_;
 }
 
 bool PropConfused::allow_read_absolute(const Verbosity verbosity) const

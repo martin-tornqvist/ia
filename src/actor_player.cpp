@@ -1616,7 +1616,13 @@ int Player::shock_tot() const
 
 int Player::ins() const
 {
-    return std::min(100, ins_);
+    int result = ins_;
+
+    result = prop_handler_->affect_ins(result);
+
+    result = std::min(100, result);
+
+    return result;
 }
 
 void Player::on_std_turn()

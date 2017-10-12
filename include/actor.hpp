@@ -152,10 +152,7 @@ public:
 
     int hp_max(const bool with_modifiers) const;
 
-    int spi_max() const
-    {
-        return spi_max_;
-    }
+    int spi_max() const;
 
     int speed_pct() const;
 

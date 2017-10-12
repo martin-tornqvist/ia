@@ -2296,11 +2296,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'L';
     d.color = clr_yellow_drk;
     d.tile = TileId::leech;
-    d.hp = 32;
+    d.hp = 22;
     d.spi = 40;
     d.dmg_melee = 2;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2309,12 +2309,12 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 8;
     d.descr =
         "A tentacled alien creature, mysteriously floating through the air "
         "in a ghostly manner. They somehow sustain themselves on the brain "
@@ -2343,11 +2343,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'L';
     d.color = clr_red_lgt;
     d.tile = TileId::leech;
-    d.hp = 32;
+    d.hp = 22;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2356,12 +2356,12 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 8;
     d.descr =
         "A tentacled alien creature, mysteriously floating through the air "
         "in a ghostly manner. They sustain themselves by consuming the life "
@@ -2387,11 +2387,11 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal + 20;
+    d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'L';
     d.color = clr_violet;
     d.tile = TileId::leech;
-    d.hp = 32;
+    d.hp = 22;
     d.spi = 40;
     d.dmg_melee = 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2400,12 +2400,12 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
-    d.spawn_min_dlvl = 5;
+    d.spawn_min_dlvl = 3;
     d.spawn_max_dlvl = (dlvl_last_mid_game + dlvl_last) / 2;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
-    d.nr_turns_aware = 16;
+    d.nr_turns_aware = 8;
     d.descr =
         "A tentacled alien creature, mysteriously floating through the air "
         "in a ghostly manner. They sustain themselves by consuming the Spirit "

@@ -1064,8 +1064,8 @@ void MindLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
     }
     else // Player mind can be eaten
     {
-        map::player->incr_shock(ShockLvl::mind_shattering,
-                                ShockSrc::misc);
+        map::player->prop_handler().apply(
+            new PropMindSap(PropTurns::indefinite));
 
         // Make the monster pause, so things don't get too crazy
         mon->prop_handler().apply(
@@ -1086,7 +1086,8 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->change_max_spi(-1, Verbosity::verbose);
+    map::player->prop_handler().apply(
+        new PropSpiSap(PropTurns::indefinite));
 
     auto* const mon = actor_carrying_;
 
@@ -1112,7 +1113,8 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->change_max_hp(-1, Verbosity::verbose);
+    map::player->prop_handler().apply(
+        new PropHpSap(PropTurns::indefinite));
 
     auto* const mon = actor_carrying_;
 

@@ -79,8 +79,8 @@ private:
     {
         return
             "This elixir heals all wounds and cures blindness, poisoning, "
-            "infections, disease, and weakening. It can even temporarily raise "
-            "the consumers condition past normal levels.";
+            "infections, disease, weakening, and life sapping. It can even "
+            "temporarily raise the consumers condition past normal levels.";
     }
 
     PotionAlignment alignment() const override
@@ -108,7 +108,7 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "Restores the spirit.";
+        return "Restores the spirit, and cures spirit sapping.";
     }
 
     PotionAlignment alignment() const override
@@ -252,7 +252,9 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "Gives the consumer complete peace of mind.";
+        return
+            "Gives the consumer complete peace of mind, and cures mind "
+            "sapping.";
     }
 
     PotionAlignment alignment() const override
@@ -370,8 +372,9 @@ private:
     std::string descr_identified() const override
     {
         return
-            "Cures blindness, poisoning, infections, disease, and weakening, "
-            "and restores the consumers health by a small amount.";
+            "Cures blindness, poisoning, infections, disease, weakening, "
+            "and life sapping, and restores the consumers health by a small "
+            "amount.";
     }
 
     PotionAlignment alignment() const override

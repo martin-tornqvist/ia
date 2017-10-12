@@ -375,6 +375,7 @@ ConsumeItem DeviceRejuvenator::run_effect()
         PropId::infected,
         PropId::diseased,
         PropId::weakened,
+        PropId::hp_sap,
         PropId::wound
     };
 

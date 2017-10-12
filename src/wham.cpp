@@ -172,10 +172,8 @@ void run()
         corpse_name = text_format::first_to_lower(corpse_name);
 
         // Decide if we should kick or use wielded weapon
-        const bool can_wpn_att_corpse = wpn->data().melee.att_corpse;
-
         const auto* const wpn_used_att_corpse =
-            can_wpn_att_corpse ?
+            wpn->data().melee.att_corpse ?
             wpn :
             kick_wpn.get();
 

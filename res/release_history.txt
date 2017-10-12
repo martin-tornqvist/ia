@@ -8,6 +8,7 @@ Gameplay
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds
 * Hound bites cause physical damage instead of elemental (again) - this is to avoid players trivially becoming invincible against Hounds by casting the "Resistance" spell
+* Leech type monsters apply indefinite properties (which can be cured) instead of directly affecting stats
 * Slightly fewer monsters are spawned on the map
 * Monsters can no longer cast "See Invisible"
 * Some monsters now have more specialized spell selections (too many monsters could cast too many different spells)
