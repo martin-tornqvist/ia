@@ -148,7 +148,7 @@ protected:
 
     virtual int nr_turns_to_recharge() const override
     {
-        return 120;
+        return 90;
     }
 
     void run_effect() override;
