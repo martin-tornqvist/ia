@@ -80,13 +80,13 @@ ActionResult Actor::roll_sneak(const Actor& actor_searching) const
 
     // Distance  Sneak bonus
     // ----------------------
-    // 1         -10
+    // 1          -7
     // 2           0
-    // 3          10
-    // 4          20
-    // 5          30
-    // 6          40
-    const int dist_mod = std::min((dist - 2) * 10, 40);
+    // 3           7
+    // 4          14
+    // 5          21
+    // 6          28
+    const int dist_mod = (dist - 2) * 7;
 
     const Cell& cell = map::cells[pos.x][pos.y];
 
