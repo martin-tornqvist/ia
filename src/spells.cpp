@@ -1710,7 +1710,7 @@ void SpellFrenzy::run_effect(Actor* const caster,
 {
     (void)skill;
 
-    const int nr_turns = rnd::range(12, 18);
+    const int nr_turns = rnd::range(30, 40);
 
     PropFrenzied* frenzy = new PropFrenzied(PropTurns::specific, nr_turns);
 
