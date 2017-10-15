@@ -19,7 +19,7 @@ void mk_pylons_and_levers()
     // Determine number of Pylons to place, by a weighted choice
     std::vector<int> nr_weights =
     {
-        30, // 0 pylon(s)
+        40, // 0 pylon(s)
         4,  // 1 -
         1,  // 2 -
     };
