@@ -770,10 +770,10 @@ void Wpn::set_random_melee_plus()
     // Increase chance for higher bonus damage on deeper dungeon levels
     const Fraction chance_to_continue =
         (map::dlvl <= dlvl_last_early_game) ?
-        Fraction(6, 12) :
+        Fraction(5, 12) :
         (map::dlvl <= dlvl_last_mid_game) ?
-        Fraction(7, 12) :
-        Fraction(8, 12);
+        Fraction(6, 12) :
+        Fraction(7, 12);
 
     const int max_plus = 5;
 
