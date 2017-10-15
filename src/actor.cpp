@@ -929,6 +929,7 @@ ActorDied Actor::hit(int dmg,
         const bool is_destroyed =
             !data_->can_leave_corpse ||
             is_on_bottomless ||
+            has_prop(PropId::summoned) ||
             (dmg >= dmg_threshold_relative) ||
             (dmg >= dmg_threshold_absolute);
 
@@ -999,7 +1000,8 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
 
         const bool is_destroyed =
             !data_->can_leave_corpse ||
-            is_on_bottomless;
+            is_on_bottomless ||
+            has_prop(PropId::summoned);
 
         die(is_destroyed, false, true);
 
