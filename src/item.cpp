@@ -757,35 +757,19 @@ Clr Wpn::clr() const
 
 void Wpn::set_random_melee_plus()
 {
-    // We determine the weapon's "plus" value by iterating through a loop, and
-    // in each iteration we roll to check if we should quit or continue adding
-    // bonus damage.
-    //
-    // The chance for +N bonus can be calculated by:
-    //
-    // f(N) = (1 − k) × (k ^ N)
-    //
-    // Where "k" is the fixed chance to continue in each loop
-
-    // Increase chance for higher bonus damage on deeper dungeon levels
-    const Fraction chance_to_continue =
-        (map::dlvl <= dlvl_last_early_game) ?
-        Fraction(5, 12) :
-        (map::dlvl <= dlvl_last_mid_game) ?
-        Fraction(6, 12) :
-        Fraction(7, 12);
-
-    const int max_plus = 5;
-
-    melee_dmg_plus_ = 0;
-
-    for (; melee_dmg_plus_ < max_plus; ++melee_dmg_plus_)
+    // Element corresponds to plus damage value (+0, +1, +2, etc)
+    const std::vector<int> weights =
     {
-        if (!chance_to_continue.roll())
-        {
-            break;
-        }
-    }
+        100,    // +0
+        100,    // +1
+        50,     // +2
+        25,     // +3
+        4,      // +4
+        2,      // +5
+        1       // +6
+    };
+
+    melee_dmg_plus_ = rnd::weighted_choice(weights);
 }
 
 std::string Wpn::name_inf() const
