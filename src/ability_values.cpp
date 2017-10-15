@@ -142,7 +142,7 @@ int AbilityVals::val(const AbilityId id,
 
             if (player_bon::traits[(size_t)Trait::imperceptible])
             {
-                ret += 30;
+                ret += 40;
             }
         }
         break;

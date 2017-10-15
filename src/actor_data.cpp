@@ -142,7 +142,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 8;
     d.descr =
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It has grown sharp claws to "
@@ -196,7 +196,7 @@ void init_data_list()
     d.actor_size = ActorSize::humanoid;
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.can_bash_doors = true;
-    d.nr_turns_aware = 7;
+    d.nr_turns_aware = 8;
     d.descr =
         "This rotting thing appears to have been brought back to life "
         "through some abominable process. It is wielding a rusty axe.";

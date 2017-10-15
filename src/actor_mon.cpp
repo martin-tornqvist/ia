@@ -617,15 +617,12 @@ std::vector<Actor*> Mon::seeable_foes() const
 
     bool blocked_los[map_w][map_h];
 
-    R los_rect(std::max(0, pos.x - fov_std_radi_int),
-               std::max(0, pos.y - fov_std_radi_int),
-               std::min(map_w - 1, pos.x + fov_std_radi_int),
-               std::min(map_h - 1, pos.y + fov_std_radi_int));
+    const R fov_rect = fov::get_fov_rect(pos);
 
     map_parsers::BlocksLos()
         .run(blocked_los,
              MapParseMode::overwrite,
-             los_rect);
+             fov_rect);
 
     for (Actor* actor : game_time::actors)
     {
@@ -643,10 +640,8 @@ std::vector<Actor*> Mon::seeable_foes() const
             const bool is_enemy =
                 is_hostile_to_player != is_other_hostile_to_player;
 
-            const Mon* const mon = static_cast<const Mon*>(this);
-
             if (is_enemy &&
-                mon->is_actor_seeable(*actor, blocked_los))
+                is_actor_seeable(*actor, blocked_los))
             {
                 out.push_back(actor);
             }
@@ -974,7 +969,8 @@ void Mon::set_player_aware_of_me(int duration_factor)
 bool Mon::try_attack(Actor& defender)
 {
     if (state_ != ActorState::alive ||
-        ((aware_of_player_counter_ <= 0) && (leader_ != map::player)))
+        ((aware_of_player_counter_ <= 0) &&
+         (leader_ != map::player)))
     {
         return false;
     }

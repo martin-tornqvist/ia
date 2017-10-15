@@ -1961,6 +1961,10 @@ void melee(Actor* const attacker,
                 speed_pct_diff += 10;
             }
         }
+        else // Attacker is monster
+        {
+            static_cast<Mon*>(attacker)->become_aware_player(false);
+        }
 
         // Attacking ends cloaking
         attacker->prop_handler().end_prop(PropId::cloaked);
@@ -2055,33 +2059,38 @@ bool ranged(Actor* const attacker,
 
     states::draw();
 
-    // Only pass time if an actor is attacking (not if it's e.g. a trap)
     if (did_attack && attacker)
     {
         int speed_pct_diff = 0;
 
-        if (attacker == map::player &&
-            wpn.data().type == ItemType::ranged_wpn)
+        if (attacker == map::player)
         {
-            if (player_bon::traits[(size_t)Trait::adept_marksman])
+            if (wpn.data().type == ItemType::ranged_wpn)
             {
-                speed_pct_diff += 25;
-            }
+                if (player_bon::traits[(size_t)Trait::adept_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
 
-            if (player_bon::traits[(size_t)Trait::expert_marksman])
-            {
-                speed_pct_diff += 25;
-            }
+                if (player_bon::traits[(size_t)Trait::expert_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
 
-            if (player_bon::traits[(size_t)Trait::master_marksman])
-            {
-                speed_pct_diff += 25;
-            }
+                if (player_bon::traits[(size_t)Trait::master_marksman])
+                {
+                    speed_pct_diff += 25;
+                }
 
-            if (player_bon::traits[(size_t)Trait::fast_shooter])
-            {
-                speed_pct_diff += 100;
+                if (player_bon::traits[(size_t)Trait::fast_shooter])
+                {
+                    speed_pct_diff += 100;
+                }
             }
+        }
+        else // Attacker is monster
+        {
+            static_cast<Mon*>(attacker)->become_aware_player(false);
         }
 
         // Attacking ends cloaking

@@ -582,16 +582,22 @@ bool look(Mon& mon)
 
             if (become_aware)
             {
+                map::update_vision();
+
                 mon.become_aware_player(true);
             }
             // Not aware, just become wary if non-critical fail
             else if (is_non_critical_fail)
             {
+                map::update_vision();
+
                 mon.become_wary_player();
             }
         }
         else // Other actor is monster
         {
+            map::update_vision();
+
             mon.become_aware_player(false);
         }
 
