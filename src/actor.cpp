@@ -909,7 +909,7 @@ ActorDied Actor::hit(int dmg,
             map::cells[pos.x][pos.y].rigid->is_bottomless();
 
         //
-        // Destroy the corpse if the damage is either:
+        // Destroy the corpse if the killing blow damage is either:
         //
         // * Above a threshold relative to the actor's maximum hit points, or
         // * Above a fixed value threshold

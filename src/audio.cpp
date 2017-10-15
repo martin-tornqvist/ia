@@ -358,6 +358,11 @@ void try_play_amb(const int one_in_n_chance_to_play)
     //       loaded (only the action sound effects are pre-loaded)
     //
 
+    if (!config::is_amb_audio_enabled())
+    {
+        return;
+    }
+
     if (!audio_chunks_.empty() &&
         rnd::one_in(one_in_n_chance_to_play))
     {

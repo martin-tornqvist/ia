@@ -61,6 +61,7 @@ int delay_explosion_ = -1;
 std::string default_player_name_ = "";
 bool is_bot_playing_ = false;
 bool is_audio_enabled_ = false;
+bool is_amb_audio_enabled_ = false;
 bool is_tiles_mode_ = false;
 int cell_px_w_ = -1;
 int cell_px_h_ = -1;
@@ -137,6 +138,7 @@ void set_default_variables()
     TRACE_FUNC_BEGIN;
 
     is_audio_enabled_ = true;
+    is_amb_audio_enabled_ = true;
     is_tiles_mode_ = true;
     font_name_ = "16x24_v1.png";
 
@@ -171,7 +173,15 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 1: // Tiles mode
+    case 1: // Ambient audio
+    {
+        is_amb_audio_enabled_ = !is_amb_audio_enabled_;
+
+        audio::init();
+    }
+    break;
+
+    case 2: // Tiles mode
     {
         is_tiles_mode_ = !is_tiles_mode_;
 
@@ -190,7 +200,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 2: // Font
+    case 3: // Font
     {
         // Set next font
         for (size_t i = 0; i < font_image_names.size(); ++i)
@@ -235,61 +245,61 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 3: // Light fade effect
+    case 4: // Light fade effect
     {
         use_light_fade_effect_ = !use_light_fade_effect_;
     }
     break;
 
-    case 4: // Fullscreen
+    case 5: // Fullscreen
     {
         toggle_fullscreen();
     }
     break;
 
-    case 5: // Tiles mode wall symbol
+    case 6: // Tiles mode wall symbol
     {
         is_tiles_wall_full_square_ = !is_tiles_wall_full_square_;
     }
     break;
 
-    case 6: // Text mode wall symbol
+    case 7: // Text mode wall symbol
     {
         is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
     }
     break;
 
-    case 7: // Skip intro level
+    case 8: // Skip intro level
     {
         is_intro_lvl_skipped_ = !is_intro_lvl_skipped_;
     }
     break;
 
-    case 8: // Confirm "more" with any key
+    case 9: // Confirm "more" with any key
     {
         is_any_key_confirm_more_ = !is_any_key_confirm_more_;
     }
     break;
 
-    case 9: // Print warning when lighting explovies
+    case 10: // Print warning when lighting explovies
     {
         is_light_explosive_prompt_ = !is_light_explosive_prompt_;
     }
     break;
 
-    case 10: // Print warning when melee attacking with ranged weapons
+    case 11: // Print warning when melee attacking with ranged weapons
     {
         is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
     }
     break;
 
-    case 11: // Ranged weapon auto reload
+    case 12: // Ranged weapon auto reload
     {
         is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
     }
     break;
 
-    case 12: // Projectile delay
+    case 13: // Projectile delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -308,7 +318,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 13: // Shotgun delay
+    case 14: // Shotgun delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -327,7 +337,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 14: // Explosion delay
+    case 15: // Explosion delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -346,7 +356,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 15: // Reset to defaults
+    case 16: // Reset to defaults
     {
         set_default_variables();
 
@@ -389,6 +399,9 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     TRACE_FUNC_BEGIN;
 
     is_audio_enabled_ = lines.front() == "1";
+    lines.erase(begin(lines));
+
+    is_amb_audio_enabled_ = lines.front() == "1";
     lines.erase(begin(lines));
 
     is_tiles_mode_ = lines.front() == "1";
@@ -443,6 +456,7 @@ void set_variables_from_lines(std::vector<std::string>& lines)
 
         default_player_name_ = lines.front();
     }
+
     lines.erase(begin(lines));
 
     ASSERT(lines.empty());
@@ -476,6 +490,7 @@ std::vector<std::string> lines_from_variables()
 
     lines.clear();
     lines.push_back(is_audio_enabled_ ? "1" : "0");
+    lines.push_back(is_amb_audio_enabled_ ? "1" : "0");
     lines.push_back(is_tiles_mode_ ? "1" : "0");
     lines.push_back(font_name_);
     lines.push_back(use_light_fade_effect_ ? "1" : "0");
@@ -507,7 +522,7 @@ std::vector<std::string> lines_from_variables()
     return lines;
 }
 
-} //namespace
+} // namespace
 
 void init()
 {
@@ -609,6 +624,11 @@ bool is_audio_enabled()
     return is_audio_enabled_;
 }
 
+bool is_amb_audio_enabled()
+{
+    return is_amb_audio_enabled_;
+}
+
 bool is_bot_playing()
 {
     return is_bot_playing_;
@@ -702,7 +722,7 @@ void toggle_fullscreen()
 // -----------------------------------------------------------------------------
 ConfigState::ConfigState() :
     State       (),
-    browser_    (16)
+    browser_    (17)
 {
 
 }
@@ -758,17 +778,22 @@ void ConfigState::draw()
     std::string str = "";
 
     io::draw_text("-Options-",
-                      Panel::screen,
-                      P(0, 0),
-                      clr_white);
+                  Panel::screen,
+                  P(0, 0),
+                  clr_white);
 
     std::string font_disp_name = config::font_name_;
 
     std::vector< std::pair< std::string, std::string > > labels =
     {
         {
-            "Play audio",
+            "Enable audio",
             config::is_audio_enabled_ ? "Yes" : "No"
+        },
+
+        {
+            "Play ambient sounds",
+            config::is_amb_audio_enabled_ ? "Yes" : "No"
         },
 
         {
@@ -881,9 +906,9 @@ void ConfigState::draw()
     } // for each label
 
     io::draw_text("[enter] to set option [space/esc] to exit",
-                      Panel::screen,
-                      P(0, 18),
-                      clr_white);
+                  Panel::screen,
+                  P(0, 19),
+                  clr_white);
 
     str =
         "NOTE: Tile set requires a resolution 1280x720 or higher. Using "
