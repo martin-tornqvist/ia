@@ -131,6 +131,19 @@ Dice Item::dmg(const AttMode att_mode,
             {
                 ++dice.plus;
             }
+
+            if (id() == ItemId::player_ghoul_claw)
+            {
+                if (player_bon::has_trait(Trait::foul))
+                {
+                    ++dice.plus;
+                }
+
+                if (player_bon::has_trait(Trait::toxic))
+                {
+                    ++dice.plus;
+                }
+            }
         }
 
         // Bonus damage from being frenzied?

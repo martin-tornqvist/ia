@@ -645,9 +645,10 @@ void init_data_list()
     d.name = "Frenzied";
     d.name_short = "Frenzied";
     d.descr =
-        "Cannot move away from seen enemies, +100% speed, +10% melee hit "
-        "chance, immune to confusion, fainting, fear, and weakening, cannot "
-        "read or cast spells, becomes weakened when the frenzy ends";
+        "Cannot move away from seen enemies, +100% speed, +1 melee damage "
+        "+10% melee hit chance, immune to confusion, fainting, fear, and "
+        "weakening, cannot read or cast spells, becomes weakened when the "
+        "frenzy ends";
     d.msg[(size_t)PropMsg::start_player] = "I feel ferocious!!!";
     d.msg[(size_t)PropMsg::start_mon] = "Looks ferocious!";
     d.msg[(size_t)PropMsg::end_player] = "I calm down.";

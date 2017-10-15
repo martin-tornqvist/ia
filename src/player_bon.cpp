@@ -29,12 +29,6 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::adept_melee_fighter:
     case Trait::expert_melee_fighter:
     case Trait::master_melee_fighter:
-    case Trait::adept_marksman:
-    case Trait::expert_marksman:
-    case Trait::master_marksman:
-    case Trait::steady_aimer:
-    case Trait::sharpshooter:
-    case Trait::fast_shooter:
     case Trait::cool_headed:
     case Trait::perseverant:
     case Trait::observant:
@@ -76,6 +70,24 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::mobile:
     case Trait::fearless:
         break;
+
+    case Trait::adept_marksman:
+        return bg == Bg::ghoul;
+
+    case Trait::expert_marksman:
+        return bg == Bg::ghoul;
+
+    case Trait::master_marksman:
+        return bg == Bg::ghoul;
+
+    case Trait::steady_aimer:
+        return bg == Bg::ghoul;
+
+    case Trait::sharpshooter:
+        return bg == Bg::ghoul;
+
+    case Trait::fast_shooter:
+        return bg == Bg::ghoul;
 
     case Trait::healer:
         // Cannot use Medial Bag
@@ -679,19 +691,18 @@ std::string trait_descr(const Trait id)
 
     case Trait::ravenous:
         return
-            "You occasionally feed on living victims when attacking with your "
-            "claws";
+            "You occasionally feed on living victims when attacking with claws";
 
     case Trait::foul:
         return
-            "You have particularly filthy and verminous claws - vicious worms "
-            "occasionally burst out from the corpses of your victims to attack "
-            "your enemies";
+            "+1 claw damage, when attacking with claws, vicious worms "
+            "occasionally burst out from the corpses of your victims to "
+            "attack your enemies";
 
     case Trait::toxic:
         return
-            "Attacks with your claws occasionally poisons your victims. "
-            "You are immune to Poison";
+            "+1 claw damage, you are immune to poison, and attacks with your "
+            "claws occasionally poisons your victims";
 
     case Trait::indomitable_fury:
         return
