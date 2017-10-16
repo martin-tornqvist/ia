@@ -120,7 +120,7 @@ public:
         return data_->aggro_sfx_mon_hidden;
     }
 
-    void speak_phrase(const AlertsMon alerts_others);
+    void speak_phrase();
 
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;

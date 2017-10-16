@@ -230,29 +230,9 @@ void Mon::act()
     {
         is_roaming_allowed_ = MonRoamingAllowed::yes;
 
-        // Does the monster have a living leader?
-        if (leader_ &&
-            leader_->is_alive())
+        if (is_alive() && rnd::one_in(12))
         {
-            // If monster is aware of hostile player, make leader also aware
-            if (aware_of_player_counter_ > 0 &&
-                !is_player_leader)
-            {
-                // Make leader aware
-                Mon* const leader_mon = static_cast<Mon*>(leader_);
-
-                leader_mon->aware_of_player_counter_ =
-                    std::max(leader_mon->data().nr_turns_aware,
-                             leader_mon->aware_of_player_counter_);
-            }
-        }
-        else // Monster does not have a living leader
-        {
-            // Monster is wary or aware, occasionally make a sound
-            if (is_alive() && rnd::one_in(12))
-            {
-                speak_phrase(AlertsMon::no);
-            }
+            speak_phrase();
         }
     }
 
@@ -708,9 +688,7 @@ void Mon::on_hit(int& dmg,
     (void)method;
     (void)allow_wound;
 
-    aware_of_player_counter_ =
-        std::max(data_->nr_turns_aware,
-                 aware_of_player_counter_);
+    become_aware_player(false);
 }
 
 void Mon::move(Dir dir)
@@ -839,7 +817,7 @@ void Mon::hear_sound(const Snd& snd)
     }
 }
 
-void Mon::speak_phrase(const AlertsMon alerts_others)
+void Mon::speak_phrase()
 {
     const bool is_seen_by_player = map::player->can_see_actor(*this);
 
@@ -861,7 +839,7 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
             pos,
             this,
             SndVol::low,
-            alerts_others);
+            AlertsMon::no);
 
     snd_emit::run(snd);
 }
@@ -906,7 +884,7 @@ void Mon::become_aware_player(const bool is_from_seeing,
 
         if (rnd::coin_toss())
         {
-            speak_phrase(AlertsMon::yes);
+            speak_phrase();
         }
     }
 }
@@ -948,7 +926,7 @@ void Mon::become_wary_player()
 
         if (rnd::one_in(4))
         {
-            speak_phrase(AlertsMon::no);
+            speak_phrase();
         }
     }
 }
