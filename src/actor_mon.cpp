@@ -2538,6 +2538,8 @@ DidAction Zombie::try_resurrect()
 
             aware_of_player_counter_ += data_->nr_turns_aware * 4;
 
+            wary_of_player_counter_ = aware_of_player_counter_;
+
             game_time::tick();
 
             return DidAction::yes;
