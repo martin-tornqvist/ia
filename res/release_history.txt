@@ -8,13 +8,7 @@ Gameplay
 * Hounds can no longer bash doors
 * Reduced group sizes of Hounds
 * Hound bites cause physical damage instead of elemental (again) - this is to avoid players trivially becoming invincible against Hounds by casting the "Resistance" spell
-* Monsters become unaware after the player teleports, if they cannot see the player at the new position
-* Some monsters such as Molds or common Rats have negative dodging ability (i.e. they are extra easy to hit)
-* Leng Spiders have a ranged attack
-* Flying Polyps and Greater Polyps attacks no longer causes paralysis
-* Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
 * Leech type monsters apply indefinite properties (which can be cured) instead of directly affecting stats
-* Monsters cannot alert each other (except in cases such as monsters summoning other monsters), each monster must detect the player individually
 * Slightly fewer monsters are spawned on the map
 * Monsters can no longer cast "See Invisible"
 * Some monsters now have more specialized spell selections (too many monsters could cast too many different spells)
@@ -37,6 +31,10 @@ Gameplay
 * Room templates (loaded from file) are now considered unique, each type may only appear once per game
 * Fountains with bad effects always dry up on the first quaff
 * Added map feature "Alchemist's workbench", similar to bookshelf but may contain potions
+* Some monsters such as Molds or common Rats have negative dodging ability (i.e. they are extra easy to hit)
+* Leng Spiders have a ranged attack
+* Flying Polyps and Greater Polyps attacks no longer causes paralysis
+* Invisible monsters causes shock (with a fixed amount), provided that the monster cannot be seen, and the player is aware of the monster ("!" sign on the map), and their map cell is seen
 * The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
 * While the player is using the Medical Bag, infections cannot turn into disease, and the infection turn count is frozen
 * Updated the score formula to include turn count (lower turn counts give higher scores), also a winning game now guarantees higher score than a non-winning game
@@ -44,6 +42,7 @@ Gameplay
 * Nicer tombs are guaranteed to contain better items (and common tomes MAY contain better items)
 * Pitchforks gives +15% chance to evade melee attacks
 * Sledgehammers no longer knocks the victim back
+* Monsters become unaware after the player teleports, if they cannot see the player at the new position
 * Ghoul characters can use their claws for destroying corpses (and cannot get sprains from this)
 * The Ghoul traits "Foul" and "Toxic" also gives +1 claw damage
 * Ghouls do not have access to any ranged weapon traits
