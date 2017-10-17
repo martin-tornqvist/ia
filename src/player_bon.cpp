@@ -686,8 +686,8 @@ std::string trait_descr(const Trait id)
     case Trait::elec_incl:
         return
             "Rods recharge twice as fast, Strange Devices are less likely to "
-            "malfunction or break, Electric Lanterns last twice as long, and "
-            "are less likely to flicker, +1 damage with electricity weapons";
+            "malfunction or break, Electric Lanterns last twice as long, "
+            "+1 damage with electricity weapons";
 
     case Trait::ravenous:
         return

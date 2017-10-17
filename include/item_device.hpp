@@ -166,12 +166,6 @@ private:
     ConsumeItem run_effect() override;
 };
 
-enum class LanternWorkingState
-{
-    working,
-    flicker
-};
-
 class DeviceLantern : public Device
 {
 public:
@@ -189,14 +183,10 @@ public:
     void load() override;
 
     int nr_turns_left_;
-    int nr_flicker_turns_left_;
-    LanternWorkingState working_state_;
     bool is_activated_;
 
 private:
     void toggle();
-
-    int random_nr_turns_to_next_bad_effect() const;
 
     std::string name_inf() const override;
 };

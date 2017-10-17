@@ -46,6 +46,7 @@ Gameplay
 * Ghoul characters can use their claws for destroying corpses (and cannot get sprains from this)
 * The Ghoul traits "Foul" and "Toxic" also gives +1 claw damage
 * Ghouls do not have access to any ranged weapon traits
+* Removed the "flickering" effect of the Electric Lantern
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)

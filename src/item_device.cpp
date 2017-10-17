@@ -492,8 +492,6 @@ ConsumeItem DeviceSentryDrone::run_effect()
 DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
     Device                  (item_data),
     nr_turns_left_          (200),
-    nr_flicker_turns_left_  (-1),
-    working_state_          (LanternWorkingState::working),
     is_activated_           (false) {}
 
 std::string DeviceLantern::name_inf() const
@@ -524,16 +522,12 @@ ConsumeItem DeviceLantern::activate(Actor* const actor)
 void DeviceLantern::save()
 {
     saving::put_int(nr_turns_left_);
-    saving::put_int(nr_flicker_turns_left_);
-    saving::put_int(int(working_state_));
     saving::put_bool(is_activated_);
 }
 
 void DeviceLantern::load()
 {
     nr_turns_left_ = saving::get_int();
-    nr_flicker_turns_left_ = saving::get_int();
-    working_state_ = LanternWorkingState(saving::get_int());
     is_activated_ = saving::get_bool();
 }
 
@@ -563,14 +557,15 @@ void DeviceLantern::toggle()
 {
     const std::string toggle_str =
         is_activated_ ?
-        "I turn off" : "I turn on";
+        "I turn off" :
+        "I turn on";
 
     msg_log::add(toggle_str + " an Electric Lantern.");
 
     is_activated_ = !is_activated_;
 
     // Discourage flipping on and off frequently
-    if (is_activated_ && nr_turns_left_ >= 4)
+    if (is_activated_ && (nr_turns_left_ >= 4))
     {
         nr_turns_left_ -= 2;
     }
@@ -582,87 +577,35 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
 {
     (void)inv_type;
 
-    if (is_activated_)
+    if (!is_activated_)
     {
-        if (working_state_ == LanternWorkingState::working)
-        {
-            bool should_decr = true;
+        return;
+    }
 
-            if (player_bon::traits[(size_t)Trait::elec_incl] &&
-                game_time::turn_nr() % 2 == 0)
-            {
-                should_decr = false;
-            }
+    if (!(player_bon::has_trait(Trait::elec_incl) &&
+          ((game_time::turn_nr() % 2) == 0)))
+    {
+        --nr_turns_left_;
+    }
 
-            if (should_decr)
-            {
-                --nr_turns_left_;
-            }
-        }
+    if (nr_turns_left_ <= 0)
+    {
+        msg_log::add("My Electric Lantern has expired.",
+                     clr_msg_note,
+                     true,
+                     MorePromptOnMsg::yes);
 
-        if (nr_turns_left_ <= 0)
-        {
-            msg_log::add("My Electric Lantern has expired.",
-                         clr_msg_note,
-                         true,
-                         MorePromptOnMsg::yes);
+        game::add_history_event("My Electric Lantern expired.");
 
-            game::add_history_event("My Electric Lantern expired.");
-
-            // NOTE: The this deletes the object
-            map::player->inv().remove_item_in_backpack_with_ptr(this, true);
-
-            return;
-        }
-
-        // This point reached means the lantern is not destroyed
-
-        if (nr_flicker_turns_left_ > 0)
-        {
-            // Already flickering, count down instead
-            --nr_flicker_turns_left_;
-
-            if (nr_flicker_turns_left_ <= 0)
-            {
-                working_state_ = LanternWorkingState::working;
-            }
-        }
-        else // Not already flickering
-        {
-            int flicker_one_in_n = 40;
-
-            if (player_bon::traits[(size_t)Trait::elec_incl])
-            {
-                flicker_one_in_n *= 2;
-            }
-
-            if (rnd::one_in(flicker_one_in_n))
-            {
-                msg_log::add("My Electric Lantern flickers...");
-                working_state_ = LanternWorkingState::flicker;
-                nr_flicker_turns_left_  = rnd::range(4, 8);
-            }
-            else // Not starting to flicker
-            {
-                working_state_ = LanternWorkingState::working;
-            }
-        }
+        // NOTE: The this deletes the object
+        map::player->inv().remove_item_in_backpack_with_ptr(this, true);
     }
 }
 
 LgtSize DeviceLantern::lgt_size() const
 {
-    if (is_activated_)
-    {
-        switch (working_state_)
-        {
-        case LanternWorkingState::working:
-            return LgtSize::fov;
-
-        case LanternWorkingState::flicker:
-            return LgtSize::small;
-        }
-    }
-
-    return LgtSize::none;
+        return
+            is_activated_ ?
+            LgtSize::fov :
+            LgtSize::none;
 }
