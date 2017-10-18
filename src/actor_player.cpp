@@ -1232,7 +1232,7 @@ void Player::on_actor_turn()
             P(std::max(0, pos.x - d),
               std::max(0, pos.y - d)),
             P(std::min(map_w - 1, pos.x + d),
-              std::min(map_h - 1, pos.x - d)));
+              std::min(map_h - 1, pos.y + d)));
 
         map_parsers::BlocksSound()
             .run(blocks_sound,
