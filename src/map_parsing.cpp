@@ -222,6 +222,13 @@ bool BlocksProjectiles::parse(const Mob& f)  const
     return !f.is_projectile_passable();
 }
 
+bool BlocksSound::parse(const Cell& c)  const
+{
+    return
+        !map::is_pos_inside_map(c.pos, false) ||
+        !c.rigid->is_sound_passable();
+}
+
 bool LivingActorsAdjToPos::parse(const Actor& a) const
 {
     if (!a.is_alive())

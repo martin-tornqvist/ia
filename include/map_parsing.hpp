@@ -145,6 +145,18 @@ private:
     bool parse(const Mob& f) const override;
 };
 
+class BlocksSound : public MapParser
+{
+public:
+    BlocksSound() :
+        MapParser(ParseCells::yes,
+                  ParseMobs::no,
+                  ParseActors::no) {}
+
+private:
+    bool parse(const Cell& c) const override;
+};
+
 class LivingActorsAdjToPos : public MapParser
 {
 public:

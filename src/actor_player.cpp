@@ -1220,6 +1220,31 @@ void Player::on_actor_turn()
         }
     }
 
+    int vigilant_flood[map_w][map_h] = {};
+
+    if (player_bon::has_trait(Trait::vigilant))
+    {
+        bool blocks_sound[map_w][map_h];
+
+        const int d = 3;
+
+        const R area(
+            P(std::max(0, pos.x - d),
+              std::max(0, pos.y - d)),
+            P(std::min(map_w - 1, pos.x + d),
+              std::min(map_h - 1, pos.x - d)));
+
+        map_parsers::BlocksSound()
+            .run(blocks_sound,
+                 MapParseMode::overwrite,
+                 area);
+
+        floodfill(pos,
+                  blocks_sound,
+                  vigilant_flood,
+                  d);
+    }
+
     for (Actor* actor : game_time::actors)
     {
         //
@@ -1265,10 +1290,8 @@ void Player::on_actor_turn()
         {
             mon.is_msg_mon_in_view_printed_ = false;
 
-            if (!map::cells[mon.pos.x][mon.pos.y].is_seen_by_player)
-            {
-                continue;
-            }
+            const bool is_cell_seen =
+                map::cells[mon.pos.x][mon.pos.y].is_seen_by_player;
 
             const bool is_mon_invis =
                 mon.has_prop(PropId::invis) ||
@@ -1277,16 +1300,31 @@ void Player::on_actor_turn()
             const bool can_player_see_invis =
                 has_prop(PropId::see_invis);
 
-            // If the monster is invisible, and the player cannot see
-            // invisible monsters, being Vigilant will make the player aware
-            // of the monster
+            // NOTE: We only run the flodofill within a limited area, so ANY
+            //       cell reached by the flood is considered as within distance
+            const bool is_mon_within_vigilant_dist =
+                vigilant_flood[mon.pos.x][mon.pos.y] > 0;
+
+            // If the monster is invisible (and the player cannot see invisible
+            // monsters), or if the cells is not seen, being Vigilant will make
+            // the player aware of the monster if within a certain distance
             if (player_bon::has_trait(Trait::vigilant) &&
-                is_mon_invis &&
-                !can_player_see_invis)
+                is_mon_within_vigilant_dist &&
+                ((is_mon_invis && !can_player_see_invis) ||
+                 !is_cell_seen))
             {
                 if (mon.player_aware_of_me_counter_ <= 0)
                 {
-                    print_aware_invis_mon_msg(mon);
+                    if (is_cell_seen)
+                    {
+                        // The monster must be invisible
+                        print_aware_invis_mon_msg(mon);
+                    }
+                    else // Became aware of a monster in an unseen cell
+                    {
+                        // Abort quick move
+                        quick_move_dir_ = Dir::END;
+                    }
                 }
 
                 mon.set_player_aware_of_me();
@@ -1295,11 +1333,13 @@ void Player::on_actor_turn()
             {
                 auto sneak_result = ActionResult::success;
 
-                if (player_bon::has_trait(Trait::vigilant))
+                if (player_bon::has_trait(Trait::vigilant) &&
+                    is_mon_within_vigilant_dist)
                 {
                     sneak_result = ActionResult::fail;
                 }
-                else // Player is not Vigilant
+                // Monster cannot be discovered with Vigilant
+                else if (is_cell_seen)
                 {
                     sneak_result = mon.roll_sneak(*this);
                 }
@@ -1316,10 +1356,6 @@ void Player::on_actor_turn()
                                  MorePromptOnMsg::yes);
                 }
             }
-            // else // Monster is not sneaking
-            // {
-            //     mon.set_player_aware_of_me();
-            // }
         }
     } // actor loop
 

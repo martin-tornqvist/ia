@@ -613,8 +613,8 @@ std::string trait_descr(const Trait id)
 
     case Trait::vigilant:
         return
-            "You are always aware of creatures inside your view, even if they "
-            "are hidden or invisible";
+            "You are always aware of creatures within three steps, even "
+            "if they are invisible, around the corner, or behind a door, etc";
 
     case Trait::rapid_recoverer:
         return

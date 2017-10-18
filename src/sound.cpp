@@ -80,15 +80,8 @@ void run(Snd snd)
 
     bool blocked[map_w][map_h];
 
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            const auto f  = map::cells[x][y].rigid;
-
-            blocked[x][y] = !f->is_sound_passable();
-        }
-    }
+    map_parsers::BlocksSound()
+        .run(blocked);
 
     const P& origin = snd.origin();
 
