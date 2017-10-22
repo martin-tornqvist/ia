@@ -31,7 +31,6 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
     case Trait::master_melee_fighter:
     case Trait::cool_headed:
     case Trait::perseverant:
-    case Trait::observant:
     case Trait::ravenous:
     case Trait::foul:
     case Trait::toxic:
@@ -257,9 +256,6 @@ std::string trait_title(const Trait id)
     case Trait::fast_shooter:
         return "Fast Shooter";
 
-    case Trait::observant:
-        return "Observant";
-
     case Trait::vigilant:
         return "Vigilant";
 
@@ -407,10 +403,14 @@ std::vector<StrAndClr> bg_descr(const Bg id)
     case Bg::rogue:
         put("Shock received passively over time is reduced by 25%");
         put("");
+        put("+10% chance to spot hidden monsters, doors, and traps");
+        put("");
+        put("Remains aware of the presence of other creatures longer");
+        put("");
+        put("Can often sense unique monsters or artifacts");
+        put("");
         put("Has acquired an artifact which can cloud the minds of all "
             "enemies, causing them to forget the presence of the user");
-        put("");
-        put_trait(Trait::observant);
         put("");
         put_trait(Trait::stealthy);
         break;
@@ -603,13 +603,6 @@ std::string trait_descr(const Trait id)
     case Trait::healer:
         return
             "Using medical equipment takes half the normal time and resources";
-
-    case Trait::observant:
-        return
-            "+10% chance to spot hidden monsters, doors, and traps, 80% "
-            "chance to sense unique monsters or artifacts (when entering a "
-            "new level, or when new monsters appear), you remain aware of the "
-            "presence of other creatures longer";
 
     case Trait::vigilant:
         return
@@ -880,11 +873,7 @@ void trait_prereqs(const Trait trait,
     case Trait::healer:
         break;
 
-    case Trait::observant:
-        break;
-
     case Trait::vigilant:
-        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::rapid_recoverer:
@@ -938,7 +927,6 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::treasure_hunter:
-        traits_out.push_back(Trait::observant);
         break;
 
     case Trait::undead_bane:
@@ -1167,7 +1155,6 @@ void pick_bg(const Bg bg)
         break;
 
     case Bg::rogue:
-        pick_trait(Trait::observant);
         pick_trait(Trait::stealthy);
         break;
 

@@ -21,9 +21,9 @@ Gameplay
 * Monsters spawned from traps now wait a bit before acting
 * Using Rods causes less shock than before
 * Removed the "Demolition Expert" trait
+* Removed the "Observant" trait (the effects are Rogue background bonuses instead)
+* The "Vigilant" trait grants awareness of all monsters within three steps - even if they are invisible, around the corner, or behind a door, etc (instead of only preventing backstabs)
 * The "Silent" trait also prevents alerting monsters when wading through liquid
-* The Rogue's bonus to remain aware of creatures longer is now part of the "Observant" trait instead
-* The "Vigilant" trait grants awareness of all monsters within three steps, even if they are invisible, around the corner, or behind a door, etc (instead of only preventing backstabs)
 * With the "Rapid Recoverer" trait, Hit Point regeneration is 1 HP every 2nd turn (previously it only regenerated 1 HP every 5th turn)
 * The "Survivalist" trait no longer has "Tough" as prerequisite
 * The "Self-aware" trait has "Cool-headed" as prerequisite instead of "Observant"

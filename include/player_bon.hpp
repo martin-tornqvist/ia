@@ -28,7 +28,6 @@ enum class Trait
     silent,
     mobile,
     lithe,
-    observant,
     vigilant,
     treasure_hunter,
     self_aware,

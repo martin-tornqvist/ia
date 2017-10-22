@@ -771,7 +771,7 @@ bool Player::is_standing_in_cramped_place() const
 
 void Player::item_feeling()
 {
-    if (!player_bon::traits[(size_t)Trait::observant] ||
+    if ((player_bon::bg() != Bg::rogue) ||
         !rnd::percent(80))
     {
         return;
@@ -859,7 +859,7 @@ void Player::on_new_dlvl_reached()
 
 void Player::mon_feeling()
 {
-    if (!player_bon::traits[(size_t)Trait::observant])
+    if (player_bon::bg() != Bg::rogue)
     {
         return;
     }

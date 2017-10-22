@@ -47,7 +47,7 @@ int AbilityVals::val(const AbilityId id,
         {
             ret += 10;
 
-            if (player_bon::traits[(size_t)Trait::observant])
+            if (player_bon::bg() == Bg::rogue)
             {
                 ret += 10;
             }
