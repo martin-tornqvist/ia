@@ -123,7 +123,8 @@ public:
         return true;
     }
 
-    std::vector<std::string> descr(const SpellSkill skill) const;
+    std::vector<std::string> descr(const SpellSkill skill,
+                                   const IsIntrinsic is_intrinsic) const;
 
     Range spi_cost(const SpellSkill skill, Actor* const caster = nullptr) const;
 
@@ -139,6 +140,8 @@ protected:
 
     virtual std::vector<std::string> descr_specific(
         const SpellSkill skill) const = 0;
+
+    virtual bool is_noisy(const SpellSkill skill) const = 0;
 
     void on_resist(Actor& target) const;
 };
@@ -193,6 +196,13 @@ private:
 
         return 4;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellAzaWrath: public Spell
@@ -245,6 +255,13 @@ private:
 
         return 8;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellMayhem: public Spell
@@ -291,6 +308,13 @@ private:
         (void)skill;
 
         return 6;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -344,6 +368,13 @@ private:
 
         return 6;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellAnimWpns: public Spell
@@ -388,6 +419,13 @@ private:
         (void)skill;
 
         return 6;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -439,6 +477,13 @@ protected:
         (void)skill;
 
         return 2;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -493,6 +538,12 @@ protected:
 
         return 6;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
+    }
 };
 
 class SpellSearching: public Spell
@@ -537,6 +588,12 @@ private:
         (void)skill;
 
         return 5;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
     }
 };
 
@@ -583,6 +640,8 @@ private:
 
         return 4;
     }
+
+    bool is_noisy(const SpellSkill skill) const override;
 };
 
 class SpellFrenzy: public Spell
@@ -633,6 +692,12 @@ private:
 
         return 3;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
+    }
 };
 
 class SpellBless: public Spell
@@ -677,6 +742,12 @@ private:
         (void)skill;
 
         return 8;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
     }
 };
 
@@ -723,6 +794,12 @@ private:
 
         return 4;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
+    }
 };
 
 class SpellLight: public Spell
@@ -766,6 +843,12 @@ private:
         (void)skill;
 
         return 4;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
     }
 };
 
@@ -824,6 +907,13 @@ private:
 
         return 8;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellTeleport: public Spell
@@ -875,6 +965,13 @@ private:
         (void)skill;
 
         return 10;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -928,6 +1025,13 @@ private:
 
         return 8;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellSpellShield: public Spell
@@ -975,6 +1079,12 @@ public:
 
 private:
     int max_spi_cost(const SpellSkill skill) const override;
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+        return false;
+    }
 };
 
 class SpellRes: public Spell
@@ -1027,6 +1137,13 @@ private:
 
         return 7;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellEnfeeble: public Spell
@@ -1078,6 +1195,13 @@ protected:
         (void)skill;
 
         return 6;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -1136,6 +1260,13 @@ private:
 
         return 7;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellSummonMon: public Spell
@@ -1188,6 +1319,13 @@ private:
 
         return 6;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellHeal: public Spell
@@ -1239,6 +1377,13 @@ private:
         (void)skill;
 
         return 6;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 
@@ -1297,6 +1442,13 @@ private:
 
         return 7;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellBurn: public Spell
@@ -1354,6 +1506,13 @@ private:
 
         return 7;
     }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
+    }
 };
 
 class SpellDeafen: public Spell
@@ -1410,6 +1569,13 @@ private:
         (void)skill;
 
         return 4;
+    }
+
+    bool is_noisy(const SpellSkill skill) const override
+    {
+        (void)skill;
+
+        return true;
     }
 };
 

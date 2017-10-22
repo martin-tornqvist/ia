@@ -447,7 +447,7 @@ void BrowseSpell::draw()
         {
             const auto skill = map::player->spell_skill(id);
 
-            const auto descr = spell->descr(skill);
+            const auto descr = spell->descr(skill, IsIntrinsic::yes);
 
             std::vector<StrAndClr> lines;
 

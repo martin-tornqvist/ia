@@ -35,7 +35,7 @@ std::vector<std::string> Scroll::descr() const
 
         const auto player_spell_skill = map::player->spell_skill(spell->id());
 
-        const auto descr = spell->descr(player_spell_skill);
+        const auto descr = spell->descr(player_spell_skill, IsIntrinsic::no);
 
         delete spell;
 

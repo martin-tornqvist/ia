@@ -227,54 +227,64 @@ void Spell::cast(Actor* const caster,
 
         map::player->incr_shock((double)value, shock_src);
 
-        Snd snd("",
-                SfxId::spell_generic,
-                IgnoreMsgIfOriginSeen::yes,
-                caster->pos,
-                caster,
-                SndVol::low,
-                AlertsMon::yes);
+        // Make sound if noisy - casting from scrolls is always noisy
+        if (is_noisy(skill) ||
+            (intrinsic == IsIntrinsic::no))
+        {
+            Snd snd("",
+                    SfxId::spell_generic,
+                    IgnoreMsgIfOriginSeen::yes,
+                    caster->pos,
+                    caster,
+                    SndVol::low,
+                    AlertsMon::yes);
 
-        snd_emit::run(snd);
+            snd_emit::run(snd);
+        }
     }
     else // Caster is monster
     {
         TRACE << "Monster casting spell" << std::endl;
 
-        Mon* const mon = static_cast<Mon*>(caster);
-
-        const bool is_mon_seen = map::player->can_see_actor(*mon);
-
-        std::string spell_str = mon->data().spell_cast_msg;
-
-        if (!spell_str.empty())
+        // Make sound if noisy - casting from scrolls is always noisy
+        if (is_noisy(skill) ||
+            (intrinsic == IsIntrinsic::no))
         {
-            std::string mon_name = "";
+            Mon* const mon = static_cast<Mon*>(caster);
 
-            if (is_mon_seen)
+            const bool is_mon_seen = map::player->can_see_actor(*mon);
+
+            std::string spell_str = mon->data().spell_cast_msg;
+
+            if (!spell_str.empty())
             {
-                mon_name = text_format::first_to_upper(mon->name_the());
-            }
-            else // Cannot see monster
-            {
-                mon_name =
-                    mon->data().is_humanoid ?
-                    "Someone" :
-                    "Something";
+                std::string mon_name = "";
+
+                if (is_mon_seen)
+                {
+                    mon_name = text_format::first_to_upper(mon->name_the());
+                }
+                else // Cannot see monster
+                {
+                    mon_name =
+                        mon->data().is_humanoid ?
+                        "Someone" :
+                        "Something";
+                }
+
+                spell_str = mon_name + " " + spell_str;
             }
 
-            spell_str = mon_name + " " + spell_str;
+            Snd snd(spell_str,
+                    SfxId::END,
+                    IgnoreMsgIfOriginSeen::no,
+                    caster->pos,
+                    caster,
+                    SndVol::low,
+                    AlertsMon::no);
+
+            snd_emit::run(snd);
         }
-
-        Snd snd(spell_str,
-                SfxId::END,
-                IgnoreMsgIfOriginSeen::no,
-                caster->pos,
-                caster,
-                SndVol::low,
-                AlertsMon::no);
-
-        snd_emit::run(snd);
     }
 
     bool allow_cast = true;
@@ -335,9 +345,22 @@ void Spell::on_resist(Actor& target) const
     }
 }
 
-std::vector<std::string> Spell::descr(const SpellSkill skill) const
+std::vector<std::string> Spell::descr(const SpellSkill skill,
+                                      const IsIntrinsic is_intrinsic) const
 {
     auto ret = descr_specific(skill);
+
+    if (is_intrinsic == IsIntrinsic::yes)
+    {
+        if (is_noisy(skill))
+        {
+            ret.push_back("Casting this spell requires making sounds.");
+        }
+        else // The spell is silent
+        {
+            ret.push_back("This spell can be cast silently.");
+        }
+    }
 
     if (can_be_improved_with_skill())
     {
@@ -1700,6 +1723,11 @@ std::vector<std::string> SpellOpening::descr_specific(
     descr.push_back(std::to_string(chance_to_open) + "% chance to open.");
 
     return descr;
+}
+
+bool SpellOpening::is_noisy(const SpellSkill skill) const
+{
+    return (skill == SpellSkill::basic);
 }
 
 // -----------------------------------------------------------------------------
