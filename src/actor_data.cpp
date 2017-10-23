@@ -1305,7 +1305,6 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::ranged, 75);
     d.ability_vals.set_val(AbilityId::dodging, 20);
     d.natural_props[(size_t)PropId::r_elec] = true;
-    d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::darkvis] = true;
@@ -2958,6 +2957,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -3005,6 +3005,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = dlvl_last - 3;
@@ -3053,6 +3054,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
+    d.natural_props[(size_t)PropId::r_blind] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.actor_size = ActorSize::humanoid;
