@@ -19,6 +19,7 @@ enum class StateId
     message,
     marker,
     manual,
+    manual_page,
     view_actor,
     inventory,
     highscore,

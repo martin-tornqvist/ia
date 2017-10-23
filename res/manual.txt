@@ -1,24 +1,13 @@
-Contents:
-1. Command list
-2. Movement and interaction
-3. The interface
-4. Inventory handling
-5. Hit Points, Wounds and healing
-6. Spirit and spell casting
-7. Insanity
-8. Sneaking and backstabbing
-9. High scores and memorial files
-
 --------------------------------------------------------------------------------
-1. Command list
+Command list
 --------------------------------------------------------------------------------
-   Esc    Menu
+   Esc    In-game menu
    ?, F1  This manual
    =      Options
    Q      Quit
    Space  Cancel, proceed
    Enter  Select something in a menu, confirm
-   o      Alternative Enter key
+   o      Alternative Enter key (except in letter based menus)
    @      Display character information
    TAB    Melee attack adjacent known monster
    a      Activate, read or consume an item
@@ -41,7 +30,7 @@ Contents:
    z      Swap to readied weapon
 
 --------------------------------------------------------------------------------
-2. Movement and interaction
+Movement and interaction
 --------------------------------------------------------------------------------
 You can move in eight directions by using the numpad keys in this manner:
 
@@ -75,7 +64,7 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
    * Move into fountains to drink from them
 
 --------------------------------------------------------------------------------
-3. The interface
+The interface
 --------------------------------------------------------------------------------
 The following is an example of what the interface lines can look like:
 
@@ -105,7 +94,7 @@ The third line displays properties currently affecting you. This can be temporar
 To the far right on the third line, the current "standard" turn number is displayed. Note that depending on traits, items, etc, you may sometimes act more often, or less often, than this number is incremented. For example, if you move twice as fast as normal (+100% speed), you will only see the turn number increment on every second action you take.
 
 --------------------------------------------------------------------------------
-4. Inventory handling
+Inventory handling
 --------------------------------------------------------------------------------
 The inventory can be accessed in three ways:
 
@@ -131,7 +120,7 @@ To drop an item, select the item while holding shift (i.e. shift + enter, or shi
 In any inventory screen, you can see percentage values to the far right of each item. This is how many percent of your total carried weight that each item takes (the numbers roughly adds up to 100%, but there will be rounding errors, since decimals are not shown). So if you are overburdened, an item with a high percentage value might be a good candidate to drop.
 
 --------------------------------------------------------------------------------
-5. Hit Points, Wounds and healing
+Hit Points, Wounds and healing
 --------------------------------------------------------------------------------
 The state of your physical health is described in two ways:
 
@@ -141,14 +130,10 @@ This represents minor wounds like bruises and sprains, and also general combat m
    (2) Wounds
 This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities, maximum HP, and HP regeneration rate.
 
-There is an item called a "Medical Bag", which has a certain number of "supplies". When activated, it will either Sanitize an infection or treat a Wound.
-
-When bitten or clawed by certain monsters, you can become Infected. You should treat the infection before it becomes a disease! It only takes a few turns and supplies.
-
-Treating a Wound requires many uninterrupted turns, and uses up lots of supplies.
+There is an item called a "Medical Bag", which has a certain number of "supplies". When activated, it will either Sanitize an infection or treat a Wound. When bitten or clawed by certain monsters, you can become Infected. You should treat the infection before it becomes a disease! It only takes a few turns and supplies. Treating a Wound requires many uninterrupted turns, and uses up lots of supplies.
 
 --------------------------------------------------------------------------------
-6. Spirit and spell casting
+Spirit and spell casting
 --------------------------------------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
@@ -164,7 +149,7 @@ When casting a spell, you will get a warning if the spell could potentially drai
 There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
 
 --------------------------------------------------------------------------------
-7. Insanity
+Insanity
 --------------------------------------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
@@ -185,7 +170,7 @@ Each time you travel to the next dungeon level, your shock is restored (you have
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 --------------------------------------------------------------------------------
-8. Sneaking and backstabbing
+Sneaking and backstabbing
 --------------------------------------------------------------------------------
 Monsters unaware of your presence have a blue background on their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you. If you attack an unaware opponent in melee, the attack gets a big bonus to damage and hit chance.
 
@@ -206,7 +191,7 @@ When you stay out of an aware monster's vision for a certain number of turns (an
 Monsters also react to noise, and may disturb nearby monsters when becoming aware, alerting them to your presence. Medium and heavy melee weapons will make noise on attacks, so a light weapon might be more ideal for a stealthy combat approach. Some sounds are louder than others, for example firing a gun or kicking down a door is likely to attract some attention.
 
 --------------------------------------------------------------------------------
-9. High scores and memorial files
+High scores and memorial files
 --------------------------------------------------------------------------------
 Winning is not the sole purpose of Infra Arcana - there is also challenge and joy to be found in exploring further, gaining more abilities, discovering more items, or encountering stranger and more powerful monsters than in previous attempts.
 
