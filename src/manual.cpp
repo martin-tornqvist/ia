@@ -151,6 +151,8 @@ void BrowseManual::draw()
                       Panel::screen,
                       P(0, y),
                       drw_clr);
+
+        ++key_str[0];
     }
 }
 
