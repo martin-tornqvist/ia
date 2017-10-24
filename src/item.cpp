@@ -1634,9 +1634,15 @@ void Dynamite::on_std_turn_player_hold_ignited()
 
         fuse_msg += "***";
 
+        const auto more_prompt =
+            (fuse_turns_ <= 2) ?
+            MorePromptOnMsg::yes :
+            MorePromptOnMsg::no;
+
         msg_log::add(fuse_msg,
                      clr_yellow,
-                     true);
+                     true,
+                     more_prompt);
     }
     else // Fuse has run out
     {
