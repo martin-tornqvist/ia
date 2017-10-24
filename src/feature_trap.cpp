@@ -275,9 +275,8 @@ void Trap::trigger_start(const Actor* actor)
 
     // Set number of remaining turns to the randomized value if number of turns
     // was not already set, or if the new value will make it trigger sooner.
-    if (
-        nr_turns_until_trigger_ == -1 ||
-        rnd_nr_turns < nr_turns_until_trigger_)
+    if ((nr_turns_until_trigger_ == -1) ||
+        (rnd_nr_turns < nr_turns_until_trigger_))
     {
         nr_turns_until_trigger_ = rnd_nr_turns;
     }
