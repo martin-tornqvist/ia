@@ -267,7 +267,7 @@ private:
 
     Range nr_turns_range_to_trigger() const override
     {
-        return {1, 3};
+        return {2, 3};
     }
 
     bool is_poisoned_;
@@ -307,7 +307,7 @@ private:
 
     Range nr_turns_range_to_trigger() const override
     {
-        return {1, 2};
+        return {2, 3};
     }
 
     bool is_poisoned_;

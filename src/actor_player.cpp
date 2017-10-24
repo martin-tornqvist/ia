@@ -253,14 +253,14 @@ void Player::mk_start_items()
     if (has_pistol)
     {
         inv_->put_in_slot(SlotId::wpn_alt,
-                          item_factory::mk(ItemId::pistol),
+                          item_factory::mk(ItemId::incinerator /* ItemId::pistol */),
                           Verbosity::silent);
     }
 
     for (int i = 0; i < nr_cartridges; ++i)
     {
         inv_->put_in_backpack(
-            item_factory::mk(ItemId::pistol_mag));
+            item_factory::mk( ItemId::incinerator_ammo /* ItemId::pistol_mag */ ));
     }
 
     if (nr_dynamite > 0)
