@@ -281,25 +281,34 @@ void run(const P& origin,
             // Apply properties
             for (auto* prop : properties_applied)
             {
-                bool should_apply_on_living_actor = (living_actor != nullptr);
+                bool should_apply_on_living_actor = true;
 
-                if (living_actor == map::player)
+                if (living_actor)
                 {
-                    // Do not apply effect if wearing Gas Mask, and this is a
-                    // gas explosion
-                    const Item* const head_item =
-                        map::player->inv().item_in_slot(SlotId::head);
-
-                    if ((is_gas == ExplIsGas::yes) &&
-                        head_item &&
-                        (head_item->id() == ItemId::gas_mask))
+                    if (is_gas == ExplIsGas::yes)
                     {
-                        should_apply_on_living_actor = false;
+                        if (living_actor->has_prop(PropId::r_breath))
+                        {
+                            should_apply_on_living_actor = false;
+                        }
+
+                        if (living_actor == map::player)
+                        {
+                            // Do not apply effect if wearing Gas Mask, and this is a
+                            // gas explosion
+                            const Item* const head_item =
+                                map::player->inv().item_in_slot(SlotId::head);
+
+                            if ((is_gas == ExplIsGas::yes) &&
+                                head_item &&
+                                (head_item->id() == ItemId::gas_mask))
+                            {
+                                should_apply_on_living_actor = false;
+                            }
+                        }
                     }
                 }
-
-                if (living_actor &&
-                    living_actor->has_prop(PropId::r_breath))
+                else // No living actor here
                 {
                     should_apply_on_living_actor = false;
                 }
