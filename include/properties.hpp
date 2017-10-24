@@ -32,6 +32,7 @@ enum class PropId
     //       intended as a natural property - not for e.g. gas masks.
     //
     r_blind,
+    r_para, // Mostly intended as a natural property for monsters
     lgt_sens,
     blind,
     deaf,
@@ -1364,6 +1365,17 @@ class PropRBlind: public Prop
 public:
     PropRBlind(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::r_blind, turns_init, nr_turns) {}
+
+    void on_start() override;
+
+    bool is_resisting_other_prop(const PropId prop_id) const override;
+};
+
+class PropRPara: public Prop
+{
+public:
+    PropRPara(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::r_para, turns_init, nr_turns) {}
 
     void on_start() override;
 

@@ -2009,6 +2009,7 @@ void init_data_list()
     d.ability_vals.set_val(AbilityId::dodging, 30);
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 8;
+    d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = true;
     d.nr_turns_aware = 5;
@@ -3675,6 +3676,8 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_sleep] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
+    d.natural_props[(size_t)PropId::r_para] = true;
+    d.natural_props[(size_t)PropId::r_fire] = true;
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = dlvl_last - 6;

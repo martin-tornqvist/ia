@@ -217,6 +217,21 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
+    d.id = PropId::r_para;
+    d.name = "Paralysis resistance";
+    d.name_short = "rPara";
+    d.descr = "Cannot be paralyzed";
+    d.msg[(size_t)PropMsg::start_player] = "";
+    d.msg[(size_t)PropMsg::start_mon] = "";
+    d.msg[(size_t)PropMsg::end_player] = "";
+    d.msg[(size_t)PropMsg::end_mon] = "";
+    d.is_making_mon_aware = false;
+    d.allow_display_turns = false;
+    d.update_vision_when_start_or_end = false;
+    d.allow_test_on_bot = false;
+    d.alignment = PropAlignment::good;
+    add_prop_data(d);
+
     d.id = PropId::r_breath;
     d.std_rnd_turns = Range(50, 100);
     d.name = "";
@@ -1217,6 +1232,9 @@ Prop* PropHandler::mk_prop(const PropId id,
 
     case PropId::r_blind:
         return new PropRBlind(turns_init, nr_turns);
+
+    case PropId::r_para:
+        return new PropRPara(turns_init, nr_turns);
 
     case PropId::tele_ctrl:
         return new PropTeleControl(turns_init, nr_turns);
@@ -3336,6 +3354,16 @@ bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
 void PropRBlind::on_start()
 {
     owning_actor_->prop_handler().end_prop(PropId::blind);
+}
+
+bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
+{
+    return prop_id == PropId::paralyzed;
+}
+
+void PropRPara::on_start()
+{
+    owning_actor_->prop_handler().end_prop(PropId::paralyzed);
 }
 
 bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
