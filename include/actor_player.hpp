@@ -53,6 +53,8 @@ public:
 
     void update_fov();
 
+    void update_mon_awareness();
+
     bool can_see_actor(const Actor& other) const;
 
     std::vector<Actor*> seen_actors() const override;
@@ -74,7 +76,8 @@ public:
     void on_actor_turn() override;
     void on_std_turn() override;
 
-    void hear_sound(const Snd& snd, const bool is_origin_seen_by_player,
+    void hear_sound(const Snd& snd,
+                    const bool is_origin_seen_by_player,
                     const Dir dir_to_origin,
                     const int percent_audible_distance);
 

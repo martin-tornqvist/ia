@@ -975,6 +975,8 @@ bool Mon::try_attack(Actor& defender)
         return false;
     }
 
+    map::update_vision();
+
     AiAvailAttacksData my_avail_attacks;
 
     avail_attacks(defender,

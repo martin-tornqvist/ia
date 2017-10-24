@@ -261,6 +261,8 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     // Attacker not weakened, or not an actor attacking (e.g. a trap)
     else  if (attacker && !is_defender_aware)
     {
+        TRACE << "Melee attack is backstab" << std::endl;
+
         // Backstab, +50% damage
         int dmg_pct = 150;
 

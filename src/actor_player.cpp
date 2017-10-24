@@ -433,7 +433,8 @@ std::vector<Actor*> Player::seen_actors() const
 
     for (Actor* actor : game_time::actors)
     {
-        if (actor != this && actor->is_alive())
+        if ((actor != this) &&
+            actor->is_alive())
         {
             if (can_see_actor(*actor))
             {
@@ -946,17 +947,6 @@ void Player::act()
         tgt_ = nullptr;
     }
 
-    //
-    // NOTE: We cannot just check for "seen_foes()" here, since the result is
-    //       also used for setting player awareness below
-    //
-    const auto my_seen_actors = seen_actors();
-
-    for (Actor* const actor : my_seen_actors)
-    {
-        static_cast<Mon*>(actor)->set_player_aware_of_me();
-    }
-
     if (active_medical_bag)
     {
         active_medical_bag->continue_action();
@@ -1203,6 +1193,8 @@ void Player::on_actor_turn()
     reset_perm_shock_taken_current_turn();
 
     update_fov();
+
+    update_mon_awareness();
 
     // Set current temporary shock from darkness etc
     update_tmp_shock();
@@ -2650,6 +2642,16 @@ void Player::fov_hack()
                 }
             }
         }
+    }
+}
+
+void Player::update_mon_awareness()
+{
+    const auto my_seen_actors = seen_actors();
+
+    for (Actor* const actor : my_seen_actors)
+    {
+        static_cast<Mon*>(actor)->set_player_aware_of_me();
     }
 }
 

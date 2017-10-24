@@ -225,6 +225,8 @@ void update_vision()
 
     map::player->update_fov();
 
+    map::player->update_mon_awareness();
+
     states::draw();
 }
 
