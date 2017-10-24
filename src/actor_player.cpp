@@ -700,7 +700,7 @@ void Player::incr_insanity()
     // This point reached means insanity is below 100%
     insanity::run_sympt();
 
-    restore_shock(70, true);
+    restore_shock(999, true);
 }
 
 bool Player::is_standing_in_open_place() const

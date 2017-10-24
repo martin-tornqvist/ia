@@ -162,7 +162,7 @@ The X-value represents your current state of shock, stress and paranoia, while t
 
 When various disturbing events occur, the shock value rises. When shock hits 100%, the following happens:
    * You react somehow (scream, laugh, faint, babble, gain a phobia...)
-   * The shock value is restored a bit
+   * The shock value is restored
    * Insanity rises
 
 Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress). Also, standing in a lit area reduces your shock a bit (most characters start with an Electric Lantern).

@@ -70,7 +70,7 @@ void draw()
 
     p.x += str.size();
 
-    const int shock = std::min(100, player.shock_tot());
+    const int shock = std::min(999, player.shock_tot());
 
     const int ins = player.ins();
 
