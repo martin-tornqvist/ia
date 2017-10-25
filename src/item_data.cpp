@@ -839,6 +839,7 @@ void init_data_list()
     d.ranged.throw_dmg = Dice(2, 3);
     d.ranged.throw_hit_chance_mod = 10;
     d.ranged.effective_range = 5;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.max_stack_at_spawn = 6;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";
     d.land_on_hard_sfx = SfxId::metal_clank;
@@ -862,6 +863,7 @@ void init_data_list()
     d.clr = clr_gray;
     d.ranged.throw_dmg = Dice(1, 3);
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.max_stack_at_spawn = 3;
     d.main_att_mode = AttMode::thrown;
     d.native_containers.push_back(FeatureId::cabinet);
@@ -893,6 +895,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_light;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::tomb);
@@ -922,6 +925,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_light;
     d.ranged.throw_hit_chance_mod = 0;
     d.ranged.effective_range = 5;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -949,6 +953,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.land_on_hard_snd_msg = "I hear a thudding sound.";
     d.land_on_hard_sfx = SfxId::END;
     data[(size_t)d.id] = d;
@@ -974,6 +979,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_medium;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
     data[(size_t)d.id] = d;
@@ -1001,6 +1007,7 @@ void init_data_list()
     d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
     data[(size_t)d.id] = d;
@@ -1028,6 +1035,7 @@ void init_data_list()
     d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -1057,6 +1065,7 @@ void init_data_list()
     d.melee.is_noisy = true;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -1086,6 +1095,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_heavy;
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
     data[(size_t)d.id] = d;
@@ -1110,6 +1120,7 @@ void init_data_list()
     d.melee.miss_sfx = SfxId::miss_heavy;
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.native_containers.push_back(FeatureId::cabinet);
     data[(size_t)d.id] = d;
 
@@ -1129,6 +1140,7 @@ void init_data_list()
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.throw_dmg = Dice(1, 4);
     d.ranged.effective_range = 3;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.max_stack_at_spawn = 12;
     d.land_on_hard_snd_msg = "I hear a clanking sound.";
     d.land_on_hard_sfx = SfxId::metal_clank;
@@ -2221,6 +2233,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::blunt;
     d.ranged.throw_hit_chance_mod = -10;
     d.ranged.effective_range = 3;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2445,6 +2458,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::piercing;
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.effective_range = 4;
+    d.ranged.max_range = d.ranged.effective_range + 3;
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
