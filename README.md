@@ -6,19 +6,10 @@ Clone the IA repository on Github:
 
     https://github.com/martin-tornqvist/ia.git
 
-**NOTE:** Part of the IA source code resides in a Git sub module, which you also need to initialize and update, like so:
-
-    $ git submodule init
-    $ git submodule update
-
-Run "git submodule update" again when checking out different branches or tags.
-
-## Which branch	should I build?
+## Which branch should I build?
 **develop** - If you want to try out new features early (the develop branch should be relatively stable and bug free, feel free to open Github issues if you encounter bugs or crashes).
 
-**master** - If you want a more stable and well tested experience.
-
-**tags (v15.0, v16.0, etc)** - If you want to build one of the official releases (note that the build method may be different for older versions).
+**tags (v15.0, v16.0, etc)** - If you want to build one of the official releases (note that the build method may be very different for older versions).
 
 ## Building Infra Arcana
 
