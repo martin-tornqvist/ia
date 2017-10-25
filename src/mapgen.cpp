@@ -200,13 +200,17 @@ void allowed_stair_cells(bool out[map_w][map_h])
         FeatureId::floor,
         FeatureId::carpet,
         FeatureId::grass,
-        FeatureId::rubble_low
+        FeatureId::bush,
+        FeatureId::rubble_low,
+        FeatureId::vines,
+        FeatureId::chains,
+        FeatureId::trap
     };
 
     map_parsers::AllAdjIsAnyOfFeatures(feat_ids_ok)
         .run(out);
 
-    // Block cells with item
+    // Block cells with items
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -236,9 +240,9 @@ P mk_stairs()
 
     allowed_stair_cells(allowed_cells);
 
-    auto allowed_cells_list = to_vec(allowed_cells, true);
+    auto pos_bucket = to_vec(allowed_cells, true);
 
-    const int nr_ok_cells = allowed_cells_list.size();
+    const int nr_ok_cells = pos_bucket.size();
 
     const int min_nr_ok_cells_req = 3;
 
@@ -264,16 +268,53 @@ P mk_stairs()
     }
 
     TRACE << "Sorting the allowed cells vector "
-          << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
+          << "(" << pos_bucket.size() << " cells)" << std:: endl;
 
-    IsCloserToPos is_closer(map::player->pos);
+    bool blocks_move[map_w][map_h];
 
-    std::sort(allowed_cells_list.begin(),
-              allowed_cells_list.end(),
-              is_closer);
+    map_parsers::BlocksMoveCommon(ParseActors::no)
+        .run(blocks_move);
 
-    TRACE << "Picking furthest cell" << std:: endl;
-    const P stairs_pos(allowed_cells_list[nr_ok_cells - 1]);
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
+            {
+                blocks_move[x][y] = false;
+            }
+        }
+    }
+
+    int flood[map_w][map_h];
+
+    floodfill(map::player->pos,
+              blocks_move,
+              flood);
+
+    std::sort(pos_bucket.begin(),
+              pos_bucket.end(),
+              [flood](const P& p1, const P& p2)
+    {
+        return flood[p1.x][p1.y] < flood[p2.x][p2.y];
+    });
+
+    TRACE << "Picking one of the furthest cells" << std:: endl;
+    const int cell_idx_range_size = std::max(1, nr_ok_cells / 5);
+
+    const int cell_idx = nr_ok_cells - rnd::range(1, cell_idx_range_size);
+
+    if ((cell_idx < 0) ||
+        (cell_idx > (int)pos_bucket.size()))
+    {
+        ASSERT(false);
+
+        is_map_valid = false;
+
+        return P(-1, -1);
+    }
+
+    const P stairs_pos(pos_bucket[cell_idx]);
 
     TRACE << "Spawning stairs at chosen cell" << std:: endl;
     map::put(new Stairs(stairs_pos));
@@ -287,27 +328,31 @@ void move_player_to_nearest_allowed_pos()
     TRACE_FUNC_BEGIN;
 
     bool allowed_cells[map_w][map_h];
+
     allowed_stair_cells(allowed_cells);
 
-    auto allowed_cells_list = to_vec(allowed_cells, true);
+    auto pos_bucket = to_vec(allowed_cells, true);
 
-    if (allowed_cells_list.empty())
+    if (pos_bucket.empty())
     {
         is_map_valid = false;
     }
     else // Valid cells exists
     {
         TRACE << "Sorting the allowed cells vector "
-              << "(" << allowed_cells_list.size() << " cells)" << std:: endl;
+              << "(" << pos_bucket.size() << " cells)" << std:: endl;
 
         IsCloserToPos is_closer_to_origin(map::player->pos);
 
-        sort(allowed_cells_list.begin(),
-             allowed_cells_list.end(),
+        sort(pos_bucket.begin(),
+             pos_bucket.end(),
              is_closer_to_origin);
 
-        map::player->pos = allowed_cells_list.front();
+        map::player->pos = pos_bucket.front();
 
+        // Ensure that the player always descends to a floor cell (and not into
+        // a bush or something)
+        map::put(new Floor(map::player->pos));
     }
 
     TRACE_FUNC_END;
@@ -716,7 +761,7 @@ bool mk_std_lvl()
                 const bool is_choke =
                     is_choke_point(P(x, y),
                                    blocked,
-                                   d);
+                                   &d);
 
                 // 'is_choke_point' called above may invalidate the map
                 if (!is_map_valid)

@@ -112,7 +112,7 @@ void valid_corridor_entries(const Room& room,
 
 bool is_choke_point(const P& p,
                     const bool blocked[map_w][map_h],
-                    ChokePointData& out);
+                    ChokePointData* out);
 
 void mk_pathfind_corridor(Room& r0,
                           Room& r1,

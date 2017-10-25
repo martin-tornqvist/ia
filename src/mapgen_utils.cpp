@@ -479,7 +479,7 @@ void valid_corridor_entries(const Room& room, std::vector<P>& out)
 
 bool is_choke_point(const P& p,
                     const bool blocked[map_w][map_h],
-                    ChokePointData& out)
+                    ChokePointData* out)
 {
     // Assuming that the tested position is free
     ASSERT(!blocked[p.x][p.y]);
@@ -531,7 +531,7 @@ bool is_choke_point(const P& p,
 
     if (flood_side1[p_side2.x][p_side2.y] == 0)
     {
-        // The two sides was already separated from each other, nevermind
+        // The two sides were already separated from each other, nevermind
         return false;
     }
 
@@ -555,36 +555,42 @@ bool is_choke_point(const P& p,
 
     // OK, this is a "true" choke point, time to gather more information!
 
-    out.p = p;
+    if (out)
+    {
+        out->p = p;
+    }
 
     int flood_side2[map_w][map_h];
 
     // Do a floodfill from side 2
     floodfill(p_side2,
-                   blocked_cpy,
-                   flood_side2);
+              blocked_cpy,
+              flood_side2);
 
-    // Prepare for at lease the worst case of push-backs
-    out.sides[0].reserve(nr_map_cells);
-    out.sides[1].reserve(nr_map_cells);
-
-    // Add the origin positions for both sides (they have flood value 0)
-    out.sides[0].push_back(p_side1);
-    out.sides[1].push_back(p_side2);
-
-    for (int x = 0; x < map_w; ++x)
+    if (out)
     {
-        for (int y = 0; y < map_h; ++y)
-        {
-            if (flood_side1[x][y] > 0)
-            {
-                ASSERT(flood_side2[x][y] == 0);
+        // Prepare for at lease the worst case of push-backs
+        out->sides[0].reserve(nr_map_cells);
+        out->sides[1].reserve(nr_map_cells);
 
-                out.sides[0].push_back(P(x, y));
-            }
-            else if (flood_side2[x][y] > 0)
+        // Add the origin positions for both sides (they have flood value 0)
+        out->sides[0].push_back(p_side1);
+        out->sides[1].push_back(p_side2);
+
+        for (int x = 0; x < map_w; ++x)
+        {
+            for (int y = 0; y < map_h; ++y)
             {
-                out.sides[1].push_back(P(x, y));
+                if (flood_side1[x][y] > 0)
+                {
+                    ASSERT(flood_side2[x][y] == 0);
+
+                    out->sides[0].push_back(P(x, y));
+                }
+                else if (flood_side2[x][y] > 0)
+                {
+                    out->sides[1].push_back(P(x, y));
+                }
             }
         }
     }
