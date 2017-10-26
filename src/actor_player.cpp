@@ -1638,14 +1638,16 @@ int Player::shock_tot() const
 
     shock_tot_db = floor(shock_tot_db);
 
-    return (int)shock_tot_db;
+    int result = (int)shock_tot_db;
+
+    result = prop_handler_->affect_shock(result);
+
+    return result;
 }
 
 int Player::ins() const
 {
     int result = ins_;
-
-    result = prop_handler_->affect_ins(result);
 
     result = std::min(100, result);
 

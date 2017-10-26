@@ -573,9 +573,9 @@ void init_data_list()
 
     d.id = PropId::mind_sap;
     d.name = "Mind Sapped";
-    d.descr = "Increased Insanity";
+    d.descr = "Increased Shock";
     d.msg[(size_t)PropMsg::start_player] = "My mind is sapped!";
-    d.msg[(size_t)PropMsg::end_player] = "My sanity returns.";
+    d.msg[(size_t)PropMsg::end_player] = "My mind returns.";
     d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
     d.is_making_mon_aware = false;
     d.allow_display_turns = false;
@@ -2049,16 +2049,16 @@ int PropHandler::affect_max_spi(const int spi_max) const
     return new_spi_max;
 }
 
-int PropHandler::affect_ins(const int ins) const
+int PropHandler::affect_shock(const int shock) const
 {
-    int new_ins = ins;
+    int new_shock = shock;
 
     for (Prop* prop : props_)
     {
-        new_ins = prop->affect_ins(new_ins);
+        new_shock = prop->affect_shock(new_shock);
     }
 
-    return new_ins;
+    return new_shock;
 }
 
 void PropHandler::affect_move_dir(const P& actor_pos, Dir& dir) const
@@ -2855,7 +2855,7 @@ void PropSpiSap::on_more(const Prop& new_prop)
 
 PropMindSap::PropMindSap(PropTurns turns_init, int nr_turns) :
     Prop        (PropId::mind_sap, turns_init, nr_turns),
-    nr_drained_ (rnd::range(10, 15)) {}
+    nr_drained_ (rnd::range(1, 3)) {}
 
 void PropMindSap::save() const
 {
@@ -2867,9 +2867,9 @@ void PropMindSap::load()
     nr_drained_ = saving::get_int();
 }
 
-int PropMindSap::affect_ins(const int ins) const
+int PropMindSap::affect_shock(const int shock) const
 {
-    return (ins + nr_drained_);
+    return (shock + nr_drained_);
 }
 
 void PropMindSap::on_more(const Prop& new_prop)

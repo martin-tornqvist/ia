@@ -259,7 +259,7 @@ public:
 
     int affect_max_hp(const int hp_max) const;
     int affect_max_spi(const int spi_max) const;
-    int affect_ins(const int ins) const;
+    int affect_shock(const int shock) const;
 
     bool allow_attack(const Verbosity verbosity) const;
     bool allow_attack_melee(const Verbosity verbosity) const;
@@ -447,9 +447,9 @@ public:
         return spi_max;
     }
 
-    virtual int affect_ins(const int ins) const
+    virtual int affect_shock(const int shock) const
     {
-        return ins;
+        return shock;
     }
 
     virtual bool affect_actor_clr(Clr& clr) const
@@ -1021,12 +1021,12 @@ public:
 
     std::string name_short() const override
     {
-        return "ins(" + std::to_string(nr_drained_) + ")";
+        return "shock(" + std::to_string(nr_drained_) + "%)";
     }
 
     void on_more(const Prop& new_prop) override;
 
-    int affect_ins(const int ins) const override;
+    int affect_shock(const int shock) const override;
 
 private:
     int nr_drained_;
