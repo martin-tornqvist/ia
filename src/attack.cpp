@@ -1170,6 +1170,8 @@ void fire_projectiles(Actor* const attacker,
                 {
                     proj->is_dead = true;
 
+                    proj->obstructed_in_element = path_element;
+
                     continue;
                 }
 
@@ -1482,9 +1484,18 @@ void fire_projectiles(Actor* const attacker,
 
     if (first_projectile->is_dead)
     {
-        const int element = first_projectile->obstructed_in_element;
+        // NOTE: Projectiles can also be obstructed due to reaching max range
+        const int path_idx = first_projectile->obstructed_in_element;
 
-        const P& pos = path[element];
+        TRACE << "Projectile obstructed in path index: "
+              << path_idx
+              << "/"
+              << path.size()
+              << std::endl;
+
+        ASSERT(path_idx < (int)path.size());
+
+        const P& pos = path[path_idx];
 
         wpn.on_projectile_blocked(pos, first_projectile->actor_hit);
     }

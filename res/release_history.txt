@@ -60,6 +60,7 @@ Interface
 * Added option for disabling ambient sound effects
 
 Bug fixes
+* Fixed a crash bug for the Incinerator weapon (the game could crash when the projectile reached its max range)
 * Energy Vortexes were not resistant to electricity
 * In the game summary, insanity symptoms were written in the wrong format (e.g. "Phobia of spiders", instead of "Had a phobia of spiders")
 * Monsters no longer spawn over time on special levels (e.g. the "Egypt" level)
