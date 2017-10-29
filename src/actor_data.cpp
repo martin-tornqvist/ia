@@ -1154,7 +1154,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::normal + 20;
     d.glyph = 'S';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::snake;
     d.hp = 6;
     d.dmg_melee = 1;
@@ -1244,7 +1244,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::fast;
     d.ranged_cooldown_turns = 3;
     d.glyph = 'd';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::hound;
     d.hp = 22;
     d.dmg_melee = min_dmg_to_wound + 1;
@@ -1482,7 +1482,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'G';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::wraith;
     d.hp = 15;
     d.spi = 30;
@@ -2673,7 +2673,7 @@ void init_data_list()
     d.is_unique = true;
     d.nr_left_allowed_to_spawn = 0;
     d.glyph = 'P';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::mummy;
     d.hp = 80;
     d.spi = 60;
@@ -2994,7 +2994,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::fast;
     d.glyph = 'V';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::vortex;
     d.hp = 16;
     d.spi = 12;
@@ -3503,7 +3503,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_leader] = false;
     d.speed_pct = (int)ActorSpeed::sluggish;
     d.glyph = 'E';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::gas_spore;
     d.hp = 1;
     d.spi = 1;
@@ -3561,7 +3561,7 @@ void init_data_list()
     d.speed_pct = (int)ActorSpeed::normal + 20;
     d.ranged_cooldown_turns = 3;
     d.glyph = 'T';
-    d.color = clr_red;
+    d.color = clr_red_lgt;
     d.tile = TileId::device2;
     d.hp = 18;
     d.spi = 40;
