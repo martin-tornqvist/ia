@@ -491,7 +491,7 @@ ConsumeItem DeviceSentryDrone::run_effect()
 // -----------------------------------------------------------------------------
 DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
     Device                  (item_data),
-    nr_turns_left_          (200),
+    nr_turns_left_          (100),
     is_activated_           (false) {}
 
 std::string DeviceLantern::name_inf() const

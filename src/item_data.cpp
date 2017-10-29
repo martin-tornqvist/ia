@@ -2164,9 +2164,8 @@ void init_data_list()
         "A portable light source. It is somewhat unreliable, as it tends to "
         "malfunction."
     };
-    d.spawn_std_range = Range(1, dlvl_last_mid_game);
     d.spawn_std_range = Range(1, 10);
-    d.chance_to_incl_in_spawn_list = 50;
+    d.chance_to_incl_in_spawn_list = 100;
     d.is_identified = true;
     d.tile = TileId::lantern;
     d.clr = clr_yellow;

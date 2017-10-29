@@ -468,7 +468,7 @@ void set_item_randomized_properties(Item* item)
         item->nr_items_ = rnd::range(1, d.max_stack_at_spawn);
     }
 
-    // Vary number of Medical supplies (mostly just for aesthetic reasons)
+    // Vary number of Medical supplies
     if (d.id == ItemId::medical_bag)
     {
         MedicalBag* const medbag = static_cast<MedicalBag*>(item);
@@ -478,6 +478,18 @@ void set_item_randomized_properties(Item* item)
         const int nr_supplies_min = nr_supplies_max - (nr_supplies_max / 3);
 
         medbag->nr_supplies_ = rnd::range(nr_supplies_min, nr_supplies_max);
+    }
+
+    // Vary Lantern duration
+    if (d.id == ItemId::lantern)
+    {
+        DeviceLantern* const lantern = static_cast<DeviceLantern*>(item);
+
+        const int duration_max = lantern->nr_turns_left_;
+
+        const int duration_min = duration_max / 2;
+
+        lantern->nr_turns_left_ = rnd::range(duration_min, duration_max);
     }
 }
 
