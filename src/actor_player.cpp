@@ -825,7 +825,7 @@ void Player::item_feeling()
                 const std::string msg = rnd::element(msg_bucket);
 
                 msg_log::add(msg,
-                             clr_msg_note,
+                             clr_cyan_lgt,
                              false,
                              MorePromptOnMsg::yes);
 
