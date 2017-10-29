@@ -307,20 +307,28 @@ RangedAttData::RangedAttData(Actor* const attacker,
     // If aim level parameter not given, determine intended aim level now
     if (aim_lvl == ActorSize::undefined)
     {
-        if (actor_aimed_at)
+        // TODO: Quick hack, Incinerators always aim at the floor - refactor
+        if (wpn.id() == ItemId::incinerator)
         {
-            intended_aim_lvl = actor_aimed_at->data().actor_size;
+            intended_aim_lvl = ActorSize::floor;
         }
-        else // No actor aimed at
+        else // Not incinerator
         {
-            const bool is_cell_blocked =
-                map_parsers::BlocksProjectiles().
-                cell(current_pos);
+            if (actor_aimed_at)
+            {
+                intended_aim_lvl = actor_aimed_at->data().actor_size;
+            }
+            else // No actor aimed at
+            {
+                const bool is_cell_blocked =
+                    map_parsers::BlocksProjectiles().
+                    cell(current_pos);
 
-            intended_aim_lvl =
-                is_cell_blocked ?
-                ActorSize::humanoid :
-                ActorSize::floor;
+                intended_aim_lvl =
+                    is_cell_blocked ?
+                    ActorSize::humanoid :
+                    ActorSize::floor;
+            }
         }
     }
     else // Aim level already provided by parameter

@@ -51,6 +51,7 @@ Gameplay
 * Ghoul characters never gets sprains from breaking down doors, destroying corpses, etc
 * Removed the "flickering" effect of the Electric Lantern
 * Shock is completely restored when taking a sanity hit
+* The Incinerator is always aimed at the floor of the selected cell (no need for players to select a floor cell adjacent to the monster they are attacking)
 
 Interface
 * Monsters are drawn with magenta background when they have temporary negative properties (such as paralyzation)
