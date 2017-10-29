@@ -368,9 +368,9 @@ std::vector<StrAndClr> bg_descr(const Bg id)
         put("");
         put("+6 Hit Points");
         put("");
-        put("+1 Armor Point (physical damage reduced by 1 point)");
-        put("");
         put("Is immune to Disease and Infections");
+        put("");
+        put("Does not get sprains");
         put("");
         put("Can see in darkness");
         put("");

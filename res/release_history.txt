@@ -47,6 +47,8 @@ Gameplay
 * Ghoul characters can use their claws for destroying corpses (and cannot get sprains from this)
 * The Ghoul traits "Foul" and "Toxic" also gives +1 claw damage
 * Ghouls do not have access to any ranged weapon traits
+* Removed armor bonus for Ghoul characters
+* Ghoul characters never gets sprains from breaking down doors, destroying corpses, etc
 * Removed the "flickering" effect of the Electric Lantern
 * Shock is completely restored when taking a sanity hit
 

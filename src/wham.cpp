@@ -18,7 +18,8 @@ namespace wham
 
 void try_sprain_player()
 {
-    if (map::player->has_prop(PropId::frenzied))
+    if ((player_bon::bg() == Bg::ghoul) ||
+        map::player->has_prop(PropId::frenzied))
     {
         return;
     }

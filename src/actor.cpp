@@ -1036,11 +1036,6 @@ int Actor::armor_points() const
         {
             ++ap;
         }
-
-        if (player_bon::bg() == Bg::ghoul)
-        {
-            ++ap;
-        }
     }
 
     return ap;
