@@ -1486,7 +1486,8 @@ void Player::add_shock_from_seen_monsters()
     for (Actor* actor : game_time::actors)
     {
         if (actor->is_player() ||
-            !actor->is_alive())
+            !actor->is_alive() ||
+            (is_leader_of(actor)))
         {
             continue;
         }
@@ -2658,12 +2659,13 @@ void Player::update_mon_awareness()
 
 bool Player::is_leader_of(const Actor* const actor) const
 {
-    if (!actor || actor == this)
+    if (!actor || (actor == this))
     {
         return false;
     }
 
     // Actor is monster
+
     return static_cast<const Mon*>(actor)->leader_ == this;
 }
 
