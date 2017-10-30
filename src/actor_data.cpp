@@ -2205,8 +2205,8 @@ void init_data_list()
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::see_invis] = true;
-    d.prevent_knockback = true;
-    d.spawn_min_dlvl = 6;
+    d.prevent_knockback = false;
+    d.spawn_min_dlvl = 5;
     d.spawn_max_dlvl = dlvl_last_mid_game;
     d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
@@ -2265,10 +2265,10 @@ void init_data_list()
     d.natural_props[(size_t)PropId::flying] = true;
     d.natural_props[(size_t)PropId::invis] = true;
     d.natural_props[(size_t)PropId::see_invis] = true;
-    d.prevent_knockback = true;
+    d.prevent_knockback = false;
     d.spawn_min_dlvl = dlvl_first_mid_game;
     d.spawn_max_dlvl = dlvl_last - 3;
-    d.actor_size = ActorSize::giant;
+    d.actor_size = ActorSize::humanoid;
     d.can_bash_doors = false;
     d.can_open_doors = false;
     d.nr_turns_aware = 7;

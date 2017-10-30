@@ -3287,7 +3287,7 @@ DmgResistData PropRPhys::is_resisting_dmg(const DmgType dmg_type) const
 
     d.resist_msg_player = "I resist harm.";
 
-    d.resist_msg_mon = "seems unaffected.";
+    d.resist_msg_mon = "seems unharmed.";
 
     return d;
 }
