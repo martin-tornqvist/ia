@@ -457,7 +457,7 @@ void handle_player_input(const InputData& input)
                     if ((wpn->nr_ammo_loaded_ >= 1) ||
                         item_data.ranged.has_infinite_ammo)
                     {
-                        // Not enough spirit for Mi-go gun?
+                        // Not enough health for Mi-go gun?
 
                         //
                         // TODO: This doesn't belong here - refactor

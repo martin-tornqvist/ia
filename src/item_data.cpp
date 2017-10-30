@@ -637,13 +637,13 @@ void init_data_list()
         "electricity.",
 
         "The weapon does not use ammunition, instead it draws power from the "
-        "life force of the wielder (2 Hit Points per attack)."
+        "life force of the wielder (3 Hit Points per attack)."
     };
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
     d.tile = TileId::mi_go_gun;
     d.clr = clr_yellow;
-    d.ranged.dmg = Dice(2, 6, 0);
+    d.ranged.dmg = Dice(3, 4, 1);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
     d.ranged.prop_applied =
@@ -656,7 +656,6 @@ void init_data_list()
     d.ranged.att_msgs = {"fire", "fires a Mi-go Electric Gun"};
     d.ranged.snd_msg = "I hear a bolt of electricity.";
     d.ranged.att_sfx = SfxId::mi_go_gun_fire;
-    d.ranged.reload_sfx = SfxId::machine_gun_reload;
     d.ranged.makes_ricochet_snd = false;
     data[(size_t)d.id] = d;
 
