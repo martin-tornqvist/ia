@@ -181,37 +181,25 @@ void EventWallCrumble::on_new_turn()
     }
 
     // Spawn monsters
-    size_t nr_mon_limit_except_adj_to_entry = 4;
 
-    ActorId mon_type = ActorId::zombie;
+    // Actor id, and corresponding maximum number of monsters allowed
+    std::vector< std::pair<ActorId, size_t> > spawn_bucket;
 
-    const int rnd = rnd::range(1, 5);
-
-    switch (rnd)
+    if (map::dlvl <= dlvl_last_early_game)
     {
-    case 1:
-        mon_type = ActorId::zombie_axe;
-        nr_mon_limit_except_adj_to_entry = 3;
-        break;
-
-    case 2:
-        mon_type = ActorId::bloated_zombie;
-        nr_mon_limit_except_adj_to_entry = 2;
-        break;
-
-    case 3:
-        mon_type = ActorId::rat;
-        nr_mon_limit_except_adj_to_entry = 24;
-        break;
-
-    case 4:
-        mon_type = ActorId::rat_thing;
-        nr_mon_limit_except_adj_to_entry = 16;
-        break;
-
-    default:
-        break;
+        spawn_bucket.push_back({ActorId::rat, 24});
+        spawn_bucket.push_back({ActorId::rat_thing, 16});
     }
+
+    spawn_bucket.push_back({ActorId::zombie, 4});
+    spawn_bucket.push_back({ActorId::zombie_axe, 3});
+    spawn_bucket.push_back({ActorId::bloated_zombie, 2});
+
+    const auto spawn_data = rnd::element(spawn_bucket);
+
+    const auto actor_id = spawn_data.first;
+
+    const auto nr_mon_limit_except_adj_to_entry = spawn_data.second;
 
     random_shuffle(begin(inner_cells_), end(inner_cells_));
 
@@ -219,10 +207,10 @@ void EventWallCrumble::on_new_turn()
 
     for (const P& p : inner_cells_)
     {
-        if ((mon_spawned.size() < nr_mon_limit_except_adj_to_entry) ||
+        if ((mon_spawned.size() <  nr_mon_limit_except_adj_to_entry) ||
             is_pos_adj(p, pos_, false))
         {
-            Actor* const actor = actor_factory::mk(mon_type, p);
+            Actor* const actor = actor_factory::mk(actor_id, p);
 
             Mon* const mon = static_cast<Mon*>(actor);
 
