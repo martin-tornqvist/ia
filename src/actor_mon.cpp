@@ -31,6 +31,7 @@
 #include "fov.hpp"
 #include "text_format.hpp"
 #include "feature_door.hpp"
+#include "drop.hpp"
 
 Mon::Mon() :
     Actor(),
@@ -2999,6 +3000,12 @@ AnimatedWpn::AnimatedWpn() :
     Mon                     (),
     nr_turns_until_drop_    (rnd::range(225, 250)) {}
 
+void AnimatedWpn::on_death()
+{
+    inv_->remove_item_in_slot(SlotId::wpn,
+                              true); // Delete the item
+}
+
 std::string AnimatedWpn::name_the() const
 {
     Item* item = inv_->item_in_slot(SlotId::wpn);
@@ -3073,19 +3080,19 @@ std::string AnimatedWpn::death_msg() const
 {
     Item* item = inv_->item_in_slot(SlotId::wpn);
 
+    ASSERT(item);
+
     if (!item)
     {
-        ASSERT(false);
-
-        // Release build robustness
         return "";
     }
 
-    const std::string name = item->name(ItemRefType::plain,
-                                        ItemRefInf::yes,
-                                        ItemRefAttInf::none);
+    const std::string name =
+        item->name(ItemRefType::plain,
+                   ItemRefInf::yes,
+                   ItemRefAttInf::none);
 
-    return "The " + name + " suddenly becomes lifeless and drops down.";
+    return "The " + name + " is destroyed.";
 }
 
 void AnimatedWpn::on_std_turn_hook()
@@ -3107,5 +3114,37 @@ void AnimatedWpn::on_std_turn_hook()
 
 void AnimatedWpn::drop()
 {
-    die(true, false, true);
+    if (map::player->can_see_actor(*this))
+    {
+        Item* item = inv_->item_in_slot(SlotId::wpn);
+
+        ASSERT(item);
+
+        if (item)
+        {
+            const std::string name =
+                item->name(ItemRefType::plain,
+                           ItemRefInf::yes,
+                           ItemRefAttInf::none);
+
+            std::string msg =
+                "The " +
+                name +
+                " suddenly becomes lifeless and drops down.";
+
+            msg_log::add(msg);
+        }
+    }
+
+    destroy_silent();
+
+    Item* item = inv_->remove_item_in_slot(SlotId::wpn,
+                                           false); // Do not delete the item
+
+    ASSERT(item);
+
+    if (item)
+    {
+        item_drop::drop_item_on_map(pos, *item);
+    }
 }

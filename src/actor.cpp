@@ -1201,11 +1201,6 @@ void Actor::die(const bool is_destroyed,
 
             snd.run();
         }
-
-        if (allow_drop_items)
-        {
-            item_drop::drop_all_characters_items(*this);
-        }
     }
 
     if (is_destroyed)
@@ -1252,6 +1247,11 @@ void Actor::die(const bool is_destroyed,
 
     if (!is_player())
     {
+        if (allow_drop_items)
+        {
+            item_drop::drop_all_characters_items(*this);
+        }
+
         game::on_mon_killed(*this);
 
         static_cast<Mon*>(this)->leader_ = nullptr;

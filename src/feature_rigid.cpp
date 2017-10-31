@@ -48,12 +48,12 @@ void Rigid::on_new_turn()
 
         auto scorch_actor = [](Actor & actor)
         {
-            if (&actor == map::player)
+            if (actor.is_player())
             {
                 msg_log::add("I am scorched by flames.",
                              clr_msg_bad);
             }
-            else
+            else // Monster
             {
                 if (map::player->can_see_actor(actor))
                 {

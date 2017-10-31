@@ -17,6 +17,7 @@ Gameplay
 * Monsters cannot summon other monsters near the player from a distance (summoned monsters always appear as near the summoner as possible)
 * The "Transmute" spell costs much less spirit to cast
 * The spells "Summon Creature" and "Summon Mummy Servant" costs one less spirit to cast
+* Animated weapons are stronger, but are permanently destroyed when "killed"
 * When cast intrinsically (i.e. not from Manuscripts), some spells can be cast without making noise (this is specified in the spell descriptions)
 * The Horn of Banishment now also works on Khephren's summoned Locusts, and on monsters spawned from traps
 * Monsters spawned from traps now wait a bit before acting
