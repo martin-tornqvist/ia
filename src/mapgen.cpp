@@ -957,7 +957,10 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     if (map::dlvl > 1)
     {
-        const int make_drk_pct = 2 + (map::dlvl / 4);
+        const int make_drk_pct =
+            (map::dlvl <= dlvl_last_early_game) ? 1 :
+            (map::dlvl <= dlvl_last_mid_game) ? 2 :
+            15;
 
         if (rnd::percent(make_drk_pct))
         {
