@@ -2800,9 +2800,17 @@ void PropWound::on_more(const Prop& new_prop)
 {
     (void)new_prop;
 
-    const int max_nr_wounds = 5;
+    ++nr_wounds_;
 
-    nr_wounds_ = std::min(max_nr_wounds, nr_wounds_ + 1);
+    if (nr_wounds_ >= 5)
+    {
+        if (owning_actor_ == map::player)
+        {
+            msg_log::add("I die from my wounds!");
+        }
+
+        owning_actor_->die(false, false, true);
+    }
 }
 
 PropHpSap::PropHpSap(PropTurns turns_init, int nr_turns) :

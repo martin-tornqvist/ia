@@ -128,7 +128,7 @@ The state of your physical health is described in two ways:
 This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or completely exhausted). Hit Points usually regenerate automatically over time.
 
    (2) Wounds
-This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities, maximum HP, and HP regeneration rate.
+This represents more serious long-term damage, and is shown as a property at the bottom of the screen. Wounds are received when you take a high amount of damage in one hit. Each Wound reduces your fighting abilities, maximum HP, and HP regeneration rate. Five concurrent wounds results in death.
 
 There is an item called a "Medical Bag", which has a certain number of "supplies". When activated, it will either Sanitize an infection or treat a Wound. When bitten or clawed by certain monsters, you can become Infected. You should treat the infection before it becomes a disease! It only takes a few turns and supplies. Treating a Wound requires many uninterrupted turns, and uses up lots of supplies.
 
@@ -140,13 +140,13 @@ In addition to your physical and mental health, you have an "essence" - or Spiri
 Your Spirit Points are shown like this:
    SP:Current/Max
 
-You can learn spells by first casting them from manuscripts. Casting spells "naturally" (without manuscripts) will drain some of your spirit.
+You can learn spells by casting them from manuscripts. Casting spells "naturally" (without manuscripts) will drain some of your spirit.
 
 To cast intrinsic spells, press [x] to open a menu for selecting which spell to cast. In this menu you can see the Spirit cost per spell (the cost is a range of values, and the spirit drained is a random value in this range), and your skill level for each spell (Occultist characters can learn to cast spells at higher levels by picking certain traits).
 
 When casting a spell, you will get a warning if the spell could potentially drain all your remaining Spirit. You can then press y/n to attempt casting or abort. Casting the spell in this situation is a gamble with death.
 
-There are also other ways you can lose your Spirit, for example some monsters can drain your Spirit with their attacks.
+There are also other ways you can lose Spirit, for example some monsters can drain your Spirit with their attacks.
 
 --------------------------------------------------------------------------------
 Insanity
