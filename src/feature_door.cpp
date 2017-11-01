@@ -242,7 +242,7 @@ void Door::on_hit(const int dmg,
             {
                 if (is_player)
                 {
-                    int destr_chance_pct = 20 + (dmg * 5) - (nr_spikes_ * 4);
+                    int destr_chance_pct = 25 + (dmg * 5) - (nr_spikes_ * 4);
 
                     destr_chance_pct = std::max(1, destr_chance_pct);
 
