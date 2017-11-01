@@ -10,14 +10,14 @@ void mk_sub_rooms()
 {
     TRACE_FUNC_BEGIN;
 
-    const int nr_tries_to_mk_room = 40;
+    const int nr_tries_to_mk_room = 100;
 
     const int max_nr_sub_rooms =
         rnd::one_in(3) ?
         1 : 7;
 
     // Minimum allowed size of the sub room, including the walls
-    const P walls_min_d(3, 3);
+    const P walls_min_d(4, 4);
 
     for (size_t i = 0; i < map::room_list.size(); ++i)
     {
