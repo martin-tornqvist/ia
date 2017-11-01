@@ -115,8 +115,8 @@ void init_room_bucket()
 
     if (dlvl <= dlvl_last_early_game)
     {
-        add_to_room_bucket(RoomType::human, rnd::range(3, 4));
-        add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::human, rnd::range(4, 5));
+        add_to_room_bucket(RoomType::jail, 1);
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::crypt, rnd::range(2, 3));
         add_to_room_bucket(RoomType::monster, 1);
@@ -130,7 +130,7 @@ void init_room_bucket()
     }
     else if (dlvl <= dlvl_last_mid_game)
     {
-        add_to_room_bucket(RoomType::human, rnd::range(1, 2));
+        add_to_room_bucket(RoomType::human, rnd::range(2, 3));
         add_to_room_bucket(RoomType::jail, rnd::range(1, 2));
         add_to_room_bucket(RoomType::ritual, 1);
         add_to_room_bucket(RoomType::spider, rnd::range(1, 3));
@@ -554,21 +554,34 @@ void PlainRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 // -----------------------------------------------------------------------------
 std::vector<RoomAutoFeatureRule> HumanRoom::auto_features_allowed() const
 {
-    return
+    std::vector<RoomAutoFeatureRule> result;
+
+    result.push_back({FeatureId::brazier,   rnd::range(0, 2)});
+    result.push_back({FeatureId::statue,    rnd::range(0, 2)});
+
+    // Control how many item container features that can spawn in the room
+    std::vector<FeatureId> item_containers =
     {
-        {FeatureId::chest,              rnd::range(1, 2)},
-        {FeatureId::cabinet,            rnd::range(0, 2)},
-        {FeatureId::bookshelf,          rnd::range(0, 2)},
-        {FeatureId::alchemist_bench,    rnd::range(0, 1)},
-        {FeatureId::brazier,            rnd::range(0, 2)},
-        {FeatureId::statue,             rnd::range(0, 3)}
+        FeatureId::chest,
+        FeatureId::cabinet,
+        FeatureId::bookshelf,
+        FeatureId::alchemist_bench
     };
+
+    const int nr_item_containers = rnd::range(0, 2);
+
+    for (int i = 0; i < nr_item_containers; ++i)
+    {
+        result.push_back({rnd::element(item_containers), 1});
+    }
+
+    return result;
 }
 
 bool HumanRoom::is_allowed() const
 {
     return
-        r_.min_dim() >= 4 &&
+        r_.min_dim() >= 3 &&
         r_.max_dim() <= 8;
 }
 
@@ -980,7 +993,7 @@ std::vector<RoomAutoFeatureRule> CryptRoom::auto_features_allowed() const
 bool CryptRoom::is_allowed() const
 {
     return
-        r_.min_dim() >= 3 &&
+        r_.min_dim() >= 2 &&
         r_.max_dim() <= 12;
 }
 
