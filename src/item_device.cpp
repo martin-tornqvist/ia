@@ -354,56 +354,6 @@ ConsumeItem DeviceTranslocator::run_effect()
 }
 
 // -----------------------------------------------------------------------------
-// Purge invisible
-// -----------------------------------------------------------------------------
-ConsumeItem DevicePurgeInvis::run_effect()
-{
-    bool blocked[map_w][map_h];
-
-    map_parsers::BlocksLos()
-        .run(blocked,
-             MapParseMode::overwrite,
-             fov::get_fov_rect(map::player->pos));
-
-    LosResult fov[map_w][map_h];
-
-    fov::run(map::player->pos, blocked, fov);
-
-    for (Actor* const actor : game_time::actors)
-    {
-        if (actor->is_player())
-        {
-            continue;
-        }
-
-        const P& p(actor->pos);
-
-        const LosResult& los = fov[p.x][p.y];
-
-        if (!los.is_blocked_hard)
-        {
-            // Reveal invisible monsters
-            if (actor->has_prop(PropId::invis) ||
-                actor->has_prop(PropId::cloaked))
-            {
-                actor->prop_handler().end_prop(PropId::invis);
-                actor->prop_handler().end_prop(PropId::cloaked);
-            }
-
-            // Reveal sneaking monsters
-            Mon* const mon = static_cast<Mon*>(actor);
-
-            if (mon->is_sneaking())
-            {
-                mon->set_player_aware_of_me();
-            }
-        }
-    }
-
-    return ConsumeItem::no;
-}
-
-// -----------------------------------------------------------------------------
 // Sentry drone
 // -----------------------------------------------------------------------------
 ConsumeItem DeviceSentryDrone::run_effect()

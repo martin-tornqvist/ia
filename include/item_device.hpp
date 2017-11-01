@@ -108,25 +108,6 @@ private:
     ConsumeItem run_effect() override;
 };
 
-class DevicePurgeInvis : public StrangeDevice
-{
-public:
-    DevicePurgeInvis(ItemDataT* const item_data) :
-        StrangeDevice(item_data) {}
-
-    ~DevicePurgeInvis() {}
-
-private:
-    std::string descr_identified() const override
-    {
-        return
-            "When activated, this device reveals any hidden or invisible "
-            "creatures in the area around the user.";
-    }
-
-    ConsumeItem run_effect() override;
-};
-
 class DeviceSentryDrone : public StrangeDevice
 {
 public:

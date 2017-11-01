@@ -40,7 +40,7 @@ Gameplay
 * The Spirit Dagger does 300% extra backstab damage (just like normal daggers)
 * While the player is using the Medical Bag, infections cannot turn into disease, and the infection turn count is frozen
 * Updated the score formula to include turn count (lower turn counts give higher scores), also a winning game now guarantees higher score than a non-winning game
-* The Rod of Purge Invisible is a Strange Device instead
+* Removed the Rod of Purge Invisible
 * The Shockwave Device is a Rod instead
 * Nicer tombs are guaranteed to contain better items (and common tomes MAY contain better items)
 * Pitchforks gives +15% chance to evade melee attacks

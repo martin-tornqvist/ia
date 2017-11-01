@@ -309,10 +309,6 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new DeviceTranslocator(d);
         break;
 
-    case ItemId::device_purge_invis:
-        r = new DevicePurgeInvis(d);
-        break;
-
     case ItemId::device_sentry_drone:
         r = new DeviceSentryDrone(d);
         break;

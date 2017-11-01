@@ -172,7 +172,6 @@ enum class ItemId
 
     device_blaster,
     device_rejuvenator,
-    device_purge_invis,
     device_translocator,
     device_sentry_drone,
 
