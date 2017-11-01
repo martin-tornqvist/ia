@@ -2091,19 +2091,6 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::device);
-    d.id = ItemId::device_shockwave;
-    d.base_name =
-    {
-        "Shock Wave Device", "Shock Wave Devices", "a Shock Wave Device"
-    };
-    d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
-    d.native_containers.push_back(FeatureId::chest);
-    d.native_containers.push_back(FeatureId::tomb);
-    d.native_containers.push_back(FeatureId::cocoon);
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::device);
     d.id = ItemId::device_rejuvenator;
     d.base_name =
     {
@@ -2194,6 +2181,10 @@ void init_data_list()
 
     reset_data(d, ItemType::rod);
     d.id = ItemId::rod_cloud_minds;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::rod);
+    d.id = ItemId::rod_shockwave;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::general);

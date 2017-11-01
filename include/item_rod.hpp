@@ -154,6 +154,31 @@ protected:
     void run_effect() override;
 };
 
+class RodShockwave : public Rod
+{
+public:
+    RodShockwave(ItemDataT* const item_data) :
+        Rod(item_data) {}
+
+    ~RodShockwave() {}
+
+    const std::string real_name() const override
+    {
+        return "Shockwave";
+    }
+
+protected:
+    std::string descr_identified() const override
+    {
+        return
+            "When activated, this device generates a shock wave which "
+            "violently pushes away any adjacent creatures and destroys "
+            "structures.";
+    }
+
+    void run_effect() override;
+};
+
 namespace rod_handling
 {
 

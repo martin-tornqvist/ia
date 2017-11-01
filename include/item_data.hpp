@@ -171,7 +171,6 @@ enum class ItemId
     potion_invis,
 
     device_blaster,
-    device_shockwave,
     device_rejuvenator,
     device_purge_invis,
     device_translocator,
@@ -181,6 +180,7 @@ enum class ItemId
     rod_opening,
     rod_bless,
     rod_cloud_minds,
+    rod_shockwave,
 
     lantern,
 

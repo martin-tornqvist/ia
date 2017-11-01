@@ -69,26 +69,6 @@ private:
     ConsumeItem run_effect() override;
 };
 
-class DeviceShockwave : public StrangeDevice
-{
-public:
-    DeviceShockwave(ItemDataT* const item_data) :
-        StrangeDevice(item_data) {}
-
-    ~DeviceShockwave() override {}
-
-private:
-    std::string descr_identified() const override
-    {
-        return
-            "When activated, this device generates a shock wave which "
-            "violently pushes away any adjacent creatures and destroys "
-            "structures.";
-    }
-
-    ConsumeItem run_effect() override;
-};
-
 class DeviceRejuvenator : public StrangeDevice
 {
 public:

@@ -301,10 +301,6 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new DeviceBlaster(d);
         break;
 
-    case ItemId::device_shockwave:
-        r = new DeviceShockwave(d);
-        break;
-
     case ItemId::device_rejuvenator:
         r = new DeviceRejuvenator(d);
         break;
@@ -339,6 +335,10 @@ Item* mk(const ItemId item_id, const int nr_items)
 
     case ItemId::rod_cloud_minds:
         r = new RodCloudMinds(d);
+        break;
+
+    case ItemId::rod_shockwave:
+        r = new RodShockwave(d);
         break;
 
     case ItemId::medical_bag:

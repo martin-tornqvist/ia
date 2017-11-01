@@ -13,6 +13,8 @@
 #include "io.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
+#include "text_format.hpp"
+#include "knockback.hpp"
 
 void Rod::save()
 {
@@ -258,6 +260,81 @@ void RodCloudMinds::run_effect()
             mon->wary_of_player_counter_ = 0;
         }
     }
+
+    identify(Verbosity::verbose);
+}
+
+void RodShockwave::run_effect()
+{
+    msg_log::add("It triggers a shock wave around me.");
+
+    const P& player_pos = map::player->pos;
+
+    for (const P& d : dir_utils::dir_list)
+    {
+        const P p(player_pos + d);
+
+        Rigid* const rigid = map::cells[p.x][p.y].rigid;
+
+        rigid->hit(1, // Doesn't matter
+                   DmgType::physical,
+                   DmgMethod::explosion);
+    }
+
+    for (Actor* actor : game_time::actors)
+    {
+        if (actor->is_player() ||
+            !actor->is_alive())
+        {
+            continue;
+        }
+
+        const P& other_pos = actor->pos;
+
+        const bool is_adj =
+            is_pos_adj(player_pos,
+                       other_pos,
+                       false);
+
+        if (!is_adj)
+        {
+            continue;
+        }
+
+        if (map::player->can_see_actor(*actor))
+        {
+            std::string msg =
+                text_format::first_to_upper(actor->name_the()) +
+                " is hit!";
+
+            msg = text_format::first_to_upper(msg);
+
+            msg_log::add(msg);
+        }
+
+        actor->hit(rnd::dice(1, 6),
+                   DmgType::physical);
+
+        // Surived the damage? Knock the monster back
+        if (actor->is_alive())
+        {
+            knockback::run(*actor,
+                           player_pos,
+                           false,
+                           Verbosity::verbose,
+                           1); // 1 extra turn paralyzed
+        }
+    }
+
+    Snd snd("",
+            SfxId::END,
+            IgnoreMsgIfOriginSeen::yes,
+            player_pos,
+            map::player,
+            SndVol::high,
+            AlertsMon::yes);
+
+    snd.run();
 
     identify(Verbosity::verbose);
 }
