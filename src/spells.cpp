@@ -2831,7 +2831,7 @@ void SpellTransmut::run_effect(Actor* const caster,
     else if ((item_type_before == ItemType::melee_wpn) &&
              (melee_wpn_plus >= 1))
     {
-        pct_chance_per_item += (melee_wpn_plus * 5);
+        pct_chance_per_item += (melee_wpn_plus * 10);
 
         for (size_t item_id = 0; (ItemId)item_id != ItemId::END; ++item_id)
         {
@@ -2911,7 +2911,7 @@ std::vector<std::string> SpellTransmut::descr_specific(
 
     const int chance_per_scroll = skill_bon + 50;
 
-    const int chance_per_wpn_plus = 5;
+    const int chance_per_wpn_plus = 10;
 
     const int chance_wpn_plus_1 = skill_bon + chance_per_wpn_plus;
     const int chance_wpn_plus_2 = skill_bon + chance_per_wpn_plus * 2;
