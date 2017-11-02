@@ -459,6 +459,7 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
             if (is_void_traveler &&
                 (actor->state() == ActorState::alive) &&
+                actor->prop_handler().allow_act() &&
                 !actor->is_actor_my_leader(map::player) &&
                 (static_cast<Mon*>(actor)->aware_of_player_counter_ > 0))
             {
