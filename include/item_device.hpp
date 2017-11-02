@@ -127,6 +127,26 @@ private:
     ConsumeItem run_effect() override;
 };
 
+class DeviceDeafening : public StrangeDevice
+{
+public:
+    DeviceDeafening(ItemDataT* const item_data) :
+        StrangeDevice(item_data) {}
+
+    ~DeviceDeafening() override {}
+
+private:
+    std::string descr_identified() const override
+    {
+        return
+            "When activated, this device causes temporary deafness in all "
+            "creatures in a large area (on the whole map), except for the "
+            "user.";
+    }
+
+    ConsumeItem run_effect() override;
+};
+
 class DeviceLantern : public Device
 {
 public:

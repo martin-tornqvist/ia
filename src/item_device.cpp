@@ -369,6 +369,27 @@ ConsumeItem DeviceSentryDrone::run_effect()
 }
 
 // -----------------------------------------------------------------------------
+// Deafening
+// -----------------------------------------------------------------------------
+ConsumeItem DeviceDeafening::run_effect()
+{
+    msg_log::add("The device emits a piercing resonance.");
+
+    for (Actor* const actor : game_time::actors)
+    {
+        if (actor->is_player())
+        {
+            continue;
+        }
+
+        actor->prop_handler().apply(
+            new PropDeaf(PropTurns::std));
+    }
+
+    return ConsumeItem::no;
+}
+
+// -----------------------------------------------------------------------------
 // Electric lantern
 // -----------------------------------------------------------------------------
 DeviceLantern::DeviceLantern(ItemDataT* const item_data) :

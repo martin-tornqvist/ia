@@ -174,6 +174,7 @@ enum class ItemId
     device_rejuvenator,
     device_translocator,
     device_sentry_drone,
+    device_deafening,
 
     rod_curing,
     rod_opening,
@@ -190,7 +191,6 @@ enum class ItemId
     resurrect_talisman,
     tele_ctrl_talisman,
     horn_of_malice,
-    horn_of_deafening,
     horn_of_banishment,
     clockwork,
     spirit_dagger,

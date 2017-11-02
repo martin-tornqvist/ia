@@ -81,36 +81,6 @@ private:
 };
 
 // -----------------------------------------------------------------------------
-// Horn of Deafening
-// -----------------------------------------------------------------------------
-class HornOfDeafeningHeard: public SndHeardEffect
-{
-public:
-    HornOfDeafeningHeard() {}
-
-    ~HornOfDeafeningHeard() {}
-
-    void run(Actor& actor) const override;
-};
-
-class HornOfDeafening: public Item
-{
-public:
-    HornOfDeafening(ItemDataT* const item_data);
-
-    std::string name_inf() const override;
-
-    void save() override;
-
-    void load() override;
-
-    ConsumeItem activate(Actor* const actor) override;
-
-private:
-    int charges_;
-};
-
-// -----------------------------------------------------------------------------
 // Horn of Banishment
 // -----------------------------------------------------------------------------
 class HornOfBanishmentHeard: public SndHeardEffect

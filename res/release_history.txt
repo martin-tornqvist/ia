@@ -42,6 +42,7 @@ Gameplay
 * Updated the score formula to include turn count (lower turn counts give higher scores), also a winning game now guarantees higher score than a non-winning game
 * Removed the Rod of Purge Invisible
 * The Shockwave Device is a Rod instead
+* The Horn of Deafening is a Strange Device instead
 * Nicer tombs are guaranteed to contain better items (and common tomes MAY contain better items)
 * Pitchforks gives +15% chance to evade melee attacks
 * Sledgehammers no longer knocks the victim back

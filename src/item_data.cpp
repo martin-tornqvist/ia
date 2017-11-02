@@ -2130,6 +2130,19 @@ void init_data_list()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::device);
+    d.id = ItemId::device_deafening;
+    d.base_name =
+    {
+        "Deafening Device", "Deafening Devices", "a Deafening Device"
+    };
+    d.value = ItemValue::minor_treasure;
+    d.clr = clr_gray;
+    d.native_containers.push_back(FeatureId::chest);
+    d.native_containers.push_back(FeatureId::tomb);
+    d.native_containers.push_back(FeatureId::cocoon);
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::device);
     d.id = ItemId::lantern;
     d.is_prio_in_backpack_list = true;
     d.base_name =
@@ -2343,33 +2356,6 @@ void init_data_list()
         "intense hatred and distrust."
     };
     d.clr = clr_gray;
-    d.weight = ItemWeight::light;
-    d.tile = TileId::horn;
-    d.glyph = '%';
-    d.is_unique = true;
-    d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
-    d.has_std_activate = true;
-    d.is_carry_shocking = true;
-    d.chance_to_incl_in_spawn_list = 1;
-    d.native_containers.push_back(FeatureId::tomb);
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::general);
-    d.id = ItemId::horn_of_deafening;
-    d.base_name =
-    {
-        "Horn of Deafening",
-        "",
-        "the Horn of Deafening"
-    };
-    d.base_descr =
-    {
-        "When blown, this sinister artifact emits a weird resonance which "
-        "causes all within hearing range (excluding the horn blower) to become "
-        "temporarily deaf."
-    };
-    d.clr = clr_violet;
     d.weight = ItemWeight::light;
     d.tile = TileId::horn;
     d.glyph = '%';

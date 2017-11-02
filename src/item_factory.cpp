@@ -313,6 +313,10 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new DeviceSentryDrone(d);
         break;
 
+    case ItemId::device_deafening:
+        r = new DeviceDeafening(d);
+        break;
+
     case ItemId::lantern:
         r = new DeviceLantern(d);
         break;
@@ -359,10 +363,6 @@ Item* mk(const ItemId item_id, const int nr_items)
 
     case ItemId::horn_of_malice:
         r = new HornOfMalice(d);
-        break;
-
-    case ItemId::horn_of_deafening:
-        r = new HornOfDeafening(d);
         break;
 
     case ItemId::horn_of_banishment:
