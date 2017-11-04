@@ -2663,7 +2663,7 @@ DidOpen Tomb::open(Actor* const actor_opening)
                           SfxId::tomb_open,
                           IgnoreMsgIfOriginSeen::yes,
                           pos_,
-                          nullptr,
+                          map::player,
                           SndVol::high,
                           AlertsMon::yes
                           ));
@@ -3072,53 +3072,66 @@ void Chest::hit(const int dmg,
             {
                 msg_log::add("It is already open.");
             }
-            else if (!is_locked_)
+            else // Is seen and closed
             {
-                msg_log::add("The lid slams open, then falls shut.");
-            }
-            else
-            {
-                ASSERT(actor);
-
-                msg_log::add("I kick the lid.");
-
-                if (actor->has_prop(PropId::weakened) ||
-                    (matl_ == ChestMatl::iron))
+                if (is_locked_)
                 {
-                    wham::try_sprain_player();
+                    ASSERT(actor);
 
-                    msg_log::add("It seems futile.");
-                }
-                else // Chest can be bashed open
-                {
-                    if (!actor->has_prop(PropId::blessed) &&
-                        (actor->has_prop(PropId::cursed) || rnd::one_in(3)))
+                    msg_log::add("I kick the lid.");
+
+                    if (actor->has_prop(PropId::weakened) ||
+                        (matl_ == ChestMatl::iron))
                     {
-                        item_container_.destroy_single_fragile();
-                    }
-
-                    const int open_one_in_n =
-                        player_bon::traits[(size_t)Trait::rugged]   ? 2 :
-                        player_bon::traits[(size_t)Trait::tough]    ? 3 : 4;
-
-                    if (rnd::one_in(open_one_in_n))
-                    {
-                        msg_log::add("The lock breaks and the lid flies open!",
-                                     clr_text,
-                                     false,
-                                     MorePromptOnMsg::yes);
-
-                        is_locked_ = false;
-
-                        is_open_ = true;
-                    }
-                    else
-                    {
-                        msg_log::add("The lock resists.");
-
                         wham::try_sprain_player();
+
+                        msg_log::add("It seems futile.");
+                    }
+                    else // Chest can be bashed open
+                    {
+                        if (!actor->has_prop(PropId::blessed) &&
+                            (actor->has_prop(PropId::cursed) || rnd::one_in(3)))
+                        {
+                            item_container_.destroy_single_fragile();
+                        }
+
+                        const int open_one_in_n =
+                            player_bon::traits[(size_t)Trait::rugged]   ? 2 :
+                            player_bon::traits[(size_t)Trait::tough]    ? 3 : 4;
+
+                        if (rnd::one_in(open_one_in_n))
+                        {
+                            msg_log::add(
+                                "The lock breaks and the lid flies open!",
+                                clr_text,
+                                false,
+                                MorePromptOnMsg::yes);
+
+                            is_locked_ = false;
+
+                            is_open_ = true;
+                        }
+                        else
+                        {
+                            msg_log::add("The lock resists.");
+
+                            wham::try_sprain_player();
+                        }
                     }
                 }
+                else // Not locked
+                {
+                    msg_log::add("The lid slams open, then falls shut.");
+                }
+
+                snd_emit::run(Snd("",
+                                  SfxId::END,
+                                  IgnoreMsgIfOriginSeen::yes,
+                                  pos_,
+                                  map::player,
+                                  SndVol::high,
+                                  AlertsMon::yes
+                                  ));
             }
         }
         break; // Kick
@@ -3126,14 +3139,14 @@ void Chest::hit(const int dmg,
         default:
             break;
 
-        } // dmg_method
+        } // Damage method
 
     } // Physical damage
 
     default:
         break;
 
-    } // dmg_type
+    } // Damage type
 }
 
 void Chest::on_hit(const int dmg,
