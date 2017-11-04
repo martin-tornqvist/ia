@@ -538,14 +538,12 @@ bool is_choke_point(const P& p,
     // Check if this position can completely separate the two sides
     bool blocked_cpy[map_w][map_h];
 
-    std::copy_n(*blocked, nr_map_cells, *blocked_cpy);
+    memcpy(blocked_cpy, blocked, nr_map_cells);
 
     blocked_cpy[p.x][p.y] = true;
 
     // Do another floodfill from side 1
-    floodfill(p_side1,
-                   blocked_cpy,
-                   flood_side1);
+    floodfill(p_side1, blocked_cpy, flood_side1);
 
     if (flood_side1[p_side2.x][p_side2.y] > 0)
     {
@@ -563,9 +561,7 @@ bool is_choke_point(const P& p,
     int flood_side2[map_w][map_h];
 
     // Do a floodfill from side 2
-    floodfill(p_side2,
-              blocked_cpy,
-              flood_side2);
+    floodfill(p_side2, blocked_cpy, flood_side2);
 
     if (out)
     {
