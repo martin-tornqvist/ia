@@ -18,6 +18,7 @@
 #include "saving.hpp"
 #include "game.hpp"
 #include "text_format.hpp"
+#include "query.hpp"
 
 Potion::Potion(ItemDataT* const item_data) :
     Item(item_data),
@@ -50,6 +51,25 @@ ConsumeItem Potion::activate(Actor* const actor)
 
     if (actor->is_player())
     {
+        // Really quaff a known malign potion?
+        if ((alignment() == PotionAlignment::bad) &&
+            data_->is_alignment_known &&
+            config::is_drink_malign_pot_prompt())
+        {
+            const std::string name = this->name(ItemRefType::a);
+
+            msg_log::add("Drink " + name + "? [y/n]");
+
+            auto result = query::yes_or_no();
+
+            msg_log::clear();
+
+            if (result == BinaryAnswer::no)
+            {
+                return ConsumeItem::no;
+            }
+        }
+
         data_->is_tried = true;
 
         audio::play(SfxId::potion_quaff);

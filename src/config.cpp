@@ -44,6 +44,7 @@ bool is_fullscr_ = false;
 bool is_tiles_wall_full_square_ = false;
 bool is_text_mode_wall_full_square_ = false;
 bool is_light_explosive_prompt_ = false;
+bool is_drink_malign_pot_prompt_ = false;
 bool is_ranged_wpn_meleee_prompt_ = false;
 bool is_ranged_wpn_auto_reload_ = false;
 bool is_intro_lvl_skipped_ = false;
@@ -151,6 +152,7 @@ void set_default_variables()
     is_intro_lvl_skipped_ = false;
     is_any_key_confirm_more_ = true;
     is_light_explosive_prompt_ = false;
+    is_drink_malign_pot_prompt_ = false;
     is_ranged_wpn_meleee_prompt_ = true;
     is_ranged_wpn_auto_reload_ = false;
     delay_projectile_draw_ = 30;
@@ -287,19 +289,25 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 11: // Print warning when melee attacking with ranged weapons
+    case 11: // Print warning when drinking known malign potions
+    {
+        is_drink_malign_pot_prompt_ = !is_drink_malign_pot_prompt_;
+    }
+    break;
+
+    case 12: // Print warning when melee attacking with ranged weapons
     {
         is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
     }
     break;
 
-    case 12: // Ranged weapon auto reload
+    case 13: // Ranged weapon auto reload
     {
         is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
     }
     break;
 
-    case 13: // Projectile delay
+    case 14: // Projectile delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -318,7 +326,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 14: // Shotgun delay
+    case 15: // Shotgun delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -337,7 +345,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 15: // Explosion delay
+    case 16: // Explosion delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -356,7 +364,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 16: // Reset to defaults
+    case 17: // Reset to defaults
     {
         set_default_variables();
 
@@ -433,6 +441,9 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     is_light_explosive_prompt_ = lines.front() == "1";
     lines.erase(begin(lines));
 
+    is_drink_malign_pot_prompt_ = lines.front() == "1";
+    lines.erase(begin(lines));
+
     is_ranged_wpn_meleee_prompt_ = lines.front() == "1";
     lines.erase(begin(lines));
 
@@ -500,6 +511,7 @@ std::vector<std::string> lines_from_variables()
     lines.push_back(is_intro_lvl_skipped_ ? "1" : "0");
     lines.push_back(is_any_key_confirm_more_ ? "1" : "0");
     lines.push_back(is_light_explosive_prompt_ ? "1" : "0");
+    lines.push_back(is_drink_malign_pot_prompt_ ? "1" : "0");
     lines.push_back(is_ranged_wpn_meleee_prompt_ ? "1" : "0");
     lines.push_back(is_ranged_wpn_auto_reload_ ? "1" : "0");
     lines.push_back(std::to_string(delay_projectile_draw_));
@@ -644,6 +656,11 @@ bool is_light_explosive_prompt()
     return is_light_explosive_prompt_;
 }
 
+bool is_drink_malign_pot_prompt()
+{
+    return is_drink_malign_pot_prompt_;
+}
+
 bool is_ranged_wpn_meleee_prompt()
 {
     return is_ranged_wpn_meleee_prompt_;
@@ -722,7 +739,7 @@ void toggle_fullscreen()
 // -----------------------------------------------------------------------------
 ConfigState::ConfigState() :
     State       (),
-    browser_    (17)
+    browser_    (18)
 {
 
 }
@@ -836,8 +853,13 @@ void ConfigState::draw()
         },
 
         {
-            "Warning when lighting explosive",
+            "Warn when lighting explosives",
             config::is_light_explosive_prompt_ ? "Yes" : "No"
+        },
+
+        {
+            "Warn when drinking malign potions",
+            config::is_drink_malign_pot_prompt_ ? "Yes" : "No"
         },
 
         {
@@ -907,7 +929,7 @@ void ConfigState::draw()
 
     io::draw_text("[enter] to set option [space/esc] to exit",
                   Panel::screen,
-                  P(0, 19),
+                  P(0, 20),
                   clr_white);
 
     str =

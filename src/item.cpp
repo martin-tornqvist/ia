@@ -1587,14 +1587,12 @@ ConsumeItem Explosive::activate(Actor* const actor)
 
         auto result = query::yes_or_no();
 
+        msg_log::clear();
+
         if (result == BinaryAnswer::no)
         {
-            msg_log::clear();
-
             return ConsumeItem::no;
         }
-
-        msg_log::clear();
     }
 
     // Make a copy to use as the held ignited explosive.

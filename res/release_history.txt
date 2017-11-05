@@ -64,6 +64,7 @@ Interface
 * The "auto move" feature stops at junctions etc (instead of after a fixed amount of steps)
 * When selecting "New Journey" from the main menu, and a saved game exists, the game asks if you really want to start a new game
 * Added option for disabling ambient sound effects
+* Added option to ask for confirmation before drinking malign potions
 
 Bug fixes
 * Fixed a crash bug for the Incinerator weapon (the game could crash when the projectile reached its max range)
