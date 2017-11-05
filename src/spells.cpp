@@ -2733,9 +2733,7 @@ void SpellTransmut::run_effect(Actor* const caster,
 
     // Player is standing on an item
 
-    //
     // Get information on the existing item(s)
-    //
     const bool is_stackable_before = item_before->data().is_stackable;
 
     const int nr_items_before =
@@ -2765,9 +2763,7 @@ void SpellTransmut::run_effect(Actor* const caster,
         item_name_before += item_before->name(ItemRefType::plain);
     }
 
-    //
     // Remove the existing item(s)
-    //
     delete cell.item;
 
     cell.item = nullptr;
@@ -2780,9 +2776,7 @@ void SpellTransmut::run_effect(Actor* const caster,
                      MorePromptOnMsg::yes);
     }
 
-    //
     // Determine which item(s) to spawn, if any
-    //
     int pct_chance_per_item = (int)skill * 20;
 
     std::vector<ItemId> id_bucket;
@@ -2845,11 +2839,23 @@ void SpellTransmut::run_effect(Actor* const caster,
         }
     }
 
+    // Never spawn Transmute scrolls, this is just dumb
+    for (auto it = begin(id_bucket); it != end(id_bucket); )
+    {
+        if (*it == ItemId::scroll_transmut)
+        {
+            it = id_bucket.erase(it);
+        }
+        else // Not transmute
+        {
+            ++it;
+        }
+    }
+
     ItemId id_new = ItemId::END;
 
     if (!id_bucket.empty())
     {
-        // Which item?
         id_new = rnd::element(id_bucket);
     }
 
@@ -2874,9 +2880,7 @@ void SpellTransmut::run_effect(Actor* const caster,
 
     // OK, items are good, and player succeeded the rolls etc
 
-    //
     // Spawn new item(s)
-    //
     auto* const item_new =
         item_factory::mk_item_on_floor(id_new, map::player->pos);
 
@@ -2902,8 +2906,7 @@ std::vector<std::string> SpellTransmut::descr_specific(
 
     descr.push_back(
         "Attempts to convert items (stand over an item when casting). "
-        "The spell has a certain chance per item to succeed based on skill "
-        "level and item type. On failure, the item is destroyed.");
+        "On failure, the item is destroyed.");
 
     const int skill_bon = (int)skill * 20;
 
@@ -2918,14 +2921,14 @@ std::vector<std::string> SpellTransmut::descr_specific(
     const int chance_wpn_plus_3 = skill_bon + chance_per_wpn_plus * 3;
 
     descr.push_back(
-        "Converts Potions to a different type, with " +
+        "Converts Potions with " +
         std::to_string(chance_per_pot) +
-        "% chance per item.");
+        "% chance.");
 
     descr.push_back(
-        "Converts Manuscripts to a different type, with " +
+        "Converts Manuscripts with " +
         std::to_string(chance_per_scroll) +
-        "% chance per item.");
+        "% chance.");
 
     descr.push_back(
         "Melee weapons with at least +1 damage (not counting any damage bonus "
