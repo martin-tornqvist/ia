@@ -153,10 +153,21 @@ void Rigid::on_new_turn()
 
             if (map::is_pos_inside_map(p))
             {
-                map::cells[p.x][p.y].rigid->hit(
+                auto& cell = map::cells[p.x][p.y];
+
+                cell.rigid->hit(
                     1, // Damage
                     DmgType::fire,
                     DmgMethod::elemental);
+
+                if ((cell.rigid->burn_state() == BurnState::burning) &&
+                    (map::player->pos == p))
+                {
+                    msg_log::add("Fire has spread here!",
+                                 clr_msg_note,
+                                 true,
+                                 MorePromptOnMsg::yes);
+                }
             }
         }
 
