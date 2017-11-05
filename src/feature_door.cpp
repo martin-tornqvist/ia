@@ -446,7 +446,7 @@ WasDestroyed Door::on_finished_burning()
 
     RubbleLow* const rubble = new RubbleLow(pos_);
 
-    rubble->set_has_burned();
+    rubble->burn_state_ = BurnState::has_burned;
 
     map::put(rubble);
 
@@ -549,7 +549,7 @@ std::string Door::name(const Article article) const
 
     std::string mod = "";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         a =
             article == Article::a ?

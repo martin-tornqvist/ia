@@ -29,10 +29,12 @@
 // -----------------------------------------------------------------------------
 Rigid::Rigid(const P& p) :
     Feature                     (p),
+    item_container_             (),
+    burn_state_                 (BurnState::not_burned),
+    started_burning_this_turn_  (false),
     gore_tile_                  (TileId::empty),
     gore_glyph_                 (0),
     is_bloody_                  (false),
-    burn_state_                 (BurnState::not_burned),
     nr_turns_color_corrupted_   (-1) {}
 
 void Rigid::on_new_turn()
@@ -42,7 +44,8 @@ void Rigid::on_new_turn()
         --nr_turns_color_corrupted_;
     }
 
-    if (burn_state_ == BurnState::burning)
+    if ((burn_state_ == BurnState::burning) &&
+        !started_burning_this_turn_)
     {
         clear_gore();
 
@@ -104,23 +107,23 @@ void Rigid::on_new_turn()
             break;
 
         case Matl::stone:
-            finish_burning_one_in_n = 12;
-            hit_adjacent_one_in_n   = 12;
+            finish_burning_one_in_n = 14;
+            hit_adjacent_one_in_n   = 10;
             break;
 
         case Matl::metal:
-            finish_burning_one_in_n = 12;
-            hit_adjacent_one_in_n   = 8;
+            finish_burning_one_in_n = 14;
+            hit_adjacent_one_in_n   = 10;
             break;
 
         case Matl::plant:
             finish_burning_one_in_n = 30;
-            hit_adjacent_one_in_n   = 12;
+            hit_adjacent_one_in_n   = 10;
             break;
 
         case Matl::wood:
-            finish_burning_one_in_n = 60;
-            hit_adjacent_one_in_n   = 16;
+            finish_burning_one_in_n = 40;
+            hit_adjacent_one_in_n   = 10;
             break;
 
         case Matl::cloth:
@@ -160,13 +163,17 @@ void Rigid::on_new_turn()
                     DmgType::fire,
                     DmgMethod::elemental);
 
-                if ((cell.rigid->burn_state() == BurnState::burning) &&
-                    (map::player->pos == p))
+                if (cell.rigid->burn_state_ == BurnState::burning)
                 {
-                    msg_log::add("Fire has spread here!",
-                                 clr_msg_note,
-                                 true,
-                                 MorePromptOnMsg::yes);
+                    cell.rigid->started_burning_this_turn_ = true;
+
+                    if (map::player->pos == p)
+                    {
+                        msg_log::add("Fire has spread here!",
+                                     clr_msg_note,
+                                     true,
+                                     MorePromptOnMsg::yes);
+                    }
                 }
             }
         }
@@ -214,6 +221,8 @@ void Rigid::try_start_burning(const bool is_msg_allowed)
         }
 
         burn_state_ = BurnState::burning;
+
+        started_burning_this_turn_ = true;
     }
 }
 
@@ -429,13 +438,11 @@ Clr Rigid::clr_bg() const
     switch (burn_state_)
     {
     case BurnState::not_burned:
+    case BurnState::has_burned:
         return clr_bg_default();
 
     case BurnState::burning:
         return Clr {Uint8(rnd::range(32, 255)), 0, 0, 0};
-
-    case BurnState::has_burned:
-        return clr_bg_default();
     }
 
     ASSERT(false && "Failed to set color");
@@ -495,7 +502,7 @@ void Floor::on_hit(const int dmg,
 
 TileId Floor::tile() const
 {
-    return burn_state() == BurnState::has_burned ?
+    return burn_state_ == BurnState::has_burned ?
         TileId::scorched_ground :
         data().tile;
 }
@@ -504,13 +511,13 @@ std::string Floor::name(const Article article) const
 {
     std::string ret = article == Article::a ? "" : "the ";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         ret += "flames";
     }
     else
     {
-        if (burn_state() == BurnState::has_burned)
+        if (burn_state_ == BurnState::has_burned)
         {
             ret += "scorched ";
         }
@@ -878,7 +885,7 @@ std::string RubbleLow::name(const Article article) const
         ret += "the ";
     }
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         ret += "burning ";
     }
@@ -1631,7 +1638,7 @@ WasDestroyed Carpet::on_finished_burning()
 {
     Floor* const floor = new Floor(pos_);
 
-    floor->set_has_burned();
+    floor->burn_state_ = BurnState::has_burned;
 
     map::put(floor);
 
@@ -1681,7 +1688,7 @@ void Grass::on_hit(const int dmg,
 TileId Grass::tile() const
 {
     return
-        (burn_state() == BurnState::has_burned) ?
+        (burn_state_ == BurnState::has_burned) ?
         TileId::scorched_ground :
         data().tile;
 }
@@ -1692,7 +1699,7 @@ std::string Grass::name(const Article article) const
 
     if (article == Article::the) {ret += "the ";}
 
-    switch (burn_state())
+    switch (burn_state_)
     {
     case BurnState::not_burned:
         switch (type_)
@@ -1765,7 +1772,7 @@ WasDestroyed Bush::on_finished_burning()
 {
     Grass* const grass = new Grass(pos_);
 
-    grass->set_has_burned();
+    grass->burn_state_ = BurnState::has_burned;
 
     map::put(grass);
 
@@ -1776,7 +1783,7 @@ std::string Bush::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
-    switch (burn_state())
+    switch (burn_state_)
     {
     case BurnState::not_burned:
         switch (type_)
@@ -1843,7 +1850,7 @@ WasDestroyed Vines::on_finished_burning()
 {
     Floor* const floor = new Floor(pos_);
 
-    floor->set_has_burned();
+    floor->burn_state_ = BurnState::has_burned;
 
     map::put(floor);
 
@@ -1854,7 +1861,7 @@ std::string Vines::name(const Article article) const
 {
     std::string ret = article == Article::a ? "" : "the ";
 
-    switch (burn_state())
+    switch (burn_state_)
     {
     case BurnState::not_burned:
         return ret + "hanging vines";
@@ -2050,7 +2057,7 @@ WasDestroyed Tree::on_finished_burning()
     {
         Grass* const grass = new Grass(pos_);
 
-        grass->set_has_burned();
+        grass->burn_state_ = BurnState::has_burned;
 
         map::put(grass);
 
@@ -2066,7 +2073,7 @@ std::string Tree::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
-    switch (burn_state())
+    switch (burn_state_)
     {
     case BurnState::not_burned:
         break;
@@ -3543,7 +3550,7 @@ std::string Cabinet::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         ret += "burning ";
     }
@@ -3647,7 +3654,7 @@ std::string Bookshelf::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         ret += "burning ";
     }
@@ -3756,7 +3763,7 @@ std::string AlchemistBench::name(const Article article) const
 
     std::string mod = "";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         if (article == Article::a)
         {
@@ -3960,7 +3967,7 @@ std::string Cocoon::name(const Article article) const
 {
     std::string ret = article == Article::a ? "a " : "the ";
 
-    if (burn_state() == BurnState::burning)
+    if (burn_state_ == BurnState::burning)
     {
         ret += "burning ";
     }

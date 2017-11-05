@@ -113,19 +113,13 @@ public:
         is_bloody_ = true;
     }
 
-    void set_has_burned()
-    {
-        burn_state_ = BurnState::has_burned;
-    }
-
-    BurnState burn_state() const
-    {
-        return burn_state_;
-    }
-
     void corrupt_color();
 
     ItemContainer item_container_;
+
+    BurnState burn_state_;
+
+    bool started_burning_this_turn_;
 
 protected:
     virtual void on_new_turn_hook() {}
@@ -160,7 +154,6 @@ protected:
 
 private:
     bool is_bloody_;
-    BurnState burn_state_;
 
     // Corrupted by a Strange Color monster
     int nr_turns_color_corrupted_;

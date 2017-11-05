@@ -1047,7 +1047,7 @@ void Player::act()
                     (target_rigid_id == FeatureId::chains) ||
                     (target_rigid_id == FeatureId::liquid_shallow) ||
                     (target_rigid_id == FeatureId::vines) ||
-                    (target_cell.rigid->burn_state() == BurnState::burning);
+                    (target_cell.rigid->burn_state_ == BurnState::burning);
             }
 
             if (should_abort)
@@ -1170,7 +1170,7 @@ bool Player::is_seeing_burning_feature() const
             const auto& cell = map::cells[x][y];
 
             if (cell.is_seen_by_player &&
-                (cell.rigid->burn_state() == BurnState::burning))
+                (cell.rigid->burn_state_ == BurnState::burning))
             {
                 is_fire_found = true;
 

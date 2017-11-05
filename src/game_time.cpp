@@ -53,6 +53,7 @@ void run_std_turn_events()
                      MorePromptOnMsg::yes);
 
         map_travel::go_to_nxt();
+
         return;
     }
 
@@ -101,6 +102,20 @@ void run_std_turn_events()
             actor->on_std_turn_common();
 
             ++it;
+        }
+    }
+
+    // Allow already burning features to damage stuff, spread fire, etc
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            auto& r = *map::cells[x][y].rigid;
+
+            if (r.burn_state_ == BurnState::burning)
+            {
+                r.started_burning_this_turn_ = false;
+            }
         }
     }
 
