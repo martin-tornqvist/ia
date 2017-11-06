@@ -581,14 +581,19 @@ bool mk_rat_cave_level()
                 }
                 else if (c == 'r')
                 {
+                    Actor* actor = nullptr;
+
                     if (rnd::one_in(rat_thing_one_in_n_rat))
                     {
-                        actor_factory::mk(ActorId::rat_thing, p);
+                        actor = actor_factory::mk(ActorId::rat_thing, p);
                     }
                     else
                     {
-                        actor_factory::mk(ActorId::rat, p);
+                        actor = actor_factory::mk(ActorId::rat, p);
                     }
+
+                    actor->prop_handler().apply(
+                        new PropFrenzied(PropTurns::indefinite));
                 }
             }
             break;
@@ -605,7 +610,7 @@ bool mk_rat_cave_level()
 
             case 'x':
             {
-                if (rnd::one_in(2))
+                if (rnd::one_in(3))
                 {
                     map::put(new RubbleLow(p));
                 }
