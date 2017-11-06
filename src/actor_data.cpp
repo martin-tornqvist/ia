@@ -340,7 +340,7 @@ void init_data_list()
     d.descr =
         "Alan Halsey was the dean of the Miskatonic University in New "
         "England. He must have gotten into the hands of the Cult, who "
-        "turned him into the hellish zombie warrior I now see before me.";
+        "turned him into the hellish zombie warrior.";
     d.wary_msg = d.name_the + " looks wary.";
     d.erratic_move_pct = ActorErraticFreq::rare;
     d.mon_shock_lvl = ShockLvl::terrifying;
@@ -1019,7 +1019,7 @@ void init_data_list()
     d.color = clr_gray;
     d.tile = TileId::giant_spider;
     d.hp = 6;
-    d.dmg_melee = min_dmg_to_wound;
+    d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 70);
     d.ability_vals.set_val(AbilityId::stealth, 97);
     d.ability_vals.set_val(AbilityId::dodging, 30);
@@ -1565,7 +1565,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'Y';
     d.color = clr_orange;
     d.tile = TileId::void_traveler;
@@ -1754,7 +1754,7 @@ void init_data_list()
     d.hp = 2;
     d.spi = 6;
     d.dmg_melee = 1;
-    d.ability_vals.set_val(AbilityId::melee, 35);
+    d.ability_vals.set_val(AbilityId::melee, 30);
     d.ability_vals.set_val(AbilityId::dodging, 50);
     d.natural_props[(size_t)PropId::flying] = true;
     d.spawn_min_dlvl = 1;
@@ -2075,7 +2075,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
     d.speed_pct = (int)ActorSpeed::fast;
-    d.ranged_cooldown_turns = 4;
+    d.ranged_cooldown_turns = 3;
     d.glyph = 'E';
     d.color = clr_brown_drk;
     d.tile = TileId::mi_go;
@@ -2183,7 +2183,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = true;
-    d.speed_pct = (int)ActorSpeed::normal - 10;
+    d.speed_pct = (int)ActorSpeed::normal;
     d.glyph = 'E';
     d.color = clr_magenta;
     d.tile = TileId::polyp;
@@ -2191,9 +2191,7 @@ void init_data_list()
     d.spi = 20;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 80);
-    //
     // NOTE: Polyps should be resistant against all damage except electricity
-    //
     d.natural_props[(size_t)PropId::r_phys] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
@@ -2251,9 +2249,7 @@ void init_data_list()
     d.spi = 30;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.ability_vals.set_val(AbilityId::melee, 90);
-    //
     // NOTE: Polyps should be resistant against all damage except electricity
-    //
     d.natural_props[(size_t)PropId::r_phys] = true;
     d.natural_props[(size_t)PropId::r_conf] = true;
     d.natural_props[(size_t)PropId::r_fear] = true;
@@ -2759,7 +2755,7 @@ void init_data_list()
     d.glyph = 'F';
     d.color = clr_white;
     d.tile = TileId::deep_one;
-    d.hp = 22;
+    d.hp = 26;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound + 4;
     d.dmg_ranged = min_dmg_to_wound;
@@ -2899,7 +2895,7 @@ void init_data_list()
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
     d.ai[(size_t)AiId::moves_to_lair] = false;
     d.ai[(size_t)AiId::moves_to_leader] = false;
-    d.speed_pct = (int)ActorSpeed::normal;
+    d.speed_pct = (int)ActorSpeed::normal + 10;
     d.glyph = 'w';
     d.color = clr_violet;
     d.tile = TileId::mass_of_worms;
@@ -2949,7 +2945,7 @@ void init_data_list()
     d.glyph = 'V';
     d.color = clr_gray;
     d.tile = TileId::vortex;
-    d.hp = 10;
+    d.hp = 16;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 60);
@@ -2959,6 +2955,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
+    d.natural_props[(size_t)PropId::r_para] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 4;
     d.spawn_max_dlvl = d.spawn_min_dlvl + 10;
@@ -2996,7 +2993,7 @@ void init_data_list()
     d.glyph = 'V';
     d.color = clr_red_lgt;
     d.tile = TileId::vortex;
-    d.hp = 16;
+    d.hp = 20;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound - 1;
     d.ability_vals.set_val(AbilityId::melee, 70);
@@ -3007,6 +3004,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
+    d.natural_props[(size_t)PropId::r_para] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = 8;
     d.spawn_max_dlvl = dlvl_last - 3;
@@ -3044,7 +3042,7 @@ void init_data_list()
     d.glyph = 'V';
     d.color = clr_yellow;
     d.tile = TileId::vortex;
-    d.hp = 24;
+    d.hp = 30;
     d.spi = 12;
     d.dmg_melee = min_dmg_to_wound + 3;
     d.ability_vals.set_val(AbilityId::melee, 80);
@@ -3056,6 +3054,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
+    d.natural_props[(size_t)PropId::r_para] = true;
     d.prevent_knockback = true;
     d.spawn_min_dlvl = (dlvl_first_mid_game + dlvl_first_late_game) / 2;
     d.actor_size = ActorSize::humanoid;
@@ -3329,6 +3328,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_poison] = true;
     d.natural_props[(size_t)PropId::r_disease] = true;
     d.natural_props[(size_t)PropId::r_blind] = true;
+    d.natural_props[(size_t)PropId::r_para] = true;
     d.natural_props[(size_t)PropId::darkvis] = true;
     d.spawn_min_dlvl = 14;
     d.spawn_max_dlvl = dlvl_last - 6;
@@ -3617,7 +3617,7 @@ void init_data_list()
     d.glyph = 'W';
     d.color = clr_gray;
     d.tile = TileId::hunting_horror;
-    d.hp = 90;
+    d.hp = 100;
     d.spi = 40;
     d.dmg_melee = min_dmg_to_wound + 7;
     d.ability_vals.set_val(AbilityId::melee, 90);
@@ -3669,7 +3669,7 @@ void init_data_list()
     d.glyph = 'Y';
     d.color = clr_gray;
     d.tile = TileId::fiend;
-    d.hp = 90;
+    d.hp = 100;
     d.spi = 40;
     d.dmg_melee = 200;
     d.ability_vals.set_val(AbilityId::melee, 80);
@@ -3760,7 +3760,7 @@ void init_data_list()
     d.name_the = d.name_a;
     d.id = ActorId::high_priest_guard_war_vet;
     d.ai[(size_t)AiId::looks] = true;
-    d.ai[(size_t)AiId::makes_room_for_friend] = false;
+    d.ai[(size_t)AiId::makes_room_for_friend] = true;
     d.ai[(size_t)AiId::attacks] = true;
     d.ai[(size_t)AiId::paths_to_tgt_when_aware] = true;
     d.ai[(size_t)AiId::moves_to_tgt_when_los] = true;
@@ -3777,7 +3777,7 @@ void init_data_list()
     d.natural_props[(size_t)PropId::r_fear] = true;
     d.natural_props[(size_t)PropId::r_breath] = true;
     d.ability_vals.set_val(AbilityId::melee, 100);
-    d.ability_vals.set_val(AbilityId::dodging, 25);
+    d.ability_vals.set_val(AbilityId::dodging, 30);
     d.ability_vals.set_val(AbilityId::ranged, 100);
     d.is_auto_spawn_allowed = false;
     d.actor_size = ActorSize::humanoid;
