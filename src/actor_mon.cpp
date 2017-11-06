@@ -2072,6 +2072,7 @@ void DeathFiend::mk_start_items()
     inv_->put_in_intrinsics(item_factory::mk(ItemId::death_fiend_claw));
 
     add_spell(SpellSkill::expert, SpellId::enfeeble);
+    add_spell(SpellSkill::expert, SpellId::spell_shield);
 }
 
 void HuntingHorror::mk_start_items()
