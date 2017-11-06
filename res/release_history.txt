@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-v19.2
+v19.2 (November 6, 2017)
 --------------------------------------------------------------
 Gameplay
 * All items which gave XP on identification now instead gives XP when that item is found for the first time (except "Strange Devices") - the reason for this is to reduce the pressure to identify consumables as soon as possible, and also to have a more "natural" continuous stream of XP, rather than occasional bursts
