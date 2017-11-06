@@ -26,6 +26,8 @@ private:
     MenuBrowser browser_;
 
     IsWin is_win_;
+
+    std::vector<std::string> ascii_graveyard_lines_;
 };
 
 class PostmortemInfo: public State

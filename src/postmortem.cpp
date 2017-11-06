@@ -46,9 +46,7 @@ StateId PostmortemMenu::id()
 
 void PostmortemMenu::on_start()
 {
-    //
     // Game summary file path
-    //
     const std::string game_summary_time_stamp =
         game::start_time().time_str(TimeType::second, false);
 
@@ -62,9 +60,7 @@ void PostmortemMenu::on_start()
         "res/data/" +
         game_summary_filename;
 
-    //
     // Highscore entry
-    //
     const auto highscore_entry =
         highscore::mk_entry_from_current_game_data(
             game_summary_file_path,
@@ -313,10 +309,36 @@ void PostmortemMenu::on_start()
         clr_heading
     });
 
-    //
     // Also dump the lines to a memorial file
-    //
     mk_memorial_file(game_summary_file_path);
+
+    // If running text mode, load the graveyard ascii art
+    if (!config::is_tiles_mode())
+    {
+        ascii_graveyard_lines_.clear();
+
+        std::string current_line;
+
+        std::ifstream file("res/ascii_graveyard");
+
+        if (file.is_open())
+        {
+            while (getline(file, current_line))
+            {
+                // if (current_line.size() > 0)
+                // {
+                ascii_graveyard_lines_.push_back(current_line);
+                // }
+            }
+        }
+        else
+        {
+            TRACE << "Failed to open ascii graveyard file" << std::endl;
+            ASSERT(false);
+        }
+
+        file.close();
+    }
 }
 
 void PostmortemMenu::on_popped()
@@ -327,7 +349,16 @@ void PostmortemMenu::on_popped()
 
 void PostmortemMenu::draw()
 {
-    P pos(48, 10);
+    P pos;
+
+    if (config::is_tiles_mode())
+    {
+        pos.set(50, 10);
+    }
+    else // Text mode
+    {
+        pos.set(56, 13);
+    }
 
     std::vector<std::string> labels =
     {
@@ -358,7 +389,30 @@ void PostmortemMenu::draw()
 
     if (config::is_tiles_mode())
     {
-        io::draw_skull(P(24, 1));
+        io::draw_skull(P(27, 2));
+    }
+    else // Text mode
+    {
+        int y = 0;
+
+        for (const auto& line : ascii_graveyard_lines_)
+        {
+            io::draw_text(line,
+                          Panel::screen,
+                          P(0, y),
+                          clr_gray);
+
+            ++y;
+        }
+
+        const std::string name = map::player->name_the();
+
+        const int name_x = 44 - ((name.length() - 1) / 2);
+
+        io::draw_text(name,
+                      Panel::screen,
+                      P(name_x, 20),
+                      clr_gray);
     }
 
     io::draw_box(R(0, 0, screen_w - 1, screen_h - 1));
@@ -393,10 +447,8 @@ void PostmortemMenu::mk_memorial_file(const std::string path) const
                 // as things are now. The current strategy is to show the symbol
                 // as a wall then (it's probably a wall, rubble, or a statue).
 
-                //
                 // TODO: Perhaps text mode should strictly use only printable
                 //       basic ASCII symbols?
-                //
                 c = '#';
             }
 
@@ -422,16 +474,12 @@ void PostmortemMenu::update()
     case MenuAction::selected:
     case MenuAction::selected_shift:
 
-        //
         // Display postmortem info
-        //
         switch (browser_.y())
         {
         case 0:
         {
-            //
             // Exit screen
-            //
             states::pop();
 
             init::init_session();
@@ -454,9 +502,7 @@ void PostmortemMenu::update()
         }
         break;
 
-        //
         // Show highscores
-        //
         case 2:
         {
             std::unique_ptr<State> browse_highscore_state(new BrowseHighscore);
@@ -465,9 +511,7 @@ void PostmortemMenu::update()
         }
         break;
 
-        //
         // Display message history
-        //
         case 3:
         {
             std::unique_ptr<State> msg_history_state(new MsgHistoryState);
@@ -476,28 +520,20 @@ void PostmortemMenu::update()
         }
         break;
 
-        //
         // Return to main menu
-        //
         case 4:
         {
-            //
             // Exit screen
-            //
             states::pop();
 
             return;
         }
         break;
 
-        //
         // Quit game
-        //
         case 5:
         {
-            //
             // Bye!
-            //
             states::pop_all();
 
             return;
@@ -622,9 +658,7 @@ void PostmortemInfo::update()
 
     case SDLK_SPACE:
     case SDLK_ESCAPE:
-        //
         // Exit screen
-        //
         states::pop();
         break;
     }
