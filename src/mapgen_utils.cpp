@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <climits>
+#include <cstring>
 
 #include "init.hpp"
 #include "map.hpp"
