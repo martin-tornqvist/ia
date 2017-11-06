@@ -1156,9 +1156,7 @@ void on_mon_seen(Actor& actor)
     {
         d.has_player_seen = true;
 
-        //
         // Give XP based on monster shock rating
-        //
         int xp_gained = 0;
 
         switch (d.mon_shock_lvl)
@@ -1196,11 +1194,14 @@ void on_mon_seen(Actor& actor)
 
             add_history_event("Discovered " + name + ".");
 
-            //
             // We also cause some shock the first time
-            //
-            map::player->incr_shock(d.mon_shock_lvl,
-                                    ShockSrc::see_mon);
+            double shock_value =
+                map::player->shock_lvl_to_value(d.mon_shock_lvl);
+
+            // Dampen the progression a bit
+            shock_value = pow(shock_value, 0.9);
+
+            map::player->incr_shock(shock_value, ShockSrc::see_mon);
         }
     }
 }

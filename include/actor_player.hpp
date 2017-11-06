@@ -81,11 +81,11 @@ public:
                     const Dir dir_to_origin,
                     const int percent_audible_distance);
 
-    void incr_shock(const ShockLvl shock,
-                    ShockSrc shock_src);
+    void incr_shock(const ShockLvl shock_lvl, ShockSrc shock_src);
 
-    void incr_shock(const double shock,
-                    ShockSrc shock_src);
+    void incr_shock(const double shock, ShockSrc shock_src);
+
+    double shock_lvl_to_value(const ShockLvl shock_lvl) const;
 
     void restore_shock(const int amount_restored,
                        const bool is_temp_shock_restored);

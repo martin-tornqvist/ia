@@ -616,22 +616,11 @@ double Player::shock_taken_after_mods(const double base_shock,
     return (base_shock * (100.0 - shock_res_db)) / 100.0;
 }
 
-void Player::incr_shock(double shock, ShockSrc shock_src)
-{
-    shock = shock_taken_after_mods(shock, shock_src);
-
-    shock_ += shock;
-
-    perm_shock_taken_current_turn_ += shock;
-
-    shock_ = std::max(0.0, shock_);
-}
-
-void Player::incr_shock(const ShockLvl shock, ShockSrc shock_src)
+double Player::shock_lvl_to_value(const ShockLvl shock_lvl) const
 {
     double shock_value = 0.0;
 
-    switch (shock)
+    switch (shock_lvl)
     {
     case ShockLvl::unsettling:
         shock_value = 2.0;
@@ -653,6 +642,24 @@ void Player::incr_shock(const ShockLvl shock, ShockSrc shock_src)
     case ShockLvl::END:
         break;
     }
+
+    return shock_value;
+}
+
+void Player::incr_shock(double shock, ShockSrc shock_src)
+{
+    shock = shock_taken_after_mods(shock, shock_src);
+
+    shock_ += shock;
+
+    perm_shock_taken_current_turn_ += shock;
+
+    shock_ = std::max(0.0, shock_);
+}
+
+void Player::incr_shock(const ShockLvl shock_lvl, ShockSrc shock_src)
+{
+    double shock_value = shock_lvl_to_value(shock_lvl);
 
     if (shock_value > 0.0)
     {
