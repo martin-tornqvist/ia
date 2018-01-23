@@ -1,7 +1,7 @@
 #ifndef ITEM_HPP
 #define ITEM_HPP
 
-#include "art.hpp"
+#include "gfx.hpp"
 #include "inventory_handling.hpp"
 #include "rl_utils.hpp"
 
@@ -31,9 +31,9 @@ public:
 
     ItemDataT& data() const;
 
-    virtual Clr clr() const;
+    virtual Color color() const;
 
-    char glyph() const;
+    char character() const;
 
     TileId tile() const;
 
@@ -69,9 +69,9 @@ public:
 
     virtual ConsumeItem activate(Actor* const actor);
 
-    virtual Clr interface_clr() const
+    virtual Color interface_color() const
     {
-        return clr_yellow_drk;
+        return colors::dark_yellow();
     }
 
     virtual void on_std_turn_in_inv(const InvType inv_type)
@@ -214,9 +214,9 @@ public:
     void save() override;
     void load() override;
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_gray;
+        return colors::gray();
     }
 
     int armor_points() const;
@@ -281,11 +281,11 @@ public:
     void save() override;
     void load() override;
 
-    Clr clr() const override;
+    Color color() const override;
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_gray;
+        return colors::gray();
     }
 
     void set_random_melee_plus();
@@ -466,9 +466,9 @@ public:
     Ammo(ItemDataT* const item_data) : Item(item_data) {}
     virtual ~Ammo() {}
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_white;
+        return colors::white();
     }
 };
 
@@ -522,9 +522,9 @@ public:
 
     void finish_current_action();
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_green;
+        return colors::green();
     }
 
     int nr_supplies_;
@@ -552,9 +552,9 @@ public:
     Headwear(ItemDataT* item_data) :
         Item(item_data) {}
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_brown;
+        return colors::brown();
     }
 };
 
@@ -596,15 +596,16 @@ public:
     Explosive() = delete;
 
     ConsumeItem activate(Actor* const actor) override final;
-    Clr interface_clr() const override final
+
+    Color interface_color() const override final
     {
-        return clr_red_lgt;
+        return colors::light_red();
     }
 
     virtual void on_std_turn_player_hold_ignited() = 0;
     virtual void on_thrown_ignited_landing(const P& p) = 0;
     virtual void on_player_paralyzed() = 0;
-    virtual Clr ignited_projectile_clr() const = 0;
+    virtual Color ignited_projectile_color() const = 0;
     virtual std::string str_on_player_throw() const = 0;
 
 protected:
@@ -628,9 +629,9 @@ public:
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
-    Clr ignited_projectile_clr() const override
+    Color ignited_projectile_color() const override
     {
-        return clr_red_lgt;
+        return colors::light_red();
     }
 
     std::string str_on_player_throw() const override
@@ -656,9 +657,9 @@ public:
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
-    Clr ignited_projectile_clr() const override
+    Color ignited_projectile_color() const override
     {
-        return clr_yellow;
+        return colors::yellow();
     }
 
     std::string str_on_player_throw() const override
@@ -683,9 +684,9 @@ public:
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
 
-    Clr ignited_projectile_clr() const override
+    Color ignited_projectile_color() const override
     {
-        return clr_yellow;
+        return colors::yellow();
     }
 
     std::string str_on_player_throw() const override
@@ -709,7 +710,8 @@ public:
     void on_thrown_ignited_landing(const P& p) override;
     void on_std_turn_player_hold_ignited() override;
     void on_player_paralyzed() override;
-    Clr ignited_projectile_clr() const override;
+
+    Color ignited_projectile_color() const override;
 
     std::string str_on_player_throw() const override
     {

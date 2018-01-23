@@ -57,7 +57,7 @@ private:
 
     virtual void on_new_turn_hook() override;
 
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     std::unique_ptr<PylonImpl> pylon_impl_;
 

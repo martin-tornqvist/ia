@@ -7,7 +7,7 @@
 #include "ability_values.hpp"
 #include "item_data.hpp"
 #include "actor_data.hpp"
-#include "art.hpp"
+#include "gfx.hpp"
 
 class Actor;
 class Wpn;
@@ -88,16 +88,16 @@ public:
 struct Projectile
 {
     Projectile() :
-        pos                     (P(-1, -1)),
-        is_dead                 (false),
-        is_seen_by_player       (true),
-        actor_hit               (nullptr),
-        obstructed_in_element   (-1),
-        is_done_rendering       (false),
-        glyph                   (-1),
-        tile                    (TileId::empty),
-        clr                     (clr_white),
-        att_data                (nullptr) {}
+        pos(P(-1, -1)),
+        is_dead(false),
+        is_seen_by_player(true),
+        actor_hit(nullptr),
+        obstructed_in_element(-1),
+        is_done_rendering(false),
+        character(-1),
+        tile(TileId::empty),
+        color(colors::white()),
+        att_data(nullptr) {}
 
     ~Projectile()
     {
@@ -111,16 +111,17 @@ struct Projectile
         att_data = new_att_data;
     }
 
-    void set_tile(const TileId tile_to_render, const Clr& clr_to_render)
+    void set_tile(const TileId tile_to_render, const Color& color_to_render)
     {
-        tile  = tile_to_render;
-        clr   = clr_to_render;
+        tile = tile_to_render;
+        color = color_to_render;
     }
 
-    void set_glyph(const char glyph_to_render, const Clr& clr_to_render)
+    void set_character(const char character_to_render,
+                       const Color& color_to_render)
     {
-        glyph = glyph_to_render;
-        clr   = clr_to_render;
+        character = character_to_render;
+        color = color_to_render;
     }
 
     P pos;
@@ -129,9 +130,9 @@ struct Projectile
     Actor* actor_hit;
     int obstructed_in_element;
     bool is_done_rendering;
-    char glyph;
+    char character;
     TileId tile;
-    Clr clr;
+    Color color;
     RangedAttData* att_data;
 };
 

@@ -52,7 +52,7 @@ void print_aware_invis_mon_msg(const Mon& mon)
         "a creature";
 
     msg_log::add("There is " + mon_ref + " here!",
-                 clr_msg_note,
+                 colors::msg_note(),
                  false,
                  MorePromptOnMsg::yes);
 }
@@ -404,11 +404,11 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Blocked by darkness, and not seeing monster with infravision?
-    const bool has_darkvis = prop_handler_->has_prop(PropId::darkvis);
+    const bool has_darkvision = prop_handler_->has_prop(PropId::darkvision);
 
     const bool can_see_other_in_drk =
         can_see_invis ||
-        has_darkvis;
+        has_darkvision;
 
     if (cell.player_los.is_blocked_by_drk &&
         !can_see_other_in_drk)
@@ -832,7 +832,7 @@ void Player::item_feeling()
                 const std::string msg = rnd::element(msg_bucket);
 
                 msg_log::add(msg,
-                             clr_cyan_lgt,
+                             colors::light_cyan(),
                              false,
                              MorePromptOnMsg::yes);
 
@@ -920,7 +920,7 @@ void Player::mon_feeling()
         const auto msg = rnd::element(msg_bucket);
 
         msg_log::add(msg,
-                     clr_msg_note,
+                     colors::msg_note(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -1213,7 +1213,7 @@ void Player::on_actor_turn()
         if (is_seeing_burning_feature())
         {
             msg_log::add(msg_fire_prevent_cmd,
-                         clr_text,
+                         colors::text(),
                          true);
         }
     }
@@ -1278,7 +1278,7 @@ void Player::on_actor_turn()
                         actor->name_a());
 
                 msg_log::add(name_a + " comes into my view.",
-                             clr_text,
+                             colors::text(),
                              true);
             }
 
@@ -1349,7 +1349,7 @@ void Player::on_actor_turn()
                     const std::string mon_name = mon.name_a();
 
                     msg_log::add("I spot " + mon_name + "!",
-                                 clr_msg_note,
+                                 colors::msg_note(),
                                  true,
                                  MorePromptOnMsg::yes);
                 }
@@ -1455,7 +1455,7 @@ void Player::on_actor_turn()
         if (nr_turns_until_ins_ > 0)
         {
             msg_log::add("I feel my sanity slipping...",
-                         clr_msg_note,
+                         colors::msg_note(),
                          true,
                          MorePromptOnMsg::yes);
         }
@@ -1923,7 +1923,7 @@ void Player::interrupt_actions()
                     " turns left)? [y/n]";
             }
 
-            msg_log::add(msg, clr_white_lgt);
+            msg_log::add(msg, colors::light_white());
 
             should_continue = (query::yes_or_no() == BinaryAnswer::yes);
 
@@ -1968,7 +1968,7 @@ void Player::hear_sound(const Snd& snd,
     if (has_snd_msg)
     {
         msg_log::add(msg,
-                     clr_text,
+                     colors::text(),
                      false,
                      snd.should_add_more_prompt_on_msg());
     }
@@ -2074,7 +2074,7 @@ void Player::move(Dir dir)
                             msg_log::add("Attack " + mon_name +
                                          " with " + wpn_name +
                                          "? [y/n]",
-                                         clr_white_lgt);
+                                         colors::light_white());
 
                             if (query::yes_or_no() == BinaryAnswer::no)
                             {
@@ -2151,7 +2151,7 @@ void Player::move(Dir dir)
             else if ((enc >= 100) ||
                      (nr_wounds >= min_nr_wounds_for_stagger))
             {
-                msg_log::add("I stagger.", clr_msg_note);
+                msg_log::add("I stagger.", colors::msg_note());
 
                 prop_handler_->apply(new PropWaiting(PropTurns::std));
             }
@@ -2279,23 +2279,23 @@ void Player::move(Dir dir)
     }
 }
 
-Clr Player::clr() const
+Color Player::color() const
 {
     if (!is_alive())
     {
-        return clr_red;
+        return colors::red();
     }
 
     if (active_explosive)
     {
-        return clr_yellow;
+        return colors::yellow();
     }
 
-    Clr tmp_clr;
+    Color tmp_color;
 
-    if (prop_handler_->affect_actor_clr(tmp_clr))
+    if (prop_handler_->affect_actor_color(tmp_color))
     {
-        return tmp_clr;
+        return tmp_color;
     }
 
     const auto* const lantern = inv_->item_in_backpack(ItemId::lantern);
@@ -2303,18 +2303,18 @@ Clr Player::clr() const
     if (lantern &&
         static_cast<const DeviceLantern*>(lantern)->is_activated_)
     {
-        return clr_yellow;
+        return colors::yellow();
     }
 
     if (shock_tot() >= 75)
     {
-        return clr_magenta;
+        return colors::magenta();
     }
 
     if (has_prop(PropId::invis) ||
         has_prop(PropId::cloaked))
     {
-        return clr_gray;
+        return colors::gray();
     }
 
     return data_->color;
@@ -2358,9 +2358,8 @@ void Player::kick_mon(Actor& defender)
 
     const ActorDataT& d = defender.data();
 
-    //
-    // TODO: This is REALLY hacky, it should be done another way.
-    //       Why even have a "stomp" attack?? Why not just kick them as well?
+    // TODO: This is REALLY hacky, it should be done another way. Why even have
+    // a "stomp" attack?? Why not just kick them as well?
     if (d.actor_size == ActorSize::floor &&
         (d.is_spider ||
          d.is_rat ||
@@ -2483,7 +2482,7 @@ void Player::update_fov()
         }
     }
 
-    const bool has_darkvis = has_prop(PropId::darkvis);
+    const bool has_darkvision = has_prop(PropId::darkvision);
 
     if (prop_handler_->allow_see())
     {
@@ -2510,7 +2509,7 @@ void Player::update_fov()
 
                 cell.is_seen_by_player =
                     !los.is_blocked_hard &&
-                    (!los.is_blocked_by_drk || has_darkvis);
+                    (!los.is_blocked_by_drk || has_darkvision);
 
                 cell.player_los = los;
 
@@ -2588,7 +2587,7 @@ void Player::update_fov()
             const bool allow_explore =
                 !cell.is_dark ||
                 is_blocking ||
-                has_darkvis;
+                has_darkvision;
 
             // Do not explore dark floor cells
             if (cell.is_seen_by_player &&
@@ -2612,7 +2611,7 @@ void Player::fov_hack()
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
-    const bool has_darkvis = has_prop(PropId::darkvis);
+    const bool has_darkvision = has_prop(PropId::darkvision);
 
     for (int x = 0; x < map_w; ++x)
     {
@@ -2633,7 +2632,7 @@ void Player::fov_hack()
                         const bool allow_explore =
                             (!adj_cell.is_dark ||
                              adj_cell.is_lit ||
-                             has_darkvis) &&
+                             has_darkvision) &&
                             !blocked[p_adj.x][p_adj.y];
 
                         if (adj_cell.is_seen_by_player &&

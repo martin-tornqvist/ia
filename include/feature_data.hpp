@@ -2,7 +2,7 @@
 #define FEATURE_DATA_HPP
 
 #include <functional>
-#include "art.hpp"
+#include "gfx.hpp"
 #include "map_patterns.hpp"
 #include "properties.hpp"
 
@@ -103,7 +103,7 @@ struct FeatureDataT
 {
     std::function<Feature*(const P& p)> mk_obj;
     FeatureId id;
-    char glyph;
+    char character;
     TileId tile;
     MoveRules move_rules;
     bool is_sound_passable;

@@ -147,8 +147,8 @@ void PickBgState::draw()
     io::draw_text_center("What is your background?",
                          Panel::screen,
                          P(map_w_half, 0),
-                         clr_title,
-                         clr_black,
+                         colors::title(),
+                         colors::black(),
                          true);
 
     int y = opt_y0_;
@@ -165,15 +165,15 @@ void PickBgState::draw()
         const std::string bg_name = player_bon::bg_title(bg);
         const bool is_marked = bg == bg_marked;
 
-        const Clr& drw_clr =
+        const auto& draw_color =
             is_marked ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         io::draw_text(key_str + bg_name,
                       Panel::screen,
                       P(opt_x0_, y),
-                      drw_clr);
+                      draw_color);
 
         ++y;
         ++key_str[0];
@@ -205,7 +205,7 @@ void PickBgState::draw()
             io::draw_text(line,
                           Panel::screen,
                           P(descr_x0_, y),
-                          descr_entry.clr);
+                          descr_entry.color);
             ++y;
         }
     }
@@ -334,8 +334,8 @@ void PickTraitState::draw()
     io::draw_text_center(title,
                          Panel::screen,
                          P(map_w_half, 0),
-                         clr_title,
-                         clr_black,
+                         colors::title(),
+                         colors::black(),
                          true);
 
     MenuBrowser* browser;
@@ -378,35 +378,35 @@ void PickTraitState::draw()
 
         const bool is_idx_marked = browser_y == i;
 
-        Clr clr = clr_magenta_lgt;
+        Color color = colors::light_magenta();
 
         if (screen_mode_ == TraitScreenMode::pick_new)
         {
             if (is_idx_marked)
             {
-                clr = clr_menu_highlight;
+                color = colors::menu_highlight();
             }
             else // Not marked
             {
-                clr = clr_menu_drk;
+                color = colors::menu_dark();
             }
         }
         else // Viewing unavailable traits
         {
             if (is_idx_marked)
             {
-                clr = clr_red_lgt;
+                color = colors::light_red();
             }
             else // Not marked
             {
-                clr = clr_red;
+                color = colors::red();
             }
         }
 
         io::draw_text(key_str + trait_name,
                       Panel::screen,
                       P(opt_x0_, y),
-                      clr);
+                      color);
 
         ++y;
         ++key_str[0];
@@ -418,7 +418,7 @@ void PickTraitState::draw()
         io::draw_text("(More - Page Up)",
                       Panel::screen,
                       P(opt_x0_, top_more_y_),
-                      clr_white_lgt);
+                      colors::light_white());
     }
 
     if (!browser->is_on_btm_page())
@@ -426,7 +426,7 @@ void PickTraitState::draw()
         io::draw_text("(More - Page Down)",
                       Panel::screen,
                       P(opt_x0_, btm_more_y_),
-                      clr_white_lgt);
+                      colors::light_white());
     }
 
     //
@@ -443,7 +443,7 @@ void PickTraitState::draw()
         io::draw_text(str,
                       Panel::screen,
                       P(descr_x0_, y),
-                      clr_white);
+                      colors::white());
         ++y;
     }
 
@@ -474,19 +474,19 @@ void PickTraitState::draw()
         io::draw_text(label,
                       Panel::screen,
                       P(descr_x0_, y),
-                      clr_white);
+                      colors::white());
 
-        std::vector<StrAndClr> prereq_titles;
+        std::vector<ColoredString> prereq_titles;
 
         std::string prereq_str = "";
 
-        const Clr& clr_prereq_ok = clr_green;
+        const Color& clr_prereq_ok = colors::green();
 
-        const Clr& clr_prereq_not_ok = clr_red;
+        const Color& clr_prereq_not_ok = colors::red();
 
         if (trait_marked_bg_prereq != Bg::END)
         {
-            const Clr& clr =
+            const auto& color =
                 (player_bon::bg() == trait_marked_bg_prereq) ?
                 clr_prereq_ok :
                 clr_prereq_not_ok;
@@ -494,7 +494,7 @@ void PickTraitState::draw()
             const std::string bg_title =
                 player_bon::bg_title(trait_marked_bg_prereq);
 
-            prereq_titles.push_back(StrAndClr(bg_title, clr));
+            prereq_titles.push_back(ColoredString(bg_title, color));
         }
 
         for (Trait prereq_trait : trait_marked_prereqs)
@@ -502,7 +502,7 @@ void PickTraitState::draw()
             const bool is_picked =
                 player_bon::traits[(size_t)prereq_trait];
 
-            const Clr& clr =
+            const auto& color =
                 is_picked ?
                 clr_prereq_ok :
                 clr_prereq_not_ok;
@@ -510,12 +510,12 @@ void PickTraitState::draw()
             const std::string trait_title =
                 player_bon::trait_title(prereq_trait);
 
-            prereq_titles.push_back(StrAndClr(trait_title, clr));
+            prereq_titles.push_back(ColoredString(trait_title, color));
         }
 
         if (trait_marked_clvl_prereq != -1)
         {
-            const Clr& clr =
+            const Color& color =
                 (game::clvl() >= trait_marked_clvl_prereq) ?
                 clr_prereq_ok :
                 clr_prereq_not_ok;
@@ -523,17 +523,17 @@ void PickTraitState::draw()
             const std::string clvl_title =
                 "Character level " + std::to_string(trait_marked_clvl_prereq);
 
-            prereq_titles.push_back(StrAndClr(clvl_title, clr));
+            prereq_titles.push_back(ColoredString(clvl_title, color));
         }
 
         const int prereq_list_x = descr_x0_ + label.size() + 1;
 
-        for (const StrAndClr& title : prereq_titles)
+        for (const ColoredString& title : prereq_titles)
         {
             io::draw_text(title.str,
                           Panel::screen,
                           P(prereq_list_x, y),
-                          title.clr);
+                          title.color);
 
             ++y;
         }
@@ -640,7 +640,7 @@ void EnterNameState::draw()
     io::draw_text_center("What is your name?",
                          Panel::screen,
                          P(map_w_half, 0),
-                         clr_title);
+                         colors::title());
 
     const int y_name = 3;
 
@@ -655,7 +655,7 @@ void EnterNameState::draw()
     io::draw_text(name_str,
                   Panel::screen,
                   P(name_x0, y_name),
-                  clr_menu_highlight);
+                  colors::menu_highlight());
 
     R box_rect(P(name_x0 - 1, y_name - 1),
                P(name_x1 + 1, y_name + 1));

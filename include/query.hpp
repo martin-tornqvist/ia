@@ -37,12 +37,12 @@ void wait_for_confirm();
 InputData letter(const bool accept_enter);
 
 int number(const P& pos,
-           const Clr clr,
+           const Color color,
            const int min,
            const int max_nr_digits,
            const int default_value,
            const bool cancel_returns_default);
 
-} //query
+} // query
 
 #endif

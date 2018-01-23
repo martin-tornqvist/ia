@@ -91,7 +91,7 @@ InputData letter(const bool accept_enter)
 }
 
 int number(const P& pos,
-           const Clr clr,
+           const Color color,
            const int min,
            const int max_nr_digits,
            const int default_value,
@@ -110,7 +110,7 @@ int number(const P& pos,
 
     const std::string str = (ret_num == 0 ? "" : std::to_string(ret_num)) + "_";
 
-    io::draw_text(str, Panel::screen, pos, clr);
+    io::draw_text(str, Panel::screen, pos, color);
 
     io::update_screen();
 
@@ -146,13 +146,13 @@ int number(const P& pos,
             ret_num = ret_num / 10;
 
             io::cover_area(Panel::screen,
-                               pos,
-                               P(max_nr_digits + 1, 1));
+                           pos,
+                           P(max_nr_digits + 1, 1));
 
             io::draw_text((ret_num == 0 ? "" : std::to_string(ret_num)) + "_",
-                              Panel::screen,
-                              pos,
-                              clr);
+                          Panel::screen,
+                          pos,
+                          color);
 
             io::update_screen();
             continue;
@@ -165,13 +165,13 @@ int number(const P& pos,
             ret_num = std::max(min, ret_num * 10 + current_digit);
 
             io::cover_area(Panel::screen,
-                               pos,
-                               P(max_nr_digits + 1, 1));
+                           pos,
+                           P(max_nr_digits + 1, 1));
 
-            io::draw_text((ret_num == 0 ? "" : std::to_string(ret_num)) + "_",
-                              Panel::screen,
-                              pos,
-                              clr);
+            io::draw_text(((ret_num == 0) ? "" : std::to_string(ret_num)) + "_",
+                          Panel::screen,
+                          pos,
+                          color);
 
             io::update_screen();
         }

@@ -2,18 +2,34 @@
 #define ABILITY_VALUES_HPP
 
 #include <cstddef>
+#include <unordered_map>
 
 class Actor;
 
 enum class AbilityId
 {
-    empty,
-    searching,
-    ranged,
     melee,
+    ranged,
     dodging,
     stealth,
+    searching,
     END
+};
+
+const std::unordered_map<std::string, AbilityId> str_to_ability_id_map = {
+    {"melee", AbilityId::melee},
+    {"ranged", AbilityId::ranged},
+    {"dodging", AbilityId::dodging},
+    {"stealth", AbilityId::stealth},
+    {"searching", AbilityId::searching},
+};
+
+const std::unordered_map<AbilityId, std::string> ability_id_to_str_map = {
+    {AbilityId::melee, "melee"},
+    {AbilityId::ranged, "ranged"},
+    {AbilityId::dodging, "dodging"},
+    {AbilityId::stealth, "stealth"},
+    {AbilityId::searching, "searching"},
 };
 
 enum class ActionResult
@@ -51,7 +67,7 @@ public:
             const bool is_affected_by_props,
             const Actor& actor) const;
 
-    int raw_val(const AbilityId id)
+    int raw_val(const AbilityId id) const
     {
         return ability_list[(size_t)id];
     }

@@ -25,9 +25,9 @@ public:
 
     ConsumeItem activate(Actor* const actor) override final;
 
-    Clr interface_clr() const override final
+    Color interface_color() const override final
     {
-        return clr_blue_lgt;
+        return colors::light_blue();
     }
 
     std::vector<std::string> descr() const override final;
@@ -484,7 +484,7 @@ struct PotionLook
 {
     std::string name_plain;
     std::string name_a;
-    Clr clr;
+    Color color;
 };
 
 void init();
@@ -492,6 +492,6 @@ void init();
 void save();
 void load();
 
-} //PotionHandling
+} // potion_handling
 
-#endif
+#endif // ITEM_POTION_HPP

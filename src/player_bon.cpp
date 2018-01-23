@@ -337,19 +337,19 @@ std::string trait_title(const Trait id)
     return "[TRAIT TITLE MISSING]";
 }
 
-std::vector<StrAndClr> bg_descr(const Bg id)
+std::vector<ColoredString> bg_descr(const Bg id)
 {
-    std::vector<StrAndClr> descr;
+    std::vector<ColoredString> descr;
 
     auto put = [&descr](const std::string& str)
     {
-        descr.push_back({str, clr_white});
+        descr.push_back({str, colors::white()});
     };
 
     auto put_trait = [&descr](const Trait id)
     {
-        descr.push_back({trait_title(id), clr_white});
-        descr.push_back({trait_descr(id), clr_gray});
+        descr.push_back({trait_title(id), colors::white()});
+        descr.push_back({trait_descr(id), colors::gray()});
     };
 
     switch (id)

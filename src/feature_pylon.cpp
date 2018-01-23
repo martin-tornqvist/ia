@@ -84,12 +84,12 @@ std::string Pylon::name(const Article article) const
     return str;
 }
 
-Clr Pylon::clr_default() const
+Color Pylon::color_default() const
 {
     return
         is_activated_ ?
-        clr_red_lgt :
-        clr_gray;
+        colors::light_red() :
+        colors::gray();
 }
 
 void Pylon::on_hit(const int dmg,

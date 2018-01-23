@@ -1,0 +1,47 @@
+<colors>
+  <color name="black" rgb_hex="000000"/>
+
+  <color name="gray" rgb_hex="808080"/>
+  <color name="dark_gray" rgb_hex="303030"/>
+  <color name="extra_dark_gray" rgb_hex="1e1e1e"/>
+
+  <color name="white" rgb_hex="c0c0c0"/>
+  <color name="light_white" rgb_hex="ffffff"/>
+
+  <color name="red" rgb_hex="800000"/>
+  <color name="light_red" rgb_hex="ff0000"/>
+
+  <color name="green" rgb_hex="008000"/>
+  <color name="light_green" rgb_hex="00ff00"/>
+  <color name="dark_green" rgb_hex="004000"/>
+
+  <color name="yellow" rgb_hex="ffff00"/>
+  <color name="dark_yellow" rgb_hex="cdcd00"/>
+
+  <color name="blue" rgb_hex="0000a8"/>
+  <color name="light_blue" rgb_hex="1e90ff"/>
+
+  <color name="magenta" rgb_hex="8b008b"/>
+  <color name="light_magenta" rgb_hex="ff00ff"/>
+
+  <color name="cyan" rgb_hex="008080"/>
+  <color name="light_cyan" rgb_hex="00ffff"/>
+
+  <color name="brown" rgb_hex="99663d"/>
+  <color name="dark_brown" rgb_hex="604020"/>
+  <color name="gray_brown" rgb_hex="534c42"/>
+  <color name="dark_gray_brown" rgb_hex="2b2820"/>
+
+  <color name="violet" rgb_hex="8000ff"/>
+  <color name="dark_violet" rgb_hex="400080"/>
+
+  <color name="orange" rgb_hex="ff8000"/>
+
+  <color name="sepia" rgb_hex="887239"/>
+  <color name="light_sepia" rgb_hex="e1cd9a"/>
+  <color name="dark_sepia" rgb_hex="423c2b"/>
+
+  <color name="teal" rgb_hex="399d98"/>
+  <color name="light_teal" rgb_hex="58e2e4"/>
+  <color name="dark_teal" rgb_hex="143633"/>
+</colors>

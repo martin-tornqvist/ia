@@ -19,13 +19,13 @@ struct AiAttData
 struct AiAvailAttacksData
 {
     AiAvailAttacksData() :
-        is_reload_needed    (false),
-        is_melee            (true) {}
+        is_reload_needed(false),
+        is_melee(true) {}
 
     AiAvailAttacksData(const AiAvailAttacksData& other) :
-        weapons             (other.weapons),
-        is_reload_needed    (other.is_reload_needed),
-        is_melee            (other.is_melee) {}
+        weapons(other.weapons),
+        is_reload_needed(other.is_reload_needed),
+        is_melee(other.is_melee) {}
 
     AiAvailAttacksData& operator=(const AiAvailAttacksData& other)
     {
@@ -42,9 +42,9 @@ struct AiAvailAttacksData
 struct MonSpell
 {
     MonSpell() :
-        spell       (nullptr),
-        skill       ((SpellSkill)0),
-        cooldown    (-1) {}
+        spell(nullptr),
+        skill((SpellSkill)0),
+        cooldown(-1) {}
 
     Spell* spell;
     SpellSkill skill;
@@ -77,7 +77,7 @@ public:
 
     void move(Dir dir) override;
 
-    virtual Clr clr() const override;
+    virtual Color color() const override;
 
     SpellSkill spell_skill(const SpellId id) const override;
 
@@ -100,24 +100,24 @@ public:
 
     void on_std_turn() override final;
 
-    virtual std::string aggro_msg_mon_seen() const
+    virtual std::string aware_msg_mon_seen() const
     {
-        return data_->aggro_msg_mon_seen;
+        return data_->aware_msg_mon_seen;
     }
 
-    virtual std::string aggro_msg_mon_hidden() const
+    virtual std::string aware_msg_mon_hidden() const
     {
-        return data_->aggro_msg_mon_hidden;
+        return data_->aware_msg_mon_hidden;
     }
 
-    virtual SfxId aggro_sfx_mon_seen() const
+    virtual SfxId aware_sfx_mon_seen() const
     {
-        return data_->aggro_sfx_mon_seen;
+        return data_->aware_sfx_mon_seen;
     }
 
-    virtual SfxId aggro_sfx_mon_hidden() const
+    virtual SfxId aware_sfx_mon_hidden() const
     {
-        return data_->aggro_sfx_mon_hidden;
+        return data_->aware_sfx_mon_hidden;
     }
 
     void speak_phrase(const AlertsMon alerts_others);
@@ -438,12 +438,12 @@ public:
 
     static std::string cultist_phrase();
 
-    std::string aggro_msg_mon_seen() const override
+    std::string aware_msg_mon_seen() const override
     {
         return name_the() + ": " + cultist_phrase();
     }
 
-    std::string aggro_msg_mon_hidden() const override
+    std::string aware_msg_mon_hidden() const override
     {
         return "Voice: " + cultist_phrase();
     }
@@ -996,7 +996,7 @@ public:
 
     void mk_start_items() override;
 
-    Clr clr() const override;
+    Color color() const override;
 
     std::string death_msg() const override
     {
@@ -1099,9 +1099,9 @@ public:
 
     std::string name_a() const override;
 
-    char glyph() const override;
+    char character() const override;
 
-    Clr clr() const override;
+    Color color() const override;
 
     TileId tile() const override;
 

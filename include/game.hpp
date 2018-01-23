@@ -15,8 +15,8 @@ class Actor;
 struct HistoryEvent
 {
     HistoryEvent(const std::string msg, const int turn) :
-        msg     (msg),
-        turn    (turn) {}
+        msg(msg),
+        turn(turn) {}
 
     const std::string msg;
     const int turn;
@@ -25,23 +25,23 @@ struct HistoryEvent
 struct CellRenderData
 {
     CellRenderData() :
-        clr                             (clr_black),
-        clr_bg                          (clr_black),
-        tile                            (TileId::empty),
-        glyph                           (0),
-        is_light_fade_allowed           (true),
-        mark_lit                        (false),
-        is_living_actor_seen_here       (false),
-        is_aware_of_hostile_mon_here    (false),
-        is_aware_of_allied_mon_here     (false),
-        lifebar_length                  (-1) {}
+        color(colors::black()),
+        color_bg(colors::black()),
+        tile(TileId::empty),
+        character(0),
+        is_light_fade_allowed(true),
+        mark_lit(false),
+        is_living_actor_seen_here(false),
+        is_aware_of_hostile_mon_here(false),
+        is_aware_of_allied_mon_here(false),
+        lifebar_length(-1) {}
 
     CellRenderData& operator=(const CellRenderData&) = default;
 
-    Clr clr;
-    Clr clr_bg;
+    Color color;
+    Color color_bg;
     TileId tile;
-    char glyph;
+    char character;
     bool is_light_fade_allowed;
     bool mark_lit;
     bool is_living_actor_seen_here;

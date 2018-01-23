@@ -313,7 +313,7 @@ void player_sets_option(const MenuBrowser& browser)
 
         const int nr = query::number(
             p,
-            clr_menu_highlight,
+            colors::menu_highlight(),
             1,
             3,
             delay_projectile_draw_,
@@ -332,7 +332,7 @@ void player_sets_option(const MenuBrowser& browser)
 
         const int nr = query::number(
             p,
-            clr_menu_highlight,
+            colors::menu_highlight(),
             1,
             3,
             delay_shotgun_,
@@ -351,7 +351,7 @@ void player_sets_option(const MenuBrowser& browser)
 
         const int nr = query::number(
             p,
-            clr_menu_highlight,
+            colors::menu_highlight(),
             1,
             3,
             delay_explosion_,
@@ -797,7 +797,7 @@ void ConfigState::draw()
     io::draw_text("-Options-",
                   Panel::screen,
                   P(0, 0),
-                  clr_white);
+                  colors::white());
 
     std::string font_disp_name = config::font_name_;
 
@@ -900,10 +900,10 @@ void ConfigState::draw()
         const std::string& str_l = label.first;
         const std::string& str_r = label.second;
 
-        const Clr& clr =
+        const auto& color =
             browser_.y() == (int)i ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
 
         const int y = config::opt_y0_ + i;
@@ -911,26 +911,26 @@ void ConfigState::draw()
         io::draw_text(str_l,
                           Panel::screen,
                           P(0, y),
-                          clr);
+                          color);
 
         if (str_r != "")
         {
             io::draw_text(":",
                               Panel::screen,
                               P(x1 - 2, y),
-                              clr);
+                              color);
 
             io::draw_text(str_r,
                               Panel::screen,
                               P(x1, y),
-                              clr);
+                              color);
         }
     } // for each label
 
     io::draw_text("[enter] to set option [space/esc] to exit",
                   Panel::screen,
                   P(0, 20),
-                  clr_white);
+                  colors::white());
 
     str =
         "NOTE: Tile set requires a resolution 1280x720 or higher. Using "
@@ -946,7 +946,7 @@ void ConfigState::draw()
         io::draw_text(line,
                       Panel::screen,
                       P(0, y),
-                      clr_gray);
+                      colors::gray());
 
         ++y;
     }

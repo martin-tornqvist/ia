@@ -19,9 +19,9 @@ public:
 
     ConsumeItem activate(Actor* const actor) override final;
 
-    Clr interface_clr() const override final
+    Color interface_color() const override final
     {
-        return clr_violet;
+        return colors::violet();
     }
 
     void on_std_turn_in_inv(const InvType inv_type) override final;
@@ -186,7 +186,7 @@ struct RodLook
 {
     std::string name_plain;
     std::string name_a;
-    Clr clr;
+    Color color;
 };
 
 void init();
@@ -194,6 +194,6 @@ void init();
 void save();
 void load();
 
-} //rod_handling
+} // rod_handling
 
 #endif // ITEM_ROD_HPP

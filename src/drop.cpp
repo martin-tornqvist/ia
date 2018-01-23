@@ -96,7 +96,7 @@ void drop_item_from_inv(Actor& actor,
     if (&actor == map::player)
     {
         msg_log::add("I drop " + item_ref + ".",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "ability_values.hpp"
 #include "global.hpp"
@@ -17,25 +18,36 @@ enum class ActorId
     zombie,
     zombie_axe,
     bloated_zombie,
+    major_clapham_lee,
+    dean_halsey,
     crawling_intestines,
     crawling_hand,
     thing,
     floating_skull,
     cultist,
+    bog_tcher,
+    keziah_mason,
+    brown_jenkin,
+    leng_elder,
     cultist_priest,
     cultist_wizard,
     cultist_arch_wizard,
-    bog_tcher,
-    rat,
-    rat_thing,
     green_spider,
     white_spider,
     red_spider,
     shadow_spider,
     leng_spider,
+    rat,
+    rat_thing,
     pit_viper,
     spitting_cobra,
     black_mamba,
+    fire_hound,
+    energy_hound,
+    zuul,
+    ghost,
+    phantasm,
+    wraith,
     mi_go,
     mi_go_commander,
     flying_polyp,
@@ -47,12 +59,6 @@ enum class ActorId
     shadow,
     invis_stalker,
     wolf,
-    fire_hound,
-    energy_hound,
-    zuul,
-    ghost,
-    phantasm,
-    wraith,
     void_traveler,
     elder_void_traveler,
     raven,
@@ -68,11 +74,6 @@ enum class ActorId
     nitokris,
     deep_one,
     ape,
-    keziah_mason,
-    brown_jenkin,
-    leng_elder,
-    major_clapham_lee,
-    dean_halsey,
     worm_mass,
     mind_worms,
     dust_vortex,
@@ -106,6 +107,20 @@ enum class MonGroupSize
     swarm
 };
 
+const std::unordered_map<std::string, MonGroupSize> str_to_group_size_map = {
+    {"alone", MonGroupSize::alone},
+    {"few", MonGroupSize::few},
+    {"pack", MonGroupSize::pack},
+    {"swarm", MonGroupSize::swarm}
+};
+
+const std::unordered_map<MonGroupSize, std::string> group_size_to_str_map = {
+    {MonGroupSize::alone, "alone"},
+    {MonGroupSize::few, "few"},
+    {MonGroupSize::pack, "pack"},
+    {MonGroupSize::swarm, "swarm"}
+};
+
 // Each actor data entry has a list of this struct, this is used for choosing
 // group sizes when spawning monsters. The size of the group spawned is
 // determined by a weighted random choice (so that a certain monster could for
@@ -134,14 +149,6 @@ enum class ActorSpeed
     END
 };
 
-enum class ActorErraticFreq
-{
-    never       = 0,
-    rare        = 5,
-    somewhat    = 15,
-    very        = 35
-};
-
 enum class ActorSize
 {
     undefined,
@@ -150,17 +157,53 @@ enum class ActorSize
     giant
 };
 
+const std::unordered_map<std::string, ActorSize> str_to_actor_size_map = {
+    {"undefined", ActorSize::undefined},
+    {"floor", ActorSize::floor},
+    {"humanoid", ActorSize::humanoid},
+    {"giant", ActorSize::giant}
+};
+
+const std::unordered_map<ActorSize, std::string> actor_size_to_str_map = {
+    {ActorSize::undefined, "undefined"},
+    {ActorSize::floor, "floor"},
+    {ActorSize::humanoid, "humanoid"},
+    {ActorSize::giant, "giant"}
+};
+
 enum class AiId
 {
     looks,
-    makes_room_for_friend,
+    avoids_blocking_friend,
     attacks,
-    paths_to_tgt_when_aware,
-    moves_to_tgt_when_los,
+    paths_to_target_when_aware,
+    moves_to_target_when_los,
     moves_to_lair,
     moves_to_leader,
-    moves_to_random_when_unaware,
+    moves_randomly_when_unaware,
     END
+};
+
+const std::unordered_map<std::string, AiId> str_to_ai_id_map = {
+    {"looks", AiId::looks},
+    {"avoids_blocking_friend", AiId::avoids_blocking_friend},
+    {"attacks", AiId::attacks},
+    {"paths_to_target_when_aware", AiId::paths_to_target_when_aware},
+    {"moves_to_target_when_los", AiId::moves_to_target_when_los},
+    {"moves_to_lair", AiId::moves_to_lair},
+    {"moves_to_leader", AiId::moves_to_leader},
+    {"moves_randomly_when_unaware", AiId::moves_randomly_when_unaware}
+};
+
+const std::unordered_map<AiId, std::string> ai_id_to_str_map = {
+    {AiId::looks, "looks"},
+    {AiId::avoids_blocking_friend, "avoids_blocking_friend"},
+    {AiId::attacks, "attacks"},
+    {AiId::paths_to_target_when_aware, "paths_to_target_when_aware"},
+    {AiId::moves_to_target_when_los, "moves_to_target_when_los"},
+    {AiId::moves_to_lair, "moves_to_lair"},
+    {AiId::moves_to_leader, "moves_to_leader"},
+    {AiId::moves_randomly_when_unaware, "moves_randomly_when_unaware"}
 };
 
 struct ActorDataT
@@ -178,10 +221,13 @@ struct ActorDataT
     std::string corpse_name_a;
     std::string corpse_name_the;
     TileId tile;
-    char glyph;
-    Clr color;
+    char character;
+    Color color;
     std::vector<MonGroupSpawnRule> group_sizes;
-    int hp, spi, dmg_melee, dmg_ranged;
+    int hp;
+    int spi;
+    int dmg_melee;
+    int dmg_ranged;
     int speed_pct;
     AbilityVals ability_vals;
     bool natural_props[(size_t)PropId::END];
@@ -191,26 +237,24 @@ struct ActorDataT
     int spawn_min_dlvl, spawn_max_dlvl;
     ActorSize actor_size;
     bool is_humanoid;
-    bool is_auto_descr_allowed;
+    bool allow_generated_descr;
     int nr_kills;
     bool has_player_seen;
     bool can_open_doors, can_bash_doors;
-    //
-    // NOTE: Knockback may be prevented even if this is false, e.g. if monstes
-    //       is ethereal
-    //
+    // NOTE: Knockback may also be prevented by other soucres, e.g. if
+    // the monster is ethereal
     bool prevent_knockback;
     int nr_left_allowed_to_spawn;
     bool is_unique;
     bool is_auto_spawn_allowed;
     std::string descr;
     std::string wary_msg;
-    std::string aggro_msg_mon_seen;
-    std::string aggro_msg_mon_hidden;
-    SfxId aggro_sfx_mon_seen;
-    SfxId aggro_sfx_mon_hidden;
+    std::string aware_msg_mon_seen;
+    std::string aware_msg_mon_hidden;
+    SfxId aware_sfx_mon_seen;
+    SfxId aware_sfx_mon_hidden;
     std::string spell_cast_msg;
-    ActorErraticFreq erratic_move_pct;
+    int erratic_move_pct;
     ShockLvl mon_shock_lvl;
     bool is_rat;
     bool is_canine;

@@ -36,18 +36,20 @@ enum class ExplIsGas
 namespace explosion
 {
 
-//
+// TODO: The signature of this function is really ugly! add a data struct
+// instead to pass as config. Perhaps also a second convenience function which
+// just runs a good old regular explosion.
+
 // NOTE: If "emit_expl_sound" is set to "no", this typically means that the
-//       caller should emit a custom sound before running the explosion (e.g.
-//       molotov explosion sound).
-//
+// caller should emit a custom sound before running the explosion (e.g. molotov
+// explosion sound).
 void run(const P& origin,
          const ExplType expl_type,
          const EmitExplSnd emit_expl_snd = EmitExplSnd::yes,
          const int radi_change = 0,
          const ExplExclCenter exclude_center = ExplExclCenter::no,
          std::vector<Prop*> properties_applied = {},
-         const Clr* const clr_override = nullptr,
+         const Color clr_override = Color(),
          const ExplIsGas is_gas = ExplIsGas::no);
 
 void run_smoke_explosion_at(const P& origin,

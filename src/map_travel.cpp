@@ -15,6 +15,7 @@
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
+#include "actor_player.hpp"
 
 namespace map_travel
 {

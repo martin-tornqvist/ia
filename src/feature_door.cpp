@@ -10,6 +10,8 @@
 #include "player_bon.hpp"
 #include "map_parsing.hpp"
 #include "text_format.hpp"
+#include "game.hpp"
+#include "game_time.hpp"
 
 Door::Door(const P& feature_pos,
            const Rigid* const mimic_feature,
@@ -23,9 +25,7 @@ Door::Door(const P& feature_pos,
     is_secret_              (false),
     type_                   (type)
 {
-    //
     // Gates should never be secret
-    //
     ASSERT(!(type_ == DoorType::gate &&
              mimic_feature));
 
@@ -35,12 +35,10 @@ Door::Door(const P& feature_pos,
 
     if (spawn_state == DoorSpawnState::any)
     {
-        //
         // NOTE: The chances below are just generic default behavior for random
-        //       doors placed wherever. Doors may be explicitly set to other
-        //       states elsewhere during map generation (e.g. set to secret to
-        //       hide an optional branch of the map).
-        //
+        // doors placed wherever. Doors may be explicitly set to other states
+        // elsewhere during map generation (e.g. set to secret to hide an
+        // optional branch of the map).
 
         const int pct_secret =
             (type_ == DoorType::gate) ?
@@ -412,7 +410,7 @@ void Door::on_hit(const int dmg,
                     !is_secret_)
                 {
                     msg_log::add("It seems futile.",
-                                 clr_msg_note,
+                                 colors::msg_note(),
                                  false,
                                  MorePromptOnMsg::yes);
                 }
@@ -581,43 +579,43 @@ std::string Door::name(const Article article) const
 
 } // name
 
-Clr Door::clr_default() const
+Color Door::color_default() const
 {
     if (is_secret_)
     {
-        return mimic_feature_->clr();
+        return mimic_feature_->color();
     }
     else
     {
         switch (type_)
         {
         case DoorType::wood:
-            return clr_brown_drk;
+            return colors::dark_brown();
             break;
 
         case DoorType::metal:
-            return clr_cyan;
+            return colors::cyan();
             break;
 
         case DoorType::gate:
-            return clr_gray;
+            return colors::gray();
             break;
         }
     }
 
     ASSERT(false);
 
-    return clr_gray;
+    return colors::gray();
 }
 
-char Door::glyph() const
+char Door::character() const
 {
     if (is_secret_)
     {
         ASSERT(type_ != DoorType::gate);
         ASSERT(mimic_feature_);
 
-        return mimic_feature_->glyph();
+        return mimic_feature_->character();
     }
     else // Not secret
     {

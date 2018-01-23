@@ -48,7 +48,7 @@ void run_std_turn_events()
     if (is_magic_descend_nxt_std_turn)
     {
         msg_log::add("I sink downwards!",
-                     clr_white,
+                     colors::white(),
                      false,
                      MorePromptOnMsg::yes);
 

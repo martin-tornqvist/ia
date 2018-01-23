@@ -49,7 +49,7 @@ protected:
     void draw_weight_pct_and_dots(const P item_pos,
                                   const size_t item_name_len,
                                   const Item& item,
-                                  const Clr& item_name_clr,
+                                  const Color& item_name_color_id,
                                   const bool is_marked) const;
 
     void draw_item_symbol(const Item& item, const P& p) const;
@@ -61,8 +61,8 @@ class BrowseInv: public InvState
 {
 public:
     BrowseInv() :
-        InvState            (),
-        received_exit_cmd_  (false) {}
+        InvState(),
+        received_exit_cmd_(false) {}
 
     void on_start() override;
 

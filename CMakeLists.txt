@@ -17,7 +17,6 @@ set(SRC
   include/actor_mon.hpp
   include/actor_player.hpp
   include/ai.hpp
-  include/art.hpp
   include/attack.hpp
   include/audio.hpp
   include/bot.hpp
@@ -42,6 +41,7 @@ set(SRC
   include/fov.hpp
   include/game.hpp
   include/game_time.hpp
+  include/gfx.hpp
   include/global.hpp
   include/gods.hpp
   include/highscore.hpp
@@ -100,7 +100,6 @@ set(SRC
   src/actor_mon.cpp
   src/actor_player.cpp
   src/ai.cpp
-  src/art.cpp
   src/attack.cpp
   src/audio.cpp
   src/bot.cpp
@@ -125,6 +124,7 @@ set(SRC
   src/fov.cpp
   src/game.cpp
   src/game_time.cpp
+  src/gfx.cpp
   src/gods.cpp
   src/highscore.cpp
   src/init.cpp
@@ -209,6 +209,9 @@ set(SRC
   rl_utils/src/random.cpp
   rl_utils/src/rl_utils.cpp
   rl_utils/src/time.cpp
+
+  xml/tinyxml2/tinyxml2.h
+  xml/tinyxml2/tinyxml2.cpp
   )
 
 
@@ -251,6 +254,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
     -Wextra
     -Werror
     -Wno-unused-value
+    # implicit-fallthrough warnings must be disabled for tinyxml2, which relies
+    # on this technique
+    -Wno-implicit-fallthrough
     )
 
   set(DEBUG_COMPILE_FLAGS
@@ -284,6 +290,7 @@ target_compile_options(ia-debug PUBLIC
 set(COMMON_INCLUDE_DIRS
     include
     rl_utils/include
+    xml/tinyxml2
     )
 
 target_include_directories(ia PUBLIC

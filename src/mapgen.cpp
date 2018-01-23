@@ -63,7 +63,7 @@ void connect_rooms()
                 io::draw_text("Failed to connect map",
                               Panel::screen,
                               P(0, 0),
-                              clr_red_lgt);
+                              colors::light_red());
                 io::update_screen();
                 sdl_base::sleep(8000);
             }
@@ -259,7 +259,7 @@ P mk_stairs()
             io::draw_text("To few cells to place stairs",
                           Panel::screen,
                           P(0, 0),
-                          clr_red_lgt);
+                          colors::light_red());
             io::update_screen();
             sdl_base::sleep(8000);
         }
@@ -522,7 +522,7 @@ bool mk_std_lvl()
         io::draw_text("Press any key to make aux rooms...",
                       Panel::screen,
                       P(0, 0),
-                      clr_white);
+                      colors::white());
         io::update_screen();
         query::wait_for_key_press();
         io::cover_panel(Panel::log);
@@ -549,7 +549,7 @@ bool mk_std_lvl()
             io::draw_text("Press any key to make sub rooms...",
                           Panel::screen,
                           P(0, 0),
-                          clr_white);
+                          colors::white());
             io::update_screen();
             query::wait_for_key_press();
             io::cover_panel(Panel::log);
@@ -605,7 +605,7 @@ bool mk_std_lvl()
         io::draw_text("Press any key to run pre-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
-                      clr_white);
+                      colors::white());
         io::update_screen();
         query::wait_for_key_press();
         io::cover_panel(Panel::log);
@@ -635,7 +635,7 @@ bool mk_std_lvl()
         io::draw_text("Press any key to connect rooms...",
                       Panel::screen,
                       P(0, 0),
-                      clr_white);
+                      colors::white());
         io::update_screen();
         query::wait_for_key_press();
         io::cover_panel(Panel::log);
@@ -661,7 +661,7 @@ bool mk_std_lvl()
         io::draw_text("Press any key to run post-connect functions on rooms...",
                       Panel::screen,
                       P(0, 0),
-                      clr_white);
+                      colors::white());
         io::update_screen();
         query::wait_for_key_press();
         io::cover_panel(Panel::log);

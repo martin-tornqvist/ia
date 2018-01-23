@@ -147,7 +147,6 @@ int AbilityVals::val(const AbilityId id,
         }
         break;
 
-        case AbilityId::empty:
         case AbilityId::END:
             break;
         }

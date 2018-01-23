@@ -39,6 +39,7 @@
 #include "character_descr.hpp"
 #include "mapgen.hpp"
 #include "actor_data.hpp"
+#include "colors.hpp"
 
 namespace game
 {
@@ -121,14 +122,14 @@ void draw_life_bar(const P& pos, const int length)
     {
         io::draw_line_hor(P(x0_green, px_pos.y),
                           w_green,
-                          clr_green_lgt);
+                          colors::light_green());
     }
 
     if (w_red > 0)
     {
         io::draw_line_hor(P(x0_red, px_pos.y),
                           w_red,
-                          clr_red_lgt);
+                          colors::light_red());
     }
 }
 
@@ -204,9 +205,7 @@ void handle_player_input(const InputData& input)
     switch (input.key)
     {
 
-    //
     // Movement
-    //
     case SDLK_RIGHT:
     case '6':
     case 'l':
@@ -328,9 +327,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Wait
-    //
     case 's':
     {
         if (map::player->is_seeing_burning_feature())
@@ -343,17 +340,12 @@ void handle_player_input(const InputData& input)
         }
         else // We are allowed to wait
         {
-            //
             // NOTE: We should not print any "wait" message here, since it will
-            //       look weird in some cases - e.g. when the waiting is
-            //       immediately interrupted by a message from rearranging
-            //       pistol magazines.
-            //
+            // look weird in some cases - e.g. when the waiting is immediately
+            // interrupted by a message from rearranging pistol magazines.
 
-            //
             // NOTE: Waiting with 's' merely performs "move" into the center
-            //       position a number of turns (i.e. the same as pressing '5')
-            //
+            //  position a number of turns (i.e. the same as pressing '5')
             const int turns_to_apply = 5;
 
             map::player->wait_turns_left = turns_to_apply - 1;
@@ -363,9 +355,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Manual
-    //
     case '?':
     case SDLK_F1:
     {
@@ -375,9 +365,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Options
-    //
     case '=':
     {
         std::unique_ptr<State> config_state(new ConfigState);
@@ -386,9 +374,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Reload
-    //
     case 'r':
     {
         Item* const wpn = map::player->inv().item_in_slot(SlotId::wpn);
@@ -397,45 +383,35 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Kick
-    //
     case 'w':
     {
         wham::run();
     }
     break;
 
-    //
     // Close
-    //
     case 'c':
     {
         close_door::player_try_close_or_jam();
     }
     break;
 
-    //
     // Disarm
-    //
     case 'd':
     {
         disarm::player_disarm();
     }
     break;
 
-    //
     // Unload
-    //
     case 'G':
     {
         item_pickup::try_unload_wpn_or_pickup_ammo();
     }
     break;
 
-    //
     // Aim/fire
-    //
     case 'f':
     {
         const bool is_allowed =
@@ -459,9 +435,7 @@ void handle_player_input(const InputData& input)
                     {
                         // Not enough health for Mi-go gun?
 
-                        //
                         // TODO: This doesn't belong here - refactor
-                        //
                         if (wpn->data().id == ItemId::mi_go_gun)
                         {
                             if (map::player->hp() <= mi_go_gun_hp_drained)
@@ -501,9 +475,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Get
-    //
     case 'g':
     {
         const P& p = map::player->pos;
@@ -517,14 +489,10 @@ void handle_player_input(const InputData& input)
 
             states::pop();
 
-            //
             // Show victory text
-            //
             game::win_game();
 
-            //
             // Go to postmortem state
-            //
             std::unique_ptr<State> postmortem_state(
                 new PostmortemMenu(IsWin::yes));
 
@@ -537,9 +505,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Inventory screen
-    //
     case 'i':
     {
         std::unique_ptr<State> browse_inv(new BrowseInv);
@@ -548,9 +514,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Apply item
-    //
     case 'a':
     {
         std::unique_ptr<State> apply_state(new Apply);
@@ -559,9 +523,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Swap to prepared weapon
-    //
     case 'z':
     {
         Inventory& inv = map::player->inv();
@@ -629,9 +591,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Auto-walk
-    //
     case 'e':
     {
         if (map::player->is_seeing_burning_feature())
@@ -657,7 +617,7 @@ void handle_player_input(const InputData& input)
         else // We are allowed to use auto-walk
         {
             msg_log::add("Which direction?" + cancel_info_str,
-                         clr_white_lgt);
+                         colors::light_white());
 
             const Dir input_dir = query::dir(AllowCenter::no);
 
@@ -677,9 +637,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Throw
-    //
     case 't':
     {
         const Item* explosive = map::player->active_explosive;
@@ -716,9 +674,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Select item for throwing
-    //
     case 'T':
     {
         std::unique_ptr<State> select_throw(new SelectThrow);
@@ -727,9 +683,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // View
-    //
     case 'v':
     {
         if (map::player->prop_handler().allow_see())
@@ -746,18 +700,14 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Auto melee
-    //
     case SDLK_TAB:
     {
         map::player->auto_melee();
     }
     break;
 
-    //
     // Cast spell / use power
-    //
     case 'x':
     {
         std::unique_ptr<State> browse_spell_state(new BrowseSpell);
@@ -766,14 +716,10 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Character info
-    //
     case '@':
     {
-        //
         // TODO: Push character description state
-        //
         std::unique_ptr<State> char_descr_state(new CharacterDescr);
 
         states::push(std::move(char_descr_state));
@@ -788,9 +734,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Make noise
-    //
     case 'N':
     {
         if (player_bon::bg() == Bg::ghoul)
@@ -817,9 +761,7 @@ void handle_player_input(const InputData& input)
     }
     break;
 
-    //
     // Menu
-    //
     case SDLK_ESCAPE:
     {
         const std::vector<std::string> choices
@@ -835,44 +777,34 @@ void handle_player_input(const InputData& input)
 
         if (choice == 0)
         {
-            //
             // Options
-            //
             std::unique_ptr<State> config_state(new ConfigState);
 
             states::push(std::move(config_state));
         }
         else if (choice == 1)
         {
-            //
             // Manual
-            //
             std::unique_ptr<State> browse_manual_state(new BrowseManual);
 
             states::push(std::move(browse_manual_state));
         }
         else if (choice == 2)
         {
-            //
             // Quit
-            //
             query_quit();
         }
     }
     break;
 
-    //
     // Quit
-    //
     case 'Q':
     {
         query_quit();
     }
     break;
 
-    //
     // Some cheat commands enabled in debug builds
-    //
 #ifndef NDEBUG
     case SDLK_F2:
     {
@@ -949,10 +881,10 @@ void handle_player_input(const InputData& input)
     {
         const std::string query_str = "Summon monster id:";
 
-        io::draw_text(query_str, Panel::screen, P(0, 0), clr_yellow);
+        io::draw_text(query_str, Panel::screen, P(0, 0), colors::yellow());
 
         const int idx = query::number(P(query_str.size(), 0),
-                                      clr_white_lgt,
+                                      colors::light_white(),
                                       0,
                                       (int)ActorId::END,
                                       0,
@@ -965,9 +897,7 @@ void handle_player_input(const InputData& input)
     break;
 #endif // NDEBUG
 
-    //
     // Undefined commands
-    //
     default:
     {
         if (input.key != -1 && input.key != SDLK_RETURN)
@@ -1030,7 +960,7 @@ void incr_player_xp(const int xp_gained,
             ++clvl_;
 
             msg_log::add("Welcome to level " + std::to_string(clvl_) + "!",
-                         clr_green,
+                         colors::green(),
                          false,
                          MorePromptOnMsg::yes);
 
@@ -1119,8 +1049,8 @@ void win_game()
             io::draw_text(line,
                           Panel::screen,
                           P(x0, y),
-                          clr_white,
-                          clr_black);
+                          colors::white(),
+                          colors::black());
 
             io::update_screen();
 
@@ -1139,8 +1069,8 @@ void win_game()
         "[space/esc/enter] to continue",
         Panel::screen,
         P(map_w_half, screen_h - 2),
-        clr_menu_drk,
-        clr_black,
+        colors::menu_dark(),
+        colors::black(),
         false);
 
     io::update_screen();
@@ -1318,9 +1248,7 @@ void GameState::update()
     // Then another state cycle will be executed, and rendering performed.
     while (true)
     {
-        //
         // Let the current actor act
-        //
         Actor* actor = game_time::current_actor();
 
         const bool allow_act = actor->prop_handler().allow_act();
@@ -1344,9 +1272,7 @@ void GameState::update()
             game_time::tick();
         }
 
-        //
         // NOTE: This state may have been popped at this point
-        //
 
         // We have quit the current game, or the player is dead?
         if (!map::player ||
@@ -1375,13 +1301,11 @@ void GameState::update()
         audio::play(SfxId::death);
 
         msg_log::add("-I AM DEAD!-",
-                     clr_msg_bad,
+                     colors::msg_bad(),
                      false,
                      MorePromptOnMsg::yes);
 
-        //
         // Go to postmortem menu
-        //
         states::pop();
 
         std::unique_ptr<State> postmortem_state(
@@ -1419,32 +1343,32 @@ void GameState::draw_map()
 
                 TileId gore_tile = TileId::empty;
 
-                char gore_glyph = 0;
+                char gore_character = 0;
 
                 if (f->can_have_gore())
                 {
                     gore_tile = f->gore_tile();
-                    gore_glyph = f->gore_glyph();
+                    gore_character = f->gore_character();
                 }
 
                 if (gore_tile == TileId::empty)
                 {
                     render_data->tile = f->tile();
-                    render_data->glyph = f->glyph();
-                    render_data->clr = f->clr();
+                    render_data->character = f->character();
+                    render_data->color = f->color();
 
-                    const Clr& feature_clr_bg = f->clr_bg();
+                    const Color feature_color_bg = f->color_bg();
 
-                    if (!is_clr_equal(feature_clr_bg, clr_black))
+                    if (feature_color_bg != colors::black())
                     {
-                        render_data->clr_bg = feature_clr_bg;
+                        render_data->color_bg = feature_color_bg;
                     }
                 }
                 else // Has gore
                 {
                     render_data->tile = gore_tile;
-                    render_data->glyph = gore_glyph;
-                    render_data->clr = clr_red;
+                    render_data->character = gore_character;
+                    render_data->color = colors::red();
                 }
 
                 if (f->is_los_passable() &&
@@ -1465,16 +1389,16 @@ void GameState::draw_map()
         const P& p(actor->pos);
 
         if (actor->is_corpse() &&
-            actor->data().glyph != 0 &&
-            actor->data().glyph != ' ' &&
+            actor->data().character != 0 &&
+            actor->data().character != ' ' &&
             actor->data().tile != TileId::empty &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data = &game::render_array[p.x][p.y];
 
-            render_data->clr = actor->clr();
+            render_data->color = actor->color();
             render_data->tile = actor->tile();
-            render_data->glyph = actor->glyph();
+            render_data->character = actor->character();
         }
     }
 
@@ -1493,9 +1417,9 @@ void GameState::draw_map()
 
                 if (item)
                 {
-                    render_data->clr = item->clr();
+                    render_data->color = item->color();
                     render_data->tile = item->tile();
-                    render_data->glyph = item->glyph();
+                    render_data->character = item->character();
                 }
 
                 // -------------------------------------------------------------
@@ -1513,8 +1437,10 @@ void GameState::draw_map()
                 // -------------------------------------------------------------
                 if (render_data->mark_lit)
                 {
-                    render_data->clr.r = std::min(255, render_data->clr.r + 40);
-                    render_data->clr.g = std::min(255, render_data->clr.g + 40);
+                    auto& color = render_data->color;
+
+                    color.set_r(std::min(255, color.r() + 40));
+                    color.set_g(std::min(255, color.g() + 40));
 
                     render_data->is_light_fade_allowed = false;
                 }
@@ -1531,17 +1457,17 @@ void GameState::draw_map()
 
         const TileId mob_tile = mob->tile();
 
-        const char mob_glyph = mob->glyph();
+        const char mob_character = mob->character();
 
         if (mob_tile != TileId::empty &&
-            mob_glyph != 0 &&
-            mob_glyph != ' ' &&
+            mob_character != 0 &&
+            mob_character != ' ' &&
             map::cells[p.x][p.y].is_seen_by_player)
         {
             render_data = &game::render_array[p.x][p.y];
-            render_data->clr = mob->clr();
+            render_data->color = mob->color();
             render_data->tile = mob_tile;
-            render_data->glyph = mob_glyph;
+            render_data->character = mob_character;
         }
     }
 
@@ -1570,12 +1496,12 @@ void GameState::draw_map()
             if (map::player->can_see_actor(*actor))
             {
                 if (actor->tile() != TileId::empty &&
-                    actor->glyph() != 0 &&
-                    actor->glyph() != ' ')
+                    actor->character() != 0 &&
+                    actor->character() != ' ')
                 {
-                    render_data->clr = actor->clr();
+                    render_data->color = actor->color();
                     render_data->tile = actor->tile();
-                    render_data->glyph = actor->glyph();
+                    render_data->character = actor->character();
 
                     render_data->is_living_actor_seen_here = true;
                     render_data->is_light_fade_allowed = false;
@@ -1584,7 +1510,7 @@ void GameState::draw_map()
 
                     if (map::player->is_leader_of(mon))
                     {
-                        render_data->clr_bg = clr_allied_mon;
+                        render_data->color_bg = colors::allied_mon();
                     }
                     else // Player is not leader of monster
                     {
@@ -1592,7 +1518,7 @@ void GameState::draw_map()
                         // colored background
                         if (mon->aware_of_player_counter_ <= 0)
                         {
-                            render_data->clr_bg = clr_blue;
+                            render_data->color_bg = colors::blue();
                         }
                         else // Monster is aware of player
                         {
@@ -1604,7 +1530,7 @@ void GameState::draw_map()
 
                             if (has_temporary_negative_prop)
                             {
-                                render_data->clr_bg = clr_magenta;
+                                render_data->color_bg = colors::magenta();
                             }
                         }
                     }
@@ -1630,6 +1556,7 @@ void GameState::draw_map()
     //--------------------------------------------------------------------------
     // Do some "post processing", and draw the map
     //--------------------------------------------------------------------------
+
     const bool use_light_fade = config::use_light_fade_effect();
 
     for (int x = 0; x < map_w; ++x)
@@ -1658,8 +1585,11 @@ void GameState::draw_map()
 
                             div = std::min(2.0, div);
 
-                            div_clr(render_data->clr, div);
-                            div_clr(render_data->clr_bg, div);
+                            render_data->color =
+                                render_data->color.fraction(div);
+
+                            render_data->color_bg =
+                                render_data->color_bg.fraction(div);
                         }
                     }
 
@@ -1670,8 +1600,11 @@ void GameState::draw_map()
                     {
                         const double div = 1.75;
 
-                        div_clr(render_data->clr, div);
-                        div_clr(render_data->clr_bg, div);
+                        render_data->color =
+                            render_data->color.fraction(div);
+
+                        render_data->color_bg =
+                            render_data->color_bg.fraction(div);
                     }
                 }
             }
@@ -1698,8 +1631,11 @@ void GameState::draw_map()
 
                 const double div = 3.0;
 
-                div_clr(render_data->clr, div);
-                div_clr(render_data->clr_bg, div);
+                render_data->color =
+                    render_data->color.fraction(div);
+
+                render_data->color_bg =
+                    render_data->color_bg.fraction(div);
             }
 
             if (is_tile_mode)
@@ -1831,15 +1767,15 @@ void GameState::draw_map()
                 ASSERT(!render_data->is_aware_of_hostile_mon_here ||
                        !render_data->is_aware_of_allied_mon_here);
 
-                const Clr clr_bg =
+                const Color color_bg =
                     render_data->is_aware_of_hostile_mon_here ?
-                    clr_gray :
-                    clr_allied_mon;
+                    colors::gray() :
+                    colors::allied_mon();
 
                 render_data->tile = TileId::empty;
-                render_data->glyph = '!';
-                render_data->clr = clr_black;
-                render_data->clr_bg = clr_bg;
+                render_data->character = '!';
+                render_data->color = colors::black();
+                render_data->color_bg = color_bg;
             }
 
             bool did_draw = false;
@@ -1850,27 +1786,25 @@ void GameState::draw_map()
                 io::draw_tile(render_data->tile,
                               Panel::map,
                               pos,
-                              render_data->clr,
-                              render_data->clr_bg);
+                              render_data->color,
+                              render_data->color_bg);
 
                 did_draw = true;
             }
-            // Text mode, or no tile set - draw glyph?
-            else if ((render_data->glyph != 0) &&
-                     (render_data->glyph != ' '))
+            // Text mode, or no tile set - draw character?
+            else if ((render_data->character != 0) &&
+                     (render_data->character != ' '))
             {
-                //
                 // NOTE: It can happen that text is drawn on the map even in
-                //       tiles mode - for example exclamation marks on cells
-                //       with known, unseen actors
-                //
+                // tiles mode - for example exclamation marks on cells with
+                // known, unseen actors
 
-                io::draw_glyph(render_data->glyph,
+                io::draw_character(render_data->character,
                                Panel::map,
                                pos,
-                               render_data->clr,
+                               render_data->color,
                                true,
-                               render_data->clr_bg);
+                               render_data->color_bg);
 
                 did_draw = true;
             }
@@ -1898,9 +1832,9 @@ void GameState::draw_map()
 
     const bool is_ghoul = player_bon::bg() == Bg::ghoul;
 
-    const Clr clr = map::player->clr();
+    const Color color = map::player->color();
 
-    Clr clr_bg = clr_black;
+    Color color_bg = colors::black();
 
     bool uses_ranged_wpn = false;
 
@@ -1915,31 +1849,31 @@ void GameState::draw_map()
         uses_ranged_wpn ? TileId::player_firearm :
         TileId::player_melee;
 
-    const char glyph = '@';
+    const char character = '@';
 
     auto& player_render_data = game::render_array[pos.x][pos.y];
 
     player_render_data.tile = tile;
-    player_render_data.glyph = glyph;
-    player_render_data.clr = clr;
-    player_render_data.clr_bg = clr_bg;
+    player_render_data.character = character;
+    player_render_data.color = color;
+    player_render_data.color_bg = color_bg;
 
     if (is_tile_mode)
     {
         io::draw_tile(tile,
                       Panel::map,
                       pos,
-                      clr,
-                      clr_bg);
+                      color,
+                      color_bg);
     }
     else // Text mode
     {
-        io::draw_glyph(glyph,
-                       Panel::map,
-                       pos,
-                       clr,
-                       true,
-                       clr_bg);
+        io::draw_character(character,
+                           Panel::map,
+                           pos,
+                           color,
+                           true,
+                           color_bg);
     }
 
     const int life_bar_length = game::lifebar_length(*map::player);
@@ -1949,8 +1883,6 @@ void GameState::draw_map()
         game::draw_life_bar(pos, life_bar_length);
     }
 
-    //
-    // TODO: Reimplement somehow
-    //
+    // TODO: Reimplement somehow - perhaps play a sound effect instead?
     // draw_player_shock_excl_marks();
 }

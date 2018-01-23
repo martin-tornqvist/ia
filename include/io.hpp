@@ -9,7 +9,7 @@
 
 #include "game_time.hpp"
 #include "config.hpp"
-#include "art.hpp"
+#include "gfx.hpp"
 
 struct Projectile;
 
@@ -24,16 +24,16 @@ enum class Panel
 struct InputData
 {
     InputData() :
-        key             (-1),
-        is_shift_held   (false),
-        is_ctrl_held    (false) {}
+        key(-1),
+        is_shift_held(false),
+        is_ctrl_held(false) {}
 
     InputData(int key,
               bool is_shift_held = false,
               bool is_ctrl_held  = false) :
-        key             (key),
-        is_shift_held   (is_shift_held),
-        is_ctrl_held    (is_ctrl_held) {}
+        key(key),
+        is_shift_held(is_shift_held),
+        is_ctrl_held(is_ctrl_held) {}
 
     int key;
     bool is_shift_held, is_ctrl_held;
@@ -49,40 +49,40 @@ void update_screen();
 
 void clear_screen();
 
-void draw_tile(const TileId tile,
-               const Panel panel,
-               const P& pos,
-               const Clr& clr,
-               const Clr& bg_clr = clr_black);
+void draw_tile(
+    const TileId tile,
+    const Panel panel,
+    const P& pos,
+    const Color& color,
+    const Color& color_bg = colors::black());
 
-void draw_glyph(const char glyph,
-                const Panel panel,
-                const P& pos,
-                const Clr& clr,
-                const bool draw_bg_clr = true,
-                const Clr& bg_clr = clr_black);
+void draw_character(const char character,
+                    const Panel panel,
+                    const P& pos,
+                    const Color& color,
+                    const bool draw_bg_color = true,
+                    const Color& color_bg = colors::black());
 
 void draw_text(const std::string& str,
                const Panel panel,
                const P& pos,
-               const Clr& clr,
-               const Clr& bg_clr = clr_black);
+               const Color& color,
+               const Color& color_bg = colors::black());
 
 // TODO: Perhaps centering by adjusting pixel position should not be alloed?
-//       It ruins the terminal feeling a bit...
+// It ruins the terminal feeling a bit...
 int draw_text_center(const std::string& str,
                      const Panel panel,
                      const P& pos,
-                     const Clr& clr,
-                     const Clr& bg_clr = clr_black,
+                     const Color& color,
+                     const Color& color_bg = colors::black(),
                      const bool is_pixel_pos_adj_allowed = true);
 
 void cover_cell_in_map(const P& pos);
 
 void cover_panel(const Panel panel);
 
-void cover_area(const Panel panel,
-                const R& area);
+void cover_area(const Panel panel, const R& area);
 
 void cover_area(const Panel panel,
                 const P& pos,
@@ -92,30 +92,30 @@ void cover_area_px(const P& px_pos, const P& px_dims);
 
 void draw_rectangle_solid(const P& px_pos,
                           const P& px_dims,
-                          const Clr& clr);
+                          const Color& color);
 
 void draw_line_hor(const P& px_pos,
                    const int w,
-                   const Clr& clr);
+                   const Color& color);
 
 void draw_line_ver(const P& px_pos,
                    const int h,
-                   const Clr& clr);
+                   const Color& color);
 
 void draw_blast_at_field(const P& center_pos,
                          const int radius,
                          bool forbidden_cells[map_w][map_h],
-                         const Clr& clr_inner,
-                         const Clr& clr_outer);
+                         const Color& color_inner,
+                         const Color& color_outer);
 
 void draw_blast_at_cells(const std::vector<P>& positions,
-                         const Clr& clr);
+                         const Color& color);
 
 void draw_blast_at_seen_cells(const std::vector<P>& positions,
-                              const Clr& clr);
+                              const Color& color);
 
 void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
-                               const Clr& clr);
+                               const Color& color);
 
 void draw_main_menu_logo(const int y_pos);
 
@@ -126,30 +126,25 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
 
 void draw_box(const R& area,
               const Panel panel = Panel::screen,
-              const Clr& clr = clr_gray_drk,
+              const Color& color = colors::dark_gray(),
               const bool do_cover_area = false);
 
 // Draws a description "box" for items, spells, etc. The parameter lines may be
 // empty, in which case an empty area is drawn.
-void draw_descr_box(const std::vector<StrAndClr>& lines);
+void draw_descr_box(const std::vector<ColoredString>& lines);
 
 void draw_info_scr_interface(const std::string& title,
                              const InfScreenType screen_type);
 
 P px_pos_for_cell_in_panel(const Panel panel, const P& pos);
 
-// ---
-//
+// ----------------------------------------
 // TODO: WTF is the difference between these two functions?
-//
 void flush_input();
-
 void clear_events();
-// ---
+// ----------------------------------------
 
-//
 // TODO: "is_o_return" is very hacky...
-//
 InputData get(const bool is_o_return);
 
 } // io

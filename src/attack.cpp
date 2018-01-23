@@ -717,7 +717,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                     other_name = "It";
                 }
 
-                msg_log::add(other_name + " misses me.", clr_text, true);
+                msg_log::add(other_name + " misses me.", colors::text(), true);
             }
         };
 
@@ -795,7 +795,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                              other_name +
                              att_mod_str +
                              dmg_punct,
-                             clr_msg_good);
+                             colors::msg_good());
             }
             else // Not intrinsic attack
             {
@@ -803,10 +803,10 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                     att_data.is_weak_attack ? "feebly " :
                     att_data.is_backstab ? "covertly "  : "";
 
-                const Clr clr =
+                const Color color =
                     att_data.is_backstab ?
-                    clr_blue_lgt :
-                    clr_msg_good;
+                    colors::light_blue() :
+                    colors::msg_good();
 
                 const std::string wpn_name_a =
                     wpn.name(ItemRefType::a,
@@ -821,7 +821,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                              "with " +
                              wpn_name_a +
                              dmg_punct,
-                             clr);
+                             color);
             }
         }
         else if (att_data.attacker) // Attacker is monster
@@ -846,7 +846,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                              " " +
                              wpn_verb +
                              dmg_punct,
-                             clr_msg_bad,
+                             colors::msg_bad(),
                              true);
             }
         }
@@ -855,7 +855,7 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
             if (att_data.defender == map::player)
             {
                 msg_log::add("I am hit" + dmg_punct,
-                             clr_msg_bad,
+                             colors::msg_bad(),
                              true);
             }
             else // Defender is monster
@@ -866,14 +866,14 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
                         text_format::first_to_upper(
                             att_data.defender->name_the());
 
-                    Clr msg_clr = clr_msg_good;
+                    Color msg_clr = colors::msg_good();
 
                     if (map::player->is_leader_of(att_data.defender))
                     {
                         // Monster is allied to player, use a neutral color
                         // instead (we do not use red color here, since that
                         // is reserved for player taking damage).
-                        msg_clr = clr_white;
+                        msg_clr = colors::white();
                     }
 
                     msg_log::add(other_name + " is hit" + dmg_punct,
@@ -941,7 +941,7 @@ void print_ranged_init_msgs(const RangedAttData& data)
                 const std::string attack_verb = data.verb_other_attacks;
 
                 msg_log::add(attacker_name + " " + attack_verb + ".",
-                             clr_white,
+                             colors::white(),
                              true);
             }
         }
@@ -981,7 +981,7 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
 
         if (data.defender->is_player())
         {
-            msg_log::add("I am hit" + dmg_punct, clr_msg_bad, true);
+            msg_log::add("I am hit" + dmg_punct, colors::msg_bad(), true);
         }
         else // Defender is monster
         {
@@ -994,7 +994,7 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
                         data.defender->name_the());
             }
 
-            msg_log::add(other_name + " is hit" + dmg_punct, clr_msg_good);
+            msg_log::add(other_name + " is hit" + dmg_punct, colors::msg_good());
         }
     }
 }
@@ -1049,30 +1049,30 @@ void fire_projectiles(Actor* const attacker,
                              false,
                              path);
 
-    const Clr projectile_clr = wpn.data().ranged.projectile_clr;
-    char projectile_glyph = wpn.data().ranged.projectile_glyph;
+    const Color projectile_clr = wpn.data().ranged.projectile_color;
+    char projectile_character = wpn.data().ranged.projectile_character;
 
-    if (projectile_glyph == '/')
+    if (projectile_character == '/')
     {
         const int i = path.size() > 2 ? 2 : 1;
 
         if (path[i].y == origin.y)
         {
-            projectile_glyph = '-';
+            projectile_character = '-';
         }
         else if (path[i].x == origin.x)
         {
-            projectile_glyph = '|';
+            projectile_character = '|';
         }
         else if ((path[i].x > origin.x && path[i].y < origin.y) ||
                  (path[i].x < origin.x && path[i].y > origin.y))
         {
-            projectile_glyph = '/';
+            projectile_character = '/';
         }
         else if ((path[i].x > origin.x && path[i].y > origin.y) ||
                  (path[i].x < origin.x && path[i].y < origin.y))
         {
-            projectile_glyph = '\\';
+            projectile_character = '\\';
         }
     }
 
@@ -1080,15 +1080,15 @@ void fire_projectiles(Actor* const attacker,
 
     if (projectile_tile == TileId::projectile_std_front_slash)
     {
-        if (projectile_glyph == '-')
+        if (projectile_character == '-')
         {
             projectile_tile = TileId::projectile_std_dash;
         }
-        else if (projectile_glyph == '|')
+        else if (projectile_character == '|')
         {
             projectile_tile = TileId::projectile_std_vertical_bar;
         }
-        else if (projectile_glyph == '\\')
+        else if (projectile_character == '\\')
         {
             projectile_tile = TileId::projectile_std_back_slash;
         }
@@ -1232,13 +1232,13 @@ void fire_projectiles(Actor* const attacker,
                     {
                         if (config::is_tiles_mode())
                         {
-                            proj->set_tile(TileId::blast1, clr_red_lgt);
+                            proj->set_tile(TileId::blast1, colors::light_red());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
                             sdl_base::sleep(delay / 2);
 
-                            proj->set_tile(TileId::blast2, clr_red_lgt);
+                            proj->set_tile(TileId::blast2, colors::light_red());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1246,7 +1246,7 @@ void fire_projectiles(Actor* const attacker,
                         }
                         else // Text mode
                         {
-                            proj->set_glyph('*', clr_red_lgt);
+                            proj->set_character('*', colors::light_red());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1362,13 +1362,13 @@ void fire_projectiles(Actor* const attacker,
                     {
                         if (config::is_tiles_mode())
                         {
-                            proj->set_tile(TileId::blast1, clr_yellow);
+                            proj->set_tile(TileId::blast1, colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
                             sdl_base::sleep(delay / 2);
 
-                            proj->set_tile(TileId::blast2, clr_yellow);
+                            proj->set_tile(TileId::blast2, colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1376,7 +1376,7 @@ void fire_projectiles(Actor* const attacker,
                         }
                         else // Text mode
                         {
-                            proj->set_glyph('*', clr_yellow);
+                            proj->set_character('*', colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1411,13 +1411,13 @@ void fire_projectiles(Actor* const attacker,
                     {
                         if (config::is_tiles_mode())
                         {
-                            proj->set_tile(TileId::blast1, clr_yellow);
+                            proj->set_tile(TileId::blast1, colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
                             sdl_base::sleep(delay / 2);
 
-                            proj->set_tile(TileId::blast2, clr_yellow);
+                            proj->set_tile(TileId::blast2, colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1425,7 +1425,7 @@ void fire_projectiles(Actor* const attacker,
                         }
                         else // Text mode
                         {
-                            proj->set_glyph('*', clr_yellow);
+                            proj->set_character('*', colors::yellow());
 
                             io::draw_projectiles(projectiles, !leave_trail);
 
@@ -1446,7 +1446,7 @@ void fire_projectiles(Actor* const attacker,
                     }
                     else // Text mode
                     {
-                        proj->set_glyph(projectile_glyph, projectile_clr);
+                        proj->set_character(projectile_character, projectile_clr);
 
                         io::draw_projectiles(projectiles, !leave_trail);
                     }
@@ -1670,14 +1670,14 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                             io::draw_tile(TileId::blast2,
                                               Panel::map,
                                               current_pos,
-                                              clr_red_lgt);
+                                              colors::light_red());
                         }
                         else // Text mode
                         {
-                            io::draw_glyph('*',
+                            io::draw_character('*',
                                                Panel::map,
                                                current_pos,
-                                               clr_red_lgt);
+                                               colors::light_red());
                         }
 
                         io::update_screen();
@@ -1753,11 +1753,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     io::draw_tile(TileId::blast2,
                                   Panel::map,
                                   current_pos,
-                                  clr_yellow);
+                                  colors::yellow());
                 }
                 else // Text mode
                 {
-                    io::draw_glyph('*', Panel::map, current_pos, clr_yellow);
+                    io::draw_character('*', Panel::map, current_pos, colors::yellow());
                 }
 
                 io::update_screen();
@@ -1801,14 +1801,14 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
                     io::draw_tile(TileId::blast2,
                                   Panel::map,
                                   current_pos,
-                                  clr_yellow);
+                                  colors::yellow());
                 }
                 else
                 {
-                    io::draw_glyph('*',
+                    io::draw_character('*',
                                    Panel::map,
                                    current_pos,
-                                   clr_yellow);
+                                   colors::yellow());
                 }
 
                 io::update_screen();
@@ -1942,7 +1942,7 @@ void melee(Actor* const attacker,
                 item->name(ItemRefType::plain, ItemRefInf::none);
 
             msg_log::add("My " + item_name + " breaks!",
-                         clr_msg_note,
+                         colors::msg_note(),
                          true,
                          MorePromptOnMsg::yes);
 
@@ -2049,7 +2049,7 @@ bool ranged(Actor* const attacker,
                 msg_log::add("The " +
                              wpn_name +
                              " draws power from my life force!",
-                             clr_msg_bad);
+                             colors::msg_bad());
 
                 attacker->hit(mi_go_gun_hp_drained,
                               DmgType::pure,

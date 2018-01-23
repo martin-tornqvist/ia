@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "ability_values.hpp"
 #include "rl_utils.hpp"
@@ -13,6 +14,7 @@ class Wpn;
 class Prop;
 class Item;
 
+// NOTE: When updating this, also update the two maps below
 enum class PropId
 {
     r_phys,
@@ -26,14 +28,13 @@ enum class PropId
     r_conf,
     r_breath,
     r_disease,
-    //
     // NOTE: The purpose of this is only to prevent blindness for "eyeless"
-    //       monsters (e.g. constructs such as animated weapons), and is only
-    //       intended as a natural property - not for e.g. gas masks.
-    //
+    // monsters (e.g. constructs such as animated weapons), and is only intended
+    // as a natural property - not for e.g. gas masks.
     r_blind,
     r_para, // Mostly intended as a natural property for monsters
-    lgt_sens,
+    r_spell,
+    light_sensitive,
     blind,
     deaf,
     fainted,
@@ -42,7 +43,7 @@ enum class PropId
     invis,
     cloaked,
     see_invis,
-    darkvis,
+    darkvision,
     poisoned,
     paralyzed,
     terrified,
@@ -80,7 +81,6 @@ enum class PropId
     nailed,
     flared,
     wound,
-    r_spell,
     clockwork_hasted, // For the Arcane Clockwork artifact
     summoned,
     hp_sap,
@@ -88,6 +88,102 @@ enum class PropId
     mind_sap,
 
     END
+};
+
+const std::unordered_map<std::string, PropId> str_to_prop_id_map = {
+    {"r_phys", PropId::r_phys},
+    {"r_fire", PropId::r_fire},
+    {"r_poison", PropId::r_poison},
+    {"r_elec", PropId::r_elec},
+    {"r_acid", PropId::r_acid},
+    {"r_sleep", PropId::r_sleep},
+    {"r_fear", PropId::r_fear},
+    {"r_slow", PropId::r_slow},
+    {"r_conf", PropId::r_conf},
+    {"r_breath", PropId::r_breath},
+    {"r_disease", PropId::r_disease},
+    {"r_blind", PropId::r_blind},
+    {"r_para", PropId::r_para},
+    {"r_spell", PropId::r_spell},
+    {"light_sensitive", PropId::light_sensitive},
+    {"blind", PropId::blind},
+    {"deaf", PropId::deaf},
+    {"fainted", PropId::fainted},
+    {"burning", PropId::burning},
+    {"radiant", PropId::radiant},
+    {"invis", PropId::invis},
+    {"cloaked", PropId::cloaked},
+    {"see_invis", PropId::see_invis},
+    {"darkvision", PropId::darkvision},
+    {"poisoned", PropId::poisoned},
+    {"paralyzed", PropId::paralyzed},
+    {"terrified", PropId::terrified},
+    {"confused", PropId::confused},
+    {"stunned", PropId::stunned},
+    {"slowed", PropId::slowed},
+    {"hasted", PropId::hasted},
+    {"infected", PropId::infected},
+    {"diseased", PropId::diseased},
+    {"weakened", PropId::weakened},
+    {"frenzied", PropId::frenzied},
+    {"blessed", PropId::blessed},
+    {"cursed", PropId::cursed},
+    {"tele_ctrl", PropId::tele_ctrl},
+    {"spell_reflect", PropId::spell_reflect},
+    {"strangled", PropId::strangled},
+    {"conflict", PropId::conflict},
+    {"flying", PropId::flying},
+    {"ethereal", PropId::ethereal},
+    {"ooze", PropId::ooze},
+    {"burrowing", PropId::burrowing}
+};
+
+const std::unordered_map<PropId, std::string> prop_id_to_str_map = {
+    {PropId::r_phys, "r_phys"},
+    {PropId::r_fire, "r_fire"},
+    {PropId::r_poison, "r_poison"},
+    {PropId::r_elec, "r_elec"},
+    {PropId::r_acid, "r_acid"},
+    {PropId::r_sleep, "r_sleep"},
+    {PropId::r_fear, "r_fear"},
+    {PropId::r_slow, "r_slow"},
+    {PropId::r_conf, "r_conf"},
+    {PropId::r_breath, "r_breath"},
+    {PropId::r_disease, "r_disease"},
+    {PropId::r_blind, "r_blind"},
+    {PropId::r_para, "r_para"},
+    {PropId::r_spell, "r_spell"},
+    {PropId::light_sensitive, "light_sensitive"},
+    {PropId::blind, "blind"},
+    {PropId::deaf, "deaf"},
+    {PropId::fainted, "fainted"},
+    {PropId::burning, "burning"},
+    {PropId::radiant, "radiant"},
+    {PropId::invis, "invis"},
+    {PropId::cloaked, "cloaked"},
+    {PropId::see_invis, "see_invis"},
+    {PropId::darkvision, "darkvision"},
+    {PropId::poisoned, "poisoned"},
+    {PropId::paralyzed, "paralyzed"},
+    {PropId::terrified, "terrified"},
+    {PropId::confused, "confused"},
+    {PropId::stunned, "stunned"},
+    {PropId::slowed, "slowed"},
+    {PropId::hasted, "hasted"},
+    {PropId::infected, "infected"},
+    {PropId::diseased, "diseased"},
+    {PropId::weakened, "weakened"},
+    {PropId::frenzied, "frenzied"},
+    {PropId::blessed, "blessed"},
+    {PropId::cursed, "cursed"},
+    {PropId::tele_ctrl, "tele_ctrl"},
+    {PropId::spell_reflect, "spell_reflect"},
+    {PropId::strangled, "strangled"},
+    {PropId::conflict, "conflict"},
+    {PropId::flying, "flying"},
+    {PropId::ethereal, "ethereal"},
+    {PropId::ooze, "ooze"},
+    {PropId::burrowing, "burrowing"}
 };
 
 enum class PropTurns
@@ -180,7 +276,7 @@ struct PropListEntry
         descr   (),
         prop    (nullptr) {}
 
-    StrAndClr title;
+    ColoredString title;
 
     std::string descr;
 
@@ -239,7 +335,7 @@ public:
                   const bool run_prop_end_effects = true);
 
     // A line of property names of the short form
-    std::vector<StrAndClr> props_line() const;
+    std::vector<ColoredString> props_line() const;
 
     // A list of properties names of the full form, with descriptions
     std::vector<PropListEntry> props_list() const;
@@ -270,16 +366,13 @@ public:
     bool allow_speak(const Verbosity verbosity) const;
     bool allow_eat(const Verbosity verbosity) const; // Also used for drinking
 
-    //
     // NOTE: The allow_*_absolute methods below answer if some action could
-    //       EVER be performed, and the allow_*_chance methods allows the
-    //       action with a random chance.
-    //       For example, blindness never allows the player to read scrolls, and
-    //       the game won't let the player try, and waste a scroll. But burning
-    //       will allow the player to try, with a certain percent chance of
-    //       success, and the scroll will be wasted.
-    //       (All plain allow_* methods above are also considered "absolute".)
-    //
+    // EVER be performed, and the allow_*_chance methods allows the action with
+    // a random chance. For example, blindness never allows the player to read
+    // scrolls, and the game won't let the player try, and waste a scroll. But
+    // burning will allow the player to try, with a certain percent chance of
+    // success, and the scroll will be wasted. (All plain allow_* methods above
+    // are also considered "absolute".)
     bool allow_read_absolute(const Verbosity verbosity) const;
     bool allow_read_chance(const Verbosity verbosity) const;
     bool allow_cast_intr_spell_absolute(const Verbosity verbosity) const;
@@ -290,7 +383,7 @@ public:
 
     int ability_mod(const AbilityId ability) const;
 
-    bool affect_actor_clr(Clr& clr) const;
+    bool affect_actor_color(Color& color) const;
 
     // Called when the actors turn begins
     void on_turn_begin();
@@ -452,9 +545,9 @@ public:
         return shock;
     }
 
-    virtual bool affect_actor_clr(Clr& clr) const
+    virtual bool affect_actor_color(Color& color) const
     {
-        (void)clr;
+        (void)color;
         return false;
     }
 
@@ -792,7 +885,7 @@ class PropDarkvis: public Prop
 {
 public:
     PropDarkvis(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::darkvis, turns_init, nr_turns) {}
+        Prop(PropId::darkvision, turns_init, nr_turns) {}
 };
 
 class PropBlessed: public Prop
@@ -854,9 +947,9 @@ public:
         return -30;
     }
 
-    bool affect_actor_clr(Clr& clr) const override
+    bool affect_actor_color(Color& color) const override
     {
-        clr = clr_red_lgt;
+        color = colors::light_red();
         return true;
     }
 
@@ -1393,7 +1486,7 @@ class PropLgtSens: public Prop
 {
 public:
     PropLgtSens(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::lgt_sens, turns_init, nr_turns) {}
+        Prop(PropId::light_sensitive, turns_init, nr_turns) {}
     ~PropLgtSens() override {}
 };
 

@@ -14,6 +14,7 @@
 #include "item.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
+#include "actor_player.hpp"
 
 #ifndef NDEBUG
 #include "sdl_base.hpp"
@@ -62,7 +63,7 @@ Player* player = nullptr;
 
 int dlvl = 0;
 
-Clr wall_clr;
+Color wall_color;
 
 Cell cells[map_w][map_h];
 
@@ -163,20 +164,20 @@ void reset_map()
     // Occasionally set wall color to something unusual
     if (rnd::one_in(3))
     {
-        std::vector<Clr> wall_clr_bucket =
+        std::vector<Color> wall_color_bucket =
         {
-            clr_red,
-            clr_nosf_sepia,
-            clr_nosf_sepia_drk,
-            clr_brown_drk,
-            clr_brown_gray,
+            colors::red(),
+            colors::sepia(),
+            colors::dark_sepia(),
+            colors::dark_brown(),
+            colors::gray_brown(),
         };
 
-        wall_clr = rnd::element(wall_clr_bucket);
+        wall_color = rnd::element(wall_color_bucket);
     }
     else // Standard wall color
     {
-        wall_clr = clr_gray;
+        wall_color = colors::gray();
     }
 }
 
@@ -207,7 +208,7 @@ Rigid* put(Rigid* const f)
             }
 
             states::draw();
-            io::draw_glyph('X', Panel::map, p, clr_yellow);
+            io::draw_character('X', Panel::map, p, colors::yellow());
             io::update_screen();
 
             // NOTE: Delay must be > 1 for user input to be read

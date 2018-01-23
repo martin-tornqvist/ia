@@ -3,6 +3,7 @@
 #include "map_parsing.hpp"
 #include "feature_rigid.hpp"
 #include "feature_event.hpp"
+#include "game_time.hpp"
 
 namespace mapgen
 {

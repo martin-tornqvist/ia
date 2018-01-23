@@ -16,11 +16,11 @@ public:
 
     virtual std::string name(const Article article) const override = 0;
 
-    Clr clr() const override = 0;
+    Color color() const override = 0;
 
-    Clr clr_bg() const override final
+    Color color_bg() const override final
     {
-        return clr_black;
+        return colors::black();
     }
 };
 
@@ -42,7 +42,7 @@ public:
     }
 
     std::string name(const Article article)  const override;
-    Clr clr() const override;
+    Color color() const override;
 
     void on_new_turn() override;
 
@@ -70,7 +70,7 @@ public:
 
     std::string name(const Article article) const override;
 
-    Clr clr() const override;
+    Color color() const override;
 
     //TODO: Lit dynamite should add light on their own cell (just one cell)
     //void add_light(bool light[map_w][map_h]) const;
@@ -101,7 +101,7 @@ public:
 
     std::string name(const Article article) const override;
 
-    Clr clr() const override;
+    Color color() const override;
 
     void on_new_turn() override;
 

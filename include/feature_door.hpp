@@ -72,7 +72,7 @@ public:
 
     WasDestroyed on_finished_burning() override;
 
-    char glyph() const override;
+    char character() const override;
 
     TileId tile() const override;
 
@@ -151,7 +151,7 @@ public:
     }
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,

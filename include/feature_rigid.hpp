@@ -70,9 +70,9 @@ public:
 
     virtual void on_new_turn() override final;
 
-    Clr clr() const override final;
+    Color color() const override final;
 
-    virtual Clr clr_bg() const override final;
+    virtual Color color_bg() const override final;
 
     virtual void hit(const int dmg,
                      const DmgType dmg_type,
@@ -88,9 +88,9 @@ public:
         return gore_tile_;
     }
 
-    char gore_glyph() const
+    char gore_character() const
     {
-        return gore_glyph_;
+        return gore_character_;
     }
 
     void clear_gore();
@@ -129,11 +129,11 @@ protected:
                         const DmgMethod dmg_method,
                         Actor* const actor) = 0;
 
-    virtual Clr clr_default() const = 0;
+    virtual Color color_default() const = 0;
 
-    virtual Clr clr_bg_default() const
+    virtual Color color_bg_default() const
     {
-        return clr_black;
+        return colors::black();
     }
 
     void try_start_burning(const bool is_msg_allowed);
@@ -150,7 +150,7 @@ protected:
     virtual int base_shock_when_adj() const;
 
     TileId gore_tile_;
-    char gore_glyph_;
+    char gore_character_;
 
 private:
     bool is_bloody_;
@@ -187,7 +187,7 @@ public:
     FloorType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -214,7 +214,7 @@ public:
     WasDestroyed on_finished_burning() override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -248,7 +248,7 @@ public:
     GrassType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -276,7 +276,7 @@ public:
     GrassType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -302,7 +302,7 @@ public:
     WasDestroyed on_finished_burning() override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -329,9 +329,9 @@ public:
     void bump(Actor& actor_bumping) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
-    Clr clr_bg_default() const override;
+    Color color_bg_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -356,7 +356,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -381,7 +381,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -416,7 +416,7 @@ public:
     }
 
     std::string name(const Article article) const override;
-    char glyph() const override;
+    char character() const override;
     TileId front_wall_tile() const;
     TileId top_wall_tile() const;
 
@@ -430,7 +430,7 @@ public:
     static bool is_tile_any_wall_top(const TileId tile);
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -455,7 +455,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -480,7 +480,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -505,7 +505,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -537,7 +537,7 @@ public:
     void bump(Actor& actor_bumping) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -564,7 +564,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -597,7 +597,7 @@ public:
     StatueType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -622,7 +622,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -649,7 +649,7 @@ public:
     void on_new_turn_hook() override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -673,7 +673,7 @@ public:
 
     std::string name(const Article article) const override;
     TileId tile() const override;
-    char glyph() const override;
+    char character() const override;
 
     void set_axis(const Axis axis)
     {
@@ -681,7 +681,7 @@ public:
     }
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -710,9 +710,9 @@ public:
     LiquidType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
-    Clr clr_bg_default() const override;
+    Color color_bg_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -739,7 +739,7 @@ public:
     LiquidType type_;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -762,7 +762,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -819,7 +819,7 @@ public:
     }
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -848,7 +848,7 @@ public:
     std::string name(const Article article) const override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -873,7 +873,7 @@ public:
     WasDestroyed on_finished_burning() override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -924,7 +924,7 @@ public:
     DidOpen open(Actor* const actor_opening) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -975,7 +975,7 @@ public:
              Actor* const actor) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1010,7 +1010,7 @@ public:
     DidOpen open(Actor* const actor_opening) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1041,7 +1041,7 @@ public:
     void bump(Actor& actor_bumping) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1072,7 +1072,7 @@ public:
     void bump(Actor& actor_bumping) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1134,7 +1134,7 @@ public:
     }
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1168,7 +1168,7 @@ public:
     DidOpen open(Actor* const actor_opening) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -1183,4 +1183,4 @@ private:
     bool is_open_;
 };
 
-#endif
+#endif // FEATURE_RIGID_HPP

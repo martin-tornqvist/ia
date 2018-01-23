@@ -65,7 +65,7 @@ void player_throw_lit_explosive(const P& aim_cell)
     // Render
     if (path.size() > 1)
     {
-        const auto  clr = explosive->ignited_projectile_clr();
+        const auto  color = explosive->ignited_projectile_color();
 
         for (const P& p : path)
         {
@@ -75,11 +75,14 @@ void player_throw_lit_explosive(const P& aim_cell)
             {
                 if (config::is_tiles_mode())
                 {
-                    io::draw_tile(explosive->tile(), Panel::map, p, clr);
+                    io::draw_tile(explosive->tile(), Panel::map, p, color);
                 }
                 else // Text mode
                 {
-                    io::draw_glyph(explosive->glyph(), Panel::map, p, clr);
+                    io::draw_character(explosive->character(),
+                                       Panel::map,
+                                       p,
+                                       color);
                 }
 
                 io::update_screen();
@@ -170,7 +173,7 @@ void throw_item(Actor& actor_throwing,
 
     bool is_actor_hit = false;
 
-    const Clr item_clr = item_thrown.clr();
+    const Color item_color = item_thrown.color();
 
     int break_item_one_in_n = -1;
 
@@ -220,12 +223,12 @@ void throw_item(Actor& actor_throwing,
 
                 if (player_see_cell)
                 {
-                    const Clr hit_clr =
+                    const Color hit_color =
                         is_potion ?
-                        item_clr :
-                        clr_red_lgt;
+                        item_color :
+                        colors::light_red();
 
-                    io::draw_blast_at_cells({pos}, hit_clr);
+                    io::draw_blast_at_cells({pos}, hit_color);
                 }
 
                 static_cast<Mon*>(actor_here)->set_player_aware_of_me();
@@ -247,7 +250,7 @@ void throw_item(Actor& actor_throwing,
                         text_format::first_to_upper(actor_here->name_the()) :
                         "It";
 
-                    msg_log::add(defender_name + " is hit.", clr_msg_good);
+                    msg_log::add(defender_name + " is hit.", colors::msg_good());
                 }
 
                 if (att_data.dmg > 0)
@@ -314,14 +317,14 @@ void throw_item(Actor& actor_throwing,
                 io::draw_tile(item_thrown.tile(),
                                   Panel::map,
                                   pos,
-                                  item_clr);
+                                  item_color);
             }
             else // Text mode
             {
-                io::draw_glyph(item_thrown.glyph(),
+                io::draw_character(item_thrown.character(),
                                    Panel::map,
                                    pos,
-                                   item_clr);
+                                   item_color);
             }
 
             io::update_screen();
@@ -339,9 +342,9 @@ void throw_item(Actor& actor_throwing,
     // If potion, collide it on the landscape
     if (item_thrown_data.type == ItemType::potion)
     {
-        const Clr hit_clr = item_clr;
+        const Color hit_color = item_color;
 
-        io::draw_blast_at_seen_cells({pos}, hit_clr);
+        io::draw_blast_at_seen_cells({pos}, hit_color);
 
         Potion* const potion = static_cast<Potion*>(&item_thrown);
 

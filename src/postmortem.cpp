@@ -24,7 +24,7 @@
 namespace
 {
 
-std::vector<StrAndClr> info_lines_;
+std::vector<ColoredString> info_lines_;
 
 } // namespace
 
@@ -70,9 +70,9 @@ void PostmortemMenu::on_start()
 
     info_lines_.clear();
 
-    const Clr clr_heading = clr_white_lgt;
+    const Color color_heading = colors::light_white();
 
-    const Clr clr_info = clr_white;
+    const Color color_info = colors::white();
 
     const std::string offset = "   ";
 
@@ -99,7 +99,7 @@ void PostmortemMenu::on_start()
 
     const std::string bg = player_bon::bg_title(highscore_entry.bg());
 
-    info_lines_.push_back({name + " (" + bg + ")", clr_heading});
+    info_lines_.push_back({name + " (" + bg + ")", color_heading});
 
     const int dlvl = highscore_entry.dlvl();
 
@@ -108,7 +108,7 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             offset + "Died before entering the dungeon",
-            clr_info
+            color_info
         });
     }
     else // DLVL is at least 1
@@ -116,7 +116,7 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             offset + "Explored to dungeon level " + std::to_string(dlvl),
-            clr_info
+            color_info
         });
 
     }
@@ -126,7 +126,7 @@ void PostmortemMenu::on_start()
     info_lines_.push_back(
     {
         offset + "Spent " + std::to_string(turn_count) + " turns",
-        clr_info
+        color_info
     });
 
     const int ins = highscore_entry.ins();
@@ -134,14 +134,13 @@ void PostmortemMenu::on_start()
     info_lines_.push_back(
     {
         offset + "Was " + std::to_string(ins) + "% insane",
-
-        clr_info
+        color_info
     });
 
     info_lines_.push_back(
     {
         offset + "Killed " + std::to_string(nr_kills_tot_all_mon) +" monsters",
-        clr_info
+        color_info
     });
 
     const int xp = highscore_entry.xp();
@@ -149,7 +148,7 @@ void PostmortemMenu::on_start()
     info_lines_.push_back(
     {
         offset + "Gained " + std::to_string(xp) + " experience points",
-        clr_info
+        color_info
     });
 
     const int score = highscore_entry.score();
@@ -157,7 +156,7 @@ void PostmortemMenu::on_start()
     info_lines_.push_back(
     {
         offset + "Gained a score of " + std::to_string(score),
-        clr_info
+        color_info
     });
 
     const std::vector<const InsSympt*> sympts =
@@ -173,22 +172,22 @@ void PostmortemMenu::on_start()
             {
                 info_lines_.push_back(
                 {
-                    offset + sympt_descr, clr_info
+                    offset + sympt_descr, color_info
                 });
             }
         }
     }
 
-    info_lines_.push_back({"", clr_info});
+    info_lines_.push_back({"", color_info});
 
-    info_lines_.push_back({"Traits gained:", clr_heading});
+    info_lines_.push_back({"Traits gained:", color_heading});
 
     std::string traits_line =
         player_bon::all_picked_traits_titles_line();
 
     if (traits_line.empty())
     {
-        info_lines_.push_back({offset + "None", clr_info});
+        info_lines_.push_back({offset + "None", color_info});
     }
     else
     {
@@ -196,16 +195,16 @@ void PostmortemMenu::on_start()
 
         for (const std::string& str : abilities_lines)
         {
-            info_lines_.push_back({offset + str, clr_info});
+            info_lines_.push_back({offset + str, color_info});
         }
     }
 
-    info_lines_.push_back({"", clr_info});
+    info_lines_.push_back({"", color_info});
 
     info_lines_.push_back(
     {
         "Unique monsters killed:",
-        clr_heading
+        color_heading
     });
 
     if (unique_killed_names.empty())
@@ -213,7 +212,7 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             offset + "None",
-            clr_info
+            color_info
         });
     }
     else
@@ -223,17 +222,17 @@ void PostmortemMenu::on_start()
             info_lines_.push_back(
             {
                 offset + "" + monster_name,
-                clr_info
+                color_info
             });
         }
     }
 
-    info_lines_.push_back({"", clr_info});
+    info_lines_.push_back({"", color_info});
 
     info_lines_.push_back(
     {
         "History of " + map::player->name_the(),
-        clr_heading
+        color_heading
     });
 
     const std::vector<HistoryEvent>& events =
@@ -261,16 +260,16 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             offset + ev_str,
-            clr_info
+            color_info
         });
     }
 
-    info_lines_.push_back({"", clr_info});
+    info_lines_.push_back({"", color_info});
 
     info_lines_.push_back(
     {
         "Last messages:",
-        clr_heading
+        color_heading
     });
 
     const std::vector< std::vector<Msg> >& history =
@@ -295,18 +294,18 @@ void PostmortemMenu::on_start()
         info_lines_.push_back(
         {
             offset + row,
-            clr_info
+            color_info
         });
     }
 
-    info_lines_.push_back({"", clr_info});
+    info_lines_.push_back({"", color_info});
 
     TRACE << "Drawing the final map" << std::endl;
 
     info_lines_.push_back(
     {
         "The final moment:",
-        clr_heading
+        color_heading
     });
 
     // Also dump the lines to a memorial file
@@ -374,15 +373,15 @@ void PostmortemMenu::draw()
     {
         const std::string& label = labels[i];
 
-        const Clr& clr =
+        const Color& color =
             browser_.is_at_idx(i) ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         io::draw_text(label,
                       Panel::screen,
                       pos,
-                      clr);
+                      color);
 
         ++pos.y;
     }
@@ -400,7 +399,7 @@ void PostmortemMenu::draw()
             io::draw_text(line,
                           Panel::screen,
                           P(0, y),
-                          clr_gray);
+                          colors::gray());
 
             ++y;
         }
@@ -412,7 +411,7 @@ void PostmortemMenu::draw()
         io::draw_text(name,
                       Panel::screen,
                       P(name_x, 20),
-                      clr_gray);
+                      colors::gray());
     }
 
     io::draw_box(R(0, 0, screen_w - 1, screen_h - 1));
@@ -426,7 +425,7 @@ void PostmortemMenu::mk_memorial_file(const std::string path) const
     file.open(path.c_str(), std::ios::trunc);
 
     // Add info lines to file
-    for (const StrAndClr& line : info_lines_)
+    for (const ColoredString& line : info_lines_)
     {
         file << line.str << std::endl;
     }
@@ -438,7 +437,7 @@ void PostmortemMenu::mk_memorial_file(const std::string path) const
 
         for (int x = 0; x < map_w; ++x)
         {
-            char c = game::render_array[x][y].glyph;
+            char c = game::render_array[x][y].character;
 
             // Printable ASCII character?
             if (c < 32 || c > 126)
@@ -581,7 +580,7 @@ void PostmortemInfo::draw()
             io::draw_text(info_lines_[i].str,
                           Panel::screen,
                           P(0, screen_y),
-                          info_lines_[i].clr);
+                          info_lines_[i].color);
         }
         else // Map lines
         {
@@ -599,8 +598,8 @@ void PostmortemInfo::draw()
                     io::draw_tile(d.tile,
                                   Panel::screen,
                                   P(x, screen_y),
-                                  d.clr,
-                                  d.clr_bg);
+                                  d.color,
+                                  d.color_bg);
                 }
             }
             else // Text mode
@@ -609,12 +608,12 @@ void PostmortemInfo::draw()
                 {
                     const CellRenderData& d = game::render_array[x][map_y];
 
-                    io::draw_glyph(d.glyph,
-                                   Panel::screen,
-                                   P(x, screen_y),
-                                   d.clr,
-                                   true,
-                                   d.clr_bg);
+                    io::draw_character(d.character,
+                                       Panel::screen,
+                                       P(x, screen_y),
+                                       d.color,
+                                       true,
+                                       d.color_bg);
                 }
             }
         }

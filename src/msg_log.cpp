@@ -54,7 +54,7 @@ void draw_line(const std::vector<Msg>& line, const int y_pos)
         io::draw_text(str,
                       Panel::log,
                       P(msg.x_pos_, y_pos),
-                      msg.clr_);
+                      msg.color_);
     }
 }
 
@@ -112,7 +112,7 @@ void clear()
 }
 
 void add(const std::string& str,
-         const Clr& clr,
+         const Color& color,
          const bool interrupt_all_player_actions,
          const MorePromptOnMsg add_more_prompt_on_msg)
 {
@@ -168,7 +168,7 @@ void add(const std::string& str,
             }
 
             add(frenzied_str,
-                clr,
+                color,
                 interrupt_all_player_actions,
                 add_more_prompt_on_msg);
 
@@ -233,7 +233,7 @@ void add(const std::string& str,
             x_pos = 0;
         }
 
-        lines_[current_line_nr].push_back(Msg(str, clr, x_pos));
+        lines_[current_line_nr].push_back(Msg(str, color, x_pos));
     }
 
     io::clear_screen();
@@ -293,8 +293,8 @@ void more_prompt()
     io::draw_text(more_str,
                   Panel::log,
                   P(x_pos, line_nr),
-                  clr_black,
-                  clr_gray);
+                  colors::black(),
+                  colors::gray());
 
     query::wait_for_msg_more();
 
@@ -306,7 +306,7 @@ void add_line_to_history(const std::string& line_to_add)
     std::vector<Msg> history_line;
 
     const Msg msg(line_to_add,
-                  clr_white,
+                  colors::white(),
                   0);
 
     history_[history_count_ % history_capacity_] = {msg};

@@ -224,19 +224,17 @@ void MarkerState::draw_marker(const std::vector<P>& line,
             auto& d = marker_render_data_[x][y];
 
             d.tile  = TileId::empty;
-            d.glyph = 0;
+            d.character = 0;
         }
     }
 
-    Clr clr = clr_green_lgt;
+    Color color = colors::light_green();
 
-    //
     // Draw the line
-    //
+
     // NOTE: We include the head index in this loop, so that we can set up which
-    //       color it should be drawn with, but we do the actual drawing of the
-    //       head after the loop
-    //
+    // color it should be drawn with, but we do the actual drawing of the head
+    // after the loop
     for (size_t line_idx = 0; line_idx < line.size(); ++line_idx)
     {
         const P& line_pos = line[line_idx];
@@ -257,13 +255,13 @@ void MarkerState::draw_marker(const std::vector<P>& line,
         // NOTE: Final color is stored for drawing the head
         if (is_red)
         {
-            clr = clr_red_lgt;
+            color = colors::light_red();
         }
         // Not red - orange by distance?
         else if ((orange_from_king_dist != -1) &&
                  (dist >= orange_from_king_dist))
         {
-            clr = clr_orange;
+            color = colors::orange();
         }
 
         // Do not draw the head yet
@@ -277,11 +275,11 @@ void MarkerState::draw_marker(const std::vector<P>& line,
 
             d.tile = TileId::aim_marker_line;
 
-            d.glyph = '*';
+            d.character = '*';
 
-            d.clr = clr;
+            d.color = color;
 
-            d.clr_bg = clr_black;
+            d.color_bg = colors::black();
 
             // If red, always draw a character (more distinct)
             if (config::is_tiles_mode() && !is_red)
@@ -289,52 +287,50 @@ void MarkerState::draw_marker(const std::vector<P>& line,
                 io::draw_tile(d.tile,
                               Panel::map,
                               line_pos,
-                              d.clr,
-                              d.clr_bg);
+                              d.color,
+                              d.color_bg);
             }
             else // Text mode, or blocked
             {
-                io::draw_glyph(d.glyph,
+                io::draw_character(d.character,
                                Panel::map,
                                line_pos,
-                               d.clr,
+                               d.color,
                                true,
-                               d.clr_bg);
+                               d.color_bg);
             }
         }
     } // line loop
 
-    //
     // Draw the head
-    //
     const P& head_pos = line.empty() ? origin_ : line.back();
 
     auto& d = marker_render_data_[head_pos.x][head_pos.y];
 
     d.tile = TileId::aim_marker_head;
 
-    d.glyph = 'X';
+    d.character = 'X';
 
-    d.clr = clr;
+    d.color = color;
 
-    d.clr_bg = clr_black;
+    d.color_bg = colors::black();
 
     if (config::is_tiles_mode())
     {
         io::draw_tile(d.tile,
                       Panel::map,
                       head_pos,
-                      d.clr,
-                      d.clr_bg);
+                      d.color,
+                      d.color_bg);
     }
     else // Text mode
     {
-        io::draw_glyph(d.glyph,
-                       Panel::map,
-                       head_pos,
-                       d.clr,
-                       true,
-                       d.clr_bg);
+        io::draw_character(d.character,
+                           Panel::map,
+                           head_pos,
+                           d.color,
+                           true,
+                           d.color_bg);
     }
 }
 
@@ -661,9 +657,7 @@ void ThrowingExplosive::on_draw()
     {
         const R expl_area = explosion::explosion_area(pos_, expl_std_radi);
 
-        Clr clr_bg = clr_red;
-
-        div_clr(clr_bg, 2.0);
+        const Color color_bg = colors::red().fraction(2.0);
 
         // Draw explosion radius area overlay
         for (int y = expl_area.p0.y; y <= expl_area.p1.y; ++y)
@@ -676,10 +670,10 @@ void ThrowingExplosive::on_draw()
 
                 // Draw overlay if the cell contains either a map symbol, or a
                 // marker symbol
-                if (render_d.glyph != 0 ||
-                    marker_render_d.glyph != 0)
+                if (render_d.character != 0 ||
+                    marker_render_d.character != 0)
                 {
-                    const bool has_marker = marker_render_d.glyph != 0;
+                    const bool has_marker = marker_render_d.character != 0;
 
                     const auto& d =
                         has_marker ?
@@ -693,17 +687,17 @@ void ThrowingExplosive::on_draw()
                         io::draw_tile(d.tile,
                                       Panel::map,
                                       p,
-                                      d.clr,
-                                      clr_bg);
+                                      d.color,
+                                      color_bg);
                     }
                     else // Text mode
                     {
-                        io::draw_glyph(d.glyph,
-                                       Panel::map,
-                                       p,
-                                       d.clr,
-                                       true,
-                                       clr_bg);
+                        io::draw_character(d.character,
+                                           Panel::map,
+                                           p,
+                                           d.color,
+                                           true,
+                                           color_bg);
                     }
                 }
             }
@@ -777,7 +771,7 @@ int CtrlTele::chance_of_success_pct(const P& tgt) const
 void CtrlTele::on_start_hook()
 {
     msg_log::add("I have the power to control teleportation.",
-                 clr_white,
+                 colors::white(),
                  false,
                  MorePromptOnMsg::yes);
 }
@@ -828,7 +822,7 @@ void CtrlTele::handle_input(const InputData& input)
             else // Failed to teleport (blocked or roll failed)
             {
                 msg_log::add("I failed to go there...",
-                             clr_white,
+                             colors::white(),
                              false,
                              MorePromptOnMsg::yes);
 

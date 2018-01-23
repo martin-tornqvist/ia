@@ -18,9 +18,9 @@ public:
         return "";
     }
 
-    Clr clr() const override final
+    Color color() const override final
     {
-        return clr_black;
+        return colors::black();
     }
 
 protected:

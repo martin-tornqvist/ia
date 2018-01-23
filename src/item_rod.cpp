@@ -15,6 +15,7 @@
 #include "saving.hpp"
 #include "text_format.hpp"
 #include "knockback.hpp"
+#include "actor_player.hpp"
 
 void Rod::save()
 {
@@ -355,23 +356,23 @@ void init()
 
     // Init possible rod colors and fake names
     rod_looks_.clear();
-    rod_looks_.push_back({"Iron", "an Iron", clr_gray});
-    rod_looks_.push_back({"Zinc", "a Zinc", clr_white_lgt});
-    rod_looks_.push_back({"Chromium", "a Chromium", clr_white_lgt});
-    rod_looks_.push_back({"Tin", "a Tin", clr_white_lgt});
-    rod_looks_.push_back({"Silver", "a Silver", clr_white_lgt});
-    rod_looks_.push_back({"Golden", "a Golden", clr_yellow});
-    rod_looks_.push_back({"Nickel", "a Nickel", clr_white_lgt});
-    rod_looks_.push_back({"Copper", "a Copper", clr_brown});
-    rod_looks_.push_back({"Lead", "a Lead", clr_gray});
-    rod_looks_.push_back({"Tungsten", "a Tungsten", clr_white});
-    rod_looks_.push_back({"Platinum", "a Platinum", clr_white_lgt});
-    rod_looks_.push_back({"Lithium", "a Lithium", clr_white});
-    rod_looks_.push_back({"Zirconium", "a Zirconium", clr_white});
-    rod_looks_.push_back({"Gallium", "a Gallium", clr_white_lgt});
-    rod_looks_.push_back({"Cobalt", "a Cobalt", clr_blue_lgt});
-    rod_looks_.push_back({"Titanium", "a Titanium", clr_white_lgt});
-    rod_looks_.push_back({"Magnesium", "a Magnesium", clr_white});
+    rod_looks_.push_back({"Iron", "an Iron", colors::gray()});
+    rod_looks_.push_back({"Zinc", "a Zinc", colors::light_white()});
+    rod_looks_.push_back({"Chromium", "a Chromium", colors::light_white()});
+    rod_looks_.push_back({"Tin", "a Tin", colors::light_white()});
+    rod_looks_.push_back({"Silver", "a Silver", colors::light_white()});
+    rod_looks_.push_back({"Golden", "a Golden", colors::yellow()});
+    rod_looks_.push_back({"Nickel", "a Nickel", colors::light_white()});
+    rod_looks_.push_back({"Copper", "a Copper", colors::brown()});
+    rod_looks_.push_back({"Lead", "a Lead", colors::gray()});
+    rod_looks_.push_back({"Tungsten", "a Tungsten", colors::white()});
+    rod_looks_.push_back({"Platinum", "a Platinum", colors::light_white()});
+    rod_looks_.push_back({"Lithium", "a Lithium", colors::white()});
+    rod_looks_.push_back({"Zirconium", "a Zirconium", colors::white()});
+    rod_looks_.push_back({"Gallium", "a Gallium", colors::light_white()});
+    rod_looks_.push_back({"Cobalt", "a Cobalt", colors::light_blue()});
+    rod_looks_.push_back({"Titanium", "a Titanium", colors::light_white()});
+    rod_looks_.push_back({"Magnesium", "a Magnesium", colors::white()});
 
     for (auto& d : item_data::data)
     {
@@ -391,7 +392,7 @@ void init()
             d.base_name_un_id.names[(size_t)ItemRefType::a] =
                 look.name_a + " Rod";
 
-            d.clr = look.clr;
+            d.color = look.color;
 
             rod_looks_.erase(rod_looks_.begin() + idx);
 
@@ -433,9 +434,7 @@ void save()
             saving::put_str(
                 d.base_name_un_id.names[size_t(ItemRefType::a)]);
 
-            saving::put_int(d.clr.r);
-            saving::put_int(d.clr.g);
-            saving::put_int(d.clr.b);
+            saving::put_str(colors::color_to_name(d.color));
         }
     }
 }
@@ -457,9 +456,7 @@ void load()
             d.base_name_un_id.names[size_t(ItemRefType::a)] =
                 saving::get_str();
 
-            d.clr.r = saving::get_int();
-            d.clr.g = saving::get_int();
-            d.clr.b = saving::get_int();
+            d.color = colors::name_to_color(saving::get_str());
         }
     }
 }

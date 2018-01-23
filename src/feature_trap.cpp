@@ -345,7 +345,7 @@ void Trap::bump(Actor& actor_bumping)
                 msg_log::add("I avoid " +
                              trap_name_a +
                              ".",
-                             clr_msg_good);
+                             colors::msg_good());
             }
         }
         else // Failed to avoid
@@ -576,15 +576,15 @@ std::string Trap::name(const Article article) const
     }
 }
 
-Clr Trap::clr_default() const
+Color Trap::color_default() const
 {
     return
         is_hidden_ ?
-        mimic_feature_->clr() :
-        trap_impl_->clr();
+        mimic_feature_->color() :
+        trap_impl_->color();
 }
 
-Clr Trap::clr_bg_default() const
+Color Trap::color_bg_default() const
 {
     const auto* const item = map::cells[pos_.x][pos_.y].item;
 
@@ -592,20 +592,20 @@ Clr Trap::clr_bg_default() const
 
     if (!is_hidden_ && (item || corpse))
     {
-        return trap_impl_->clr();
+        return trap_impl_->color();
     }
     else // Is hidden, or nothing is over the trap
     {
-        return clr_black;
+        return colors::black();
     }
 }
 
-char Trap::glyph() const
+char Trap::character() const
 {
     return
         is_hidden_ ?
-        mimic_feature_->glyph() :
-        trap_impl_->glyph();
+        mimic_feature_->character() :
+        trap_impl_->character();
 }
 
 TileId Trap::tile() const
@@ -891,7 +891,7 @@ void TrapGasConfusion::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropConfused(PropTurns::std)},
-                   &clr_magenta,
+                   colors::magenta(),
                    ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
@@ -921,7 +921,7 @@ void TrapGasParalyzation::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropParalyzed(PropTurns::std)},
-                   &clr_magenta,
+                   colors::magenta(),
                    ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
@@ -952,7 +952,7 @@ void TrapGasFear::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropTerrified(PropTurns::std)},
-                   &clr_magenta,
+                   colors::magenta(),
                    ExplIsGas::yes);
 
     TRACE_FUNC_END_VERBOSE;
@@ -973,7 +973,7 @@ void TrapBlindingFlash::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropBlind(PropTurns::std)},
-                   &clr_yellow);
+                   colors::yellow());
 
     TRACE_FUNC_END_VERBOSE;
 }
@@ -993,7 +993,7 @@ void TrapDeafening::trigger()
                    -1,
                    ExplExclCenter::no,
                    {new PropDeaf(PropTurns::std)},
-                   &clr_white_lgt);
+                   colors::light_white());
 
     TRACE_FUNC_END_VERBOSE;
 }

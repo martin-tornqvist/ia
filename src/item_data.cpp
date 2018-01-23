@@ -15,37 +15,37 @@
 #include "game_time.hpp"
 
 ItemDataT::ItemDataT() :
-    id                                  (ItemId::END),
-    type                                (ItemType::general),
-    has_std_activate                    (false),
-    is_prio_in_backpack_list            (false),
-    value                               (ItemValue::normal),
-    weight                              (ItemWeight::none),
-    is_unique                           (false),
-    allow_spawn                         (true),
-    spawn_std_range                     (Range(1, dlvl_last)),
-    max_stack_at_spawn                  (1),
-    chance_to_incl_in_spawn_list        (100),
-    is_stackable                        (true),
-    is_identified                       (true),
-    is_alignment_known                  (true),
-    is_tried                            (false),
-    is_found                            (false),
-    xp_on_found                         (0),
-    base_name                           (),
-    glyph                               ('X'),
-    clr                                 (clr_white),
-    tile                                (TileId::empty),
-    main_att_mode                       (AttMode::none),
-    spell_cast_from_scroll              (SpellId::END),
-    land_on_hard_snd_msg                ("I hear a thudding sound."),
-    land_on_hard_sfx                    (SfxId::END),
-    is_carry_shocking                   (false),
-    is_equiped_shocking                 (false),
-    allow_display_dmg                   (true),
-    melee                               (ItemMeleeData()),
-    ranged                              (ItemRangedData()),
-    armor                               (ItemArmorData())
+    id(ItemId::END),
+    type(ItemType::general),
+    has_std_activate(false),
+    is_prio_in_backpack_list(false),
+    value(ItemValue::normal),
+    weight(ItemWeight::none),
+    is_unique(false),
+    allow_spawn(true),
+    spawn_std_range(Range(1,dlvl_last)),
+    max_stack_at_spawn(1),
+    chance_to_incl_in_spawn_list(100),
+    is_stackable(true),
+    is_identified(true),
+    is_alignment_known(true),
+    is_tried(false),
+    is_found(false),
+    xp_on_found(0),
+    base_name(),
+    character('X'),
+    color(colors::white()),
+    tile(TileId::empty),
+    main_att_mode(AttMode::none),
+    spell_cast_from_scroll(SpellId::END),
+    land_on_hard_snd_msg("Ihearathuddingsound."),
+    land_on_hard_sfx(SfxId::END),
+    is_carry_shocking(false),
+    is_equiped_shocking(false),
+    allow_display_dmg(true),
+    melee(ItemMeleeData()),
+    ranged(ItemRangedData()),
+    armor(ItemArmorData())
 {
     for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
     {
@@ -58,21 +58,21 @@ ItemDataT::ItemDataT() :
 }
 
 ItemDataT::ItemMeleeData::ItemMeleeData() :
-    is_melee_wpn                        (false),
-    dmg                                 (),
-    hit_chance_mod                      (0),
-    is_noisy                            (true),
-    att_msgs                            (ItemAttMsgs()),
-    prop_applied                        (ItemAttProp()),
-    dmg_type                            (DmgType::physical),
-    dmg_method                          (DmgMethod::slashing),
-    knocks_back                         (false),
-    att_corpse                          (false),
-    att_rigid                           (false),
-    hit_small_sfx                       (SfxId::END),
-    hit_medium_sfx                      (SfxId::END),
-    hit_hard_sfx                        (SfxId::END),
-    miss_sfx                            (SfxId::END) {}
+    is_melee_wpn(false),
+    dmg(),
+    hit_chance_mod(0),
+    is_noisy(true),
+    att_msgs(ItemAttMsgs()),
+    prop_applied(ItemAttProp()),
+    dmg_type(DmgType::physical),
+    dmg_method(DmgMethod::slashing),
+    knocks_back(false),
+    att_corpse(false),
+    att_rigid(false),
+    hit_small_sfx(SfxId::END),
+    hit_medium_sfx(SfxId::END),
+    hit_hard_sfx(SfxId::END),
+    miss_sfx(SfxId::END){}
 
 ItemDataT::ItemMeleeData::~ItemMeleeData()
 {
@@ -80,34 +80,37 @@ ItemDataT::ItemMeleeData::~ItemMeleeData()
 }
 
 ItemDataT::ItemRangedData::ItemRangedData() :
-    is_ranged_wpn                       (false),
-    is_throwable_wpn                    (false),
-    is_machine_gun                      (false),
-    is_shotgun                          (false),
-    max_ammo                            (0),
-    dmg                                 (),
-    throw_dmg                           (),
-    hit_chance_mod                      (0),
-    throw_hit_chance_mod                (0),
-    always_break_on_throw               (false),
-    effective_range                     (6),
-    max_range                           (fov_std_radi_int * 2),
-    knocks_back                         (false),
-    ammo_item_id                        (ItemId::END),
-    dmg_type                            (DmgType::physical),
-    has_infinite_ammo                   (false),
-    projectile_glyph                    ('/'),
-    projectile_tile                     (TileId::projectile_std_front_slash),
-    projectile_clr                      (clr_white),
-    projectile_leaves_trail             (false),
-    projectile_leaves_smoke             (false),
-    att_msgs                            (ItemAttMsgs()),
-    snd_msg                             (""),
-    snd_vol                             (SndVol::low),
-    makes_ricochet_snd                  (false),
-    att_sfx                             (SfxId::END),
-    reload_sfx                          (SfxId::END),
-    prop_applied                        (ItemAttProp()) {}
+    is_ranged_wpn(false),
+    is_throwable_wpn(false),
+    is_machine_gun(false),
+    is_shotgun(false),
+    max_ammo(0),
+    dmg(),
+    throw_dmg(),
+    hit_chance_mod(0),
+    throw_hit_chance_mod(0),
+    always_break_on_throw(false),
+    effective_range(6),
+    max_range(fov_std_radi_int*2),
+    knocks_back(false),
+    ammo_item_id(ItemId::END),
+    dmg_type(DmgType::physical),
+    has_infinite_ammo(false),
+    projectile_character('/'),
+    projectile_tile(TileId::projectile_std_front_slash),
+    projectile_color(colors::white()),
+    projectile_leaves_trail(false),
+    projectile_leaves_smoke(false),
+    att_msgs(ItemAttMsgs()),
+    snd_msg(""),
+    snd_vol(SndVol::low),
+    makes_ricochet_snd(false),
+    att_sfx(SfxId::END),
+    reload_sfx(SfxId::END),
+    prop_applied(ItemAttProp())
+{
+
+}
 
 ItemDataT::ItemRangedData::~ItemRangedData()
 {
@@ -148,8 +151,8 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.type = ItemType::melee_wpn;
         d.is_stackable = false;
         d.weight = ItemWeight::medium;
-        d.glyph = ')';
-        d.clr = clr_white;
+        d.character = ')';
+        d.color = colors::white();
         d.main_att_mode = AttMode::melee;
         d.melee.is_melee_wpn = true;
         d.melee.miss_sfx = SfxId::miss_medium;
@@ -179,14 +182,14 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.type = ItemType::ranged_wpn;
         d.is_stackable = false;
         d.weight = ItemWeight::medium;
-        d.glyph = '}';
-        d.clr = clr_white;
+        d.character = '}';
+        d.color = colors::white();
         d.melee.is_melee_wpn = true;
         d.melee.dmg = Dice(1, 3);
         d.main_att_mode = AttMode::ranged;
         d.ranged.is_ranged_wpn = true;
-        d.ranged.projectile_glyph = '/';
-        d.ranged.projectile_clr = clr_white;
+        d.ranged.projectile_character = '/';
+        d.ranged.projectile_color = colors::white();
         d.spawn_std_range.max = dlvl_last_mid_game;
         d.melee.hit_small_sfx = SfxId::hit_small;
         d.melee.hit_medium_sfx = SfxId::hit_medium;
@@ -203,7 +206,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.chance_to_incl_in_spawn_list = 0;
         d.allow_spawn = false;
         d.melee.is_melee_wpn = false;
-        d.ranged.projectile_glyph = '*';
+        d.ranged.projectile_character = '*';
         d.ranged.snd_vol = SndVol::low;
         break;
 
@@ -221,8 +224,8 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         reset_data(d, ItemType::general);
         d.type = ItemType::ammo;
         d.weight = ItemWeight::extra_light;
-        d.glyph = '{';
-        d.clr = clr_white;
+        d.character = '{';
+        d.color = colors::white();
         d.tile = TileId::ammo;
         d.spawn_std_range.max = dlvl_last_mid_game;
         break;
@@ -252,8 +255,8 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.weight = ItemWeight::none;
         d.is_identified = false;
         d.xp_on_found = 10;
-        d.glyph = '?';
-        d.clr = clr_white;
+        d.character = '?';
+        d.color = colors::white();
         d.tile = TileId::scroll;
         d.max_stack_at_spawn = 1;
         d.land_on_hard_snd_msg = "";
@@ -278,7 +281,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.is_identified = false;
         d.is_alignment_known = false;
         d.xp_on_found = 10;
-        d.glyph = '!';
+        d.character = '!';
         d.tile = TileId::potion;
         d.ranged.throw_hit_chance_mod = 15;
         d.ranged.throw_dmg = Dice(1, 3, 0);
@@ -313,7 +316,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         };
         d.weight = ItemWeight::light;
         d.is_identified = false;
-        d.glyph = '%';
+        d.character = '%';
         d.tile = TileId::device1;
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
@@ -336,7 +339,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.weight = ItemWeight::light;
         d.is_identified = false;
         d.xp_on_found = 15;
-        d.glyph = '%';
+        d.character = '%';
         d.tile = TileId::rod;
         d.is_stackable = false;
         d.land_on_hard_snd_msg = "I hear a clanking sound.";
@@ -350,7 +353,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         reset_data(d, ItemType::general);
         d.type = ItemType::armor;
         d.weight = ItemWeight::heavy;
-        d.glyph = '[';
+        d.character = '[';
         d.tile = TileId::armor;
         d.is_stackable = false;
         break;
@@ -358,7 +361,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
     case ItemType::head_wear:
         reset_data(d, ItemType::general);
         d.type = ItemType::head_wear;
-        d.glyph = '[';
+        d.character = '[';
         d.is_stackable = false;
         break;
 
@@ -367,7 +370,7 @@ void reset_data(ItemDataT& d, ItemType const item_type)
         d.type = ItemType::explosive;
         d.has_std_activate = true;
         d.weight = ItemWeight::light;
-        d.glyph = '-';
+        d.character = '-';
         d.max_stack_at_spawn = 2;
         d.land_on_hard_snd_msg = "";
         break;
@@ -407,8 +410,8 @@ void init_data_list()
     d.chance_to_incl_in_spawn_list = 0;
     d.allow_spawn = false;
     d.is_stackable = false;
-    d.glyph = '*';
-    d.clr = clr_red_lgt;
+    d.character = '*';
+    d.color = colors::light_red();
     d.tile = TileId::trapez;
     data[(size_t)d.id] = d;
 
@@ -506,8 +509,8 @@ void init_data_list()
     d.ranged.ammo_item_id = ItemId::incinerator_ammo;
     d.ranged.att_msgs = {"fire", "fires an incinerator"};
     d.ranged.snd_msg = "I hear the blast of a launched missile.";
-    d.ranged.projectile_glyph = '*';
-    d.ranged.projectile_clr = clr_red_lgt;
+    d.ranged.projectile_character = '*';
+    d.ranged.projectile_color = colors::light_red();
     d.ranged.reload_sfx = SfxId::machine_gun_reload;
     d.spawn_std_range.min = dlvl_first_mid_game;
     d.chance_to_incl_in_spawn_list = 35;
@@ -642,7 +645,7 @@ void init_data_list()
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
     d.tile = TileId::mi_go_gun;
-    d.clr = clr_yellow;
+    d.color = colors::yellow();
     d.ranged.dmg = Dice(3, 4, 1);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
@@ -651,7 +654,7 @@ void init_data_list()
     d.ranged.dmg_type = DmgType::electric;
     d.ranged.has_infinite_ammo = true;
     d.ranged.projectile_leaves_trail = true;
-    d.ranged.projectile_clr = clr_yellow;
+    d.ranged.projectile_color = colors::yellow();
     d.melee.att_msgs = {"strike", "strikes me with a Mi-go Electric Gun"};
     d.ranged.att_msgs = {"fire", "fires a Mi-go Electric Gun"};
     d.ranged.snd_msg = "I hear a bolt of electricity.";
@@ -694,7 +697,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::medium;
     d.tile = TileId::tommy_gun;
-    d.clr = clr_brown_drk;
+    d.color = colors::dark_brown();
     d.melee.att_msgs = {"strike", "strikes me with a Spike Gun"};
     d.ranged.max_ammo = 12;
     d.ranged.dmg = Dice(1, 7, 0);
@@ -706,7 +709,7 @@ void init_data_list()
     d.ranged.att_msgs = {"fire", "fires a Spike Gun"};
     d.ranged.snd_msg = "I hear a very crude weapon being fired.";
     d.ranged.makes_ricochet_snd = true;
-    d.ranged.projectile_clr = clr_gray;
+    d.ranged.projectile_color = colors::gray();
     d.spawn_std_range.min = 4;
     d.ranged.att_sfx = SfxId::spike_gun;
     d.ranged.snd_vol = SndVol::low;
@@ -763,7 +766,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::dynamite;
-    d.clr = clr_red_lgt;
+    d.color = colors::light_red();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -779,7 +782,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::flare;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -800,7 +803,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::molotov;
-    d.clr = clr_white;
+    d.color = colors::white();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -818,7 +821,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::flare;
-    d.clr = clr_green;
+    d.color = colors::green();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     data[(size_t)d.id] = d;
@@ -833,8 +836,8 @@ void init_data_list()
     };
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::dagger;
-    d.glyph = '/';
-    d.clr = clr_white;
+    d.character = '/';
+    d.color = colors::white();
     d.ranged.throw_dmg = Dice(2, 3);
     d.ranged.throw_hit_chance_mod = 10;
     d.ranged.effective_range = 5;
@@ -858,8 +861,8 @@ void init_data_list()
     };
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::rock;
-    d.glyph = '*';
-    d.clr = clr_gray;
+    d.character = '*';
+    d.color = colors::gray();
     d.ranged.throw_dmg = Dice(1, 3);
     d.ranged.effective_range = 4;
     d.ranged.max_range = d.ranged.effective_range + 3;
@@ -942,7 +945,7 @@ void init_data_list()
     d.spawn_std_range = Range(dlvl_first_mid_game, dlvl_last);
     d.weight = ItemWeight::medium;
     d.tile = TileId::club;
-    d.clr = clr_brown;
+    d.color = colors::brown();
     d.melee.att_msgs = {"strike", "strikes me with a Club"};
     d.melee.dmg = Dice(2, 3);
     d.melee.hit_chance_mod = 10;
@@ -1134,8 +1137,8 @@ void init_data_list()
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::iron_spike;
     d.is_stackable = true;
-    d.clr = clr_gray;
-    d.glyph = '/';
+    d.color = colors::gray();
+    d.character = '/';
     d.ranged.throw_hit_chance_mod = -5;
     d.ranged.throw_dmg = Dice(1, 4);
     d.ranged.effective_range = 3;
@@ -1227,9 +1230,9 @@ void init_data_list()
     d.ranged.att_msgs = {"", "spits acid pus at me"};
     set_dmg_from_mon_id(d, ActorId::bloated_zombie);
     d.ranged.snd_msg = "I hear spitting.";
-    d.ranged.projectile_clr = clr_green_lgt;
+    d.ranged.projectile_color = colors::light_green();
     d.ranged.dmg_type = DmgType::acid;
-    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_character = '*';
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1354,9 +1357,9 @@ void init_data_list()
     d.ranged.att_msgs = {"", "shoots a web bola at me"};
     set_dmg_from_mon_id(d, ActorId::leng_spider);
     d.ranged.snd_msg = "";
-    d.ranged.projectile_clr = clr_white_lgt;
+    d.ranged.projectile_color = colors::light_white();
     d.ranged.projectile_tile = TileId::blast1;
-    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_character = '*';
     d.ranged.snd_vol = SndVol::low;
     data[(size_t)d.id] = d;
 
@@ -1385,9 +1388,9 @@ void init_data_list()
     d.ranged.att_msgs = {"", "spits venom at me"};
     set_dmg_from_mon_id(d, ActorId::spitting_cobra);
     d.ranged.snd_msg = "I hear hissing and spitting.";
-    d.ranged.projectile_clr = clr_green_lgt;
+    d.ranged.projectile_color = colors::light_green();
     d.ranged.dmg_type = DmgType::physical;
-    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_character = '*';
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1407,8 +1410,8 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.ranged.prop_applied =
         ItemAttProp(new PropBurning(PropTurns::std));
-    d.ranged.projectile_clr = clr_red_lgt;
-    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_color = colors::light_red();
+    d.ranged.projectile_character = '*';
     d.ranged.projectile_tile = TileId::blast1;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.projectile_leaves_smoke = true;
@@ -1428,8 +1431,8 @@ void init_data_list()
     set_dmg_from_mon_id(d, ActorId::energy_hound);
     d.ranged.prop_applied =
         ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 60);
-    d.ranged.projectile_clr = clr_yellow;
-    d.ranged.projectile_glyph = '*';
+    d.ranged.projectile_color = colors::yellow();
+    d.ranged.projectile_character = '*';
     d.ranged.projectile_tile = TileId::blast1;
     d.ranged.projectile_leaves_trail = true;
     d.ranged.dmg_type = DmgType::electric;
@@ -1656,8 +1659,8 @@ void init_data_list()
     d.ranged.att_msgs = {"", "throws a javelin at me"};
     set_dmg_from_mon_id(d, ActorId::deep_one);
     d.ranged.snd_msg = "";
-    d.ranged.projectile_clr = clr_brown;
-    d.ranged.projectile_glyph = '/';
+    d.ranged.projectile_color = colors::brown();
+    d.ranged.projectile_character = '/';
     d.ranged.snd_vol = SndVol::low;
     data[(size_t)d.id] = d;
 
@@ -1793,7 +1796,7 @@ void init_data_list()
         "It offers some protection."
     };
     d.weight = ItemWeight::light;
-    d.clr = clr_brown;
+    d.color = colors::brown();
     d.spawn_std_range.min = 1;
     d.armor.armor_points = 1;
     d.armor.dmg_to_durability_factor = 1.0;
@@ -1817,7 +1820,7 @@ void init_data_list()
     d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -20;
     d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -20;
     d.weight = ItemWeight::heavy;
-    d.clr = clr_white;
+    d.color = colors::white();
     d.spawn_std_range.min = 2;
     d.armor.armor_points = 5;
     d.armor.dmg_to_durability_factor = 0.3;
@@ -1839,7 +1842,7 @@ void init_data_list()
     d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -10;
     d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -10;
     d.weight = ItemWeight::medium;
-    d.clr = clr_green;
+    d.color = colors::green();
     d.spawn_std_range.min = 3;
     d.armor.armor_points = 3;
     d.armor.dmg_to_durability_factor = 0.5;
@@ -1863,7 +1866,7 @@ void init_data_list()
     d.ability_mods_while_equipped[(size_t)AbilityId::stealth] = -10;
     d.ability_mods_while_equipped[(size_t)AbilityId::dodging] = -10;
     d.weight = ItemWeight::medium;
-    d.clr = clr_red_lgt;
+    d.color = colors::light_red();
     d.spawn_std_range.min = 3;
     d.armor.armor_points = 1;
     d.armor.dmg_to_durability_factor = 1.0;
@@ -1882,7 +1885,7 @@ void init_data_list()
     d.spawn_std_range = Range(-1, -1);
     d.weight = ItemWeight::medium;
     d.is_equiped_shocking = true;
-    d.clr = clr_magenta;
+    d.color = colors::magenta();
     d.tile = TileId::mi_go_armor;
     d.armor.armor_points = 3;
     d.armor.dmg_to_durability_factor = 0.1;
@@ -1907,9 +1910,9 @@ void init_data_list()
     d.ability_mods_while_equipped[(size_t)AbilityId::ranged]    = -10;
     d.ability_mods_while_equipped[(size_t)AbilityId::searching] = -6;
     d.is_stackable = false;
-    d.clr = clr_brown;
+    d.color = colors::brown();
     d.tile = TileId::gas_mask;
-    d.glyph = '[';
+    d.character = '[';
     d.spawn_std_range = Range(1, dlvl_last_early_game);
     d.chance_to_incl_in_spawn_list = 50;
     d.weight = ItemWeight::light;
@@ -1926,9 +1929,9 @@ void init_data_list()
 //        item_carry_shock_descr
 //    };
 //    d.is_stackable = false;
-//    d.clr = clr_magenta;
+//    d.color = colors::magenta();
 //    d.tile = TileId::mask;
-//    d.glyph = '[';
+//    d.character = '[';
 //    d.spawn_std_range = Range(-1, -1);
 //    d.weight = ItemWeight::light;
 //    d.land_on_hard_snd_msg = "";
@@ -2084,7 +2087,7 @@ void init_data_list()
     d.id = ItemId::device_blaster;
     d.base_name = {"Blaster Device", "Blaster Devices", "a Blaster Device"};
     d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2097,7 +2100,7 @@ void init_data_list()
         "Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device"
     };
     d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2110,7 +2113,7 @@ void init_data_list()
         "Translocator Device", "Translocator Devices", "a Translocator Device"
     };
     d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2123,7 +2126,7 @@ void init_data_list()
         "Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"
     };
     d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2136,7 +2139,7 @@ void init_data_list()
         "Deafening Device", "Deafening Devices", "a Deafening Device"
     };
     d.value = ItemValue::minor_treasure;
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2158,7 +2161,7 @@ void init_data_list()
     d.chance_to_incl_in_spawn_list = 100;
     d.is_identified = true;
     d.tile = TileId::lantern;
-    d.clr = clr_yellow;
+    d.color = colors::yellow();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -2198,8 +2201,8 @@ void init_data_list()
     d.weight = ItemWeight::medium;
     d.spawn_std_range = Range(1, dlvl_last_mid_game);
     d.is_stackable = false;
-    d.glyph = '%';
-    d.clr = clr_brown_drk;
+    d.character = '%';
+    d.color = colors::dark_brown();
     d.tile = TileId::medical_bag;
     data[(size_t)d.id] = d;
 
@@ -2216,7 +2219,7 @@ void init_data_list()
         "Once wielded by long-forgotten kings in ancient times, this powerful "
         "artifact grants the power to call up a loyal servant from the dead."
     };
-    d.clr = clr_magenta;
+    d.color = colors::magenta();
     d.weight = ItemWeight::medium;
     d.tile = TileId::pharaoh_staff;
     d.melee.att_msgs = {"strike", "strikes me with the Staff of the Pharaohs"};
@@ -2249,10 +2252,10 @@ void init_data_list()
         "is also reflected. The number of turns to regain spell resistance "
         "is halved."
     };
-    d.clr = clr_blue_lgt;
+    d.color = colors::light_blue();
     d.weight = ItemWeight::light;
     d.tile = TileId::amulet;
-    d.glyph = '"';
+    d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2275,10 +2278,10 @@ void init_data_list()
         "The talisman is destroyed in the process however, so one may only be "
         "brought back once."
     };
-    d.clr = clr_white_lgt;
+    d.color = colors::light_white();
     d.weight = ItemWeight::light;
     d.tile = TileId::amulet;
-    d.glyph = '"';
+    d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2300,10 +2303,10 @@ void init_data_list()
         "Grants the owner the ability to control the destination when "
         "teleporting."
     };
-    d.clr = clr_orange;
+    d.color = colors::orange();
     d.weight = ItemWeight::light;
     d.tile = TileId::amulet;
-    d.glyph = '"';
+    d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2327,10 +2330,10 @@ void init_data_list()
         "While carried, the owner is also protected from all sources of "
         "magical slowing."
     };
-    d.clr = clr_yellow;
+    d.color = colors::yellow();
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::clockwork;
-    d.glyph = '%';
+    d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2355,10 +2358,10 @@ void init_data_list()
         "horn blower) - causing them to consider all other creatures with "
         "intense hatred and distrust."
     };
-    d.clr = clr_gray;
+    d.color = colors::gray();
     d.weight = ItemWeight::light;
     d.tile = TileId::horn;
-    d.glyph = '%';
+    d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2381,10 +2384,10 @@ void init_data_list()
         "When blown, this instrument forces all magically summoned "
         "creatures within hearing range back to their original realm."
     };
-    d.clr = clr_magenta;
+    d.color = colors::magenta();
     d.weight = ItemWeight::light;
     d.tile = TileId::horn;
-    d.glyph = '%';
+    d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2413,7 +2416,7 @@ void init_data_list()
     };
     d.weight = ItemWeight::light;
     d.tile = TileId::dagger;
-    d.clr = clr_violet;
+    d.color = colors::violet();
     d.melee.att_msgs = {"stab", "stabs me with a Dagger"};
     d.melee.dmg = Dice(1, 4, 3);
     d.melee.hit_chance_mod = 20;
@@ -2445,10 +2448,10 @@ void init_data_list()
     {
         "+4 Hit Points, grants resistance against poison and disease."
     };
-    d.clr = clr_white_lgt;
+    d.color = colors::light_white();
     d.weight = ItemWeight::light;
     d.tile = TileId::orb;
-    d.glyph = '"';
+    d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
     d.value = ItemValue::major_treasure;
@@ -2473,8 +2476,8 @@ void init_data_list()
     d.spawn_std_range.max = dlvl_last;
     d.weight = ItemWeight::extra_light;
     d.tile = TileId::zombie_dust;
-    d.glyph = '*';
-    d.clr = clr_brown;
+    d.character = '*';
+    d.color = colors::brown();
     d.ranged.throw_dmg = Dice(0, 0);
     d.ranged.throw_hit_chance_mod = 15;
     d.ranged.always_break_on_throw = true;

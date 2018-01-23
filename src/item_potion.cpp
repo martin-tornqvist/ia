@@ -201,7 +201,7 @@ void Potion::on_actor_turn_in_inv(const InvType inv_type)
             text_format::first_to_lower(alignment_str());
 
         msg_log::add("I feel like " + name_plural  + " are " + align_str + ".",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
 
@@ -687,28 +687,28 @@ void init()
     // Init possible potion colors and fake names
     potion_looks_.assign(
     {
-        {"Golden",    "a Golden",     clr_yellow},
-        {"Yellow",    "a Yellow",     clr_yellow},
-        {"Dark",      "a Dark",       clr_gray},
-        {"Black",     "a Black",      clr_gray},
-        {"Oily",      "an Oily",      clr_gray},
-        {"Smoky",     "a Smoky",      clr_white},
-        {"Slimy",     "a Slimy",      clr_green},
-        {"Green",     "a Green",      clr_green_lgt},
-        {"Fiery",     "a Fiery",      clr_red_lgt},
-        {"Murky",     "a Murky",      clr_brown_drk},
-        {"Muddy",     "a Muddy",      clr_brown},
-        {"Violet",    "a Violet",     clr_violet},
-        {"Orange",    "an Orange",    clr_orange},
-        {"Watery",    "a Watery",     clr_blue_lgt},
-        {"Metallic",  "a Metallic",   clr_gray},
-        {"Clear",     "a Clear",      clr_white_lgt},
-        {"Misty",     "a Misty",      clr_white_lgt},
-        {"Bloody",    "a Bloody",     clr_red},
-        {"Magenta",   "a Magenta",    clr_magenta},
-        {"Clotted",   "a Clotted",    clr_green},
-        {"Moldy",     "a Moldy",      clr_brown},
-        {"Frothy",    "a Frothy",     clr_white}
+        {"Golden",    "a Golden",     colors::yellow()},
+        {"Yellow",    "a Yellow",     colors::yellow()},
+        {"Dark",      "a Dark",       colors::gray()},
+        {"Black",     "a Black",      colors::gray()},
+        {"Oily",      "an Oily",      colors::gray()},
+        {"Smoky",     "a Smoky",      colors::white()},
+        {"Slimy",     "a Slimy",      colors::green()},
+        {"Green",     "a Green",      colors::light_green()},
+        {"Fiery",     "a Fiery",      colors::light_red()},
+        {"Murky",     "a Murky",      colors::dark_brown()},
+        {"Muddy",     "a Muddy",      colors::brown()},
+        {"Violet",    "a Violet",     colors::violet()},
+        {"Orange",    "an Orange",    colors::orange()},
+        {"Watery",    "a Watery",     colors::light_blue()},
+        {"Metallic",  "a Metallic",   colors::gray()},
+        {"Clear",     "a Clear",      colors::light_white()},
+        {"Misty",     "a Misty",      colors::light_white()},
+        {"Bloody",    "a Bloody",     colors::red()},
+        {"Magenta",   "a Magenta",    colors::magenta()},
+        {"Clotted",   "a Clotted",    colors::green()},
+        {"Moldy",     "a Moldy",      colors::brown()},
+        {"Frothy",    "a Frothy",     colors::white()}
     });
 
     for (auto& d : item_data::data)
@@ -729,7 +729,7 @@ void init()
             d.base_name_un_id.names[(size_t)ItemRefType::a] =
                 look.name_a     + " Potion";
 
-            d.clr = look.clr;
+            d.color = look.color;
 
             potion_looks_.erase(potion_looks_.begin() + idx);
 
@@ -776,9 +776,7 @@ void save()
             saving::put_str(
                 d.base_name_un_id.names[(size_t)ItemRefType::a]);
 
-            saving::put_int(d.clr.r);
-            saving::put_int(d.clr.g);
-            saving::put_int(d.clr.b);
+            saving::put_str(colors::color_to_name(d.color));
         }
     }
 }
@@ -800,9 +798,7 @@ void load()
             d.base_name_un_id.names[(size_t)ItemRefType::a] =
                 saving::get_str();
 
-            d.clr.r = saving::get_int();
-            d.clr.g = saving::get_int();
-            d.clr.b = saving::get_int();
+            d.color = colors::name_to_color(saving::get_str());
         }
     }
 }

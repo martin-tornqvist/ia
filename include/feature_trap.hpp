@@ -3,7 +3,7 @@
 
 #include "feature.hpp"
 #include "ability_values.hpp"
-#include "art.hpp"
+#include "gfx.hpp"
 #include "feature_rigid.hpp"
 #include "global.hpp"
 
@@ -42,11 +42,11 @@ public:
 
     // Spawn-by-id compliant ctor (do not use for normal cases):
     Trap(const P& p) :
-        Rigid                   (p),
-        mimic_feature_          (nullptr),
-        is_hidden_              (false),
-        nr_turns_until_trigger_ (-1),
-        trap_impl_              (nullptr) {}
+        Rigid(p),
+        mimic_feature_(nullptr),
+        is_hidden_(false),
+        nr_turns_until_trigger_(-1),
+        trap_impl_(nullptr) {}
 
     Trap() = delete;
 
@@ -65,7 +65,7 @@ public:
 
     void bump(Actor& actor_bumping) override;
 
-    char glyph() const override;
+    char character() const override;
 
     TileId tile() const override;
 
@@ -116,8 +116,8 @@ public:
 private:
     TrapImpl* mk_trap_impl_from_id(const TrapId trap_id);
 
-    Clr clr_default() const override;
-    Clr clr_bg_default() const override;
+    Color color_default() const override;
+    Color color_bg_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,
@@ -173,11 +173,11 @@ protected:
 
     virtual std::string name(const Article article) const = 0;
 
-    virtual Clr clr() const = 0;
+    virtual Color color() const = 0;
 
     virtual TileId tile() const = 0;
 
-    virtual char glyph() const
+    virtual char character() const
     {
         return '^';
     }
@@ -256,9 +256,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_white;
+        return colors::white();
     }
 
     void trigger() override;
@@ -296,9 +296,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_white_lgt;
+        return colors::light_white();
     }
 
     void trigger() override;
@@ -337,9 +337,9 @@ protected:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_magenta;
+        return colors::magenta();
     }
 
     Range nr_turns_range_to_trigger() const override
@@ -401,9 +401,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_yellow;
+        return colors::yellow();
     }
 
     void trigger() override;
@@ -434,9 +434,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_violet;
+        return colors::violet();
     }
 
     void trigger() override;
@@ -467,9 +467,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_gray;
+        return colors::gray();
     }
 
     void trigger() override;
@@ -500,9 +500,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_red_lgt;
+        return colors::light_red();
     }
 
     void trigger() override;
@@ -533,9 +533,9 @@ private:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_orange;
+        return colors::orange();
     }
 
     void trigger() override;
@@ -568,9 +568,9 @@ protected:
         return name;
     }
 
-    virtual Clr clr() const override
+    virtual Color color() const override
     {
-        return clr_red_lgt;
+        return colors::light_red();
     }
 
     virtual TileId tile() const override
@@ -651,9 +651,9 @@ private:
 
     void trigger() override;
 
-    Clr clr() const override
+    Color color() const override
     {
-        return clr_white_lgt;
+        return colors::light_white();
     }
 
     std::string name(const Article article) const override
@@ -668,7 +668,7 @@ private:
         return name;
     }
 
-    char glyph() const override
+    char character() const override
     {
         return '*';
     }

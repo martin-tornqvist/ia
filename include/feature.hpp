@@ -18,8 +18,8 @@ public:
 
     virtual FeatureId id() const = 0;
     virtual std::string name(const Article article) const = 0;
-    virtual Clr clr() const = 0;
-    virtual Clr clr_bg() const = 0;
+    virtual Color color() const = 0;
+    virtual Color color_bg() const = 0;
 
     const FeatureDataT& data() const;
 
@@ -39,7 +39,7 @@ public:
     virtual bool is_projectile_passable() const;
     virtual bool is_smoke_passable() const;
     virtual bool is_bottomless() const;
-    virtual char glyph() const;
+    virtual char character() const;
     virtual TileId tile() const;
     virtual bool can_have_corpse() const;
     virtual bool can_have_rigid() const;

@@ -93,9 +93,9 @@ bool Feature::is_bottomless() const
     return data().is_bottomless;
 }
 
-char Feature::glyph() const
+char Feature::character() const
 {
-    return data().glyph;
+    return data().character;
 }
 
 TileId Feature::tile() const

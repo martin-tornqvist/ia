@@ -15,9 +15,9 @@ public:
 
     virtual ConsumeItem activate(Actor* const actor) override = 0;
 
-    Clr interface_clr() const override final
+    Color interface_color() const override final
     {
-        return clr_cyan;
+        return colors::cyan();
     }
 
     virtual void on_std_turn_in_inv(const InvType inv_type) override

@@ -9,6 +9,7 @@
 #include "feature_data.hpp"
 #include "feature_trap.hpp"
 #include "game_time.hpp"
+#include "actor_player.hpp"
 
 namespace populate_traps
 {

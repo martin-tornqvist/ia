@@ -14,9 +14,9 @@ public:
 
     ~Scroll() {}
 
-    Clr interface_clr() const override
+    Color interface_color() const override
     {
-        return clr_magenta;
+        return colors::magenta();
     }
 
     ConsumeItem activate(Actor* const actor) override;
@@ -41,6 +41,6 @@ void init();
 void save();
 void load();
 
-} //ScrollHandling
+} // scroll_handling
 
 #endif

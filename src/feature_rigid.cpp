@@ -5,7 +5,6 @@
 #include "init.hpp"
 #include "msg_log.hpp"
 #include "io.hpp"
-#include "map.hpp"
 #include "popup.hpp"
 #include "map_travel.hpp"
 #include "saving.hpp"
@@ -18,24 +17,23 @@
 #include "actor_mon.hpp"
 #include "query.hpp"
 #include "pickup.hpp"
-#include "game.hpp"
 #include "sound.hpp"
-#include "feature_door.hpp"
 #include "wham.hpp"
 #include "text_format.hpp"
+#include "actor_player.hpp"
 
 // -----------------------------------------------------------------------------
 // Rigid
 // -----------------------------------------------------------------------------
 Rigid::Rigid(const P& p) :
-    Feature                     (p),
-    item_container_             (),
-    burn_state_                 (BurnState::not_burned),
-    started_burning_this_turn_  (false),
-    gore_tile_                  (TileId::empty),
-    gore_glyph_                 (0),
-    is_bloody_                  (false),
-    nr_turns_color_corrupted_   (-1) {}
+    Feature(p),
+    item_container_(),
+    burn_state_(BurnState::not_burned),
+    started_burning_this_turn_(false),
+    gore_tile_(TileId::empty),
+    gore_character_(0),
+    is_bloody_(false),
+    nr_turns_color_corrupted_(-1) {}
 
 void Rigid::on_new_turn()
 {
@@ -54,7 +52,7 @@ void Rigid::on_new_turn()
             if (actor.is_player())
             {
                 msg_log::add("I am scorched by flames.",
-                             clr_msg_bad);
+                             colors::msg_bad());
             }
             else // Monster
             {
@@ -65,7 +63,7 @@ void Rigid::on_new_turn()
                             actor.name_the());
 
                     msg_log::add(name_the + " is scorched by flames.",
-                                 clr_msg_good);
+                                 colors::msg_good());
                 }
             }
 
@@ -170,7 +168,7 @@ void Rigid::on_new_turn()
                     if (map::player->pos == p)
                     {
                         msg_log::add("Fire has spread here!",
-                                     clr_msg_note,
+                                     colors::msg_note(),
                                      true,
                                      MorePromptOnMsg::yes);
                     }
@@ -336,24 +334,24 @@ void Rigid::try_put_gore()
 {
     if (data().can_have_gore)
     {
-        const int roll_glyph = rnd::dice(1, 4);
+        const int roll_character = rnd::dice(1, 4);
 
-        switch (roll_glyph)
+        switch (roll_character)
         {
         case 1:
-            gore_glyph_ = ',';
+            gore_character_ = ',';
             break;
 
         case 2:
-            gore_glyph_ = '`';
+            gore_character_ = '`';
             break;
 
         case 3:
-            gore_glyph_ = 39;
+            gore_character_ = 39;
             break;
 
         case 4:
-            gore_glyph_ = ';';
+            gore_character_ = ';';
             break;
         }
     }
@@ -401,58 +399,61 @@ void Rigid::corrupt_color()
     nr_turns_color_corrupted_ = rnd::range(200, 220);
 }
 
-Clr Rigid::clr() const
+Color Rigid::color() const
 {
     if (burn_state_ == BurnState::burning)
     {
-        return clr_orange;
+        return colors::orange();
     }
     else // Not burning
     {
         if (nr_turns_color_corrupted_ > 0)
         {
-            Clr clr = clr_magenta_lgt;
+            Color color = colors::light_magenta();
 
-            clr.r = rnd::range(40, 255);
-            clr.g = rnd::range(40, 255);
-            clr.b = rnd::range(40, 255);
+            color.set_r(rnd::range(40, 255));
+            color.set_g(rnd::range(40, 255));
+            color.set_b(rnd::range(40, 255));
 
-            return clr;
+            return color;
         }
         else if (is_bloody_)
         {
-            return clr_red_lgt;
+            return colors::light_red();
         }
         else
         {
             return
                 (burn_state_ == BurnState::not_burned) ?
-                clr_default() :
-                clr_gray_drk;
+                color_default() :
+                colors::dark_gray();
         }
     }
 }
 
-Clr Rigid::clr_bg() const
+Color Rigid::color_bg() const
 {
     switch (burn_state_)
     {
     case BurnState::not_burned:
     case BurnState::has_burned:
-        return clr_bg_default();
+        return color_bg_default();
 
     case BurnState::burning:
-        return Clr {Uint8(rnd::range(32, 255)), 0, 0, 0};
+        auto color = Color((uint8_t)rnd::range(32, 255), 0, 0);
+
+        return color;
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+
+    return colors::yellow();
 }
 
 void Rigid::clear_gore()
 {
     gore_tile_ = TileId::empty;
-    gore_glyph_ = ' ';
+    gore_character_ = ' ';
     is_bloody_ = false;
 }
 
@@ -546,9 +547,9 @@ std::string Floor::name(const Article article) const
     return ret;
 }
 
-Clr Floor::clr_default() const
+Color Floor::color_default() const
 {
-    return clr_white;
+    return colors::white();
 }
 
 // -----------------------------------------------------------------------------
@@ -679,36 +680,36 @@ std::string Wall::name(const Article article) const
     return ret;
 }
 
-Clr Wall::clr_default() const
+Color Wall::color_default() const
 {
     if (is_mossy_)
     {
-        return clr_green_drk;
+        return colors::dark_green();
     }
 
     switch (type_)
     {
     case WallType::cliff:
-        return clr_gray_drk;
+        return colors::dark_gray();
 
     case WallType::egypt:
     case WallType::cave:
-        return clr_brown_gray;
+        return colors::gray_brown();
 
     case WallType::common:
     case WallType::common_alt:
         // Return the wall color of the current map
-        return map::wall_clr;
+        return map::wall_color;
 
     case WallType::leng_monestary:
-        return clr_red;
+        return colors::red();
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+    return colors::yellow();
 }
 
-char Wall::glyph() const
+char Wall::character() const
 {
     return config::is_text_mode_wall_full_square() ? 10 : '#';
 }
@@ -850,10 +851,10 @@ std::string RubbleHigh::name(const Article article) const
     return ret + "big pile of debris";
 }
 
-Clr RubbleHigh::clr_default() const
+Color RubbleHigh::color_default() const
 {
     // Return the wall color of the current map
-    return map::wall_clr;
+    return map::wall_color;
 }
 
 // -----------------------------------------------------------------------------
@@ -893,10 +894,10 @@ std::string RubbleLow::name(const Article article) const
     return ret + "rubble";
 }
 
-Clr RubbleLow::clr_default() const
+Color RubbleLow::color_default() const
 {
     // Return the wall color of the current map
-    return map::wall_clr;
+    return map::wall_color;
 }
 
 // -----------------------------------------------------------------------------
@@ -928,9 +929,9 @@ std::string Bones::name(const Article article) const
     return ret + "bones";
 }
 
-Clr Bones::clr_default() const
+Color Bones::color_default() const
 {
-    return clr_gray_drk;
+    return colors::dark_gray();
 }
 
 // -----------------------------------------------------------------------------
@@ -968,9 +969,9 @@ std::string GraveStone::name(const Article article) const
     return ret + "gravestone; " + inscr_;
 }
 
-Clr GraveStone::clr_default() const
+Color GraveStone::color_default() const
 {
-    return clr_white;
+    return colors::white();
 }
 
 // -----------------------------------------------------------------------------
@@ -997,9 +998,9 @@ std::string ChurchBench::name(const Article article) const
     return ret + "church bench";
 }
 
-Clr ChurchBench::clr_default() const
+Color ChurchBench::color_default() const
 {
-    return clr_brown;
+    return colors::brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -1124,9 +1125,9 @@ TileId Statue::tile() const
         TileId::ghoul;
 }
 
-Clr Statue::clr_default() const
+Color Statue::color_default() const
 {
-    return clr_white;
+    return colors::white();
 }
 
 // -----------------------------------------------------------------------------
@@ -1152,9 +1153,9 @@ std::string Stalagmite::name(const Article article) const
     return ret + "stalagmite";
 }
 
-Clr Stalagmite::clr_default() const
+Color Stalagmite::color_default() const
 {
-    return clr_brown_gray;
+    return colors::gray_brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -1229,9 +1230,9 @@ std::string Stairs::name(const Article article) const
     return ret + "downward staircase";
 }
 
-Clr Stairs::clr_default() const
+Color Stairs::color_default() const
 {
-    return clr_yellow;
+    return colors::yellow();
 }
 
 // -----------------------------------------------------------------------------
@@ -1253,7 +1254,7 @@ void Bridge::on_hit(const int dmg,
     (void)actor;
 }
 
-char Bridge::glyph() const
+char Bridge::character() const
 {
     return axis_ == Axis::hor ? '|' : '=';
 }
@@ -1264,9 +1265,9 @@ std::string Bridge::name(const Article article) const
     return ret + "bridge";
 }
 
-Clr Bridge::clr_default() const
+Color Bridge::color_default() const
 {
-    return clr_brown_drk;
+    return colors::dark_brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -1347,24 +1348,24 @@ std::string LiquidShallow::name(const Article article) const
     return ret;
 }
 
-Clr LiquidShallow::clr_default() const
+Color LiquidShallow::color_default() const
 {
     switch (type_)
     {
     case LiquidType::water:
-        return clr_blue_lgt;
+        return colors::light_blue();
         break;
 
     case LiquidType::mud:
-        return clr_brown;
+        return colors::brown();
         break;
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+    return colors::yellow();
 }
 
-Clr LiquidShallow::clr_bg_default() const
+Color LiquidShallow::color_bg_default() const
 {
     const auto* const item = map::cells[pos_.x][pos_.y].item;
 
@@ -1372,11 +1373,11 @@ Clr LiquidShallow::clr_bg_default() const
 
     if (item || corpse)
     {
-        return clr();
+        return color();
     }
     else // Nothing is "over" the liquid
     {
-        return clr_black;
+        return colors::black();
     }
 }
 
@@ -1425,21 +1426,21 @@ std::string LiquidDeep::name(const Article article) const
     return ret;
 }
 
-Clr LiquidDeep::clr_default() const
+Color LiquidDeep::color_default() const
 {
     switch (type_)
     {
     case LiquidType::water:
-        return clr_blue;
+        return colors::blue();
         break;
 
     case LiquidType::mud:
-        return clr_brown_drk;
+        return colors::dark_brown();
         break;
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+    return colors::yellow();
 }
 
 // -----------------------------------------------------------------------------
@@ -1467,9 +1468,9 @@ std::string Chasm::name(const Article article) const
     return ret + "chasm";
 }
 
-Clr Chasm::clr_default() const
+Color Chasm::color_default() const
 {
-    return clr_blue;
+    return colors::blue();
 }
 
 // -----------------------------------------------------------------------------
@@ -1508,12 +1509,12 @@ std::string Lever::name(const Article article) const
     return ret;
 }
 
-Clr Lever::clr_default() const
+Color Lever::color_default() const
 {
     return
         is_left_pos_?
-        clr_gray :
-        clr_white;
+        colors::gray() :
+        colors::white();
 }
 
 TileId Lever::tile() const
@@ -1608,9 +1609,9 @@ std::string Altar::name(const Article article) const
     return ret + "altar";
 }
 
-Clr Altar::clr_default() const
+Color Altar::color_default() const
 {
-    return clr_white;
+    return colors::white();
 }
 
 // -----------------------------------------------------------------------------
@@ -1651,9 +1652,9 @@ std::string Carpet::name(const Article article) const
     return ret + "carpet";
 }
 
-Clr Carpet::clr_default() const
+Color Carpet::color_default() const
 {
-    return clr_red;
+    return colors::red();
 }
 
 // -----------------------------------------------------------------------------
@@ -1723,21 +1724,21 @@ std::string Grass::name(const Article article) const
     return "";
 }
 
-Clr Grass::clr_default() const
+Color Grass::color_default() const
 {
     switch (type_)
     {
     case GrassType::common:
-        return clr_green;
+        return colors::green();
         break;
 
     case GrassType::withered:
-        return clr_brown_drk;
+        return colors::dark_brown();
         break;
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+    return colors::yellow();
 }
 
 // -----------------------------------------------------------------------------
@@ -1808,21 +1809,21 @@ std::string Bush::name(const Article article) const
     return "";
 }
 
-Clr Bush::clr_default() const
+Color Bush::color_default() const
 {
     switch (type_)
     {
     case GrassType::common:
-        return clr_green;
+        return colors::green();
         break;
 
     case GrassType::withered:
-        return clr_brown_drk;
+        return colors::dark_brown();
         break;
     }
 
     ASSERT(false && "Failed to set color");
-    return clr_yellow;
+    return colors::yellow();
 }
 
 // -----------------------------------------------------------------------------
@@ -1878,9 +1879,9 @@ std::string Vines::name(const Article article) const
     return "";
 }
 
-Clr Vines::clr_default() const
+Color Vines::color_default() const
 {
-    return clr_green;
+    return colors::green();
 }
 
 // -----------------------------------------------------------------------------
@@ -1898,12 +1899,12 @@ std::string Chains::name(const Article article) const
     return ret + "rusty chains";
 }
 
-Clr Chains::clr_default() const
+Color Chains::color_default() const
 {
-    return clr_gray;
+    return colors::gray();
 }
 
-Clr Chains::clr_bg_default() const
+Color Chains::color_bg_default() const
 {
     const auto* const item = map::cells[pos_.x][pos_.y].item;
 
@@ -1911,11 +1912,11 @@ Clr Chains::clr_bg_default() const
 
     if (item || corpse)
     {
-        return clr();
+        return color();
     }
     else // Nothing is "over" the chains
     {
-        return clr_black;
+        return colors::black();
     }
 }
 
@@ -1971,9 +1972,9 @@ Grate::Grate(const P& p) :
     Rigid(p) {}
 
 void Grate::on_hit(const int dmg,
-                     const DmgType dmg_type,
-                     const DmgMethod dmg_method,
-                     Actor* const actor)
+                   const DmgType dmg_type,
+                   const DmgMethod dmg_method,
+                   Actor* const actor)
 {
     (void)dmg;
     (void)actor;
@@ -2021,9 +2022,9 @@ std::string Grate::name(const Article article) const
     return ret + "grate";
 }
 
-Clr Grate::clr_default() const
+Color Grate::color_default() const
 {
-    return clr_brown;
+    return colors::brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -2090,9 +2091,9 @@ std::string Tree::name(const Article article) const
     return ret + "tree";
 }
 
-Clr Tree::clr_default() const
+Color Tree::color_default() const
 {
-    return clr_brown_drk;
+    return colors::dark_brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -2196,9 +2197,9 @@ void Brazier::add_light_hook(bool light[map_w][map_h]) const
     }
 }
 
-Clr Brazier::clr_default() const
+Color Brazier::color_default() const
 {
-    return clr_yellow;
+    return colors::yellow();
 }
 
 // -----------------------------------------------------------------------------
@@ -2554,25 +2555,25 @@ TileId Tomb::tile() const
         TileId::tomb_closed;
 }
 
-Clr Tomb::clr_default() const
+Color Tomb::color_default() const
 {
     switch (appearance_)
     {
     case TombAppearance::common:
-        return clr_gray;
+        return colors::gray();
 
     case TombAppearance::ornate:
-        return clr_cyan;
+        return colors::cyan();
 
     case TombAppearance::marvelous:
-        return clr_yellow;
+        return colors::yellow();
 
     case TombAppearance::END:
         break;
     }
 
     ASSERT("Failed to set Tomb color" && false);
-    return clr_black;
+    return colors::black();
 }
 
 void Tomb::bump(Actor& actor_bumping)
@@ -2734,7 +2735,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         const std::string msg = "The air suddenly feels colder.";
 
         msg_log::add(msg,
-                     clr_white,
+                     colors::white(),
                      false,
                      MorePromptOnMsg::yes);
 
@@ -2760,7 +2761,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
         const std::string msg = "Something rises from the tomb!";
 
         msg_log::add(msg,
-                     clr_white,
+                     colors::white(),
                      false,
                      MorePromptOnMsg::yes);
 
@@ -2775,7 +2776,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             if (is_seen)
             {
                 msg_log::add("Fumes burst out from the tomb!",
-                             clr_white,
+                             colors::white(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2792,7 +2793,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
             Prop* prop = nullptr;
 
-            Clr fume_clr = clr_magenta;
+            Color fume_color = colors::magenta();
 
             const int rnd = rnd::range(1, 100);
 
@@ -2805,13 +2806,13 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                     poison_dmg_n_turn * dmg_range.roll());
 
 
-                fume_clr = clr_green_lgt;
+                fume_color = colors::light_green();
             }
             else if (rnd < 40)
             {
                 prop = new PropDiseased(PropTurns::std);
 
-                fume_clr = clr_green;
+                fume_color = colors::green();
             }
             else
             {
@@ -2826,7 +2827,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
                            0,
                            ExplExclCenter::no,
                            {prop},
-                           &fume_clr);
+                           fume_color);
         }
         else // Not fumes
         {
@@ -2851,7 +2852,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             if (is_seen)
             {
                 msg_log::add("Something repulsive creeps up from the tomb!",
-                             clr_white,
+                             colors::white(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -3121,7 +3122,7 @@ void Chest::hit(const int dmg,
                         {
                             msg_log::add(
                                 "The lock breaks and the lid flies open!",
-                                clr_text,
+                                colors::text(),
                                 false,
                                 MorePromptOnMsg::yes);
 
@@ -3235,12 +3236,12 @@ TileId Chest::tile() const
         TileId::chest_closed;
 }
 
-Clr Chest::clr_default() const
+Color Chest::color_default() const
 {
     return
         (matl_ == ChestMatl::wood) ?
-        clr_brown_drk :
-        clr_gray;
+        colors::dark_brown() :
+        colors::gray();
 }
 
 // -----------------------------------------------------------------------------
@@ -3296,15 +3297,15 @@ void Fountain::on_hit(const int dmg,
     (void)actor;
 }
 
-Clr Fountain::clr_default() const
+Color Fountain::color_default() const
 {
     return
         has_drinks_left_ ?
-        clr_blue_lgt :
-        clr_gray;
+        colors::light_blue() :
+        colors::gray();
 
     ASSERT("Failed to get fountain color" && false);
-    return clr_black;
+    return colors::black();
 }
 
 std::string Fountain::name(const Article article) const
@@ -3566,9 +3567,9 @@ TileId Cabinet::tile() const
         TileId::cabinet_closed;
 }
 
-Clr Cabinet::clr_default() const
+Color Cabinet::color_default() const
 {
-    return clr_brown_drk;
+    return colors::dark_brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -3634,7 +3635,7 @@ void Bookshelf::bump(Actor& actor_bumping)
 void Bookshelf::player_loot()
 {
     msg_log::add("I search the bookshelf.",
-                 clr_text,
+                 colors::text(),
                  false,
                  MorePromptOnMsg::yes);
 
@@ -3670,9 +3671,9 @@ TileId Bookshelf::tile() const
         TileId::bookshelf_full;
 }
 
-Clr Bookshelf::clr_default() const
+Color Bookshelf::color_default() const
 {
-    return clr_brown_drk;
+    return colors::dark_brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -3738,7 +3739,7 @@ void AlchemistBench::bump(Actor& actor_bumping)
 void AlchemistBench::player_loot()
 {
     msg_log::add("I search the alchemist's workbench.",
-                 clr_text,
+                 colors::text(),
                  false,
                  MorePromptOnMsg::yes);
 
@@ -3784,9 +3785,9 @@ TileId AlchemistBench::tile() const
         TileId::alchemist_bench_full;
 }
 
-Clr AlchemistBench::clr_default() const
+Color AlchemistBench::color_default() const
 {
-    return clr_brown;
+    return colors::brown();
 }
 
 // -----------------------------------------------------------------------------
@@ -3980,7 +3981,7 @@ TileId Cocoon::tile() const
     return is_open_ ? TileId::cocoon_open : TileId::cocoon_closed;
 }
 
-Clr Cocoon::clr_default() const
+Color Cocoon::color_default() const
 {
-    return clr_white;
+    return colors::white();
 }

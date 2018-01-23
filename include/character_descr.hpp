@@ -20,7 +20,7 @@ public:
     StateId id() override;
 
 private:
-    std::vector<StrAndClr> lines_;
+    std::vector<ColoredString> lines_;
 
     int top_idx_;
 };

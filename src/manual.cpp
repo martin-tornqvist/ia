@@ -124,8 +124,8 @@ void BrowseManual::draw()
     io::draw_text_center("Browsing manual",
                          Panel::screen,
                          P(map_w_half, 0),
-                         clr_title,
-                         clr_black,
+                         colors::title(),
+                         colors::black(),
                          true);
 
     const int nr_pages = pages_.size();
@@ -138,10 +138,10 @@ void BrowseManual::draw()
     {
         const bool is_marked = browser_.y() == idx;
 
-        const Clr& drw_clr =
+        const Color& draw_color =
             is_marked ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         const auto& page = pages_[idx];
 
@@ -150,7 +150,7 @@ void BrowseManual::draw()
         io::draw_text(key_str + page.title,
                       Panel::screen,
                       P(0, y),
-                      drw_clr);
+                      draw_color);
 
         ++key_str[0];
     }
@@ -216,7 +216,7 @@ void BrowseManualPage::draw()
         io::draw_text(page_.lines[i],
                       Panel::screen,
                       P(0, screen_y),
-                      clr_text);
+                      colors::text());
 
         ++screen_y;
     }

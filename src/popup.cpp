@@ -68,8 +68,8 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
         io::draw_text_center(title,
                              Panel::map,
                              P(map_w_half, y),
-                             clr_title,
-                             clr_black,
+                             colors::title(),
+                             colors::black(),
                              true);
     }
 
@@ -84,8 +84,8 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
             io::draw_text_center(line,
                                  Panel::map,
                                  P(map_w_half, y),
-                                 clr_white,
-                                 clr_black,
+                                 colors::white(),
+                                 colors::black(),
                                  true);
         }
         else // Draw the message with left alignment
@@ -93,7 +93,7 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
             io::draw_text(line,
                               Panel::map,
                               P(text_x0, y),
-                              clr_white);
+                              colors::white());
         }
 
         msg_log::add_line_to_history(line);
@@ -106,16 +106,16 @@ void menu_msg_drawing_helper(const std::vector<std::string>& lines,
 
     for (size_t i = 0; i < choices.size(); ++i)
     {
-        Clr clr =
+        Color color =
             (i == current_choice) ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         io::draw_text_center(choices[i],
                              Panel::map,
                              P(map_w_half, y),
-                             clr,
-                             clr_black,
+                             color,
+                             colors::black(),
                              true);
 
         ++y;
@@ -149,8 +149,8 @@ void show_msg(const std::string& msg,
         io::draw_text_center(title,
                              Panel::map,
                              P(map_w_half, y),
-                             clr_title,
-                             clr_black,
+                             colors::title(),
+                             colors::black(),
                              true);
     }
 
@@ -165,8 +165,8 @@ void show_msg(const std::string& msg,
             io::draw_text_center(line,
                                  Panel::map,
                                  P(map_w_half, y),
-                                 clr_white,
-                                 clr_black,
+                                 colors::white(),
+                                 colors::black(),
                                  true);
         }
         else
@@ -176,7 +176,7 @@ void show_msg(const std::string& msg,
             io::draw_text(line,
                               Panel::map,
                               P(text_x0, y),
-                              clr_white);
+                              colors::white());
         }
 
         msg_log::add_line_to_history(line);
@@ -187,7 +187,7 @@ void show_msg(const std::string& msg,
     io::draw_text_center(confirm_info_str_no_space,
                          Panel::map,
                          P(map_w_half, y),
-                         clr_menu_drk);
+                         colors::menu_dark());
 
     io::update_screen();
 

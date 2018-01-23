@@ -146,7 +146,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
             if ((rnd == 5) ||
                 (rnd == 6))
             {
-                msg_log::add(hurt_msg, clr_msg_bad);
+                msg_log::add(hurt_msg, colors::msg_bad());
 
                 actor->hit(rnd::range(1, 3), DmgType::electric);
             }
@@ -165,7 +165,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
 
             if (rnd == 4)
             {
-                msg_log::add(hurt_msg, clr_msg_bad);
+                msg_log::add(hurt_msg, colors::msg_bad());
 
                 actor->hit(1, DmgType::electric);
             }
@@ -344,7 +344,7 @@ ConsumeItem DeviceTranslocator::run_effect()
             msg_log::add(text_format::first_to_upper(actor->name_the()) +
                          " is teleported.");
 
-            io::draw_blast_at_cells(std::vector<P> {actor->pos}, clr_yellow);
+            io::draw_blast_at_cells(std::vector<P> {actor->pos}, colors::yellow());
 
             actor->teleport();
         }
@@ -494,7 +494,7 @@ void DeviceLantern::on_std_turn_in_inv(const InvType inv_type)
     if (nr_turns_left_ <= 0)
     {
         msg_log::add("My Electric Lantern has expired.",
-                     clr_msg_note,
+                     colors::msg_note(),
                      true,
                      MorePromptOnMsg::yes);
 

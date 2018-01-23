@@ -16,6 +16,9 @@
 #include "inventory.hpp"
 #include "sdl_base.hpp"
 #include "text_format.hpp"
+#include "config.hpp"
+#include "colors.hpp"
+#include "rl_utils.hpp"
 
 namespace io
 {
@@ -48,6 +51,8 @@ std::vector<P> tile_contour_px_data_[tiles_nr_x_][tiles_nr_y_];
 std::vector<P> font_contour_px_data_[font_nr_x_][font_nr_y_];
 
 SDL_Event sdl_event_;
+
+const SDL_Color sdl_color_black = {0, 0, 0, 0};
 
 // Pointer to function used for writing pixels on the screen (there are
 // different variants depending on bpp)
@@ -206,12 +211,16 @@ void load_font()
 {
     TRACE_FUNC_BEGIN;
 
-    const std::string font_path = "res/images/" + config::font_name();
+    const std::string font_path = gfx_path + "/" + config::font_name();
 
     SDL_Surface* const font_srf_tmp = IMG_Load(font_path.c_str());
 
-    const Uint32 img_clr =
-        SDL_MapRGB(font_srf_tmp->format, 255, 255, 255);
+    if (!font_srf_tmp)
+    {
+        TRACE << "Failed to load font: " << IMG_GetError() << std::endl;
+    }
+
+    const Uint32 img_color = SDL_MapRGB(font_srf_tmp->format, 255, 255, 255);
 
     const int cell_w = config::cell_px_w();
     const int cell_h = config::cell_px_h();
@@ -234,7 +243,7 @@ void load_font()
                 for (int sheet_y = sheet_y0; sheet_y <= sheet_y1; ++sheet_y)
                 {
                     const bool is_img_px =
-                        px(*font_srf_tmp, sheet_x, sheet_y) == img_clr;
+                        px(*font_srf_tmp, sheet_x, sheet_y) == img_color;
 
                     if (is_img_px)
                     {
@@ -260,7 +269,7 @@ void load_tiles()
     SDL_Surface* const tile_srf_tmp =
         IMG_Load(tiles_img_name.data());
 
-    const Uint32 img_clr =
+    const Uint32 img_color =
         SDL_MapRGB(tile_srf_tmp->format, 255, 255, 255);
 
     const int cell_w = config::cell_px_w();
@@ -284,7 +293,7 @@ void load_tiles()
                 for (int sheet_y = sheet_y0; sheet_y <= sheet_y1; ++sheet_y)
                 {
                     const bool is_img_px =
-                        px(*tile_srf_tmp, sheet_x, sheet_y) == img_clr;
+                        px(*tile_srf_tmp, sheet_x, sheet_y) == img_color;
 
                     if (is_img_px)
                     {
@@ -356,15 +365,39 @@ void load_contours(const std::vector<P>* base,
     TRACE_FUNC_END;
 }
 
-void put_pixels_on_scr(const std::vector<P> px_data,
-                       /*const P& sheet_pos,*/
-                       const P& scr_px_pos,
-                       const Clr& clr)
+void draw_rectangle_solid(const P& px_pos,
+                          const P& px_dims,
+                          const SDL_Color& sdl_color)
 {
-    const int px_clr = SDL_MapRGB(scr_srf_->format,
-                                  clr.r,
-                                  clr.g,
-                                  clr.b);
+    if (is_inited())
+    {
+        SDL_Rect sdl_rect =
+        {
+            (Sint16)px_pos.x,
+            (Sint16)px_pos.y,
+            (Uint16)px_dims.x,
+            (Uint16)px_dims.y
+        };
+
+        SDL_FillRect(scr_srf_,
+                     &sdl_rect,
+                     SDL_MapRGB(scr_srf_->format,
+                                sdl_color.r,
+                                sdl_color.g,
+                                sdl_color.b));
+    }
+}
+
+void put_pixels_on_scr(const std::vector<P> px_data,
+                       const P& scr_px_pos,
+                       const Color& color)
+{
+    const auto sdl_color = color.sdl_color();
+
+    const int px_color = SDL_MapRGB(scr_srf_->format,
+                                    sdl_color.r,
+                                    sdl_color.g,
+                                    sdl_color.b);
 
     for (const P& p_relative : px_data)
     {
@@ -374,98 +407,61 @@ void put_pixels_on_scr(const std::vector<P> px_data,
         put_px_ptr_(*scr_srf_,
                     scr_px_x,
                     scr_px_y,
-                    px_clr);
+                    px_color);
     }
 }
 
 void put_pixels_on_scr_for_tile(const TileId tile,
                                 const P& scr_px_pos,
-                                const Clr& clr)
+                                const Color& color)
 {
-    const P sheet_pos(art::tile_pos(tile));
+    const P sheet_pos(gfx::tile_pos(tile));
 
-    const auto& pixel_data =
-        tile_px_data_[sheet_pos.x][sheet_pos.y];
+    const auto& pixel_data = tile_px_data_[sheet_pos.x][sheet_pos.y];
 
     put_pixels_on_scr(pixel_data,
                       /*art::tile_pos(tile),*/
                       scr_px_pos,
-                      clr);
+                      color);
 }
 
-void put_pixels_on_scr_for_glyph(const char glyph,
-                                 const P& scr_px_pos,
-                                 const Clr& clr)
+void put_pixels_on_scr_for_character(const char character,
+                                     const P& scr_px_pos,
+                                     const Color& color)
 {
-    const P sheet_pos(art::glyph_pos(glyph));
+    const P sheet_pos(gfx::character_pos(character));
 
-    const auto& pixel_data =
-        font_px_data_[sheet_pos.x][sheet_pos.y];
+    const auto& pixel_data = font_px_data_[sheet_pos.x][sheet_pos.y];
 
-    put_pixels_on_scr(pixel_data,
-                      /*art::glyph_pos(glyph),*/
-                      scr_px_pos,
-                      clr);
+    put_pixels_on_scr(pixel_data, scr_px_pos, color);
 }
 
-/*
-void draw_excl_mark_at(const P& px_pos)
+void draw_character_at_px(const char character,
+                          const P& px_pos,
+                          const Color& color,
+                          const bool draw_bg_color,
+                          const Color& bg_color = Color(0, 0, 0))
 {
-    draw_rectangle_solid(px_pos, P(3, 12), clr_black);
-    draw_line_ver(px_pos + P(1, 1), 6, clr_magenta_lgt);
-    draw_line_ver(px_pos + P(1, 9), 2, clr_magenta_lgt);
-}
-*/
-
-/*
-void draw_player_shock_excl_marks()
-{
-    const double shock = map::player->perm_shock_taken_current_turn();
-    const int nr_excl = shock > 8 ? 3 : shock > 3 ? 2 : shock > 1 ? 1 : 0;
-
-    if (nr_excl > 0)
-    {
-        const P& player_pos = map::player->pos;
-        const P px_pos_right = px_pos_for_cell_in_panel(Panel::map, player_pos);
-
-        for (int i = 0; i < nr_excl; ++i)
-        {
-            draw_excl_mark_at(px_pos_right + P(i * 3, 0));
-        }
-    }
-}
-*/
-
-void draw_glyph_at_px(const char glyph,
-                      const P& px_pos,
-                      const Clr& clr,
-                      const bool draw_bg_clr,
-                      const Clr& bg_clr = clr_black)
-{
-    if (draw_bg_clr)
+    if (draw_bg_color)
     {
         const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
-        draw_rectangle_solid(px_pos, cell_dims, bg_clr);
+        draw_rectangle_solid(px_pos, cell_dims, bg_color.sdl_color());
 
         // Draw contour if neither the foreground nor background is black
-        if (!is_clr_equal(clr, clr_black) &&
-            !is_clr_equal(bg_clr, clr_black))
+        if ((color != colors::black()) &&
+            (bg_color != colors::black()))
         {
-            const P glyph_pos(art::glyph_pos(glyph));
+            const P character_pos(gfx::character_pos(character));
 
             const auto& contour_px_data =
-                font_contour_px_data_[glyph_pos.x][glyph_pos.y];
+                font_contour_px_data_[character_pos.x][character_pos.y];
 
-            put_pixels_on_scr(contour_px_data,
-                              px_pos,
-                              clr_black);
+            put_pixels_on_scr(contour_px_data, px_pos, sdl_color_black);
         }
     }
 
-    put_pixels_on_scr_for_glyph(glyph,
-                                px_pos,
-                                clr);
+    put_pixels_on_scr_for_character(character, px_pos, color);
 }
 
 } // namespace
@@ -704,8 +700,8 @@ void draw_skull(const P& p)
 void draw_blast_at_field(const P& center_pos,
                          const int radius,
                          bool forbidden_cells[map_w][map_h],
-                         const Clr& clr_inner,
-                         const Clr& clr_outer)
+                         const Color& color_inner,
+                         const Color& color_outer)
 {
     TRACE_FUNC_BEGIN;
 
@@ -738,24 +734,24 @@ void draw_blast_at_field(const P& center_pos,
                     pos.y == center_pos.y - radius ||
                     pos.y == center_pos.y + radius;
 
-                const Clr clr = is_outer ? clr_outer : clr_inner;
+                const Color color = is_outer ? color_outer : color_inner;
 
                 if (config::is_tiles_mode())
                 {
                     draw_tile(TileId::blast1,
                               Panel::map,
                               pos,
-                              clr,
-                              clr_black);
+                              color,
+                              colors::black());
                 }
                 else // Text mode
                 {
-                    draw_glyph('*',
-                               Panel::map,
-                               pos,
-                               clr,
-                               true,
-                               clr_black);
+                    draw_character('*',
+                                   Panel::map,
+                                   pos,
+                                   color,
+                                   true,
+                                   colors::black());
                 }
 
                 is_any_blast_rendered = true;
@@ -786,25 +782,24 @@ void draw_blast_at_field(const P& center_pos,
                     pos.y == center_pos.y - radius ||
                     pos.y == center_pos.y + radius;
 
-                const Clr clr =
-                    is_outer ? clr_outer : clr_inner;
+                const Color color = is_outer ? color_outer : color_inner;
 
                 if (config::is_tiles_mode())
                 {
                     draw_tile(TileId::blast2,
                               Panel::map,
                               pos,
-                              clr,
-                              clr_black);
+                              color,
+                              colors::black());
                 }
                 else // Text mode
                 {
-                    draw_glyph('*',
-                               Panel::map,
-                               pos,
-                               clr,
-                               true,
-                               clr_black);
+                    draw_character('*',
+                                   Panel::map,
+                                   pos,
+                                   color,
+                                   true,
+                                   colors::black());
                 }
             }
         }
@@ -820,7 +815,7 @@ void draw_blast_at_field(const P& center_pos,
     TRACE_FUNC_END;
 }
 
-void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
+void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 {
     TRACE_FUNC_BEGIN;
 
@@ -837,11 +832,20 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
     {
         if (config::is_tiles_mode())
         {
-            draw_tile(TileId::blast1, Panel::map, pos, clr, clr_black);
+            draw_tile(TileId::blast1,
+                      Panel::map,
+                      pos,
+                      color,
+                      colors::black());
         }
         else
         {
-            draw_glyph('*', Panel::map, pos, clr, true, clr_black);
+            draw_character('*',
+                           Panel::map,
+                           pos,
+                           color,
+                           true,
+                           colors::black());
         }
     }
 
@@ -856,17 +860,17 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
             draw_tile(TileId::blast2,
                       Panel::map,
                       pos,
-                      clr,
-                      clr_black);
+                      color,
+                      colors::black());
         }
         else // Text mode
         {
-            draw_glyph('*',
+            draw_character('*',
                        Panel::map,
                        pos,
-                       clr,
+                       color,
                        true,
-                       clr_black);
+                       colors::black());
         }
     }
 
@@ -878,7 +882,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Clr& clr)
 }
 
 void draw_blast_at_seen_cells(const std::vector<P>& positions,
-                              const Clr& clr)
+                              const Color& color)
 {
     if (is_inited())
     {
@@ -894,13 +898,13 @@ void draw_blast_at_seen_cells(const std::vector<P>& positions,
 
         if (!positions_with_vision.empty())
         {
-            io::draw_blast_at_cells(positions_with_vision, clr);
+            io::draw_blast_at_cells(positions_with_vision, color);
         }
     }
 }
 
 void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
-                               const Clr& clr)
+                               const Color& color)
 {
     if (is_inited())
     {
@@ -911,15 +915,15 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
             positions.push_back(actor->pos);
         }
 
-        draw_blast_at_seen_cells(positions, clr);
+        draw_blast_at_seen_cells(positions, color);
     }
 }
 
 void draw_tile(const TileId tile,
                const Panel panel,
                const P& pos,
-               const Clr& clr,
-               const Clr& bg_clr)
+               const Color& color,
+               const Color& bg_color)
 {
     if (!is_inited())
     {
@@ -930,33 +934,33 @@ void draw_tile(const TileId tile,
 
     const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
-    draw_rectangle_solid(px_pos, cell_dims, bg_clr);
+    draw_rectangle_solid(px_pos, cell_dims, bg_color);
 
     // Draw contour if neither the foreground nor background is black
-    if (!is_clr_equal(clr, clr_black) &&
-        !is_clr_equal(bg_clr, clr_black))
+    if ((color != colors::black()) &&
+        (bg_color != colors::black()))
     {
-        const P tile_pos(art::tile_pos(tile));
+        const P tile_pos(gfx::tile_pos(tile));
 
         const auto& contour_px_data =
             tile_contour_px_data_[tile_pos.x][tile_pos.y];
 
         put_pixels_on_scr(contour_px_data,
                           px_pos,
-                          clr_black);
+                          sdl_color_black);
     }
 
     put_pixels_on_scr_for_tile(tile,
                                px_pos,
-                               clr);
+                               color.sdl_color());
 }
 
-void draw_glyph(const char glyph,
+void draw_character(const char character,
                 const Panel panel,
                 const P& pos,
-                const Clr& clr,
-                const bool draw_bg_clr,
-                const Clr& bg_clr)
+                const Color& color,
+                const bool draw_bg_color,
+                const Color& bg_color)
 {
     if (!is_inited())
     {
@@ -965,14 +969,22 @@ void draw_glyph(const char glyph,
 
     const P px_pos = px_pos_for_cell_in_panel(panel, pos);
 
-    draw_glyph_at_px(glyph, px_pos, clr, draw_bg_clr, bg_clr);
+    const auto sdl_color = color.sdl_color();
+
+    const auto sdl_color_bg = bg_color.sdl_color();
+
+    draw_character_at_px(character,
+                         px_pos,
+                         sdl_color,
+                         draw_bg_color,
+                         sdl_color_bg);
 }
 
 void draw_text(const std::string& str,
                const Panel panel,
                const P& pos,
-               const Clr& clr,
-               const Clr& bg_clr)
+               const Color& color,
+               const Color& bg_color)
 {
     if (!is_inited())
     {
@@ -991,7 +1003,15 @@ void draw_text(const std::string& str,
     const size_t msg_w = str.size();
     const int msg_px_w = msg_w * cell_px_w;
 
-    draw_rectangle_solid(px_pos, {msg_px_w, cell_px_h}, bg_clr);
+    const auto sdl_color = color.sdl_color();
+
+    const auto sdl_bg_color = bg_color.sdl_color();
+
+    const auto sdl_color_gray = colors::gray();
+
+    draw_rectangle_solid(px_pos,
+                         {msg_px_w, cell_px_h},
+                         sdl_bg_color);
 
     const int scr_px_w = config::scr_px_w();
     const int msg_px_x1 = px_pos.x + msg_px_w - 1;
@@ -1014,11 +1034,17 @@ void draw_text(const std::string& str,
 
         if (draw_dots)
         {
-            draw_glyph_at_px('.', px_pos, clr_gray, false);
+            draw_character_at_px('.',
+                                 px_pos,
+                                 sdl_color_gray,
+                                 false);
         }
         else // Whole message fits, or we are not yet near the screen edge
         {
-            draw_glyph_at_px(str[i], px_pos, clr, false);
+            draw_character_at_px(str[i],
+                                 px_pos,
+                                 sdl_color,
+                                 false);
         }
 
         px_pos.x += cell_px_w;
@@ -1028,8 +1054,8 @@ void draw_text(const std::string& str,
 int draw_text_center(const std::string& str,
                      const Panel panel,
                      const P& pos,
-                     const Clr& clr,
-                     const Clr& bg_clr,
+                     const Color& color,
+                     const Color& bg_color,
                      const bool is_pixel_pos_adj_allowed)
 {
     if (!is_inited())
@@ -1053,6 +1079,10 @@ int draw_text_center(const std::string& str,
 
     const int w_tot_pixel = len * cell_dims.x;
 
+    const auto sdl_color = color.sdl_color();
+
+    const auto sdl_bg_color = bg_color.sdl_color();
+
     SDL_Rect sdl_rect =
     {
         (Sint16)px_pos.x,
@@ -1064,9 +1094,9 @@ int draw_text_center(const std::string& str,
     SDL_FillRect(scr_srf_,
                  &sdl_rect,
                  SDL_MapRGB(scr_srf_->format,
-                            bg_clr.r,
-                            bg_clr.g,
-                            bg_clr.b));
+                            sdl_bg_color.r,
+                            sdl_bg_color.g,
+                            sdl_bg_color.b));
 
     for (int i = 0; i < len; ++i)
     {
@@ -1075,11 +1105,23 @@ int draw_text_center(const std::string& str,
             return x_pos_left;
         }
 
-        draw_glyph_at_px(str[i], px_pos, clr, false, bg_clr);
+        draw_character_at_px(str[i],
+                             px_pos,
+                             sdl_color,
+                             false,
+                             sdl_bg_color);
+
         px_pos.x += cell_dims.x;
     }
 
     return x_pos_left;
+}
+
+void draw_rectangle_solid(const P& px_pos,
+                          const P& px_dims,
+                          const Color& color)
+{
+    draw_rectangle_solid(px_pos, px_dims, color.sdl_color());
 }
 
 void cover_panel(const Panel panel)
@@ -1135,7 +1177,7 @@ void cover_area(const Panel panel, const P& pos, const P& dims)
 
 void cover_area_px(const P& px_pos, const P& px_dims)
 {
-    draw_rectangle_solid(px_pos, px_dims, clr_black);
+    draw_rectangle_solid(px_pos, px_dims, sdl_color_black);
 }
 
 void cover_cell_in_map(const P& pos)
@@ -1147,35 +1189,14 @@ void cover_cell_in_map(const P& pos)
     cover_area_px(px_pos, cell_dims);
 }
 
-void draw_line_hor(const P& px_pos, const int w, const Clr& clr)
+void draw_line_hor(const P& px_pos, const int w, const Color& color)
 {
-    draw_rectangle_solid(px_pos, P(w, 2), clr);
+    draw_rectangle_solid(px_pos, P(w, 2), color);
 }
 
-void draw_line_ver(const P& px_pos, const int h, const Clr& clr)
+void draw_line_ver(const P& px_pos, const int h, const Color& color)
 {
-    draw_rectangle_solid(px_pos, P(1, h), clr);
-}
-
-void draw_rectangle_solid(const P& px_pos, const P& px_dims, const Clr& clr)
-{
-    if (is_inited())
-    {
-        SDL_Rect sdl_rect =
-        {
-            (Sint16)px_pos.x,
-            (Sint16)px_pos.y,
-            (Uint16)px_dims.x,
-            (Uint16)px_dims.y
-        };
-
-        SDL_FillRect(scr_srf_,
-                     &sdl_rect,
-                     SDL_MapRGB(scr_srf_->format,
-                                clr.r,
-                                clr.g,
-                                clr.b));
-    }
+    draw_rectangle_solid(px_pos, P(1, h), color);
 }
 
 void draw_projectiles(std::vector<Projectile*>& projectiles,
@@ -1196,14 +1217,17 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
             {
                 if (p->tile != TileId::empty)
                 {
-                    draw_tile(p->tile, Panel::map, p->pos, p->clr);
+                    draw_tile(p->tile, Panel::map, p->pos, p->color);
                 }
             }
             else // Text mode
             {
-                if (p->glyph != -1)
+                if (p->character != -1)
                 {
-                    draw_glyph(p->glyph, Panel::map, p->pos, p->clr);
+                    draw_character(p->character,
+                                   Panel::map,
+                                   p->pos,
+                                   p->color);
                 }
             }
         }
@@ -1214,7 +1238,7 @@ void draw_projectiles(std::vector<Projectile*>& projectiles,
 
 void draw_box(const R& border,
               const Panel panel,
-              const Clr& clr,
+              const Color& color,
               const bool do_cover_area)
 {
     if (do_cover_area)
@@ -1235,29 +1259,29 @@ void draw_box(const R& border,
             draw_tile(TileId::popup_ver,
                       panel,
                       P(border.p0.x, y),
-                      clr,
-                      clr_black);
+                      color,
+                      colors::black());
 
             draw_tile(TileId::popup_ver,
                       panel,
                       P(border.p1.x, y),
-                      clr,
-                      clr_black);
+                      color,
+                      colors::black());
         }
         else
         {
-            draw_glyph('|', panel,
-                       P(border.p0.x, y),
-                       clr,
-                       true,
-                       clr_black);
+            draw_character('|', panel,
+                           P(border.p0.x, y),
+                           color,
+                           true,
+                           colors::black());
 
-            draw_glyph('|',
-                       panel,
-                       P(border.p1.x, y),
-                       clr,
-                       true,
-                       clr_black);
+            draw_character('|',
+                           panel,
+                           P(border.p1.x, y),
+                           color,
+                           true,
+                           colors::black());
         }
     }
 
@@ -1272,30 +1296,30 @@ void draw_box(const R& border,
             draw_tile(TileId::popup_hor,
                       panel,
                       P(x, border.p0.y),
-                      clr,
-                      clr_black);
+                      color,
+                      colors::black());
 
             draw_tile(TileId::popup_hor,
                       panel,
                       P(x, border.p1.y),
-                      clr,
-                      clr_black);
+                      color,
+                      colors::black());
         }
         else // Text mode
         {
-            draw_glyph('-',
-                       panel,
-                       P(x, border.p0.y),
-                       clr,
-                       true,
-                       clr_black);
+            draw_character('-',
+                           panel,
+                           P(x, border.p0.y),
+                           color,
+                           true,
+                           colors::black());
 
-            draw_glyph('-',
-                       panel,
-                       P(x, border.p1.y),
-                       clr,
-                       true,
-                       clr_black);
+            draw_character('-',
+                           panel,
+                           P(x, border.p1.y),
+                           color,
+                           true,
+                           colors::black());
         }
     }
 
@@ -1310,21 +1334,39 @@ void draw_box(const R& border,
     // Corners
     if (is_tile_mode)
     {
-        draw_tile(TileId::popup_top_l, panel, corners[0], clr, clr_black);
-        draw_tile(TileId::popup_top_r, panel, corners[1], clr, clr_black);
-        draw_tile(TileId::popup_btm_l, panel, corners[2], clr, clr_black);
-        draw_tile(TileId::popup_btm_r, panel, corners[3], clr, clr_black);
+        draw_tile(TileId::popup_top_l,
+                  panel,
+                  corners[0],
+                  color, colors::black());
+
+        draw_tile(TileId::popup_top_r,
+                  panel,
+                  corners[1],
+                  color,
+                  colors::black());
+
+        draw_tile(TileId::popup_btm_l,
+                  panel,
+                  corners[2],
+                  color,
+                  colors::black());
+
+        draw_tile(TileId::popup_btm_r,
+                  panel,
+                  corners[3],
+                  color,
+                  colors::black());
     }
     else
     {
-        draw_glyph('+', panel, corners[0], clr, true, clr_black);
-        draw_glyph('+', panel, corners[1], clr, true, clr_black);
-        draw_glyph('+', panel, corners[2], clr, true, clr_black);
-        draw_glyph('+', panel, corners[3], clr, true, clr_black);
+        draw_character('+', panel, corners[0], color, true, colors::black());
+        draw_character('+', panel, corners[1], color, true, colors::black());
+        draw_character('+', panel, corners[2], color, true, colors::black());
+        draw_character('+', panel, corners[3], color, true, colors::black());
     }
 }
 
-void draw_descr_box(const std::vector<StrAndClr>& lines)
+void draw_descr_box(const std::vector<ColoredString>& lines)
 {
     const int descr_y0 = 1;
     const int descr_x1 = map_w - 1;
@@ -1342,7 +1384,10 @@ void draw_descr_box(const std::vector<StrAndClr>& lines)
 
         for (const auto& line_in_formatted : formatted)
         {
-            draw_text(line_in_formatted, Panel::screen, p, line.clr);
+            draw_text(line_in_formatted,
+                      Panel::screen,
+                      p,
+                      line.color);
 
             ++p.y;
         }
@@ -1359,14 +1404,14 @@ void draw_info_scr_interface(const std::string& title,
         for (int x = 0; x < screen_w; ++x)
         {
             io::draw_tile(TileId::popup_hor,
-                              Panel::screen,
-                              P(x, 0),
-                              clr_title);
+                          Panel::screen,
+                          P(x, 0),
+                          colors::title());
 
             io::draw_tile(TileId::popup_hor,
-                              Panel::screen,
-                              P(x, screen_h - 1),
-                              clr_title);
+                          Panel::screen,
+                          P(x, screen_h - 1),
+                          colors::title());
         }
     }
     else // Text mode
@@ -1376,12 +1421,12 @@ void draw_info_scr_interface(const std::string& title,
         io::draw_text(decoration_line,
                           Panel::screen,
                           P(0, 0),
-                          clr_title);
+                          colors::title());
 
         io::draw_text(decoration_line,
                           Panel::screen,
                           P(0, screen_h - 1),
-                          clr_title);
+                          colors::title());
     }
 
     const int x_label = 3;
@@ -1389,7 +1434,7 @@ void draw_info_scr_interface(const std::string& title,
     io::draw_text(" " + title + " ",
                       Panel::screen,
                       P(x_label, 0),
-                      clr_title);
+                      colors::title());
 
     const std::string cmd_info =
         screen_type == InfScreenType::scrolling ?
@@ -1399,7 +1444,7 @@ void draw_info_scr_interface(const std::string& title,
     io::draw_text(" " + cmd_info + " ",
                       Panel::screen,
                       P(x_label, screen_h - 1),
-                      clr_title);
+                      colors::title());
 }
 
 P px_pos_for_cell_in_panel(const Panel panel, const P& pos)

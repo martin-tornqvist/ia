@@ -87,7 +87,7 @@ void player_try_close_or_jam()
     msg_log::clear();
 
     msg_log::add("Which direction?" + cancel_info_str,
-                 clr_white_lgt);
+                 colors::light_white());
 
     const Dir input_dir = query::dir(AllowCenter::no);
 

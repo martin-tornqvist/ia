@@ -12,7 +12,6 @@
 #include "knockback.hpp"
 #include "map.hpp"
 #include "actor_factory.hpp"
-#include "feature_trap.hpp"
 #include "feature_door.hpp"
 #include "player_spells.hpp"
 #include "item_scroll.hpp"
@@ -330,9 +329,10 @@ void Spell::on_resist(Actor& target) const
             audio::play(SfxId::spell_shield_break);
         }
 
-        io::draw_blast_at_cells({target.pos}, clr_white);
+        io::draw_blast_at_cells({target.pos}, colors::white());
     }
 
+    // TODO: Only end r_spell if this is not a natural property
     target.prop_handler().end_prop(PropId::r_spell);
 
     if (is_player &&
@@ -499,7 +499,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -546,14 +546,14 @@ void SpellDarkbolt::run_effect(Actor* const caster,
             io::draw_tile(TileId::blast1,
                           Panel::map,
                           p,
-                          clr_magenta);
+                          colors::magenta());
         }
         else // Text mode
         {
-            io::draw_glyph('*',
+            io::draw_character('*',
                            Panel::map,
                            p,
-                           clr_magenta);
+                           colors::magenta());
         }
 
         io::update_screen();
@@ -570,15 +570,15 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     if (player_see_tgt ||
         player_see_cell)
     {
-        io::draw_blast_at_cells({target->pos}, clr_magenta);
+        io::draw_blast_at_cells({target->pos}, colors::magenta());
 
-        Clr msg_clr = clr_msg_good;
+        Color msg_clr = colors::msg_good();
 
         std::string str_begin = "I am";
 
         if (target->is_player())
         {
-            msg_clr = clr_msg_bad;
+            msg_clr = colors::msg_bad();
         }
         else // Target is monster
         {
@@ -591,7 +591,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
             if (map::player->is_leader_of(target))
             {
-                msg_clr = clr_white;
+                msg_clr = colors::white();
             }
         }
 
@@ -720,7 +720,7 @@ void SpellAzaWrath::run_effect(Actor* const caster,
         }
     }
 
-    io::draw_blast_at_seen_actors(targets, clr_red_lgt);
+    io::draw_blast_at_seen_actors(targets, colors::light_red());
 
     for (Actor* const target : targets)
     {
@@ -735,7 +735,7 @@ void SpellAzaWrath::run_effect(Actor* const caster,
                 if (map::player->can_see_actor(*target))
                 {
                     msg_log::add(spell_reflect_msg,
-                                 clr_white,
+                                 colors::white(),
                                  false,
                                  MorePromptOnMsg::yes);
                 }
@@ -749,11 +749,11 @@ void SpellAzaWrath::run_effect(Actor* const caster,
 
         std::string str_begin = "I am";
 
-        Clr msg_clr = clr_msg_good;
+        Color msg_clr = colors::msg_good();
 
         if (target->is_player())
         {
-            msg_clr = clr_msg_bad;
+            msg_clr = colors::msg_bad();
         }
         else // Target is monster
         {
@@ -761,7 +761,7 @@ void SpellAzaWrath::run_effect(Actor* const caster,
 
             if (map::player->is_leader_of(target))
             {
-                msg_clr = clr_white;
+                msg_clr = colors::white();
             }
         }
 
@@ -1539,7 +1539,7 @@ void SpellSearching::run_effect(Actor* const caster,
 
         states::draw();
 
-        io::draw_blast_at_cells(positions_detected, clr_white);
+        io::draw_blast_at_cells(positions_detected, colors::white());
     }
 }
 
@@ -1809,7 +1809,7 @@ void SpellLight::run_effect(Actor* const caster,
                        0,
                        ExplExclCenter::yes,
                        props,
-                       &clr_yellow);
+                       colors::yellow());
     }
 }
 
@@ -2034,7 +2034,7 @@ void SpellKnockBack::run_effect(Actor* const caster,
 
     ASSERT(!caster->is_player());
 
-    Clr msg_clr = clr_msg_good;
+    Color msg_clr = colors::msg_good();
 
     std::string target_str = "me";
 
@@ -2059,7 +2059,7 @@ void SpellKnockBack::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2074,13 +2074,13 @@ void SpellKnockBack::run_effect(Actor* const caster,
 
     if (target->is_player())
     {
-        msg_clr = clr_msg_bad;
+        msg_clr = colors::msg_bad();
     }
     else // Target is monster
     {
         target_str = target->name_the();
 
-        if (map::player->is_leader_of(target)) {msg_clr = clr_white;}
+        if (map::player->is_leader_of(target)) {msg_clr = colors::white();}
     }
 
     if (map::player->can_see_actor(*target))
@@ -2133,7 +2133,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
 
     // There are targets available
 
-    io::draw_blast_at_seen_actors(targets, clr_magenta);
+    io::draw_blast_at_seen_actors(targets, colors::magenta());
 
     for (Actor* const target : targets)
     {
@@ -2150,7 +2150,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
                 if (map::player->can_see_actor(*target))
                 {
                     msg_log::add(spell_reflect_msg,
-                                 clr_text,
+                                 colors::text(),
                                  false,
                                  MorePromptOnMsg::yes);
                 }
@@ -2243,7 +2243,7 @@ void SpellDisease::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2551,7 +2551,7 @@ void SpellMiGoHypno::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2619,7 +2619,7 @@ void SpellBurn::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2685,7 +2685,7 @@ void SpellDeafen::run_effect(Actor* const caster,
             if (map::player->can_see_actor(*target))
             {
                 msg_log::add(spell_reflect_msg,
-                             clr_text,
+                             colors::text(),
                              false,
                              MorePromptOnMsg::yes);
             }
@@ -2771,7 +2771,7 @@ void SpellTransmut::run_effect(Actor* const caster,
     if (cell.is_seen_by_player)
     {
         msg_log::add(item_name_before + " disappears.",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }

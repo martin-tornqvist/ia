@@ -426,10 +426,8 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
     // If actor was held by a spider web, destroy it
 
-    //
     // TODO: If something like a bear trap is implemented, the code below
-    //       needs to be adapted to consider other "hold" type traps
-    //
+    // needs to be adapted to consider other "hold" type traps
     Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
 
     if (rigid->id() == FeatureId::trap)
@@ -557,14 +555,14 @@ TileId Actor::tile() const
     return data_->tile;
 }
 
-char Actor::glyph() const
+char Actor::character() const
 {
     if (is_corpse())
     {
         return '&';
     }
 
-    return data_->glyph;
+    return data_->character;
 }
 
 bool Actor::restore_hp(const int hp_restored,
@@ -599,7 +597,7 @@ bool Actor::restore_hp(const int hp_restored,
     {
         if (is_player())
         {
-            msg_log::add("I feel healthier!", clr_msg_good);
+            msg_log::add("I feel healthier!", colors::msg_good());
         }
         else // Is a monster
         {
@@ -640,7 +638,7 @@ bool Actor::restore_spi(const int spi_restored,
     {
         if (is_player())
         {
-            msg_log::add("I feel more spirited!", clr_msg_good);
+            msg_log::add("I feel more spirited!", colors::msg_good());
         }
         else
         {
@@ -674,11 +672,11 @@ void Actor::change_max_hp(const int change, const Verbosity verbosity)
         {
             if (change > 0)
             {
-                msg_log::add("I feel more vigorous!", clr_msg_good);
+                msg_log::add("I feel more vigorous!", colors::msg_good());
             }
             else if (change < 0)
             {
-                msg_log::add("I feel frailer!", clr_msg_bad);
+                msg_log::add("I feel frailer!", colors::msg_bad());
             }
         }
         else // Is monster
@@ -712,11 +710,11 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
         {
             if (change > 0)
             {
-                msg_log::add("My spirit is stronger!", clr_msg_good);
+                msg_log::add("My spirit is stronger!", colors::msg_good());
             }
             else if (change < 0)
             {
-                msg_log::add("My spirit is weaker!", clr_msg_bad);
+                msg_log::add("My spirit is weaker!", colors::msg_bad());
             }
         }
         else // Is monster
@@ -759,7 +757,7 @@ ActorDied Actor::hit(int dmg,
 
     // Damage type is "light", and actor is not light sensitive?
     if (dmg_type == DmgType::light &&
-        !prop_handler_->has_prop(PropId::lgt_sens))
+        !prop_handler_->has_prop(PropId::light_sensitive))
     {
         return ActorDied::no;
     }
@@ -863,9 +861,7 @@ ActorDied Actor::hit(int dmg,
         return ActorDied::no;
     }
 
-    //
     // TODO: Perhaps allow zero damage?
-    //
     dmg = std::max(1, dmg);
 
     if (dmg_type == DmgType::physical)
@@ -882,9 +878,7 @@ ActorDied Actor::hit(int dmg,
         dmg /= 2;
     }
 
-    //
     // TODO: Perhaps allow zero damage?
-    //
     dmg = std::max(1, dmg);
 
     on_hit(dmg,
@@ -894,9 +888,7 @@ ActorDied Actor::hit(int dmg,
 
     prop_handler_->on_hit();
 
-    //
     // TODO: Perhaps allow zero damage?
-    //
     dmg = std::max(1, dmg);
 
     if (!(is_player() && config::is_bot_playing()))
@@ -952,7 +944,7 @@ ActorDied Actor::hit(int dmg,
         (hp_pct_after <= hp_warn_lvl))
     {
         msg_log::add("-LOW HP WARNING!-",
-                     clr_msg_bad,
+                     colors::msg_bad(),
                      true,
                      MorePromptOnMsg::yes);
     }
@@ -966,7 +958,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
     {
         if (is_player())
         {
-            msg_log::add("My spirit is drained!", clr_msg_bad);
+            msg_log::add("My spirit is drained!", colors::msg_bad());
         }
     }
 
@@ -982,7 +974,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
         if (is_player())
         {
             msg_log::add("All my spirit is depleted, I am devoid of life!",
-                         clr_msg_bad);
+                         colors::msg_bad());
         }
         else // Is monster
         {
@@ -1072,7 +1064,7 @@ int Actor::hit_armor(int dmg)
                         armor->name(ItemRefType::plain, ItemRefInf::none);
 
                     msg_log::add("My " + armor_name + " is torn apart!",
-                                 clr_msg_note);
+                                 colors::msg_note());
                 }
 
                 inv_->remove_item_in_slot(SlotId::body, true);

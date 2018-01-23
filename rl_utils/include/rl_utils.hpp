@@ -63,6 +63,12 @@
 
 #endif // NDEBUG
 
+// Print an error, for both debug and release builds
+#define TRACE_ERROR_RELEASE std::cerr << "ERROR: "
+
+// Critical error, terminate immediately
+#define PANIC exit(EXIT_FAILURE);
+
 //------------------------------------------------------------------------------
 // Custom assert
 // NOTE: Never call this function directly, use the "ASSERT" macro above

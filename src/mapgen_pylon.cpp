@@ -2,6 +2,8 @@
 
 #include "map_parsing.hpp"
 #include "feature_pylon.hpp"
+#include "game_time.hpp"
+#include "actor.hpp"
 
 namespace mapgen
 {

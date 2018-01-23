@@ -13,20 +13,20 @@ class Msg
 {
 public:
     Msg(const std::string& text,
-        const Clr& clr,
+        const Color& color_id,
         const int x_pos) :
-        clr_            (clr),
-        x_pos_          (x_pos),
-        str_            (text),
-        repeats_str_    (""),
-        nr_             (1) {}
+        color_(color_id),
+        x_pos_(x_pos),
+        str_(text),
+        repeats_str_(""),
+        nr_(1) {}
 
     Msg() :
-        clr_            (clr_white),
-        x_pos_          (0),
-        str_            (""),
-        repeats_str_    (""),
-        nr_             (1) {}
+        color_(colors::white()),
+        x_pos_(0),
+        str_(""),
+        repeats_str_(""),
+        nr_(1) {}
 
     void str_with_repeats(std::string& str_ref) const
     {
@@ -45,7 +45,7 @@ public:
         repeats_str_ = "(x" + std::to_string(nr_) + ")";
     }
 
-    Clr clr_;
+    Color color_;
     int x_pos_;
 
 private:
@@ -62,7 +62,7 @@ void init();
 void draw();
 
 void add(const std::string& str,
-         const Clr& clr = clr_text,
+         const Color& color_id = colors::text(),
          const bool interrupt_all_player_actions = false,
          const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no);
 

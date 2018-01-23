@@ -40,7 +40,7 @@ void ViewActorDescr::on_start()
     std::string descr = actor_.descr();
 
     // Auto-description.
-    if (actor_.data().is_auto_descr_allowed)
+    if (actor_.data().allow_generated_descr)
     {
         const std::string auto_descr = auto_description_str();
 
@@ -62,9 +62,7 @@ void ViewActorDescr::on_start()
     // Add the description
     for (const std::string& s : descr_lines)
     {
-        put_text(s,
-                 p,
-                 clr_white_lgt);
+        put_text(s, p, colors::light_white());
         ++p.y;
     }
 
@@ -87,14 +85,12 @@ void ViewActorDescr::on_start()
     {
         if (!str.empty())
         {
-            const Clr& clr =
+            const Color& color =
                 (str[0] == ' ') ?
-                clr_gray :
-                clr_white_lgt;
+                colors::gray() :
+                colors::light_white();
 
-            put_text(str,
-                     p_section,
-                     clr);
+            put_text(str, p_section, color);
         }
 
         ++p_section.y;
@@ -204,7 +200,7 @@ void ViewActorDescr::on_start()
                         const P& p,
                         const bool is_sum)
     {
-        Clr clr;
+        Color color;
 
         std::string str;
 
@@ -212,19 +208,19 @@ void ViewActorDescr::on_start()
         {
             str = std::to_string(val) + "%";
 
-            clr = clr_white_lgt;
+            color = colors::light_white();
         }
         else // Not sum
         {
             if (val == val_undefined)
             {
-                clr = clr_gray_drk;
+                color = colors::dark_gray();
 
                 str = "N/A";
             }
             else // Value is set
             {
-                clr = clr_white;
+                color = colors::white();
 
                 str = std::to_string(val);
 
@@ -235,18 +231,16 @@ void ViewActorDescr::on_start()
 
                 str += "%";
 
-                clr = clr_white;
+                color = colors::white();
 
-                clr =
-                    (val < 0) ? clr_msg_bad :
-                    (val == 0) ? clr_white :
-                    clr_msg_good;
+                color =
+                    (val < 0) ? colors::msg_bad() :
+                    (val == 0) ? colors::white() :
+                    colors::msg_good();
             }
         }
 
-        put_text(str,
-                 p,
-                 clr);
+        put_text(str, p, color);
     };
 
     const int hit_chances_y0 = p.y;
@@ -255,21 +249,17 @@ void ViewActorDescr::on_start()
     {
         const bool is_sum = i == (labels.size() - 1);
 
-        const Clr label_clr = clr_white_lgt;
+        const Color label_color = colors::light_white();
 
         const std::string& label = labels[i];
 
         p.y = hit_chances_y0;
 
-        put_text(label,
-                 p,
-                 label_clr);
+        put_text(label, p, label_color);
 
         ++p.y;
 
-        //
         // Player melee
-        //
         if (player_melee)
         {
             print_val(player_melee_vals[i],
@@ -279,9 +269,7 @@ void ViewActorDescr::on_start()
 
         ++p.y;
 
-        //
         // Player ranged
-        //
         if (player_ranged)
         {
             print_val(player_ranged_vals[i],
@@ -291,9 +279,7 @@ void ViewActorDescr::on_start()
 
         ++p.y;
 
-        //
         // Player throwing
-        //
         if (player_throwing)
         {
             print_val(player_throwing_vals[i],
@@ -310,15 +296,14 @@ void ViewActorDescr::on_start()
 
     p.y += 1;
 
-    put_text(" * Attacks can always critically fail or succeed (2% chance each)",
-             p,
-             clr_gray);
+    put_text(
+        " * Attacks can always critically fail or succeed (2% chance each)",
+        p,
+        colors::gray());
 
     p.y += 3;
 
-    put_text("Current properties",
-             p,
-             clr_white_lgt);
+    put_text("Current properties", p, colors::light_white());
 
     p.y += 1;
 
@@ -351,10 +336,7 @@ void ViewActorDescr::on_start()
 
     if (prop_list.empty())
     {
-        put_text(
-            offset + "None",
-            p,
-            clr_white);
+        put_text( offset + "None", p, colors::white());
 
         p.y += 1;
     }
@@ -366,9 +348,7 @@ void ViewActorDescr::on_start()
         {
             const auto& title = e.title;
 
-            put_text(offset + title.str,
-                     p,
-                     e.title.clr);
+            put_text(offset + title.str, p, e.title.color);
 
             p.y += 1;
 
@@ -378,9 +358,7 @@ void ViewActorDescr::on_start()
 
             for (const auto& descr_line : descr_formatted)
             {
-                put_text(offset + descr_line,
-                         p,
-                         clr_gray);
+                put_text(offset + descr_line, p, colors::gray());
 
                 p.y += 1;
             }
@@ -414,7 +392,7 @@ void ViewActorDescr::draw()
             io::draw_text(text.str,
                           Panel::screen,
                           P(text.p.x, screen_y),
-                          text.clr);
+                          text.color);
         }
 
         ++screen_y;
@@ -466,7 +444,7 @@ void ViewActorDescr::update()
 
 void ViewActorDescr::put_text(const std::string str,
                               const P& p,
-                              const Clr& clr)
+                              const Color& color)
 {
     if (p.y >= (int)lines_.size())
     {
@@ -479,7 +457,7 @@ void ViewActorDescr::put_text(const std::string str,
 
     text.str = str;
 
-    text.clr = clr;
+    text.color = color;
 
     text.p = p;
 

@@ -78,12 +78,19 @@ std::vector< std::vector<P> > cells_reached(
 
 void draw(const std::vector< std::vector<P> >& pos_lists,
           bool blocked[map_w][map_h],
-          const Clr* const clr_override)
+          const Color clr_override)
 {
     states::draw();
 
-    const Clr& clr_inner = clr_override ? *clr_override : clr_yellow;
-    const Clr& clr_outer = clr_override ? *clr_override : clr_red_lgt;
+    const Color& clr_inner =
+        clr_override.is_defined() ?
+        colors::yellow() :
+        clr_override;
+
+    const Color& clr_outer =
+        clr_override.is_defined() ?
+        colors::light_red() :
+        clr_override;
 
     const bool is_tiles     = config::is_tiles_mode();
     const int nr_anim_steps = is_tiles ? 2 : 1;
@@ -100,7 +107,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
 
         for (int i_outer = 0; i_outer < nr_outer; i_outer++)
         {
-            const Clr& clr =
+            const Color& color =
                 (i_outer == nr_outer - 1) ?
                 clr_outer : clr_inner;
 
@@ -118,17 +125,17 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
                         io::draw_tile(tile,
                                       Panel::map,
                                       pos,
-                                      clr,
-                                      clr_black);
+                                      color,
+                                      colors::black());
                     }
-                    else
+                    else // Text mode
                     {
-                        io::draw_glyph('*',
-                                       Panel::map,
-                                       pos,
-                                       clr,
-                                       true,
-                                       clr_black);
+                        io::draw_character('*',
+                                           Panel::map,
+                                           pos,
+                                           color,
+                                           true,
+                                           colors::black());
                     }
                 }
             }
@@ -155,7 +162,7 @@ void run(const P& origin,
          const int radi_change,
          const ExplExclCenter exclude_center,
          std::vector<Prop*> properties_applied,
-         const Clr* const clr_override,
+         const Color clr_override,
          const ExplIsGas is_gas)
 {
     const int radi = expl_std_radi + radi_change;
@@ -252,7 +259,7 @@ void run(const P& origin,
                 {
                     if (living_actor->is_player())
                     {
-                        msg_log::add("I am hit by an explosion!", clr_msg_bad);
+                        msg_log::add("I am hit by an explosion!", colors::msg_bad());
                     }
 
                     living_actor->hit(dmg, DmgType::physical);

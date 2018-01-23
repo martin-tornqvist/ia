@@ -12,6 +12,7 @@
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 #include "game.hpp"
+#include "actor_player.hpp"
 
 
 // -----------------------------------------------------------------------------

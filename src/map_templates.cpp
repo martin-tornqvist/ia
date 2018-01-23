@@ -4,7 +4,7 @@
 #include "saving.hpp"
 
 #include <fstream>
-#include <map>
+#include <unordered_map>
 
 namespace map_templates
 {
@@ -69,14 +69,14 @@ void load_level_templates()
     ASSERT(!ifs.fail());
     ASSERT(ifs.is_open());
 
-    std::map<std::string, LevelTemplId> name_2_level_id;
+    std::unordered_map<std::string, LevelTemplId> name_to_level_id;
 
-    name_2_level_id["Intro forest"] = LevelTemplId::intro_forest;
-    name_2_level_id["Egypt"] = LevelTemplId::egypt;
-    name_2_level_id["Leng"] = LevelTemplId::leng;
-    name_2_level_id["Rat cave"] = LevelTemplId::rat_cave;
-    name_2_level_id["Boss level"] = LevelTemplId::boss_level;
-    name_2_level_id["Trapezohedron level"] = LevelTemplId::trapez_level;
+    name_to_level_id["Intro forest"] = LevelTemplId::intro_forest;
+    name_to_level_id["Egypt"] = LevelTemplId::egypt;
+    name_to_level_id["Leng"] = LevelTemplId::leng;
+    name_to_level_id["Rat cave"] = LevelTemplId::rat_cave;
+    name_to_level_id["Boss level"] = LevelTemplId::boss_level;
+    name_to_level_id["Trapezohedron level"] = LevelTemplId::trapez_level;
 
     const char name_symbol = '$';
 
@@ -122,9 +122,9 @@ void load_level_templates()
                 const std::string name_str =
                     line.substr(name_pos, line.size() - name_pos);
 
-                auto id_it = name_2_level_id.find(name_str);
+                auto id_it = name_to_level_id.find(name_str);
 
-                if (id_it == name_2_level_id.end())
+                if (id_it == name_to_level_id.end())
                 {
                     TRACE << "Unrecognized level template name: "
                           << name_str << std::endl;
@@ -254,21 +254,21 @@ void load_room_templates()
 
     room_templ_status_.clear();
 
-    std::map<std::string, RoomType> name_2_room_type;
+    std::unordered_map<std::string, RoomType> name_to_room_type;
 
-    name_2_room_type["plain"] = RoomType::plain;
-    name_2_room_type["human"] = RoomType::human;
-    name_2_room_type["ritual"] = RoomType::ritual;
-    name_2_room_type["jail"] = RoomType::jail;
-    name_2_room_type["spider"] = RoomType::spider;
-    name_2_room_type["snake_pit"] = RoomType::snake_pit;
-    name_2_room_type["crypt"] = RoomType::crypt;
-    name_2_room_type["monster"] = RoomType::monster;
-    name_2_room_type["flooded"] = RoomType::flooded;
-    name_2_room_type["muddy"] = RoomType::muddy;
-    name_2_room_type["cave"] = RoomType::cave;
-    name_2_room_type["chasm"] = RoomType::chasm;
-    name_2_room_type["forest"] = RoomType::forest;
+    name_to_room_type["plain"] = RoomType::plain;
+    name_to_room_type["human"] = RoomType::human;
+    name_to_room_type["ritual"] = RoomType::ritual;
+    name_to_room_type["jail"] = RoomType::jail;
+    name_to_room_type["spider"] = RoomType::spider;
+    name_to_room_type["snake_pit"] = RoomType::snake_pit;
+    name_to_room_type["crypt"] = RoomType::crypt;
+    name_to_room_type["monster"] = RoomType::monster;
+    name_to_room_type["flooded"] = RoomType::flooded;
+    name_to_room_type["muddy"] = RoomType::muddy;
+    name_to_room_type["cave"] = RoomType::cave;
+    name_to_room_type["chasm"] = RoomType::chasm;
+    name_to_room_type["forest"] = RoomType::forest;
 
     std::ifstream ifs("res/data/map/rooms.txt");
 
@@ -321,9 +321,9 @@ void load_room_templates()
                 const std::string type_str =
                     line.substr(type_pos, line.size() - type_pos);
 
-                auto type_it = name_2_room_type.find(type_str);
+                auto type_it = name_to_room_type.find(type_str);
 
-                if (type_it == name_2_room_type.end())
+                if (type_it == name_to_room_type.end())
                 {
                     TRACE << "Unrecognized room template type: "
                           << type_str << std::endl;

@@ -62,7 +62,7 @@ void show_map_and_freeze(const std::string& msg)
         io::draw_text("[" + msg + "]",
                           Panel::screen,
                           P(0, 0),
-                          clr_red_lgt);
+                          colors::light_red());
 
         io::update_screen();
 

@@ -42,6 +42,7 @@ void init_io()
     query::init();
     io::init();
     audio::init();
+    colors::init();
 
     TRACE_FUNC_END;
 }

@@ -257,8 +257,8 @@ public:
     ItemName                    base_name;
     ItemName                    base_name_un_id;
     std::vector<std::string>    base_descr;
-    char                        glyph;
-    Clr                         clr;
+    char                        character;
+    Color                     color;
     TileId                      tile;
     AttMode                     main_att_mode;
     SpellId                     spell_cast_from_scroll;
@@ -281,11 +281,8 @@ public:
         ~ItemMeleeData();
 
         bool                    is_melee_wpn;
-        //
         // NOTE: The "plus" field is ignored in the melee damage data, since
-        //       melee weapons have individual plus damages stored in the weapon
-        //       objects.
-        //
+        // melee weapons have individual plus damages per class instance.
         Dice                    dmg;
         int                     hit_chance_mod;
         bool                    is_noisy;
@@ -312,15 +309,11 @@ public:
         bool                    is_throwable_wpn;
         bool                    is_machine_gun;
         bool                    is_shotgun;
-        //
         // NOTE: This should be set on ranged weapons (using ammo) AND mags:
-        //
         int                     max_ammo;
         Dice                    dmg;
-        //
         // NOTE: "Pure" melee weapons do not have to (should not) set this value
-        //       they do throw damage based on their melee damage instead.
-        //
+        // they do throw damage based on their melee damage instead.
         Dice                    throw_dmg;
         int                     hit_chance_mod;
         int                     throw_hit_chance_mod;
@@ -331,9 +324,9 @@ public:
         ItemId                  ammo_item_id;
         DmgType                 dmg_type;
         bool                    has_infinite_ammo;
-        char                    projectile_glyph;
+        char                    projectile_character;
         TileId                  projectile_tile;
-        Clr                     projectile_clr;
+        Color                 projectile_color;
         bool                    projectile_leaves_trail;
         bool                    projectile_leaves_smoke;
         ItemAttMsgs             att_msgs;

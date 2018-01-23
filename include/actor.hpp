@@ -9,7 +9,7 @@
 #include "actor_data.hpp"
 #include "sound.hpp"
 #include "config.hpp"
-#include "art.hpp"
+#include "gfx.hpp"
 
 class PropHandler;
 class Inventory;
@@ -61,12 +61,9 @@ public:
 
     int ability(const AbilityId id, const bool is_affected_by_props) const;
 
-    //
-    // NOTE: This function is not concerned with whether actors are within FOV,
-    //       or if they are actually hidden or not. It merely performs a skill
-    //       check, taking various conditions such as light/dark into concern.
-    //       It has no side effects.
-    //
+    // This function is not concerned with whether actors are within FOV, or if
+    // they are actually hidden or not. It merely performs a skill check,
+    // taking various conditions such as light/dark into concern.
     ActionResult roll_sneak(const Actor& actor_searching) const;
 
     void place(const P& pos_, ActorDataT& data);
@@ -127,9 +124,9 @@ public:
 
     virtual TileId tile() const;
 
-    virtual char glyph() const;
+    virtual char character() const;
 
-    virtual Clr clr() const = 0;
+    virtual Color color() const = 0;
 
     virtual std::vector<Actor*> seen_actors() const = 0;
 
@@ -227,12 +224,6 @@ public:
     int delay_;
 
 protected:
-    // TODO: Try to get rid of these friend declarations
-    friend class AbilityVals;
-    friend class PropDiseased;
-    friend class PropPossByZuul;
-    friend class Trap;
-
     virtual void on_death() {}
 
     virtual void on_destroyed() {}

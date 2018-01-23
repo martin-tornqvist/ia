@@ -14,6 +14,7 @@
 #include "item.hpp"
 #include "msg_log.hpp"
 #include "map_parsing.hpp"
+#include "actor_player.hpp"
 
 // -----------------------------------------------------------------------------
 // Smoke
@@ -54,7 +55,7 @@ void Smoke::on_new_turn()
 
                 is_breath_prot = true;
 
-                //This may destroy the gasmask
+                // This may destroy the gasmask
                 static_cast<GasMask*>(player_head_item)->decr_turns_left(inv);
             }
 
@@ -136,9 +137,9 @@ std::string Smoke::name(const Article article)  const
     return ret + "smoke";
 }
 
-Clr Smoke::clr() const
+Color Smoke::color() const
 {
-    return clr_gray;
+    return colors::gray();
 }
 
 // -----------------------------------------------------------------------------
@@ -171,9 +172,9 @@ std::string LitDynamite::name(const Article article)  const
     return ret + "lit stick of dynamite";
 }
 
-Clr LitDynamite::clr() const
+Color LitDynamite::color() const
 {
-    return clr_red_lgt;
+    return colors::light_red();
 }
 
 // -----------------------------------------------------------------------------
@@ -229,7 +230,7 @@ std::string LitFlare::name(const Article article)  const
     return ret + "lit flare";
 }
 
-Clr LitFlare::clr() const
+Color LitFlare::color() const
 {
-    return clr_yellow;
+    return colors::yellow();
 }

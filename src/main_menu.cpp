@@ -253,17 +253,22 @@ void MainMenuState::draw()
         {
             pos.x = logo_x_pos_left;
 
-            for (const char& glyph : row)
+            for (const char& character : row)
             {
-                if (glyph != ' ')
+                if (character != ' ')
                 {
-                    Clr clr = clr_violet;
+                    Color color = colors::violet();
 
-                    clr.g += rnd::range(-50, 100);
+                    int g = color.g() + rnd::range(-50, 100);
 
-                    constr_in_range(0, int(clr.g), 254);
+                    g = constr_in_range(0, (int)g, 254);
 
-                    io::draw_glyph(glyph, Panel::screen, pos, clr);
+                    color.set_g(g);
+
+                    io::draw_character(character,
+                                       Panel::screen,
+                                       pos,
+                                       color);
                 }
                 ++pos.x;
             }
@@ -276,8 +281,8 @@ void MainMenuState::draw()
     io::draw_text("DEBUG MODE",
                   Panel::screen,
                   P(1, 1),
-                  clr_black,
-                  clr_yellow_drk);
+                  colors::black(),
+                  colors::dark_yellow());
 #endif // NDEBUG
 
     std::vector<std::string> labels =
@@ -300,22 +305,20 @@ void MainMenuState::draw()
     {
         const std::string label = labels[i];
 
-        const Clr& clr =
+        const Color& color =
             browser_.is_at_idx(i) ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         io::draw_text(label,
                       Panel::screen,
                       pos,
-                      clr);
+                      color);
 
         pos += 1;
     }
 
-    Clr quote_clr = clr_brown_gray;
-
-    div_clr(quote_clr, 4);
+    const Color quote_clr = colors::gray_brown().fraction(4.0);
 
     std::vector<std::string> quote_lines;
 
@@ -360,7 +363,7 @@ void MainMenuState::draw()
                          " (c) 2011-2017 Martin Tornqvist",
                          Panel::screen,
                          P(map_w_half, screen_h - 1),
-                         clr_gray_drk);
+                         colors::dark_gray());
 
     io::update_screen();
 

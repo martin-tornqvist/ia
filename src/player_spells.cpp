@@ -101,7 +101,7 @@ void try_cast(const SpellOpt& spell_opt)
     if (spi_cost_range.max >= map::player->spi())
     {
         msg_log::add("Cast spell and risk depleting your spirit? [y/n]",
-                     clr_white_lgt);
+                     colors::light_white());
 
         if (query::yes_or_no() == BinaryAnswer::no)
         {
@@ -314,7 +314,7 @@ void BrowseSpell::draw()
     io::draw_text_center("Use which power?",
                          Panel::screen,
                          P(screen_w / 2, 0),
-                         clr_title);
+                         colors::title());
 
     P p(0, 1);
 
@@ -338,15 +338,15 @@ void BrowseSpell::draw()
 
         p.x = 0;
 
-        const Clr clr =
+        const Color color =
             is_idx_marked ?
-            clr_menu_highlight :
-            clr_menu_drk;
+            colors::menu_highlight() :
+            colors::menu_dark();
 
         io::draw_text(key_str,
                       Panel::screen,
                       p,
-                      clr);
+                      color);
 
         ++key_str[0];
 
@@ -355,7 +355,7 @@ void BrowseSpell::draw()
         io::draw_text(name,
                       Panel::screen,
                       p,
-                      clr);
+                      color);
 
         std::string fill_str = "";
 
@@ -366,16 +366,12 @@ void BrowseSpell::draw()
             fill_str.push_back('.');
         }
 
-        Clr fill_clr = clr_gray;
-
-        fill_clr.r /= 3;
-        fill_clr.g /= 3;
-        fill_clr.b /= 3;
+        const Color fill_color = colors::gray().fraction(3.0);
 
         io::draw_text(fill_str,
                       Panel::screen,
                       P(p.x + name.size(), p.y),
-                      fill_clr);
+                      fill_color);
 
         p.x = spi_label_x;
 
@@ -384,7 +380,7 @@ void BrowseSpell::draw()
         io::draw_text(str,
                           Panel::screen,
                           p,
-                          clr_gray_drk);
+                          colors::dark_gray());
 
         p.x += str.size();
 
@@ -405,7 +401,7 @@ void BrowseSpell::draw()
         io::draw_text(str,
                           Panel::screen,
                           p,
-                          clr_white);
+                          colors::white());
 
         // Draw skill level if learned
         if ((spell_opt.src == SpellSrc::learned) &&
@@ -418,7 +414,7 @@ void BrowseSpell::draw()
             io::draw_text(str,
                           Panel::screen,
                           p,
-                          clr_gray_drk);
+                          colors::dark_gray());
 
             p.x += str.size();
 
@@ -440,7 +436,7 @@ void BrowseSpell::draw()
             io::draw_text(str,
                           Panel::screen,
                           p,
-                          clr_white);
+                          colors::white());
         }
 
         if (is_idx_marked)
@@ -449,13 +445,13 @@ void BrowseSpell::draw()
 
             const auto descr = spell->descr(skill, IsIntrinsic::yes);
 
-            std::vector<StrAndClr> lines;
+            std::vector<ColoredString> lines;
 
             if (!descr.empty())
             {
                 for (const auto& line : descr)
                 {
-                    lines.push_back(StrAndClr(line, clr_white_lgt));
+                    lines.push_back(ColoredString(line, colors::light_white()));
                 }
             }
 
@@ -468,8 +464,8 @@ void BrowseSpell::draw()
                     spell_opt.src_item->name(ItemRefType::plain,
                                              ItemRefInf::none);
 
-                lines.push_back(StrAndClr("Spell granted by " + item_name + ".",
-                                          clr_green));
+                lines.push_back(ColoredString("Spell granted by " + item_name + ".",
+                                          colors::green()));
             }
             break;
 

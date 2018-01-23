@@ -6,6 +6,7 @@
 #include "actor.hpp"
 #include "actor_mon.hpp"
 #include "actor_factory.hpp"
+#include "actor_player.hpp"
 
 Monolith::Monolith(const P& p) :
     Rigid           (p),
@@ -31,12 +32,12 @@ std::string Monolith::name(const Article article) const
     return ret + "carved monolith";
 }
 
-Clr Monolith::clr_default() const
+Color Monolith::color_default() const
 {
     return
         is_activated_ ?
-        clr_gray :
-        clr_cyan_lgt;
+        colors::gray() :
+        colors::light_cyan();
 }
 
 void Monolith::bump(Actor& actor_bumping)

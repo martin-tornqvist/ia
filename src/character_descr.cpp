@@ -33,23 +33,21 @@ void CharacterDescr::on_start()
 
     const int max_w_descr = (map_w * 3) / 4;
 
-    const Clr& clr_heading = clr_white_lgt;
+    const Color& clr_heading = colors::light_white();
 
-    const Clr& clr_text = clr_white;
+    const Color& color_text_dark = colors::gray();
 
-    const Clr& clr_text_dark = clr_gray;
-
-    lines_.push_back(StrAndClr("Current properties", clr_heading));
+    lines_.push_back(ColoredString("Current properties", clr_heading));
 
     const auto prop_list = map::player->prop_handler().props_list();
 
     if (prop_list.empty())
     {
         lines_.push_back(
-            StrAndClr(offset + "None",
-                      clr_text));
+            ColoredString(offset + "None",
+                      colors::text()));
 
-        lines_.push_back(StrAndClr("", clr_text));
+        lines_.push_back(ColoredString("", colors::text()));
     }
     else // Has properties
     {
@@ -57,27 +55,23 @@ void CharacterDescr::on_start()
         {
             const auto& title = e.title;
 
-            lines_.push_back(
-                StrAndClr(offset + title.str,
-                          title.clr));
+            lines_.push_back(ColoredString(offset + title.str, title.color));
 
             const auto descr_formatted =
-                text_format::split(e.descr,
-                                   max_w_descr);
+                text_format::split(e.descr, max_w_descr);
 
             for (const auto& descr_line : descr_formatted)
             {
                 lines_.push_back(
-                    StrAndClr(offset + descr_line,
-                              clr_text_dark));
+                    ColoredString(offset + descr_line, color_text_dark));
             }
 
-            lines_.push_back(StrAndClr("", clr_text));
+            lines_.push_back(ColoredString("", colors::text()));
         }
     }
 
     lines_.push_back(
-        StrAndClr("Mental disorders",
+        ColoredString("Mental disorders",
                   clr_heading));
 
     const std::vector<const InsSympt*> sympts = insanity::active_sympts();
@@ -85,8 +79,8 @@ void CharacterDescr::on_start()
     if (sympts.empty())
     {
         lines_.push_back(
-            StrAndClr(offset + "None",
-                      clr_text));
+            ColoredString(offset + "None",
+                      colors::text()));
     }
     else // Has insanity symptoms
     {
@@ -97,19 +91,19 @@ void CharacterDescr::on_start()
             if (!sympt_descr.empty())
             {
                 lines_.push_back(
-                    StrAndClr(offset + sympt_descr, clr_text));
+                    ColoredString(offset + sympt_descr, colors::text()));
             }
         }
     }
 
-    lines_.push_back(StrAndClr("", clr_text));
+    lines_.push_back(ColoredString("", colors::text()));
 
     lines_.push_back(
-        StrAndClr("Potion knowledge",
+        ColoredString("Potion knowledge",
                   clr_heading));
 
-    std::vector<StrAndClr> potion_list;
-    std::vector<StrAndClr> manuscript_list;
+    std::vector<ColoredString> potion_list;
+    std::vector<ColoredString> manuscript_list;
 
     for (int i = 0; i < (int)ItemId::END; ++i)
     {
@@ -124,8 +118,7 @@ void CharacterDescr::on_start()
                 const std::string name = item->name(ItemRefType::plain);
 
                 potion_list.push_back(
-                    StrAndClr(offset + name,
-                              d.clr));
+                    ColoredString(offset + name, d.color));
 
                 delete item;
             }
@@ -136,14 +129,15 @@ void CharacterDescr::on_start()
                 const std::string name = item->name(ItemRefType::plain);
 
                 manuscript_list.push_back(
-                    StrAndClr(offset + name, item->interface_clr()));
+                    ColoredString(offset + name, item->interface_color()));
 
                 delete item;
             }
         }
     }
 
-    auto str_and_clr_sort = [](const StrAndClr & e1, const StrAndClr & e2)
+    auto str_and_clr_sort = [](const ColoredString & e1,
+                               const ColoredString & e2)
     {
         return e1.str < e2.str;
     };
@@ -151,8 +145,8 @@ void CharacterDescr::on_start()
     if (potion_list.empty())
     {
         lines_.push_back(
-            StrAndClr(offset + "No known potions",
-                      clr_text));
+            ColoredString(offset + "No known potions",
+                      colors::text()));
     }
     else
     {
@@ -160,24 +154,24 @@ void CharacterDescr::on_start()
              potion_list.end(),
              str_and_clr_sort);
 
-        for (StrAndClr& e : potion_list)
+        for (ColoredString& e : potion_list)
         {
             lines_.push_back(e);
         }
     }
 
-    lines_.push_back(StrAndClr("", clr_text));
+    lines_.push_back(ColoredString("", colors::text()));
 
 
     lines_.push_back(
-        StrAndClr("Manuscript knowledge",
+        ColoredString("Manuscript knowledge",
                   clr_heading));
 
     if (manuscript_list.empty())
     {
         lines_.push_back(
-            StrAndClr(offset + "No known manuscripts",
-                      clr_text));
+            ColoredString(offset + "No known manuscripts",
+                      colors::text()));
     }
     else
     {
@@ -185,16 +179,16 @@ void CharacterDescr::on_start()
              manuscript_list.end(),
              str_and_clr_sort);
 
-        for (StrAndClr& e : manuscript_list)
+        for (ColoredString& e : manuscript_list)
         {
             lines_.push_back(e);
         }
     }
 
-    lines_.push_back(StrAndClr("", clr_text));
+    lines_.push_back(ColoredString("", colors::text()));
 
     lines_.push_back(
-        StrAndClr("History of " + map::player->name_the(),
+        ColoredString("History of " + map::player->name_the(),
                   clr_heading));
 
     const std::vector<HistoryEvent>& events = game::history();
@@ -219,14 +213,14 @@ void CharacterDescr::on_start()
         ev_str += " " + event.msg;
 
         lines_.push_back(
-            StrAndClr(offset + ev_str,
-                      clr_text));
+            ColoredString(offset + ev_str,
+                      colors::text()));
     }
 
-    lines_.push_back(StrAndClr("", clr_text));
+    lines_.push_back(ColoredString("", colors::text()));
 
     lines_.push_back(
-        StrAndClr("Traits gained",
+        ColoredString("Traits gained",
                   clr_heading));
 
     for (size_t i = 0; i < (size_t)Trait::END; ++i)
@@ -239,8 +233,8 @@ void CharacterDescr::on_start()
             const std::string descr = player_bon::trait_descr(trait);
 
             lines_.push_back(
-                StrAndClr(offset + title,
-                          clr_text));
+                ColoredString(offset + title,
+                          colors::text()));
 
             const auto descr_lines =
                 text_format::split(descr,
@@ -249,11 +243,11 @@ void CharacterDescr::on_start()
             for (const std::string& descr_line : descr_lines)
             {
                 lines_.push_back(
-                    StrAndClr(offset + descr_line,
-                              clr_text_dark));
+                    ColoredString(offset + descr_line,
+                                  color_text_dark));
             }
 
-            lines_.push_back(StrAndClr("", clr_text));
+            lines_.push_back(ColoredString("", colors::text()));
         }
     }
 }
@@ -272,12 +266,12 @@ void CharacterDescr::draw()
 
     for (int i = top_idx_; i <= btm_nr; ++i)
     {
-        const StrAndClr& line = lines_[i];
+        const ColoredString& line = lines_[i];
 
         io::draw_text(line.str,
                       Panel::screen,
                       P(0, y_pos),
-                      line.clr);
+                      line.color);
 
         ++y_pos;
     }

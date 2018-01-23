@@ -20,7 +20,7 @@ public:
     void bump(Actor& actor_bumping) override;
 
 private:
-    Clr clr_default() const override;
+    Color color_default() const override;
 
     void on_hit(const int dmg,
                 const DmgType dmg_type,

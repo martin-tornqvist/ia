@@ -124,7 +124,7 @@ std::string bg_title(const Bg id);
 //       be formatted by the caller. The reason for using a vector instead of a
 //       string is to separate the text into paragraphs.
 //
-std::vector<StrAndClr> bg_descr(const Bg id);
+std::vector<ColoredString> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();
 

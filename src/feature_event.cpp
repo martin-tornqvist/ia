@@ -100,7 +100,7 @@ void EventWallCrumble::on_new_turn()
     if (map::player->prop_handler().allow_see())
     {
         msg_log::add("Suddenly, the walls collapse!",
-                     clr_msg_note,
+                     colors::msg_note(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -405,11 +405,11 @@ void EventSnakeEmerge::on_new_turn()
     {
         msg_log::add("Suddenly, vicious snakes slither up "
                      "from cracks in the floor!",
-                     clr_msg_note,
+                     colors::msg_note(),
                      true,
                      MorePromptOnMsg::yes);
 
-        io::draw_blast_at_cells(seen_tgt_positions, clr_magenta);
+        io::draw_blast_at_cells(seen_tgt_positions, colors::magenta());
 
         ShockLvl shock_lvl = ShockLvl::unsettling;
 

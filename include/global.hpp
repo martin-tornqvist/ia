@@ -2,9 +2,10 @@
 #define CMN_HPP
 
 #include <string>
+#include <unordered_map>
 
 #include "colors.hpp"
-#include "art.hpp"
+#include "gfx.hpp"
 
 // -----------------------------------------------------------------------------
 // Data
@@ -15,9 +16,10 @@ const std::string version_str = "v19.2";
 
 const std::string date_str = __DATE__;
 
-const std::string tiles_img_name = "res/images/gfx_16x24.png";
-const std::string logo_img_name = "res/images/main_menu_logo.png";
-const std::string skull_img_name = "res/images/skull.png";
+const std::string gfx_path = "res/gfx";
+const std::string tiles_img_name = gfx_path + "/gfx_16x24.png";
+const std::string logo_img_name = gfx_path + "/main_menu_logo.png";
+const std::string skull_img_name = gfx_path + "/skull.png";
 
 const int screen_bpp = 32;
 
@@ -294,6 +296,22 @@ enum class ShockLvl
     END
 };
 
+const std::unordered_map<std::string, ShockLvl> str_to_shock_lvl_map = {
+    {"none", ShockLvl::none},
+    {"unsettling", ShockLvl::unsettling},
+    {"frightening", ShockLvl::frightening},
+    {"terrifying", ShockLvl::terrifying},
+    {"mind_shattering", ShockLvl::mind_shattering}
+};
+
+const std::unordered_map<ShockLvl, std::string> shock_lvl_to_str_map = {
+    {ShockLvl::none, "none"},
+    {ShockLvl::unsettling, "unsettling"},
+    {ShockLvl::frightening, "frightening"},
+    {ShockLvl::terrifying, "terrifying"},
+    {ShockLvl::mind_shattering, "mind_shattering"}
+};
+
 enum class MonRoamingAllowed
 {
     no,
@@ -373,25 +391,25 @@ enum class InfScreenType
     single_screen
 };
 
-struct StrAndClr
+struct ColoredString
 {
-    StrAndClr() :
+    ColoredString() :
         str(""),
-        clr(clr_black) {}
+        color(colors::white()) {}
 
-    StrAndClr(const std::string& text, const Clr& color) :
-        str(text),
-        clr(color) {}
+    ColoredString(const std::string& str, const Color& color) :
+        str(str),
+        color(color) {}
 
-    StrAndClr& operator=(const StrAndClr& other)
+    ColoredString& operator=(const ColoredString& other)
     {
         str = other.str;
-        clr = other.clr;
+        color = other.color;
         return *this;
     }
 
     std::string str;
-    Clr clr;
+    Color color;
 };
 
 enum class ItemType

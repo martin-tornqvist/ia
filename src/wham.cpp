@@ -41,7 +41,7 @@ void try_sprain_player()
 
     if (rnd::one_in(sprain_one_in_n))
     {
-        msg_log::add("I sprain myself.", clr_msg_bad);
+        msg_log::add("I sprain myself.", colors::msg_bad());
 
         const int dmg = rnd::range(1, 2);
 
@@ -59,7 +59,7 @@ void run()
     // Choose direction
     //
     msg_log::add("Which direction?" + cancel_info_str,
-                 clr_white_lgt);
+                 colors::light_white());
 
     const Dir input_dir = query::dir(AllowCenter::yes);
 

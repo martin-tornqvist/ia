@@ -54,7 +54,7 @@ void reset_data(FeatureDataT& d)
 {
     d.mk_obj = [](const P & p) {(void)p; return nullptr;};
     d.id = FeatureId::END;
-    d.glyph = ' ';
+    d.character = ' ';
     d.tile = TileId::empty;
     d.move_rules.reset();
     d.is_sound_passable = true;
@@ -91,7 +91,7 @@ void init_data_list()
     {
         return new Floor(p);
     };
-    d.glyph = '.';
+    d.character = '.';
     d.tile = TileId::floor;
     d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
@@ -113,7 +113,7 @@ void init_data_list()
     {
         return new Wall(p);
     };
-    d.glyph = config::is_text_mode_wall_full_square() ? 10 : '#';
+    d.character = config::is_text_mode_wall_full_square() ? 10 : '#';
     d.tile = TileId::wall_top;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::burrowing);
@@ -133,7 +133,7 @@ void init_data_list()
     {
         return new Tree(p);
     };
-    d.glyph = '|';
+    d.character = '|';
     d.tile = TileId::tree;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.is_sound_passable = false;
@@ -154,7 +154,7 @@ void init_data_list()
     {
         return new Grass(p);
     };
-    d.glyph = '.';
+    d.character = '.';
     d.tile = TileId::floor;
     d.move_rules.set_can_move_common();
     d.matl_type = Matl::plant;
@@ -166,7 +166,7 @@ void init_data_list()
     {
         return new Bush(p);
     };
-    d.glyph = '"';
+    d.character = '"';
     d.tile = TileId::bush;
     d.move_rules.set_can_move_common();
     d.is_los_passable = false;
@@ -178,7 +178,7 @@ void init_data_list()
     {
         return new Vines(p);
     };
-    d.glyph = '"';
+    d.character = '"';
     d.tile = TileId::vines;
     d.move_rules.set_can_move_common();
     d.is_los_passable = false;
@@ -193,7 +193,7 @@ void init_data_list()
     {
         return new Chains(p);
     };
-    d.glyph = '"';
+    d.character = '"';
     d.tile = TileId::chains;
     d.move_rules.set_can_move_common();
     d.is_los_passable = true;
@@ -208,7 +208,7 @@ void init_data_list()
     {
         return new Grate(p);
     };
-    d.glyph = '#';
+    d.character = '#';
     d.tile = TileId::grate;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::burrowing);
@@ -227,7 +227,7 @@ void init_data_list()
     {
         return new Stairs(p);
     };
-    d.glyph = '>';
+    d.character = '>';
     d.tile = TileId::stairs_down;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -242,7 +242,7 @@ void init_data_list()
     {
         return new Monolith(p);
     };
-    d.glyph = '|';
+    d.character = '|';
     d.tile = TileId::monolith;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -260,7 +260,7 @@ void init_data_list()
     {
         return new Pylon(p, PylonId::any);
     };
-    d.glyph = '|';
+    d.character = '|';
     d.tile = TileId::pylon;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -278,7 +278,7 @@ void init_data_list()
     {
         return new Lever(p);
     };
-    d.glyph = '%';
+    d.character = '%';
     d.tile = TileId::lever_left;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -293,7 +293,7 @@ void init_data_list()
     {
         return new Brazier(p);
     };
-    d.glyph = '0';
+    d.character = '0';
     d.tile = TileId::brazier;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -309,7 +309,7 @@ void init_data_list()
     {
         return new LiquidShallow(p);
     };
-    d.glyph = '~';
+    d.character = '~';
     d.tile = TileId::water1;
     d.move_rules.set_can_move_common();
     d.can_have_blood = false;
@@ -324,7 +324,7 @@ void init_data_list()
     {
         return new LiquidDeep(p);
     };
-    d.glyph = '~';
+    d.character = '~';
     d.tile = TileId::water1;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
@@ -339,7 +339,7 @@ void init_data_list()
     {
         return new Chasm(p);
     };
-    d.glyph = '.';
+    d.character = '.';
     d.tile = TileId::floor;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
@@ -360,7 +360,7 @@ void init_data_list()
     {
         return new GraveStone(p);
     };
-    d.glyph = ']';
+    d.character = ']';
     d.tile = TileId::grave_stone;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
@@ -378,7 +378,7 @@ void init_data_list()
     {
         return new ChurchBench(p);
     };
-    d.glyph = '[';
+    d.character = '[';
     d.tile = TileId::church_bench;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
@@ -398,7 +398,7 @@ void init_data_list()
     {
         return new Carpet(p);
     };
-    d.glyph = '.';
+    d.character = '.';
     d.tile = TileId::floor;
     d.can_have_rigid = false;
     d.move_rules.set_can_move_common();
@@ -410,7 +410,7 @@ void init_data_list()
     {
         return new RubbleHigh(p);
     };
-    d.glyph = 8;
+    d.character = 8;
     d.tile = TileId::rubble_high;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::ooze);
@@ -431,7 +431,7 @@ void init_data_list()
     {
         return new RubbleLow(p);
     };
-    d.glyph = ',';
+    d.character = ',';
     d.tile = TileId::rubble_low;
     d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
@@ -443,7 +443,7 @@ void init_data_list()
     {
         return new Bones(p);
     };
-    d.glyph = '&';
+    d.character = '&';
     d.tile = TileId::corpse2;
     d.move_rules.set_can_move_common();
     d.matl_type = Matl::stone;
@@ -455,7 +455,7 @@ void init_data_list()
     {
         return new Statue(p);
     };
-    d.glyph = 5; //Paragraph sign
+    d.character = 5; //Paragraph sign
     d.tile = TileId::witch_or_warlock;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -473,7 +473,7 @@ void init_data_list()
     {
         return new Cocoon(p);
     };
-    d.glyph = '8';
+    d.character = '8';
     d.tile = TileId::cocoon_closed;
     d.is_projectile_passable = true;
     d.is_los_passable = false;
@@ -492,7 +492,7 @@ void init_data_list()
     {
         return new Chest(p);
     };
-    d.glyph = '+';
+    d.character = '+';
     d.tile = TileId::chest_closed;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -507,7 +507,7 @@ void init_data_list()
     {
         return new Cabinet(p);
     };
-    d.glyph = '7';
+    d.character = '7';
     d.tile = TileId::cabinet_closed;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -525,7 +525,7 @@ void init_data_list()
     {
         return new Bookshelf(p);
     };
-    d.glyph = '7';
+    d.character = '7';
     d.tile = TileId::bookshelf_full;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -543,7 +543,7 @@ void init_data_list()
     {
         return new AlchemistBench(p);
     };
-    d.glyph = '7';
+    d.character = '7';
     d.tile = TileId::alchemist_bench_full;
     d.is_projectile_passable = false;
     d.is_los_passable = true;
@@ -561,7 +561,7 @@ void init_data_list()
     {
         return new Fountain(p);
     };
-    d.glyph = '1';
+    d.character = '1';
     d.tile = TileId::fountain;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -579,7 +579,7 @@ void init_data_list()
     {
         return new Stalagmite(p);
     };
-    d.glyph = ':';
+    d.character = ':';
     d.tile = TileId::stalagmite;
     d.is_projectile_passable = false;
     d.is_los_passable = false;
@@ -597,7 +597,7 @@ void init_data_list()
     {
         return new Altar(p);
     };
-    d.glyph = '_';
+    d.character = '_';
     d.tile = TileId::altar;
     d.can_have_blood = false;
     d.can_have_gore = false;
@@ -614,7 +614,7 @@ void init_data_list()
     {
         return new Tomb(p);
     };
-    d.glyph = ']';
+    d.character = ']';
     d.tile = TileId::tomb_closed;
     d.move_rules.set_prop_can_move(PropId::ethereal);
     d.move_rules.set_prop_can_move(PropId::flying);
@@ -654,7 +654,7 @@ void init_data_list()
     {
         return new LitDynamite(p);
     };
-    d.glyph = '/';
+    d.character = '/';
     d.tile = TileId::dynamite_lit;
     d.move_rules.set_can_move_common();
     d.can_have_blood = false;
@@ -668,7 +668,7 @@ void init_data_list()
     {
         return new LitFlare(p);
     };
-    d.glyph = '/';
+    d.character = '/';
     d.tile = TileId::flare_lit;
     d.move_rules.set_can_move_common();
     add_to_list_and_reset(d);
@@ -678,7 +678,7 @@ void init_data_list()
     {
         return new Smoke(p);
     };
-    d.glyph = '*';
+    d.character = '*';
     d.tile = TileId::smoke;
     d.move_rules.set_can_move_common();
     d.is_los_passable = false;

@@ -593,7 +593,7 @@ size_t Inventory::unequip_slot(const SlotId id)
         }
 
         msg_log::add(msg,
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -751,7 +751,7 @@ void Inventory::equip(const SlotId id,
         }
 
         msg_log::add(msg,
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -843,12 +843,14 @@ void Inventory::sort_backpack()
         // Check if item should be added to any existing color group
         for (auto& group : sort_buffer)
         {
-            const Clr clr_current_group = group[0]->interface_clr();
+            const Color color_current_group = group[0]->interface_color();
 
-            if (is_clr_equal(item->interface_clr(), clr_current_group))
+            if (item->interface_color() == color_current_group)
             {
                 group.push_back(item);
+
                 is_added_to_buffer = true;
+
                 break;
             }
         }

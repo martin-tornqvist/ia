@@ -5,15 +5,13 @@
 
 #include "colors.hpp"
 #include "item_data.hpp"
-#include "feature.hpp"
 #include "config.hpp"
-#include "actor_player.hpp"
-#include "fov.hpp"
-#include "io.hpp"
 #include "game.hpp"
+#include "fov.hpp"
 
 class Rigid;
 class Mob;
+class Player;
 
 struct Cell
 {
@@ -78,7 +76,7 @@ extern int dlvl;
 
 extern Cell cells[map_w][map_h];
 
-extern Clr wall_clr;
+extern Color wall_color;
 
 // This vector is the room owner
 extern std::vector<Room*> room_list;
@@ -87,7 +85,7 @@ extern std::vector<Room*> room_list;
 extern Room* room_map[map_w][map_h];
 
 // NOTE: This data is only intended to be used for the purpose of map generation
-//       (and placing items etc), it is NOT updated while playing the map.
+// (and placing items etc), it is NOT updated while playing the map.
 extern std::vector<ChokePointData> choke_point_data;
 
 void init();

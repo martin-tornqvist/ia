@@ -2,12 +2,12 @@
 #define ROOM_HPP
 
 #include <vector>
+#include <unordered_map>
 
 #include "rl_utils.hpp"
 #include "global.hpp"
 #include "feature_data.hpp"
 
-//
 // Room theming occurs both pre- and post-connect (before/after corridors).
 //
 //  >   In pre-connect, reshaping is performed, e.g. plus-shape, cavern-shape,
@@ -24,13 +24,11 @@
 // blocking features in the post-connect step.
 //
 
-//
-// NOTE: There are both RoomType ids, and Room classes. A room of a certain
-//       RoomType id does NOT have to be of the corresponding Room child class.
-//       For example, templated rooms are always created as the TemplateRoom
-//       class, but they may have any standard room RoomType id. There may even
-//       be RoomType ids which doesn't have a corresponding Room class at all.
-//
+// NOTE: There are both 'RoomType' ids, and 'Room' classes. A room of a certain
+// RoomType id does NOT have to be an instance of the corresponding Room child
+// class. For example, templated rooms are always created as the TemplateRoom
+// class, but they may have any standard room RoomType id. There may even be
+// RoomType ids which doesn't have a corresponding Room class at all.
 
 struct FeatureDataT;
 class Room;
@@ -57,6 +55,38 @@ enum class RoomType
     corr_link,
     crumble_room,
     river
+};
+
+const std::unordered_map<std::string, RoomType> str_to_room_type_map = {
+    {"plain", RoomType::plain},
+    {"human", RoomType::human},
+    {"ritual", RoomType::ritual},
+    {"jail", RoomType::jail},
+    {"spider", RoomType::spider},
+    {"snake_pit", RoomType::snake_pit},
+    {"crypt", RoomType::crypt},
+    {"monster", RoomType::monster},
+    {"flooded", RoomType::flooded},
+    {"muddy", RoomType::muddy},
+    {"cave", RoomType::cave},
+    {"chasm", RoomType::chasm},
+    {"forest", RoomType::forest}
+};
+
+const std::unordered_map<RoomType, std::string> room_type_to_str_map = {
+    {RoomType::plain, "plain"},
+    {RoomType::human, "human"},
+    {RoomType::ritual, "ritual"},
+    {RoomType::jail, "jail"},
+    {RoomType::spider, "spider"},
+    {RoomType::snake_pit, "snake_pit"},
+    {RoomType::crypt, "crypt"},
+    {RoomType::monster, "monster"},
+    {RoomType::flooded, "flooded"},
+    {RoomType::muddy, "muddy"},
+    {RoomType::cave, "cave"},
+    {RoomType::chasm, "chasm"},
+    {RoomType::forest, "forest"}
 };
 
 struct RoomAutoFeatureRule

@@ -286,7 +286,7 @@ void Mon::act()
     //       otherwise very fast monsters are much better at finding the player
     //
 
-    if (data_->ai[(size_t)AiId::makes_room_for_friend] &&
+    if (data_->ai[(size_t)AiId::avoids_blocking_friend] &&
         !is_player_leader &&
         (tgt_ == map::player) &&
         is_tgt_seen_ &&
@@ -355,7 +355,7 @@ void Mon::act()
     set_constr_in_range(0, erratic_move_pct, 95);
 
     // Occasionally move erratically
-    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
+    if (data_->ai[(size_t)AiId::moves_randomly_when_unaware] &&
         rnd::percent(erratic_move_pct))
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -366,7 +366,7 @@ void Mon::act()
 
     const bool is_terrified = has_prop(PropId::terrified);
 
-    if (data_->ai[(size_t)AiId::moves_to_tgt_when_los] &&
+    if (data_->ai[(size_t)AiId::moves_to_target_when_los] &&
         !is_terrified)
     {
         if (ai::action::move_to_tgt_simple(*this))
@@ -377,7 +377,7 @@ void Mon::act()
 
     std::vector<P> path;
 
-    if ((data_->ai[(size_t)AiId::paths_to_tgt_when_aware] ||
+    if ((data_->ai[(size_t)AiId::paths_to_target_when_aware] ||
          is_player_leader) &&
         !is_terrified)
     {
@@ -427,7 +427,7 @@ void Mon::act()
     }
 
     // When unaware, move randomly
-    if (data_->ai[(size_t)AiId::moves_to_random_when_unaware] &&
+    if (data_->ai[(size_t)AiId::moves_randomly_when_unaware] &&
         (!is_player_leader || rnd::one_in(8)))
     {
         if (ai::action::move_to_random_adj_cell(*this))
@@ -517,11 +517,11 @@ bool Mon::is_actor_seeable(const Actor& other,
         return false;
     }
 
-    bool has_darkvis = has_prop(PropId::darkvis);
+    bool has_darkvision = has_prop(PropId::darkvision);
 
     const bool can_see_other_in_drk =
         can_see_invis ||
-        has_darkvis;
+        has_darkvision;
 
     // Blocked by darkness, and not seeing actor with infravision?
     if (los.is_blocked_by_drk &&
@@ -774,18 +774,18 @@ void Mon::move(Dir dir)
     game_time::tick();
 }
 
-Clr Mon::clr() const
+Color Mon::color() const
 {
     if (state_ != ActorState::alive)
     {
         return data_->color;
     }
 
-    Clr tmp_clr;
+    Color tmp_color;
 
-    if (prop_handler_->affect_actor_clr(tmp_clr))
+    if (prop_handler_->affect_actor_color(tmp_color))
     {
-        return tmp_clr;
+        return tmp_color;
     }
 
     return data_->color;
@@ -846,15 +846,15 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
 
     std::string msg =
         is_seen_by_player ?
-        aggro_msg_mon_seen() :
-        aggro_msg_mon_hidden();
+        aware_msg_mon_seen() :
+        aware_msg_mon_hidden();
 
     msg = text_format::first_to_upper(msg);
 
     const SfxId sfx =
         is_seen_by_player ?
-        aggro_sfx_mon_seen() :
-        aggro_sfx_mon_hidden();
+        aware_sfx_mon_seen() :
+        aware_sfx_mon_hidden();
 
     Snd snd(msg,
             sfx,
@@ -1645,9 +1645,7 @@ DidAction Vortex::on_act()
 
                 TRACE << "Attempt pull (knockback)" << std::endl;
 
-                //
                 // TODO: Add sfx
-                //
                 knockback::run(*map::player,
                                knockback_from_pos,
                                false,
@@ -2152,7 +2150,7 @@ void LengElder::on_std_turn_hook()
             {
                 if (nr_turns_to_hostile_ <= 0)
                 {
-                    msg_log::add("I am ripped to pieces!!!", clr_msg_bad);
+                    msg_log::add("I am ripped to pieces!!!", colors::msg_bad());
                     map::player->hit(999, DmgType::pure);
                 }
                 else
@@ -2171,7 +2169,7 @@ void LengElder::on_std_turn_hook()
             {
                 msg_log::add(
                     "I perceive a cloaked figure standing before me...",
-                    clr_white,
+                    colors::white(),
                     false,
                     MorePromptOnMsg::yes);
 
@@ -2180,7 +2178,7 @@ void LengElder::on_std_turn_hook()
 
                 msg_log::add(
                     "the High Priest Not to Be Described.",
-                    clr_white,
+                    colors::white(),
                     false,
                     MorePromptOnMsg::yes);
 
@@ -2243,15 +2241,15 @@ DidAction StrangeColor::on_act()
     return DidAction::no;
 }
 
-Clr StrangeColor::clr() const
+Color StrangeColor::color() const
 {
-    Clr clr = clr_magenta_lgt;
+    Color color = colors::light_magenta();
 
-    clr.r = rnd::range(40, 255);
-    clr.g = rnd::range(40, 255);
-    clr.b = rnd::range(40, 255);
+    color.set_r(rnd::range(40, 255));
+    color.set_g(rnd::range(40, 255));
+    color.set_b(rnd::range(40, 255));
 
-    return clr;
+    return color;
 }
 
 void StrangeColor::on_std_turn_hook()
@@ -2555,7 +2553,7 @@ DidAction Zombie::try_resurrect()
 
                 msg_log::add(text_format::first_to_upper(corpse_name_the()) +
                              " rises again!!",
-                             clr_text,
+                             colors::text(),
                              true);
 
                 map::player->incr_shock(ShockLvl::frightening,
@@ -2913,7 +2911,7 @@ void TheHighPriest::mk_start_items()
 void TheHighPriest::on_death()
 {
     msg_log::add("The ground rumbles...",
-                 clr_white,
+                 colors::white(),
                  false,
                  MorePromptOnMsg::yes);
 
@@ -3033,22 +3031,22 @@ std::string AnimatedWpn::name_a() const
     return "A floating " + name;
 }
 
-char AnimatedWpn::glyph() const
+char AnimatedWpn::character() const
 {
     Item* item = inv_->item_in_slot(SlotId::wpn);
 
     ASSERT(item);
 
-    return item->glyph();
+    return item->character();
 }
 
-Clr AnimatedWpn::clr() const
+Color AnimatedWpn::color() const
 {
     Item* item = inv_->item_in_slot(SlotId::wpn);
 
     ASSERT(item);
 
-    return item->clr();
+    return item->color();
 }
 
 TileId AnimatedWpn::tile() const

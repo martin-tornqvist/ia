@@ -3,25 +3,17 @@
 #include <algorithm>
 
 #include "init.hpp"
-#include "actor_player.hpp"
 #include "msg_log.hpp"
-#include "postmortem.hpp"
-#include "io.hpp"
 #include "actor_mon.hpp"
-#include "inventory.hpp"
-#include "map.hpp"
-#include "explosion.hpp"
-#include "player_bon.hpp"
+#include "actor_player.hpp"
 #include "map_parsing.hpp"
 #include "line_calc.hpp"
 #include "actor_factory.hpp"
 #include "feature_rigid.hpp"
-#include "feature_mob.hpp"
-#include "item.hpp"
 #include "text_format.hpp"
 #include "saving.hpp"
-#include "game.hpp"
 #include "map_travel.hpp"
+#include "game_time.hpp"
 
 namespace prop_data
 {
@@ -260,7 +252,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::lgt_sens;
+    d.id = PropId::light_sensitive;
     d.std_rnd_turns = Range(50, 100);
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
@@ -775,7 +767,7 @@ void init_data_list()
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
-    d.id = PropId::darkvis;
+    d.id = PropId::darkvision;
     d.std_rnd_turns = Range(50, 100);
     d.name = "";
     d.name_short = "";
@@ -1203,7 +1195,7 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::r_sleep:
         return new PropRSleep(turns_init, nr_turns);
 
-    case PropId::lgt_sens:
+    case PropId::light_sensitive:
         return new PropLgtSens(turns_init, nr_turns);
 
     case PropId::poss_by_zuul:
@@ -1224,7 +1216,7 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::radiant:
         return new PropRadiant(turns_init, nr_turns);
 
-    case PropId::darkvis:
+    case PropId::darkvision:
         return new PropDarkvis(turns_init, nr_turns);
 
     case PropId::r_disease:
@@ -1306,7 +1298,7 @@ void PropHandler::apply(Prop* const prop,
                     if (!msg.empty())
                     {
                         msg_log::add(msg,
-                                     clr_text,
+                                     colors::text(),
                                      true);
                     }
                 }
@@ -1350,9 +1342,7 @@ void PropHandler::apply(Prop* const prop,
                 const int turns_left_old = old_prop->nr_turns_left_;
                 const int turns_left_new = prop->nr_turns_left_;
 
-                //
                 // TODO: Should messages be printed here? It can get spammy...
-                //
 
                 // Start message
                 // if (verbosity == Verbosity::verbose &&
@@ -1365,7 +1355,7 @@ void PropHandler::apply(Prop* const prop,
 
                 //         if (!msg.empty())
                 //         {
-                //             msg_log::add(msg, clr_text, true);
+                //             msg_log::add(msg, colors::text(), true);
                 //         }
                 //     }
                 //     else // Not player
@@ -1435,7 +1425,7 @@ void PropHandler::apply(Prop* const prop,
                     (prop->alignment() != PropAlignment::good);
 
                 msg_log::add(msg,
-                             clr_text,
+                             colors::text(),
                              is_interrupting);
             }
         }
@@ -1685,9 +1675,7 @@ void PropHandler::on_turn_begin()
             mon->become_aware_player(false);
         }
 
-        //
         // NOTE: The property may return a nullptr here, if it removed itself
-        //
         prop = prop->on_tick();
 
         if (prop)
@@ -1777,9 +1765,9 @@ bool PropHandler::has_temporary_negative_prop_mon()
     return false;
 }
 
-std::vector<StrAndClr> PropHandler::props_line() const
+std::vector<ColoredString> PropHandler::props_line() const
 {
-    std::vector<StrAndClr> line;
+    std::vector<ColoredString> line;
 
     for (Prop* prop : props_)
     {
@@ -1808,24 +1796,19 @@ std::vector<StrAndClr> PropHandler::props_line() const
                 player_bon::traits[(size_t)Trait::self_aware] &&
                 prop->allow_display_turns())
             {
-                //
                 // NOTE: Since turns left are decremented before the actors
-                //       turn, and checked after the turn - "turns_left"
-                //       practically represents how many more times the
-                //       actor will act with the property enabled, EXCLUDING
-                //       the current (ongoing) turn.
+                // turn, and checked after the turn - "turns_left" practically
+                // represents how many more times the actor will act with the
+                // property enabled, EXCLUDING the current (ongoing) turn.
                 //
-                //       I.e. one "turns_left" means that the property will
-                //       be enabled the whole next turn, while Zero
-                //       "turns_left", means that it will only be active the
-                //       current turn. However, from a players perspective,
-                //       this is unintuitive; "one turn left" means the
-                //       current turn, plus the next - but is likely
-                //       interpreted as just the current turn. Therefore we
-                //       add +1 to the displayed value, so that a displayed
-                //       value of one means that the property will end after
-                //       performing the next action.
-                //
+                // I.e. one "turns_left" means that the property will be enabled
+                // the whole next turn, while Zero "turns_left", means that it
+                // will only be active the current turn. However, from a players
+                // perspective, this is unintuitive; "one turn left" means the
+                // current turn, plus the next - but is likely interpreted as
+                // just the current turn. Therefore we add +1 to the displayed
+                // value, so that a displayed value of one means that the
+                // property will end after performing the next action.
                 const int turns_left_displayed = turns_left + 1;
 
                 str += ":" + std::to_string(turns_left_displayed);
@@ -1834,21 +1817,18 @@ std::vector<StrAndClr> PropHandler::props_line() const
 
         const PropAlignment alignment = prop->alignment();
 
-        const Clr clr =
-            (alignment == PropAlignment::good) ? clr_msg_good :
-            (alignment == PropAlignment::bad)  ? clr_msg_bad :
-            clr_white;
+        const Color color =
+            (alignment == PropAlignment::good) ? colors::msg_good() :
+            (alignment == PropAlignment::bad)  ? colors::msg_bad() :
+            colors::white();
 
-        line.push_back(StrAndClr(str, clr));
+        line.push_back(ColoredString(str, color));
     }
 
     return line;
 }
 
-//
-// TODO: Lots of copy paste from the function above (props_line), some
-//       refactoring needed here
-//
+// TODO: Lots of copy paste from 'props_line' above, refactor
 std::vector<PropListEntry> PropHandler::props_list() const
 {
     std::vector<PropListEntry> list;
@@ -1882,24 +1862,7 @@ std::vector<PropListEntry> PropHandler::props_list() const
                     player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
-                    //
-                    // NOTE: Since turns left are decremented before the actors
-                    //       turn, and checked after the turn - "turns_left"
-                    //       practically represents how many more times the
-                    //       actor will act with the property enabled, EXCLUDING
-                    //       the current (ongoing) turn.
-                    //
-                    //       I.e. one "turns_left" means that the property will
-                    //       be enabled the whole next turn, while Zero
-                    //       "turns_left", means that it will only be active the
-                    //       current turn. However, from a players perspective,
-                    //       this is unintuitive; "one turn left" means the
-                    //       current turn, plus the next - but is likely
-                    //       interpreted as just the current turn. Therefore we
-                    //       add +1 to the displayed value, so that a displayed
-                    //       value of one means that the property will end after
-                    //       performing the next action.
-                    //
+                    // See NOTE in 'props_line' above.
                     const int turns_left_displayed = turns_left + 1;
 
                     name_short += ":" + std::to_string(turns_left_displayed);
@@ -1922,10 +1885,10 @@ std::vector<PropListEntry> PropHandler::props_list() const
 
         const PropAlignment alignment = prop->alignment();
 
-        const Clr clr =
-            (alignment == PropAlignment::good) ? clr_msg_good :
-            (alignment == PropAlignment::bad)  ? clr_msg_bad :
-            clr_white;
+        const Color color =
+            (alignment == PropAlignment::good) ? colors::msg_good() :
+            (alignment == PropAlignment::bad)  ? colors::msg_bad() :
+            colors::white();
 
         const std::string descr = prop->descr();
 
@@ -1937,7 +1900,7 @@ std::vector<PropListEntry> PropHandler::props_list() const
 
         entry.title.str = title;
 
-        entry.title.clr = clr;
+        entry.title.color = color;
 
         entry.descr = descr;
 
@@ -2247,15 +2210,15 @@ int PropHandler::ability_mod(const AbilityId ability) const
     return modifier;
 }
 
-bool PropHandler::affect_actor_clr(Clr& clr) const
+bool PropHandler::affect_actor_color(Color& color) const
 {
-    bool did_affect_clr = false;
+    bool did_affect_color = false;
 
     for (Prop* prop : props_)
     {
-        if (prop->affect_actor_clr(clr))
+        if (prop->affect_actor_color(color))
         {
-            did_affect_clr = true;
+            did_affect_color = true;
 
             // It's probably more likely that a color change due to a bad
             // property is critical information (e.g. burning), so then we stop
@@ -2268,7 +2231,7 @@ bool PropHandler::affect_actor_clr(Clr& clr) const
         }
     }
 
-    return did_affect_clr;
+    return did_affect_color;
 }
 
 // -----------------------------------------------------------------------------
@@ -2567,7 +2530,7 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
 
-    owning_actor_->state_ = ActorState::destroyed;
+    owning_actor_->destroy_silent();
 
     const P& pos = owning_actor_->pos;
 
@@ -2591,7 +2554,7 @@ Prop* PropPoisoned::on_tick()
         if (owning_actor_->is_player())
         {
             msg_log::add("I am suffering from the poison!",
-                         clr_msg_bad,
+                         colors::msg_bad(),
                          true);
         }
         else // Is monster
@@ -2652,7 +2615,7 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
     {
         if (owning_actor_->is_player())
         {
-            msg_log::add("I struggle to tear out the spike!", clr_msg_bad);
+            msg_log::add("I struggle to tear out the spike!", colors::msg_bad());
         }
         else // Is monster
         {
@@ -2663,7 +2626,7 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
                         owning_actor_->name_the());
 
                 msg_log::add(actor_name_the +  " struggles in pain!",
-                             clr_msg_good);
+                             colors::msg_good());
             }
         }
 
@@ -3112,7 +3075,7 @@ Prop* PropBurning::on_tick()
 {
     if (owning_actor_->is_player())
     {
-        msg_log::add("AAAARGH IT BURNS!!!", clr_red_lgt);
+        msg_log::add("AAAARGH IT BURNS!!!", colors::light_red());
     }
 
     owning_actor_->hit(rnd::dice(1, 3), DmgType::fire);

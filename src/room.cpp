@@ -13,6 +13,7 @@
 #include "actor_factory.hpp"
 #include "game_time.hpp"
 #include "populate_monsters.hpp"
+#include "actor_player.hpp"
 
 #ifndef NDEBUG
 #include "io.hpp"
@@ -37,13 +38,10 @@ void add_to_room_bucket(const RoomType type, const size_t nr)
     }
 }
 
-//
 // NOTE: This cannot be a virtual class method, since a room of a certain
-//       RoomType doesn't have to be instantiated as an object of the
-//       corresponding Room child class (it could be for example a TemplateRoom
-//       object with RoomType "ritual" - in that case we still want the same
-//       chance to make it dark).
-//
+// RoomType doesn't have to be an instance of the corresponding Room child
+// class (it could be for example a TemplateRoom object with RoomType "ritual",
+// in that case we still want the same chance to make it dark).
 int base_pct_chance_drk(const RoomType room_type)
 {
     switch (room_type)
@@ -1782,12 +1780,12 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
 
                 if (valid_room_entries0[x][y])
                 {
-                    io::draw_glyph('0', Panel::map, p, clr_red_lgt);
+                    io::draw_character('0', Panel::map, p, colors::light_red());
                 }
 
                 if (valid_room_entries1[x][y])
                 {
-                    io::draw_glyph('1', Panel::map, p, clr_red_lgt);
+                    io::draw_character('1', Panel::map, p, colors::light_red());
                 }
 
                 if (valid_room_entries0[x][y] || valid_room_entries1[x][y])
@@ -1903,9 +1901,19 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
             if (init::is_demo_mapgen)
             {
                 states::draw();
-                io::draw_glyph('0', Panel::map, room_con0, clr_green_lgt);
-                io::draw_glyph('1', Panel::map, room_con1, clr_yellow);
+
+                io::draw_character('0',
+                                   Panel::map,
+                                   room_con0,
+                                   colors::light_green());
+
+                io::draw_character('1',
+                                   Panel::map,
+                                   room_con1,
+                                   colors::yellow());
+
                 io::update_screen();
+
                 sdl_base::sleep(2000);
             }
 #endif // NDEBUG

@@ -12,13 +12,13 @@ class Actor;
 struct ActorDescrText
 {
     ActorDescrText() :
-        str (),
-        clr (clr_black),
-        p   () {}
+        str(),
+        color(colors::black()),
+        p() {}
 
     std::string str;
 
-    Clr clr;
+    Color color;
 
     P p;
 };
@@ -43,7 +43,7 @@ public:
 private:
     void put_text(const std::string str,
                   const P& p,
-                  const Clr& clr);
+                  const Color& color);
 
     std::string auto_description_str() const;
 
@@ -54,11 +54,9 @@ private:
     void mon_shock_str(std::string& shock_str_out,
                        std::string& punct_str_out) const;
 
-    //
     // NOTE: The y position of the Text struct is not used at all here, instead
-    //       the indexes of the lines_ vector represents the y position.
-    //       This is more convenient when iterating over the lines to draw text.
-    //
+    // the indexes of the lines_ vector represents the y position. This is more
+    // convenient when iterating over the lines to draw text.
     std::vector< std::vector<ActorDescrText> > lines_;
 
     int top_idx_;

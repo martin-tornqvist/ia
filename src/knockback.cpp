@@ -140,7 +140,7 @@ void run(Actor& defender,
         {
             if (is_defender_player)
             {
-                msg_log::add("I plummet down the depths!", clr_msg_bad);
+                msg_log::add("I plummet down the depths!", colors::msg_bad());
             }
             else
             {
@@ -149,7 +149,7 @@ void run(Actor& defender,
                         defender.name_the());
 
                 msg_log::add(name_the + " plummets down the depths.",
-                             clr_msg_good);
+                             colors::msg_good());
             }
 
             defender.die(true, false, false);

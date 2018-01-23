@@ -20,6 +20,7 @@
 #include "player_bon.hpp"
 #include "text_format.hpp"
 #include "global.hpp"
+#include "actor_player.hpp"
 
 // -----------------------------------------------------------------------------
 // Item
@@ -75,14 +76,14 @@ ItemDataT& Item::data() const
     return *data_;
 }
 
-Clr Item::clr() const
+Color Item::color() const
 {
-    return data_->clr;
+    return data_->color;
 }
 
-char Item::glyph() const
+char Item::character() const
 {
-    return data_->glyph;
+    return data_->character;
 }
 
 TileId Item::tile() const
@@ -530,9 +531,7 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
             ((data_->main_att_mode == AttMode::melee) &&
              (data_->melee.dmg != zero_dice)))
         {
-            //
             // NOTE: "dmg" will return melee damage if this is a melee weapon
-            //
             const Dice dmg_dice = dmg(AttMode::thrown, map::player);
 
             dmg_str =
@@ -681,7 +680,7 @@ void Armor::hit(const int dmg)
     {
         const std::string armor_name = name(ItemRefType::plain);
 
-        msg_log::add("My " + armor_name + " is damaged!", clr_msg_note);
+        msg_log::add("My " + armor_name + " is damaged!", colors::msg_note());
     }
 }
 
@@ -713,7 +712,7 @@ void ArmorMiGo::on_equip_hook(const Verbosity verbosity)
     if (verbosity == Verbosity::verbose)
     {
         msg_log::add("The armor joins with my skin!",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
 
@@ -751,21 +750,16 @@ void Wpn::load()
     nr_ammo_loaded_ = saving::get_int();
 }
 
-Clr Wpn::clr() const
+Color Wpn::color() const
 {
-    if (data_->ranged.is_ranged_wpn && !data_->ranged.has_infinite_ammo)
+    if (data_->ranged.is_ranged_wpn &&
+        !data_->ranged.has_infinite_ammo &&
+        (nr_ammo_loaded_ == 0))
     {
-        if (nr_ammo_loaded_ == 0)
-        {
-            Clr ret = data_->clr;
-            ret.r /= 2;
-            ret.g /= 2;
-            ret.b /= 2;
-            return ret;
-        }
+        return data_->color.fraction(2.0);
     }
 
-    return data_->clr;
+    return data_->color;
 }
 
 void Wpn::set_random_melee_plus()
@@ -828,23 +822,19 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
 {
     (void)dmg;
 
-    //
     // TODO: If some "constructed" monster is added (something not made of
-    //       flesh, e.g. a golem), then a Ghoul player would be able to feed
-    //       from it, which would be a problem. In that case, there should
-    //       probably be a field in the actor data called something like either
-    //       "is_flesh_body", or "is_construct".
-    //
+    // flesh, e.g. a golem), then a Ghoul player would be able to feed from it,
+    // which would be a problem. In that case, there should probably be a field
+    // n the actor data called something like either "is_flesh_body", or
+    // "is_construct".
 
     // Ghoul feeding from Ravenous trait?
 
-    //
     // NOTE: Player should never feed on monsters such as Ghosts or Shadows.
-    //       Checking that the monster is not Ethereal and that it can bleed
-    //       should be a pretty good rule for this.
-    //       We should NOT check if the monster can leave a corpse however,
-    //       since some monsters such as Worms don't leave a corpse, and you
-    //       SHOULD be able to feed on those.
+    // Checking that the monster is not Ethereal and that it can bleed should
+    // be a pretty good rule for this. We should NOT check if the monster can
+    // leave a corpse however, since some monsters such as Worms don't leave a
+    // corpse, and you SHOULD be able to feed on those.
     const ActorDataT& d = actor_hit.data();
 
     const bool is_ethereal = actor_hit.has_prop(PropId::ethereal);
@@ -1545,7 +1535,7 @@ void GasMask::decr_turns_left(Inventory& carrier_inv)
             name(ItemRefType::plain, ItemRefInf::none);
 
         msg_log::add("My " + item_name + " expires.",
-                     clr_msg_note,
+                     colors::msg_note(),
                      true,
                      MorePromptOnMsg::yes);
 
@@ -1638,7 +1628,7 @@ void Dynamite::on_std_turn_player_hold_ignited()
             MorePromptOnMsg::no;
 
         msg_log::add(fuse_msg,
-                     clr_yellow,
+                     colors::yellow(),
                      true,
                      more_prompt);
     }
@@ -1696,7 +1686,7 @@ void Molotov::on_std_turn_player_hold_ignited()
     if (fuse_turns_ == 2)
     {
         msg_log::add("The Molotov Cocktail will soon explode.",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -1704,7 +1694,7 @@ void Molotov::on_std_turn_player_hold_ignited()
     if (fuse_turns_ == 1)
     {
         msg_log::add("The Molotov Cocktail is about to explode!",
-                     clr_text,
+                     colors::text(),
                      false,
                      MorePromptOnMsg::yes);
     }
@@ -1884,7 +1874,7 @@ void SmokeGrenade::on_player_paralyzed()
     delete this;
 }
 
-Clr SmokeGrenade::ignited_projectile_clr() const
+Color SmokeGrenade::ignited_projectile_color() const
 {
-    return data().clr;
+    return data().color;
 }

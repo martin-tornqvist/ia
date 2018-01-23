@@ -303,11 +303,11 @@ void BrowseHighscore::draw()
     io::draw_text_center(title,
                          panel,
                          P(map_w_half, 0),
-                         clr_title,
-                         clr_black,
+                         colors::title(),
+                         colors::black(),
                          true);
 
-    const Clr& label_clr = clr_white;
+    const Color& label_clr = colors::white();
 
     const int labels_y = 1;
 
@@ -361,20 +361,20 @@ void BrowseHighscore::draw()
 
         const bool is_idx_marked = browser_y == i;
 
-        const Clr& clr =
+        const Color& color =
             is_idx_marked ?
-            clr_menu_highlight:
-            clr_menu_drk;
+            colors::menu_highlight():
+            colors::menu_dark();
 
-        io::draw_text(date, panel, P(x_date, y), clr);
-        io::draw_text(name, panel, P(x_name, y), clr);
-        io::draw_text(bg, panel, P(x_bg, y), clr);
-        io::draw_text(lvl, panel, P(x_lvl, y), clr);
-        io::draw_text(dlvl, panel, P(x_dlvl, y), clr);
-        io::draw_text(turns, panel, P(x_turns, y), clr);
-        io::draw_text(ins + "%", panel, P(x_ins, y), clr);
-        io::draw_text(win, panel, P(x_win, y), clr);
-        io::draw_text(score, panel, P(x_score, y), clr);
+        io::draw_text(date, panel, P(x_date, y), color);
+        io::draw_text(name, panel, P(x_name, y), color);
+        io::draw_text(bg, panel, P(x_bg, y), color);
+        io::draw_text(lvl, panel, P(x_lvl, y), color);
+        io::draw_text(dlvl, panel, P(x_dlvl, y), color);
+        io::draw_text(turns, panel, P(x_turns, y), color);
+        io::draw_text(ins + "%", panel, P(x_ins, y), color);
+        io::draw_text(win, panel, P(x_win, y), color);
+        io::draw_text(score, panel, P(x_score, y), color);
 
         ++y;
     }
@@ -385,7 +385,7 @@ void BrowseHighscore::draw()
         io::draw_text("(More - Page Up)",
                       Panel::screen,
                       P(0, top_more_y_),
-                      clr_white_lgt);
+                      colors::light_white());
     }
 
     if (!browser_.is_on_btm_page())
@@ -393,7 +393,7 @@ void BrowseHighscore::draw()
         io::draw_text("(More - Page Down)",
                       Panel::screen,
                       P(0, btm_more_y_),
-                      clr_white_lgt);
+                      colors::light_white());
     }
 }
 
@@ -497,7 +497,7 @@ void BrowseHighscoreEntry::draw()
         io::draw_text(lines_[i],
                       Panel::screen,
                       P(0, screen_y),
-                      clr_text);
+                      colors::text());
 
         ++screen_y;
     }
