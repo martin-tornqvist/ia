@@ -526,8 +526,6 @@ void read_actor_definitions_xml()
                  e != nullptr;
                  e = e->NextSiblingElement())
             {
-                TRACE << get_text_str(e) << std::endl;
-
                 const auto prop_id = str_to_prop_id_map.at(get_text_str(e));
 
                 d.natural_props[(size_t)prop_id] = true;
@@ -582,11 +580,11 @@ void read_actor_definitions_xml()
         d.nr_left_allowed_to_spawn = get_text_int(
             spawning_e->FirstChildElement("nr_left_allowed_to_spawn"));
 
-        const char* group_sizes_element_str = "group_sizes";
+        const char* group_size_element_str = "group_size";
 
-        for (auto e = spawning_e->FirstChildElement(group_sizes_element_str);
+        for (auto e = spawning_e->FirstChildElement(group_size_element_str);
              e;
-             e = e->NextSiblingElement(group_sizes_element_str))
+             e = e->NextSiblingElement(group_size_element_str))
         {
             const auto group_size = str_to_group_size_map.at(get_text_str(e));
 
