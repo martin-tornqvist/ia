@@ -78,21 +78,22 @@ std::vector< std::vector<P> > cells_reached(
 
 void draw(const std::vector< std::vector<P> >& pos_lists,
           bool blocked[map_w][map_h],
-          const Color clr_override)
+          const Color color_override)
 {
     states::draw();
 
-    const Color& clr_inner =
-        clr_override.is_defined() ?
-        colors::yellow() :
-        clr_override;
+    const Color& color_inner =
+        color_override.is_defined() ?
+        color_override :
+        colors::yellow();
 
-    const Color& clr_outer =
-        clr_override.is_defined() ?
-        colors::light_red() :
-        clr_override;
+    const Color& color_outer =
+        color_override.is_defined() ?
+        color_override :
+        colors::light_red();
 
-    const bool is_tiles     = config::is_tiles_mode();
+    const bool is_tiles = config::is_tiles_mode();
+
     const int nr_anim_steps = is_tiles ? 2 : 1;
 
     bool is_any_cell_seen_by_player = false;
@@ -109,7 +110,7 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
         {
             const Color& color =
                 (i_outer == nr_outer - 1) ?
-                clr_outer : clr_inner;
+                color_outer : color_inner;
 
             const std::vector<P>& inner = pos_lists[i_outer];
 
@@ -162,7 +163,7 @@ void run(const P& origin,
          const int radi_change,
          const ExplExclCenter exclude_center,
          std::vector<Prop*> properties_applied,
-         const Color clr_override,
+         const Color color_override,
          const ExplIsGas is_gas)
 {
     const int radi = expl_std_radi + radi_change;
@@ -194,11 +195,9 @@ void run(const P& origin,
         snd_emit::run(snd);
     }
 
-    draw(pos_lists, blocked, clr_override);
+    draw(pos_lists, blocked, color_override);
 
-    //
     // Do damage, apply effect
-    //
     Actor* living_actors[map_w][map_h];
 
     std::vector<Actor*> corpses[map_w][map_h];
@@ -259,7 +258,8 @@ void run(const P& origin,
                 {
                     if (living_actor->is_player())
                     {
-                        msg_log::add("I am hit by an explosion!", colors::msg_bad());
+                        msg_log::add("I am hit by an explosion!",
+                                     colors::msg_bad());
                     }
 
                     living_actor->hit(dmg, DmgType::physical);
@@ -301,8 +301,8 @@ void run(const P& origin,
 
                         if (living_actor == map::player)
                         {
-                            // Do not apply effect if wearing Gas Mask, and this is a
-                            // gas explosion
+                            // Do not apply effect if wearing Gas Mask, and this
+                            // is a gas explosion
                             const Item* const head_item =
                                 map::player->inv().item_in_slot(SlotId::head);
 
