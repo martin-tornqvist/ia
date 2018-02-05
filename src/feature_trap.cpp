@@ -1136,30 +1136,21 @@ void TrapSummonMon::trigger()
         TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
         const auto summoned =
-            actor_factory::spawn(pos_,
-                                  {1, id_to_summon},
-                                  MakeMonAware::yes,
-                                  nullptr);
+            actor_factory::spawn(pos_, {id_to_summon})
+            .make_aware_of_player()
+            .for_each([](Mon* const mon)
+            {
+                mon->apply_prop(new PropSummoned(PropTurns::indefinite));
+                mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
 
-        ASSERT(summoned.size() == 1);
+                if (map::player->can_see_actor(*mon))
+                {
+                    states::draw();
 
-        TRACE_VERBOSE << "Monster was summoned" << std::endl;
-
-        Mon* const mon = summoned[0];
-
-        mon->prop_handler().apply(new PropSummoned(PropTurns::std));
-
-        mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
-
-        if (map::player->can_see_actor(*mon))
-        {
-            mon->set_player_aware_of_me();
-
-            states::draw();
-
-            msg_log::add(text_format::first_to_upper(mon->name_a()) +
-                         " appears!");
-        }
+                    msg_log::add(text_format::first_to_upper(mon->name_a()) +
+                                 " appears!");
+                }
+            });
     }
 
     TRACE_FUNC_END;

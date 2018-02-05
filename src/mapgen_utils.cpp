@@ -974,7 +974,7 @@ void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
             weight_map[x][y] = 1;
 
             // Increase weight for dark cells
-            if (map::cells[x][y].is_dark)
+            if (map::dark[x][y])
             {
                 weight_map[x][y] += 10;
             }

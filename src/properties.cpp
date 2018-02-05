@@ -14,6 +14,9 @@
 #include "saving.hpp"
 #include "map_travel.hpp"
 #include "game_time.hpp"
+#include "knockback.hpp"
+#include "explosion.hpp"
+#include "sound.hpp"
 
 namespace prop_data
 {
@@ -26,8 +29,8 @@ namespace
 void add_prop_data(PropDataT& d)
 {
     data[(size_t)d.id] = d;
-    PropDataT blank;
-    d = blank;
+
+    d = PropDataT();
 }
 
 void init_data_list()
@@ -39,13 +42,11 @@ void init_data_list()
     d.name = "Physical Resistance";
     d.name_short = "rPhys";
     d.descr = "Cannot be harmed by plain physical force";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to physical harm.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to physical harm.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to physical harm.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to physical harm.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to physical harm.";
+    d.msg_start_mon = "is resistant to physical harm.";
+    d.msg_end_player = "I feel vulnerable to physical harm.";
+    d.msg_end_mon = "is vulnerable to physical harm.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -55,13 +56,11 @@ void init_data_list()
     d.name = "Fire resistance";
     d.name_short = "rFire";
     d.descr = "Cannot be harmed by fire";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fire.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to fire.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fire.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fire.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to fire.";
+    d.msg_start_mon = "is resistant to fire.";
+    d.msg_end_player = "I feel vulnerable to fire.";
+    d.msg_end_mon = "is vulnerable to fire.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -71,13 +70,11 @@ void init_data_list()
     d.name = "Poison resistance";
     d.name_short = "rPoison";
     d.descr = "Cannot be harmed by poison";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to poison.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to poison.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to poison.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to poison.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to poison.";
+    d.msg_start_mon = "is resistant to poison.";
+    d.msg_end_player = "I feel vulnerable to poison.";
+    d.msg_end_mon = "is vulnerable to poison.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -87,13 +84,11 @@ void init_data_list()
     d.name = "Electric resistance";
     d.name_short = "rElec";
     d.descr = "Cannot be harmed by electricity";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to electricity.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to electricity.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to electricity.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to electricity.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to electricity.";
+    d.msg_start_mon = "is resistant to electricity.";
+    d.msg_end_player = "I feel vulnerable to electricity.";
+    d.msg_end_mon = "is vulnerable to electricity.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -103,13 +98,11 @@ void init_data_list()
     d.name = "Acid resistance";
     d.name_short = "rAcid";
     d.descr = "Cannot be harmed by acid";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to acid.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to acid.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to acid.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to acid.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to acid.";
+    d.msg_start_mon = "is resistant to acid.";
+    d.msg_end_player = "I feel vulnerable to acid.";
+    d.msg_end_mon = "is vulnerable to acid.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -119,13 +112,11 @@ void init_data_list()
     d.name = "Sleep resistance";
     d.name_short = "rSleep";
     d.descr = "Cannot faint or become hypnotized";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to sleep.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to sleep.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to sleep.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to sleep.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to sleep.";
+    d.msg_start_mon = "is resistant to sleep.";
+    d.msg_end_player = "I feel vulnerable to sleep.";
+    d.msg_end_mon = "is vulnerable to sleep.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -135,13 +126,11 @@ void init_data_list()
     d.name = "Fear resistance";
     d.name_short = "rFear";
     d.descr = "Unaffected by fear";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to fear.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to fear.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to fear.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to fear.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to fear.";
+    d.msg_start_mon = "is resistant to fear.";
+    d.msg_end_player = "I feel vulnerable to fear.";
+    d.msg_end_mon = "is vulnerable to fear.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -151,13 +140,9 @@ void init_data_list()
     d.name = "Slow resistance";
     d.name_short = "rSlow";
     d.descr = "Cannot be magically slowed";
-    d.msg[(size_t)PropMsg::start_player] = "I feel steadfast.";
-    d.msg[(size_t)PropMsg::start_mon] = "";
-    d.msg[(size_t)PropMsg::end_player] = "I feel more susceptible to time.";
-    d.msg[(size_t)PropMsg::end_mon] = "";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel steadfast.";
+    d.msg_end_player = "I feel more susceptible to time.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -167,13 +152,11 @@ void init_data_list()
     d.name = "Confusion resistance";
     d.name_short = "rConf";
     d.descr = "Cannot become confused";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to confusion.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to confusion.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to confusion.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to confusion.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to confusion.";
+    d.msg_start_mon = "is resistant to confusion.";
+    d.msg_end_player = "I feel vulnerable to confusion.";
+    d.msg_end_mon = "is vulnerable to confusion.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -183,13 +166,11 @@ void init_data_list()
     d.name = "Disease resistance";
     d.name_short = "rDisease";
     d.descr = "Cannot become diseased";
-    d.msg[(size_t)PropMsg::start_player] = "I feel resistant to disease.";
-    d.msg[(size_t)PropMsg::start_mon] = "is resistant to disease.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to disease.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to disease.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel resistant to disease.";
+    d.msg_start_mon = "is resistant to disease.";
+    d.msg_end_player = "I feel vulnerable to disease.";
+    d.msg_end_mon = "is vulnerable to disease.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -198,13 +179,7 @@ void init_data_list()
     d.name = "Blindness resistance";
     d.name_short = "rBlind";
     d.descr = "Cannot be blinded";
-    d.msg[(size_t)PropMsg::start_player] = "";
-    d.msg[(size_t)PropMsg::start_mon] = "";
-    d.msg[(size_t)PropMsg::end_player] = "";
-    d.msg[(size_t)PropMsg::end_mon] = "";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -213,27 +188,17 @@ void init_data_list()
     d.name = "Paralysis resistance";
     d.name_short = "rPara";
     d.descr = "Cannot be paralyzed";
-    d.msg[(size_t)PropMsg::start_player] = "";
-    d.msg[(size_t)PropMsg::start_mon] = "";
-    d.msg[(size_t)PropMsg::end_player] = "";
-    d.msg[(size_t)PropMsg::end_mon] = "";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
     d.id = PropId::r_breath;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "";
-    d.name_short = "";
     d.descr = "Cannot be harmed by constricted breathing";
-    d.msg[(size_t)PropMsg::start_player] = "I can breath without harm.";
-    d.msg[(size_t)PropMsg::start_mon] = "can breath without harm.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I can breath without harm.";
+    d.msg_start_mon = "can breath without harm.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -242,13 +207,11 @@ void init_data_list()
     d.name = "Spell Resistance";
     d.name_short = "rSpell";
     d.descr = "Cannot be affected by harmful spells";
-    d.msg[(size_t)PropMsg::start_player] = "I defy harmful spells!";
-    d.msg[(size_t)PropMsg::start_mon] = "is defying harmful spells.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel vulnerable to spells.";
-    d.msg[(size_t)PropMsg::end_mon] = "is vulnerable to spells.";
-    d.is_making_mon_aware = false;
-    d.update_vision_when_start_or_end = false;
-    d.allow_test_on_bot = false; // NOTE: This prop is tested anyway
+    d.msg_start_player = "I defy harmful spells!";
+    d.msg_start_mon = "is defying harmful spells.";
+    d.msg_end_player = "I feel vulnerable to spells.";
+    d.msg_end_mon = "is vulnerable to spells.";
+    d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
@@ -257,16 +220,11 @@ void init_data_list()
     d.name = "Light sensitive";
     d.name_short = "lgtSensitive";
     d.descr = "Is vulnerable to light";
-    d.msg[(size_t)PropMsg::start_player] = "I feel vulnerable to light!";
-    d.msg[(size_t)PropMsg::start_mon] = "is vulnerable to light.";
-    d.msg[(size_t)PropMsg::end_player] =
-        "I no longer feel vulnerable to light.";
-    d.msg[(size_t)PropMsg::end_mon] = "no longer is vulnerable to light.";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel vulnerable to light!";
+    d.msg_start_mon = "is vulnerable to light.";
+    d.msg_end_player = "I no longer feel vulnerable to light.";
+    d.msg_end_mon = "no longer is vulnerable to light.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
@@ -275,12 +233,10 @@ void init_data_list()
     d.name = "Blind";
     d.name_short = "Blind";
     d.descr = "Cannot see, -20% hit chance, -50% chance to evade attacks";
-    d.msg[(size_t)PropMsg::start_player] = "I am blinded!";
-    d.msg[(size_t)PropMsg::start_mon] = "is blinded.";
-    d.msg[(size_t)PropMsg::end_player] = "I can see again!";
-    d.msg[(size_t)PropMsg::end_mon] = "can see again.";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
+    d.msg_start_player = "I am blinded!";
+    d.msg_start_mon = "is blinded.";
+    d.msg_end_player = "I can see again!";
+    d.msg_end_mon = "can see again.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_test_on_bot = true;
@@ -291,14 +247,8 @@ void init_data_list()
     d.std_rnd_turns = Range(200, 300);
     d.name = "Deaf";
     d.name_short = "Deaf";
-    d.descr = "";
-    d.msg[(size_t)PropMsg::start_player] = "I am deaf!";
-    d.msg[(size_t)PropMsg::start_mon] = "";
-    d.msg[(size_t)PropMsg::end_player] = "I can hear again.";
-    d.msg[(size_t)PropMsg::end_mon] = "";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I am deaf!";
+    d.msg_end_player = "I can hear again.";
     d.allow_display_turns = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
@@ -308,13 +258,12 @@ void init_data_list()
     d.std_rnd_turns = Range(100, 200);
     d.name = "Fainted";
     d.name_short = "Fainted";
-    d.descr = "";
-    d.msg[(size_t)PropMsg::start_player] = "I faint!";
-    d.msg[(size_t)PropMsg::start_mon] = "faints.";
-    d.msg[(size_t)PropMsg::end_player] = "I am awake.";
-    d.msg[(size_t)PropMsg::end_mon] = "wakes up.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist fainting.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists fainting.";
+    d.msg_start_player = "I faint!";
+    d.msg_start_mon = "faints.";
+    d.msg_end_player = "I am awake.";
+    d.msg_end_mon = "wakes up.";
+    d.msg_res_player = "I resist fainting.";
+    d.msg_res_mon = "resists fainting.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.allow_test_on_bot = true;
@@ -328,12 +277,12 @@ void init_data_list()
     d.descr =
         "Takes damage each turn, 50% chance to fail when attempting to read "
         "or cast spells";
-    d.msg[(size_t)PropMsg::start_player] = "I am Burning!";
-    d.msg[(size_t)PropMsg::start_mon] = "is burning.";
-    d.msg[(size_t)PropMsg::end_player] = "The flames are put out.";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer burning.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist burning.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists burning.";
+    d.msg_start_player = "I am Burning!";
+    d.msg_start_mon = "is burning.";
+    d.msg_end_player = "The flames are put out.";
+    d.msg_end_mon = "is no longer burning.";
+    d.msg_res_player = "I resist burning.";
+    d.msg_res_mon = "resists burning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
@@ -346,15 +295,14 @@ void init_data_list()
     d.name = "Poisoned";
     d.name_short = "Poisoned";
     d.descr = "Takes damage each turn";
-    d.msg[(size_t)PropMsg::start_player] = "I am poisoned!";
-    d.msg[(size_t)PropMsg::start_mon] = "is poisoned.";
-    d.msg[(size_t)PropMsg::end_player] = "My body is cleansed from poisoning!";
-    d.msg[(size_t)PropMsg::end_mon] = "is cleansed from poisoning.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist poisoning.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists poisoning.";
+    d.msg_start_player = "I am poisoned!";
+    d.msg_start_mon = "is poisoned.";
+    d.msg_end_player = "My body is cleansed from poisoning!";
+    d.msg_end_mon = "is cleansed from poisoning.";
+    d.msg_res_player = "I resist poisoning.";
+    d.msg_res_mon = "resists poisoning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -364,15 +312,14 @@ void init_data_list()
     d.name = "Paralyzed";
     d.name_short = "Paralyzed";
     d.descr = "Cannot move";
-    d.msg[(size_t)PropMsg::start_player] = "I am paralyzed!";
-    d.msg[(size_t)PropMsg::start_mon] = "is paralyzed.";
-    d.msg[(size_t)PropMsg::end_player] = "I can move again!";
-    d.msg[(size_t)PropMsg::end_mon] = "can move again.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist paralyzation.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists paralyzation.";
+    d.msg_start_player = "I am paralyzed!";
+    d.msg_start_mon = "is paralyzed.";
+    d.msg_end_player = "I can move again!";
+    d.msg_end_mon = "can move again.";
+    d.msg_res_player = "I resist paralyzation.";
+    d.msg_res_mon = "resists paralyzation.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -384,15 +331,14 @@ void init_data_list()
     d.descr =
         "Cannot perform melee attacks, -20% ranged hit chance, +20% chance to "
         "evade attacks";
-    d.msg[(size_t)PropMsg::start_player] = "I am terrified!";
-    d.msg[(size_t)PropMsg::start_mon] = "looks terrified.";
-    d.msg[(size_t)PropMsg::end_player] = "I am no longer terrified!";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer terrified.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist fear.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists fear.";
+    d.msg_start_player = "I am terrified!";
+    d.msg_start_mon = "looks terrified.";
+    d.msg_end_player = "I am no longer terrified!";
+    d.msg_end_mon = "is no longer terrified.";
+    d.msg_res_player = "I resist fear.";
+    d.msg_res_mon = "resists fear.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -404,15 +350,14 @@ void init_data_list()
     d.descr =
         "Occasionally moving in random directions, cannot read or cast spells, "
         "cannot search for hidden doors or traps";
-    d.msg[(size_t)PropMsg::start_player] = "I am confused!";
-    d.msg[(size_t)PropMsg::start_mon] = "looks confused.";
-    d.msg[(size_t)PropMsg::end_player] = "I come to my senses.";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer confused.";
-    d.msg[(size_t)PropMsg::res_player] = "I manage to keep my head together.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists confusion.";
+    d.msg_start_player = "I am confused!";
+    d.msg_start_mon = "looks confused.";
+    d.msg_end_player = "I come to my senses.";
+    d.msg_end_mon = "is no longer confused.";
+    d.msg_res_player = "I manage to keep my head together.";
+    d.msg_res_mon = "resists confusion.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -421,16 +366,14 @@ void init_data_list()
     d.std_rnd_turns = Range(5, 9);
     d.name = "Stunned";
     d.name_short = "Stunned";
-    d.descr = "";
-    d.msg[(size_t)PropMsg::start_player] = "I am stunned!";
-    d.msg[(size_t)PropMsg::start_mon] = "is stunned.";
-    d.msg[(size_t)PropMsg::end_player] = "I am no longer stunned.";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer stunned.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist stunning.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists stunning.";
+    d.msg_start_player = "I am stunned!";
+    d.msg_start_mon = "is stunned.";
+    d.msg_end_player = "I am no longer stunned.";
+    d.msg_end_mon = "is no longer stunned.";
+    d.msg_res_player = "I resist stunning.";
+    d.msg_res_mon = "resists stunning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -440,17 +383,14 @@ void init_data_list()
     d.name = "Slowed";
     d.name_short = "Slowed";
     d.descr = "-50% speed";
-    d.msg[(size_t)PropMsg::start_player] =
-        "Everything around me seems to speed up.";
-    d.msg[(size_t)PropMsg::start_mon] = "slows down.";
-    d.msg[(size_t)PropMsg::end_player] =
-        "Everything around me seems to slow down.";
-    d.msg[(size_t)PropMsg::end_mon] = "speeds up.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist slowness.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists slowness.";
+    d.msg_start_player = "Everything around me seems to speed up.";
+    d.msg_start_mon = "slows down.";
+    d.msg_end_player = "Everything around me seems to slow down.";
+    d.msg_end_mon = "speeds up.";
+    d.msg_res_player = "I resist slowness.";
+    d.msg_res_mon = "resists slowness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -460,15 +400,12 @@ void init_data_list()
     d.name = "Hasted";
     d.name_short = "Hasted";
     d.descr = "+100% speed";
-    d.msg[(size_t)PropMsg::start_player] =
-        "Everything around me seems to slow down.";
-    d.msg[(size_t)PropMsg::start_mon] = "speeds up.";
-    d.msg[(size_t)PropMsg::end_player] =
-        "Everything around me seems to speed up.";
-    d.msg[(size_t)PropMsg::end_mon] = "slows down.";
+    d.msg_start_player = "Everything around me seems to slow down.";
+    d.msg_start_mon = "speeds up.";
+    d.msg_end_player = "Everything around me seems to speed up.";
+    d.msg_end_mon = "slows down.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -478,17 +415,15 @@ void init_data_list()
     d.name = "Extra hasted";
     d.name_short = "Hasted+";
     d.descr = "+300% speed";
-    d.msg[(size_t)PropMsg::start_player] =
-        "Everything around me suddenly seems very still.";
+    d.msg_start_player = "Everything around me suddenly seems very still.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
     d.id = PropId::summoned;
     d.std_rnd_turns = Range(40, 80);
-    d.msg[(size_t)PropMsg::end_mon] = "suddenly disappears.";
+    d.msg_end_mon = "suddenly disappears.";
     d.name = "Summoned";
     d.descr = "Was magically summoned here";
     d.alignment = PropAlignment::neutral;
@@ -496,7 +431,7 @@ void init_data_list()
 
     d.id = PropId::flared;
     d.std_rnd_turns = Range(3, 4);
-    d.msg[(size_t)PropMsg::start_mon] = "is perforated by a flare!";
+    d.msg_start_mon = "is perforated by a flare!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
     d.update_vision_when_start_or_end = true;
@@ -506,13 +441,12 @@ void init_data_list()
     d.id = PropId::nailed;
     d.name = "Nailed";
     d.descr = "Fastened by a spike - tearing it out will be rather painful";
-    d.msg[(size_t)PropMsg::start_player] = "I am fastened by a spike!";
-    d.msg[(size_t)PropMsg::start_mon] = "is fastened by a spike.";
-    d.msg[(size_t)PropMsg::end_player] = "I tear free!";
-    d.msg[(size_t)PropMsg::end_mon] = "tears free!";
+    d.msg_start_player = "I am fastened by a spike!";
+    d.msg_start_mon = "is fastened by a spike.";
+    d.msg_end_player = "I tear free!";
+    d.msg_end_mon = "tears free!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
@@ -522,11 +456,9 @@ void init_data_list()
         "For each wound: -5% melee hit chance, -5% chance to evade attacks, "
         "-10% Hit Points, and reduced Hit Point generation rate - also, "
         "walking takes extra turns if more than two wounds are received";
-    d.msg[(size_t)PropMsg::start_player] = "I am wounded!";
-    d.msg[(size_t)PropMsg::res_player] = "I resist wounding!";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I am wounded!";
+    d.msg_res_player = "I resist wounding!";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -534,15 +466,13 @@ void init_data_list()
     d.id = PropId::hp_sap;
     d.name = "Life Sapped";
     d.descr = "Fewer Hit Points";
-    d.msg[(size_t)PropMsg::start_player] = "My life force is sapped!";
-    d.msg[(size_t)PropMsg::start_mon] = "is sapped of life.";
-    d.msg[(size_t)PropMsg::end_player] = "My life force returns.";
-    d.msg[(size_t)PropMsg::end_mon] = "looks restored.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists sapping.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "My life force is sapped!";
+    d.msg_start_mon = "is sapped of life.";
+    d.msg_end_player = "My life force returns.";
+    d.msg_end_mon = "looks restored.";
+    d.msg_res_player = "I resist sapping.";
+    d.msg_res_mon = "resists sapping.";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -550,15 +480,13 @@ void init_data_list()
     d.id = PropId::spi_sap;
     d.name = "Spirit Sapped";
     d.descr = "Fewer Spirit Points";
-    d.msg[(size_t)PropMsg::start_player] = "My spirit is sapped!";
-    d.msg[(size_t)PropMsg::start_mon] = "is sapped of spirit.";
-    d.msg[(size_t)PropMsg::end_player] = "My spirit returns.";
-    d.msg[(size_t)PropMsg::end_mon] = "looks restored.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists sapping.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "My spirit is sapped!";
+    d.msg_start_mon = "is sapped of spirit.";
+    d.msg_end_player = "My spirit returns.";
+    d.msg_end_mon = "looks restored.";
+    d.msg_res_player = "I resist sapping.";
+    d.msg_res_mon = "resists sapping.";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -566,12 +494,10 @@ void init_data_list()
     d.id = PropId::mind_sap;
     d.name = "Mind Sapped";
     d.descr = "Increased Shock";
-    d.msg[(size_t)PropMsg::start_player] = "My mind is sapped!";
-    d.msg[(size_t)PropMsg::end_player] = "My mind returns.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist sapping.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "My mind is sapped!";
+    d.msg_end_player = "My mind returns.";
+    d.msg_res_player = "I resist sapping.";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -581,15 +507,12 @@ void init_data_list()
     d.name = "Infected";
     d.name_short = "Infected";
     d.descr = "A nasty infection, this should be treated immediately";
-    d.msg[(size_t)PropMsg::start_player] = "I am infected!";
-    d.msg[(size_t)PropMsg::start_mon] = "is infected.";
-    d.msg[(size_t)PropMsg::end_player] = "My infection is cured!";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer infected.";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
+    d.msg_start_player = "I am infected!";
+    d.msg_start_mon = "is infected.";
+    d.msg_end_player = "My infection is cured!";
+    d.msg_end_mon = "is no longer infected.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -599,15 +522,14 @@ void init_data_list()
     d.name = "Diseased";
     d.name_short = "Diseased";
     d.descr = "Affected by a horrible disease, -50% Hit Points";
-    d.msg[(size_t)PropMsg::start_player] = "I am diseased!";
-    d.msg[(size_t)PropMsg::start_mon] = "is diseased.";
-    d.msg[(size_t)PropMsg::end_player] = "My disease is cured!";
-    d.msg[(size_t)PropMsg::end_mon] = "is no longer diseased.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist disease.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists disease.";
+    d.msg_start_player = "I am diseased!";
+    d.msg_start_mon = "is diseased.";
+    d.msg_end_player = "My disease is cured!";
+    d.msg_end_mon = "is no longer diseased.";
+    d.msg_res_player = "I resist disease.";
+    d.msg_res_mon = "resists disease.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -617,12 +539,8 @@ void init_data_list()
     d.name = "Descending";
     d.name_short = "Descend";
     d.descr = "Soon moved to a deeper level";
-    d.msg[(size_t)PropMsg::start_player] = "I feel a sinking sensation.";
-    d.msg[(size_t)PropMsg::end_player] = "";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel a sinking sensation.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -634,15 +552,14 @@ void init_data_list()
     d.descr =
         "Halved melee damage, cannot bash doors or chests open, knock "
         "heavy objects over, etc";
-    d.msg[(size_t)PropMsg::start_player] = "I feel weaker.";
-    d.msg[(size_t)PropMsg::start_mon] = "looks weaker.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel stronger!";
-    d.msg[(size_t)PropMsg::end_mon] = "looks stronger!";
-    d.msg[(size_t)PropMsg::res_player] = "I resist weakness.";
-    d.msg[(size_t)PropMsg::res_mon] = "resists weakness.";
+    d.msg_start_player = "I feel weaker.";
+    d.msg_start_mon = "looks weaker.";
+    d.msg_end_player = "I feel stronger!";
+    d.msg_end_mon = "looks stronger!";
+    d.msg_res_player = "I resist weakness.";
+    d.msg_res_mon = "resists weakness.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -656,15 +573,11 @@ void init_data_list()
         "+10% melee hit chance, immune to confusion, fainting, fear, and "
         "weakening, cannot read or cast spells, becomes weakened when the "
         "frenzy ends";
-    d.msg[(size_t)PropMsg::start_player] = "I feel ferocious!!!";
-    d.msg[(size_t)PropMsg::start_mon] = "Looks ferocious!";
-    d.msg[(size_t)PropMsg::end_player] = "I calm down.";
-    d.msg[(size_t)PropMsg::end_mon] = "Calms down a little.";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel ferocious!!!";
+    d.msg_start_mon = "Looks ferocious!";
+    d.msg_end_player = "I calm down.";
+    d.msg_end_mon = "Calms down a little.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -676,11 +589,9 @@ void init_data_list()
     d.descr =
         "Is generally more lucky, most actions are easier to perform, "
         "-2% shock from casting spells";
-    d.msg[(size_t)PropMsg::start_player] = "I feel luckier.";
-    d.msg[(size_t)PropMsg::end_player] = "I have normal luck.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel luckier.";
+    d.msg_end_player = "I have normal luck.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -692,12 +603,10 @@ void init_data_list()
     d.descr =
         "Is generally more unlucky, and most actions are more difficult to "
         "perform, +2% shock from casting spells";
-    d.msg[(size_t)PropMsg::start_player] = "I feel misfortunate.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel more fortunate.";
-    d.msg[(size_t)PropMsg::res_player] = "I resist misfortune.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I feel misfortunate.";
+    d.msg_end_player = "I feel more fortunate.";
+    d.msg_res_player = "I resist misfortune.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -707,9 +616,8 @@ void init_data_list()
     d.name = "Radiant";
     d.name_short = "Radiant";
     d.descr = "Emanating a bright light";
-    d.msg[(size_t)PropMsg::start_player] = "A bright light shines around me.";
-    d.msg[(size_t)PropMsg::end_player] = "It suddenly gets darker.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "A bright light shines around me.";
+    d.msg_end_player = "It suddenly gets darker.";
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
@@ -721,11 +629,10 @@ void init_data_list()
     d.name = "Invisible";
     d.name_short = "Invis";
     d.descr = "Cannot be detected by normal sight";
-    d.msg[(size_t)PropMsg::start_player] = "I am out of sight!";
-    d.msg[(size_t)PropMsg::start_mon] = "is out of sight!";
-    d.msg[(size_t)PropMsg::end_player] = "I am visible.";
-    d.msg[(size_t)PropMsg::end_mon] = "is visible.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I am out of sight!";
+    d.msg_start_mon = "is out of sight!";
+    d.msg_end_player = "I am visible.";
+    d.msg_end_mon = "is visible.";
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
@@ -739,15 +646,17 @@ void init_data_list()
     d.descr =
         "Cannot be detected by normal sight, ends if attacking or casting "
         "spells";
-    d.msg[(size_t)PropMsg::start_player] = "I am out of sight!";
-    d.msg[(size_t)PropMsg::start_mon] = "is out of sight!";
-    d.msg[(size_t)PropMsg::end_player] = "I am visible.";
-    d.msg[(size_t)PropMsg::end_mon] = "is visible.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "I am out of sight!";
+    d.msg_start_mon = "is out of sight!";
+    d.msg_end_player = "I am visible.";
+    d.msg_end_mon = "is visible.";
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
+    add_prop_data(d);
+
+    d.id = PropId::recloaks;
     add_prop_data(d);
 
     d.id = PropId::see_invis;
@@ -755,12 +664,10 @@ void init_data_list()
     d.name = "See Invisible";
     d.name_short = "SeeInvis";
     d.descr = "Can see invisible creatures, cannot be blinded";
-    d.msg[(size_t)PropMsg::start_player] = "My eyes perceive the invisible.";
-    d.msg[(size_t)PropMsg::start_mon] = "seems very keen.";
-    d.msg[(size_t)PropMsg::end_player] =
-        "My eyes can no longer perceive the invisible.";
-    d.msg[(size_t)PropMsg::end_mon] = "seems less keen.";
-    d.is_making_mon_aware = false;
+    d.msg_start_player = "My eyes perceive the invisible.";
+    d.msg_start_mon = "seems very keen.";
+    d.msg_end_player = "My eyes can no longer perceive the invisible.";
+    d.msg_end_mon = "seems less keen.";
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
@@ -769,14 +676,6 @@ void init_data_list()
 
     d.id = PropId::darkvision;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "";
-    d.name_short = "";
-    d.descr = "";
-    d.msg[(size_t)PropMsg::start_player] = "";
-    d.msg[(size_t)PropMsg::end_player] = "";
-    d.msg[(size_t)PropMsg::res_player] = "";
-    d.msg[(size_t)PropMsg::res_mon] = "";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = true;
     d.update_vision_when_start_or_end = true;
     d.allow_test_on_bot = true;
@@ -788,23 +687,16 @@ void init_data_list()
     d.name = "Teleport Control";
     d.name_short = "TeleCtrl";
     d.descr = "Can control teleport destination";
-    d.msg[(size_t)PropMsg::start_player] = "I feel in control.";
-    d.msg[(size_t)PropMsg::end_player] = "I feel less in control.";
+    d.msg_start_player = "I feel in control.";
+    d.msg_end_player = "I feel less in control.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
 
     d.id = PropId::spell_reflect;
     d.std_rnd_turns = Range(50, 100);
-    d.name = "";
-    d.name_short = "";
-    d.descr = "";
-    d.msg[(size_t)PropMsg::start_player] = "";
-    d.msg[(size_t)PropMsg::end_player] = "";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -815,19 +707,7 @@ void init_data_list()
     d.name_short = "Aiming";
     d.descr = "Increased range attack effectiveness";
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::good;
-    add_prop_data(d);
-
-    d.id = PropId::strangled;
-    d.std_rnd_turns = Range(1, 1);
-    d.name = "Strangled";
-    d.name_short = "Strangled";
-    d.descr = "";
-    d.is_making_mon_aware = true;
-    d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
-    d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
     d.id = PropId::conflict;
@@ -835,29 +715,57 @@ void init_data_list()
     d.name_short = "Conflict";
     d.descr = "Considers every creature as an enemy";
     d.std_rnd_turns = Range(10, 20);
-    d.msg[(size_t)PropMsg::start_mon] = "Looks conflicted.";
-    d.msg[(size_t)PropMsg::end_mon] = "Looks more determined.";
+    d.msg_start_mon = "Looks conflicted.";
+    d.msg_end_mon = "Looks more determined.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
+    d.id = PropId::vortex;
+    add_prop_data(d);
+
+    d.id = PropId::explodes_on_death;
+    add_prop_data(d);
+
+    d.id = PropId::splits_on_death;
+    add_prop_data(d);
+
+    d.id = PropId::corpse_eater;
+    add_prop_data(d);
+
+    d.id = PropId::teleports;
+    add_prop_data(d);
+
+    d.id = PropId::corrupts_env_color;
+    add_prop_data(d);
+
+    d.id = PropId::regenerates;
+    add_prop_data(d);
+
+    d.id = PropId::corpse_rises;
+    add_prop_data(d);
+
+    d.id = PropId::breeds;
+    add_prop_data(d);
+
+    d.id = PropId::confuses_adjacent;
+    add_prop_data(d);
+
+    d.id = PropId::speaks_curses;
+    add_prop_data(d);
+
     d.id = PropId::poss_by_zuul;
-    d.is_making_mon_aware = false;
-    d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
-    d.allow_test_on_bot = true;
-    d.alignment = PropAlignment::neutral;
+    add_prop_data(d);
+
+    d.id = PropId::major_clapham_summon;
     add_prop_data(d);
 
     d.id = PropId::flying;
     d.name_short = "Flying";
     d.name = "Flying";
     d.descr = "Can fly over low obstacles";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -867,9 +775,7 @@ void init_data_list()
     d.name = "Ethereal";
     d.descr =
         "Can pass through solid objects, and is harder to hit with all attacks";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -880,9 +786,7 @@ void init_data_list()
     d.descr =
         "Can move through narrow cracks and crevices such as piles of rubble, "
         "or beneath doors";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -891,42 +795,32 @@ void init_data_list()
     d.name_short = "Burrow";
     d.name = "Burrowing";
     d.descr = "Can move through and destroy walls";
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.allow_test_on_bot = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
 
     d.id = PropId::waiting;
     d.std_rnd_turns = Range(1, 1);
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
 
     d.id = PropId::disabled_attack;
     d.std_rnd_turns = Range(1, 1);
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
 
     d.id = PropId::disabled_melee;
     d.std_rnd_turns = Range(1, 1);
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
 
     d.id = PropId::disabled_ranged;
     d.std_rnd_turns = Range(1, 1);
-    d.is_making_mon_aware = false;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = false;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
 }
@@ -943,8 +837,8 @@ void init()
 // -----------------------------------------------------------------------------
 // Property handler
 // -----------------------------------------------------------------------------
-PropHandler::PropHandler(Actor* owning_actor) :
-    owning_actor_(owning_actor)
+PropHandler::PropHandler(Actor* owner) :
+    owner_(owner)
 {
     // Reset the active props info
     std::fill(std::begin(active_props_info_),
@@ -954,7 +848,7 @@ PropHandler::PropHandler(Actor* owning_actor) :
 
 void PropHandler::init_natural_props()
 {
-    const ActorDataT& d = owning_actor_->data();
+    const ActorDataT& d = owner_->data();
 
     // Add natural properties
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
@@ -1002,7 +896,7 @@ void PropHandler::save() const
 {
     // Save intrinsic properties to file
 
-    ASSERT(owning_actor_);
+    ASSERT(owner_);
 
     int nr_intr_props_ = 0;
 
@@ -1020,7 +914,7 @@ void PropHandler::save() const
     {
         if (prop->src_ == PropSrc::intr)
         {
-            saving::put_int(int(prop->id()));
+            saving::put_int((int)prop->id());
             saving::put_int(prop->nr_turns_left_);
 
             prop->save();
@@ -1032,7 +926,7 @@ void PropHandler::load()
 {
     // Load intrinsic properties from file
 
-    ASSERT(owning_actor_);
+    ASSERT(owner_);
 
     const int nr_props = saving::get_int();
 
@@ -1051,7 +945,7 @@ void PropHandler::load()
                                    turns_init,
                                    nr_turns);
 
-        prop->owning_actor_ = owning_actor_;
+        prop->owner_ = owner_;
 
         prop->src_ = PropSrc::intr;
 
@@ -1201,6 +1095,9 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::poss_by_zuul:
         return new PropPossByZuul(turns_init, nr_turns);
 
+    case PropId::major_clapham_summon:
+        return new PropMajorClaphamSummon(turns_init, nr_turns);
+
     case PropId::flying:
         return new PropFlying(turns_init, nr_turns);
 
@@ -1234,17 +1131,50 @@ Prop* PropHandler::mk_prop(const PropId id,
     case PropId::spell_reflect:
         return new PropSpellReflect(turns_init, nr_turns);
 
-    case PropId::strangled:
-        return new PropStrangled(turns_init, nr_turns);
-
     case PropId::conflict:
         return new PropConflict(turns_init, nr_turns);
+
+    case PropId::vortex:
+        return new PropVortex(turns_init, nr_turns);
+
+    case PropId::explodes_on_death:
+        return new PropExplodesOnDeath(turns_init, nr_turns);
+
+    case PropId::splits_on_death:
+        return new PropSplitsOnDeath(turns_init, nr_turns);
+
+    case PropId::corpse_eater:
+        return new PropCorpseEater(turns_init, nr_turns);
+
+    case PropId::teleports:
+        return new PropTeleports(turns_init, nr_turns);
+
+    case PropId::corrupts_env_color:
+        return new PropCorruptsEnvColor(turns_init, nr_turns);
+
+    case PropId::regenerates:
+        return new PropRegenerates(turns_init, nr_turns);
+
+    case PropId::corpse_rises:
+        return new PropCorpseRises(turns_init, nr_turns);
+
+    case PropId::breeds:
+        return new PropBreeds(turns_init, nr_turns);
+
+    case PropId::confuses_adjacent:
+        return new PropConfusesAdjacent(turns_init, nr_turns);
+
+    case PropId::speaks_curses:
+        return new PropSpeaksCurses(turns_init, nr_turns);
 
     case PropId::invis:
         return new PropInvisible(turns_init, nr_turns);
 
     case PropId::cloaked:
         return new PropCloaked(turns_init, nr_turns);
+
+    case PropId::recloaks:
+        return new PropRecloaks(turns_init, nr_turns);
 
     case PropId::see_invis:
         return new PropSeeInvis(turns_init, nr_turns);
@@ -1272,13 +1202,13 @@ void PropHandler::apply(Prop* const prop,
 {
     ASSERT(prop);
 
-    prop->owning_actor_ = owning_actor_;
+    prop->owner_ = owner_;
 
     prop->src_ = src;
 
-    const bool is_player = owning_actor_->is_player();
+    const bool is_player = owner_->is_player();
 
-    const bool player_see_owner = map::player->can_see_actor(*owning_actor_);
+    const bool player_see_owner = map::player->can_see_actor(*owner_);
 
     // Check if property is resisted
     if (!force_effect)
@@ -1287,13 +1217,11 @@ void PropHandler::apply(Prop* const prop,
         {
             // Resist message
             if (verbosity == Verbosity::verbose &&
-                owning_actor_->is_alive())
+                owner_->is_alive())
             {
                 if (is_player)
                 {
-                    std::string msg = "";
-
-                    prop->msg(PropMsg::res_player, msg);
+                    const auto msg = prop->data_.msg_res_player;
 
                     if (!msg.empty())
                     {
@@ -1306,14 +1234,13 @@ void PropHandler::apply(Prop* const prop,
                 {
                     if (player_see_owner)
                     {
-                        std::string msg = "";
-                        prop->msg(PropMsg::res_mon, msg);
+                        const auto msg = prop->data_.msg_res_mon;
 
                         if (!msg.empty())
                         {
                             const std::string monster_name =
                                 text_format::first_to_upper(
-                                    owning_actor_->name_the());
+                                    owner_->name_the());
 
                             msg_log::add(monster_name + " " + msg);
                         }
@@ -1346,7 +1273,7 @@ void PropHandler::apply(Prop* const prop,
 
                 // Start message
                 // if (verbosity == Verbosity::verbose &&
-                //     owning_actor_->is_alive())
+                //     owner_->is_alive())
                 // {
                 //     if (is_player)
                 //     {
@@ -1368,7 +1295,7 @@ void PropHandler::apply(Prop* const prop,
                 //             if (!msg.empty())
                 //             {
                 //                 msg_log::add(
-                //                     owning_actor_->name_the() + " " + msg);
+                //                     owner_->name_the() + " " + msg);
                 //             }
                 //         }
                 //     }
@@ -1405,7 +1332,7 @@ void PropHandler::apply(Prop* const prop,
     prop->on_start();
 
     if (verbosity == Verbosity::verbose &&
-        owning_actor_->is_alive())
+        owner_->is_alive())
     {
         if (prop->need_update_vision_when_start_or_end())
         {
@@ -1415,9 +1342,7 @@ void PropHandler::apply(Prop* const prop,
         // Start message
         if (is_player)
         {
-            std::string msg = "";
-
-            prop->msg(PropMsg::start_player, msg);
+            const auto msg = prop->data_.msg_start_player;
 
             if (!msg.empty())
             {
@@ -1433,14 +1358,13 @@ void PropHandler::apply(Prop* const prop,
         {
             if (player_see_owner)
             {
-                std::string msg = "";
-                prop->msg(PropMsg::start_mon, msg);
+                const auto msg = prop->data_.msg_start_mon;
 
                 if (!msg.empty())
                 {
                     const std::string actor_name_the =
                         text_format::first_to_upper(
-                            owning_actor_->name_the());
+                            owner_->name_the());
 
                     msg_log::add(actor_name_the + " " + msg);
                 }
@@ -1588,14 +1512,12 @@ void PropHandler::on_prop_end(Prop* const prop)
     }
 
     // Print end message if this is the last active property of this type
-    if ((owning_actor_->state() == ActorState::alive) &&
+    if ((owner_->state() == ActorState::alive) &&
         active_props_info_[(size_t)prop->id_] == 0)
     {
-        if (owning_actor_->is_player())
+        if (owner_->is_player())
         {
-            std::string msg = "";
-
-            prop->msg(PropMsg::end_player, msg);
+            const auto msg = prop->msg_end_player();
 
             if (!msg.empty())
             {
@@ -1604,17 +1526,15 @@ void PropHandler::on_prop_end(Prop* const prop)
         }
         else // Not player
         {
-            if (map::player->can_see_actor(*owning_actor_))
+            if (map::player->can_see_actor(*owner_))
             {
-                std::string msg = "";
-
-                prop->msg(PropMsg::end_mon, msg);
+                const auto msg = prop->data_.msg_end_mon;
 
                 if (!msg.empty())
                 {
                     const std::string actor_name_the =
                         text_format::first_to_upper(
-                            owning_actor_->name_the());
+                            owner_->name_the());
 
                     msg_log::add(actor_name_the + " " + msg);
                 }
@@ -1666,19 +1586,24 @@ void PropHandler::on_turn_begin()
             --prop->nr_turns_left_;
         }
 
+        // TODO: This crashes...
+        // * Property id was 'waiting'
+
         // Aggravates monster?
-        if (!owning_actor_->is_player() &&
+        if (!owner_->is_player() &&
             prop->is_making_mon_aware())
         {
-            auto* mon = static_cast<Mon*>(owning_actor_);
+            auto* mon = static_cast<Mon*>(owner_);
 
             mon->become_aware_player(false);
         }
 
-        // NOTE: The property may return a nullptr here, if it removed itself
-        prop = prop->on_tick();
+        const auto prop_ended = prop->on_tick();
 
-        if (prop)
+        // NOTE: The property may have removed itself at this point, if so it
+        // signals this by returning 'PropEnded::yes'
+
+        if (prop_ended == PropEnded::no)
         {
             // Property has not been removed
             ++i;
@@ -1709,14 +1634,47 @@ void PropHandler::on_turn_end()
     }
 }
 
+void PropHandler::on_std_turn()
+{
+    for (auto* const prop: props_)
+    {
+        prop->on_std_turn();
+    }
+}
+
+DidAction PropHandler::on_act()
+{
+    for (size_t i = 0; i < props_.size(); /* No increment */)
+    {
+        Prop* prop = props_[i];
+
+        const auto result = prop->on_act();
+
+        // NOTE: The property may have removed itself at this point, if so it
+        // signals this by setting 'is_prop_ended' to true
+
+        if (result.prop_ended == PropEnded::no)
+        {
+            // Property has not been removed
+            ++i;
+        }
+
+        if (result.did_action == DidAction::yes)
+        {
+            return DidAction::yes;
+        }
+    }
+
+    return DidAction::no;
+}
+
 bool PropHandler::is_temporary_negative_prop_mon(const Prop& prop)
 {
-    ASSERT(owning_actor_ != map::player);
+    ASSERT(owner_ != map::player);
 
     const auto id = prop.id();
 
-    const bool is_natural_prop =
-        owning_actor_->data().natural_props[(size_t)id];
+    const bool is_natural_prop = owner_->data().natural_props[(size_t)id];
 
     return
         !is_natural_prop &&
@@ -1726,9 +1684,9 @@ bool PropHandler::is_temporary_negative_prop_mon(const Prop& prop)
 
 std::vector<PropListEntry> PropHandler::temporary_negative_prop_list()
 {
-    ASSERT(owning_actor_ != map::player);
+    ASSERT(owner_ != map::player);
 
-    auto prop_list = owning_actor_->prop_handler().props_list();
+    auto prop_list = owner_->prop_handler().props_list();
 
     // Remove all non-negative properties (we should not show temporary spell
     // resistance for example), and all natural properties (properties which all
@@ -1752,7 +1710,7 @@ std::vector<PropListEntry> PropHandler::temporary_negative_prop_list()
 
 bool PropHandler::has_temporary_negative_prop_mon()
 {
-    ASSERT(owning_actor_ != map::player);
+    ASSERT(owner_ != map::player);
 
     for (const auto* const prop: props_)
     {
@@ -1792,7 +1750,7 @@ std::vector<ColoredString> PropHandler::props_line() const
         {
             // Player can see number of turns left on own properties with
             // Self-aware?
-            if (owning_actor_->is_player() &&
+            if (owner_->is_player() &&
                 player_bon::traits[(size_t)Trait::self_aware] &&
                 prop->allow_display_turns())
             {
@@ -1858,7 +1816,7 @@ std::vector<PropListEntry> PropHandler::props_list() const
             {
                 // Player can see number of turns left on own properties with
                 // Self-aware?
-                if (owning_actor_->is_player() &&
+                if (owner_->is_player() &&
                     player_bon::traits[(size_t)Trait::self_aware] &&
                     prop->allow_display_turns())
                 {
@@ -1942,16 +1900,15 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
     if (res_data.is_resisted &&
         (verbosity == Verbosity::verbose))
     {
-        if (owning_actor_->is_player())
+        if (owner_->is_player())
         {
-            msg_log::add(res_data.resist_msg_player);
+            msg_log::add(res_data.msg_resist_player);
         }
         else // Is monster
         {
             // Print message if attacker is player, and player is aware of
             // the monster
-            const auto* const mon =
-                static_cast<const Mon*>(owning_actor_);
+            const auto* const mon = static_cast<const Mon*>(owner_);
 
             const bool is_player_aware_of_mon =
                 mon->player_aware_of_me_counter_ > 0;
@@ -1960,14 +1917,14 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
                 is_player_aware_of_mon)
             {
                 const bool can_player_see_mon =
-                    map::player->can_see_actor(*owning_actor_);
+                    map::player->can_see_actor(*owner_);
 
                 const std::string mon_name =
                     can_player_see_mon ?
-                    text_format::first_to_upper(owning_actor_->name_the()) :
+                    text_format::first_to_upper(owner_->name_the()) :
                     "It";
 
-                msg_log::add(mon_name + " " + res_data.resist_msg_mon);
+                msg_log::add(mon_name + " " + res_data.msg_resist_mon);
             }
         }
     }
@@ -2186,13 +2143,13 @@ void PropHandler::on_hit()
     }
 }
 
-void PropHandler::on_death(const bool is_player_see_owning_actor)
+void PropHandler::on_death()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
     for (Prop* prop : props_)
     {
-        prop->on_death(is_player_see_owning_actor);
+        prop->on_death();
     }
 
     TRACE_FUNC_END_VERBOSE;
@@ -2238,13 +2195,13 @@ bool PropHandler::affect_actor_color(Color& color) const
 // Properties
 // -----------------------------------------------------------------------------
 Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
-    id_                 (id),
-    data_               (prop_data::data[(size_t)id]),
-    nr_turns_left_      (nr_turns),
-    turns_init_type_    (turns_init),
-    owning_actor_       (nullptr),
-    src_                (PropSrc::END),
-    item_applying_      (nullptr)
+    id_(id),
+    data_(prop_data::data[(size_t)id]),
+    nr_turns_left_(nr_turns),
+    turns_init_type_(turns_init),
+    owner_(nullptr),
+    src_(PropSrc::END),
+    item_applying_(nullptr)
 {
     switch (turns_init)
     {
@@ -2283,7 +2240,7 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
 
 void PropBlessed::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::cursed, false);
+    owner_->prop_handler().end_prop(PropId::cursed, false);
 
     bless_adjacent();
 }
@@ -2298,7 +2255,7 @@ void PropBlessed::on_more(const Prop& new_prop)
 void PropBlessed::bless_adjacent() const
 {
     // "Bless" adjacent fountains
-    const P& p = owning_actor_->pos;
+    const P& p = owner_->pos;
 
     for (const P& d : dir_utils::dir_list_w_center)
     {
@@ -2334,12 +2291,12 @@ void PropBlessed::bless_adjacent() const
 
 void PropCursed::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::blessed, false);
+    owner_->prop_handler().end_prop(PropId::blessed, false);
 
     curse_adjacent();
 
     // If this is a permanent curse, log it as a historic event
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
         game::add_history_event("A terrible curse was put upon me.");
@@ -2356,7 +2313,7 @@ void PropCursed::on_more(const Prop& new_prop)
 void PropCursed::on_end()
 {
     // If this was a permanent curse, log it as a historic event
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
         game::add_history_event("A terrible curse was lifted from me.");
@@ -2366,7 +2323,7 @@ void PropCursed::on_end()
 void PropCursed::curse_adjacent() const
 {
     // "Curse" adjacent fountains
-    const P& p = owning_actor_->pos;
+    const P& p = owner_->pos;
 
     for (const P& d : dir_utils::dir_list_w_center)
     {
@@ -2405,23 +2362,23 @@ void PropCursed::curse_adjacent() const
 
 void PropSlowed::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::hasted, false);
+    owner_->prop_handler().end_prop(PropId::hasted, false);
 }
 
 void PropHasted::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::slowed, false);
+    owner_->prop_handler().end_prop(PropId::slowed, false);
 }
 
 void PropSummoned::on_end()
 {
-    owning_actor_->destroy_silent();
+    owner_->set_state(ActorState::destroyed);
 }
 
-Prop* PropInfected::on_tick()
+PropEnded PropInfected::on_tick()
 {
 #ifndef NDEBUG
-    ASSERT(!owning_actor_->prop_handler().has_prop(PropId::diseased));
+    ASSERT(!owner_->prop_handler().has_prop(PropId::diseased));
 #endif // NDEBUG
 
     // Don't trigger the effect if the player is currently treating the infction
@@ -2429,7 +2386,7 @@ Prop* PropInfected::on_tick()
     {
         ++nr_turns_left_;
 
-        return this;
+        return PropEnded::no;
     }
 
     // Increase risk of disease the fewer turns left the infection has
@@ -2441,26 +2398,24 @@ Prop* PropInfected::on_tick()
         ((apply_disease_one_in <= 0) ||
          rnd::one_in(apply_disease_one_in)))
     {
-        PropHandler& prop_hlr = owning_actor_->prop_handler();
+        PropHandler& prop_hlr = owner_->prop_handler();
 
         prop_hlr.apply(new PropDiseased(PropTurns::indefinite));
 
-        //
         // NOTE: Disease ends infection, this property object is now deleted!
-        //
 
         msg_log::more_prompt();
 
-        return nullptr;
+        return PropEnded::yes;
     }
 
-    return this;
+    return PropEnded::no;
 }
 
 int PropDiseased::affect_max_hp(const int hp_max) const
 {
 #ifndef NDEBUG
-    ASSERT(!owning_actor_->prop_handler().has_prop(PropId::infected));
+    ASSERT(!owner_->prop_handler().has_prop(PropId::infected));
 #endif // NDEBUG
 
     return hp_max / 2;
@@ -2469,11 +2424,11 @@ int PropDiseased::affect_max_hp(const int hp_max) const
 void PropDiseased::on_start()
 {
     // End infection
-    owning_actor_->prop_handler().end_prop(PropId::infected, false);
+    owner_->prop_handler().end_prop(PropId::infected, false);
 
     // If this is a permanent disease that the player caught, log it as a
     // historic event
-    if (owning_actor_->is_player() && turns_init_type_ == PropTurns::indefinite)
+    if (owner_->is_player() && turns_init_type_ == PropTurns::indefinite)
     {
         game::add_history_event("Caught a horrible disease.");
     }
@@ -2482,12 +2437,12 @@ void PropDiseased::on_start()
 void PropDiseased::on_end()
 {
 #ifndef NDEBUG
-    ASSERT(!owning_actor_->prop_handler().has_prop(PropId::infected));
+    ASSERT(!owner_->prop_handler().has_prop(PropId::infected));
 #endif // NDEBUG
 
     // If this is a permanent disease that the player caught, log it as a
     // historic event
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
         game::add_history_event("My body was cured from a horrible disease.");
@@ -2497,32 +2452,32 @@ void PropDiseased::on_end()
 bool PropDiseased::is_resisting_other_prop(const PropId prop_id) const
 {
 #ifndef NDEBUG
-    ASSERT(!owning_actor_->prop_handler().has_prop(PropId::infected));
+    ASSERT(!owner_->prop_handler().has_prop(PropId::infected));
 #endif // NDEBUG
 
     // Getting infected while already diseased is just annoying
     return prop_id == PropId::infected;
 }
 
-Prop* PropDescend::on_tick()
+PropEnded PropDescend::on_tick()
 {
-    ASSERT(owning_actor_->is_player());
+    ASSERT(owner_->is_player());
 
     if (nr_turns_left_ <= 1)
     {
         game_time::is_magic_descend_nxt_std_turn = true;
     }
 
-    return this;
+    return PropEnded::no;
 }
 
-void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
+void PropPossByZuul::on_death()
 {
-    if (is_player_see_owning_actor)
+    if (map::player->can_see_actor(*owner_))
     {
         const std::string& name1 =
             text_format::first_to_upper(
-                owning_actor_->name_the());
+                owner_->name_the());
 
         const std::string& name2 =
             actor_data::data[(size_t)ActorId::zuul].name_the;
@@ -2530,28 +2485,27 @@ void PropPossByZuul::on_death(const bool is_player_see_owning_actor)
         msg_log::add(name1 + " was possessed by " + name2 + "!");
     }
 
-    owning_actor_->destroy_silent();
+    owner_->set_state(ActorState::destroyed);
 
-    const P& pos = owning_actor_->pos;
+    const P& pos = owner_->pos;
 
     map::mk_gore(pos);
 
     map::mk_blood(pos);
 
-    actor_factory::spawn(pos,
-                         std::vector<ActorId> {ActorId::zuul},
-                         MakeMonAware::yes);
+    actor_factory::spawn(pos, {ActorId::zuul})
+        .make_aware_of_player();
 
-    // Zuul is now free, allow him to spawn.
+    // Zuul is now free, allow it to spawn
     actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
 }
 
-Prop* PropPoisoned::on_tick()
+PropEnded PropPoisoned::on_tick()
 {
-    if (owning_actor_->is_alive() &&
+    if (owner_->is_alive() &&
         (game_time::turn_nr() % poison_dmg_n_turn) == 0)
     {
-        if (owning_actor_->is_player())
+        if (owner_->is_player())
         {
             msg_log::add("I am suffering from the poison!",
                          colors::msg_bad(),
@@ -2559,26 +2513,26 @@ Prop* PropPoisoned::on_tick()
         }
         else // Is monster
         {
-            if (map::player->can_see_actor(*owning_actor_))
+            if (map::player->can_see_actor(*owner_))
             {
                 const std::string actor_name_the =
                     text_format::first_to_upper(
-                        owning_actor_->name_the());
+                        owner_->name_the());
 
                 msg_log::add(actor_name_the +
                              " suffers from poisoning!");
             }
         }
 
-        owning_actor_->hit(1, DmgType::pure);
+        owner_->hit(1, DmgType::pure);
     }
 
-    return this;
+    return PropEnded::no;
 }
 
 bool PropTerrified::allow_attack_melee(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owner_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too terrified to engage in close combat!");
     }
@@ -2599,9 +2553,9 @@ void PropTerrified::on_start()
     // AI would typically use the idle movement algorithm, which favors stepping
     // in the same direction as the last move).
 
-    if (!owning_actor_->is_player())
+    if (!owner_->is_player())
     {
-        Mon* const mon = static_cast<Mon*>(owning_actor_);
+        Mon* const mon = static_cast<Mon*>(owner_);
 
         mon->last_dir_moved_ = Dir::center;
     }
@@ -2613,26 +2567,26 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
 
     if (dir != Dir::center)
     {
-        if (owning_actor_->is_player())
+        if (owner_->is_player())
         {
             msg_log::add("I struggle to tear out the spike!", colors::msg_bad());
         }
         else // Is monster
         {
-            if (map::player->can_see_actor(*owning_actor_))
+            if (map::player->can_see_actor(*owner_))
             {
                 const std::string actor_name_the =
                     text_format::first_to_upper(
-                        owning_actor_->name_the());
+                        owner_->name_the());
 
                 msg_log::add(actor_name_the +  " struggles in pain!",
                              colors::msg_good());
             }
         }
 
-        owning_actor_->hit(rnd::dice(1, 3), DmgType::physical);
+        owner_->hit(rnd::dice(1, 3), DmgType::physical);
 
-        if (owning_actor_->is_alive())
+        if (owner_->is_alive())
         {
 
             // TODO: reimplement something affecting chance of success?
@@ -2643,17 +2597,17 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
 
                 if (nr_spikes_ > 0)
                 {
-                    if (owning_actor_->is_player())
+                    if (owner_->is_player())
                     {
                         msg_log::add("I rip out a spike from my flesh!");
                     }
                     else // Is monster
                     {
-                        if (map::player->can_see_actor(*owning_actor_))
+                        if (map::player->can_see_actor(*owner_))
                         {
                             const std::string actor_name_the =
                                 text_format::first_to_upper(
-                                    owning_actor_->name_the());
+                                    owner_->name_the());
 
                             msg_log::add(actor_name_the +
                                          " tears out a spike!");
@@ -2677,35 +2631,10 @@ void PropWound::load()
     nr_wounds_ = saving::get_int();
 }
 
-void PropWound::msg(const PropMsg msg_type, std::string& msg_ref) const
-{
-    switch (msg_type)
-    {
-    case PropMsg::start_player:
-    case PropMsg::res_player:
-        msg_ref = data_.msg[(size_t)msg_type];
-        break;
-
-    case PropMsg::end_player:
-        msg_ref =
-            (nr_wounds_ > 1) ?
-            "All my wounds are healed!" :
-            "A wound is healed!";
-        break;
-
-    case PropMsg::start_mon:
-    case PropMsg::end_mon:
-    case PropMsg::res_mon:
-    case PropMsg::END:
-        msg_ref = "";
-        break;
-    }
-}
-
 int PropWound::ability_mod(const AbilityId ability) const
 {
     // A player with Survivalist receives no ability penalties
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         player_bon::traits[(size_t)Trait::survivalist])
     {
         return 0;
@@ -2730,7 +2659,7 @@ int PropWound::affect_max_hp(const int hp_max) const
     int hp_pen_pct = nr_wounds_ * pen_pct_per_wound;
 
     // The HP penalty is halved for a player with Survivalist
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         player_bon::traits[(size_t)Trait::survivalist])
     {
         hp_pen_pct /= 2;
@@ -2755,7 +2684,7 @@ void PropWound::heal_one_wound()
     else // This was the last wound
     {
         // End self
-        owning_actor_->prop_handler().end_prop(id());
+        owner_->prop_handler().end_prop(id());
     }
 }
 
@@ -2767,12 +2696,12 @@ void PropWound::on_more(const Prop& new_prop)
 
     if (nr_wounds_ >= 5)
     {
-        if (owning_actor_ == map::player)
+        if (owner_ == map::player)
         {
             msg_log::add("I die from my wounds!");
         }
 
-        owning_actor_->die(false, false, true);
+        owner_->die(false, false, true);
     }
 }
 
@@ -2850,7 +2779,7 @@ void PropMindSap::on_more(const Prop& new_prop)
 
 bool PropConfused::allow_read_absolute(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owner_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too confused to read.");
     }
@@ -2861,7 +2790,7 @@ bool PropConfused::allow_read_absolute(const Verbosity verbosity) const
 bool PropConfused::allow_cast_intr_spell_absolute(
     const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         (verbosity == Verbosity::verbose))
     {
         msg_log::add("I am too confused to concentrate!");
@@ -2874,7 +2803,7 @@ bool PropConfused::allow_attack_melee(const Verbosity verbosity) const
 {
     (void)verbosity;
 
-    if (owning_actor_ != map::player)
+    if (owner_ != map::player)
     {
         return rnd::coin_toss();
     }
@@ -2886,7 +2815,7 @@ bool PropConfused::allow_attack_ranged(const Verbosity verbosity) const
 {
     (void)verbosity;
 
-    if (owning_actor_ != map::player)
+    if (owner_ != map::player)
     {
         return rnd::coin_toss();
     }
@@ -2906,7 +2835,7 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
     const R area_check_blocked(actor_pos - P(1, 1),
                                actor_pos + P(1, 1));
 
-    map_parsers::BlocksActor(*owning_actor_, ParseActors::yes)
+    map_parsers::BlocksActor(*owner_, ParseActors::yes)
         .run(blocked,
              MapParseMode::overwrite,
              area_check_blocked);
@@ -2934,44 +2863,15 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
     }
 }
 
-Prop* PropStrangled::on_tick()
-{
-    const int dmg = rnd::range(3, 4);
-
-    owning_actor_->hit(dmg, DmgType::pure, DmgMethod::forced);
-
-    return this;
-}
-
-bool PropStrangled::allow_speak(const Verbosity verbosity) const
-{
-    if (verbosity == Verbosity::verbose && owning_actor_->is_player())
-    {
-        msg_log::add("My throat is constricted.");
-    }
-
-    return false;
-}
-
-bool PropStrangled::allow_eat(const Verbosity verbosity) const
-{
-    if (verbosity == Verbosity::verbose && owning_actor_->is_player())
-    {
-        msg_log::add("My throat is constricted.");
-    }
-
-    return false;
-}
-
 void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 {
-    if (!owning_actor_->is_player() ||
+    if (!owner_->is_player() ||
         (dir == Dir::center))
     {
         return;
     }
 
-    const auto seen_foes = owning_actor_->seen_foes();
+    const auto seen_foes = owner_->seen_foes();
 
     if (seen_foes.empty())
     {
@@ -2995,7 +2895,7 @@ void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 
     bool blocked[map_w][map_h];
 
-    map_parsers::BlocksActor(*owning_actor_, ParseActors::no)
+    map_parsers::BlocksActor(*owner_, ParseActors::no)
         .run(blocked);
 
     std::vector<P> line;
@@ -3032,26 +2932,26 @@ bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const
 
 void PropFrenzied::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::confused);
-    owning_actor_->prop_handler().end_prop(PropId::fainted);
-    owning_actor_->prop_handler().end_prop(PropId::terrified);
-    owning_actor_->prop_handler().end_prop(PropId::weakened);
+    owner_->prop_handler().end_prop(PropId::confused);
+    owner_->prop_handler().end_prop(PropId::fainted);
+    owner_->prop_handler().end_prop(PropId::terrified);
+    owner_->prop_handler().end_prop(PropId::weakened);
 }
 
 void PropFrenzied::on_end()
 {
     // Only the player (except for Ghoul background) gets tired after a frenzy
     // (it looks weird for monsters)
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         (player_bon::bg() != Bg::ghoul))
     {
-        owning_actor_->prop_handler().apply(new PropWeakened(PropTurns::std));
+        owner_->apply_prop(new PropWeakened(PropTurns::std));
     }
 }
 
 bool PropFrenzied::allow_read_absolute(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() && verbosity == Verbosity::verbose)
+    if (owner_->is_player() && verbosity == Verbosity::verbose)
     {
         msg_log::add("I am too enraged to read!");
     }
@@ -3062,7 +2962,7 @@ bool PropFrenzied::allow_read_absolute(const Verbosity verbosity) const
 bool PropFrenzied::allow_cast_intr_spell_absolute(
     const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         (verbosity == Verbosity::verbose))
     {
         msg_log::add("I am too enraged to concentrate!");
@@ -3071,23 +2971,23 @@ bool PropFrenzied::allow_cast_intr_spell_absolute(
     return false;
 }
 
-Prop* PropBurning::on_tick()
+PropEnded PropBurning::on_tick()
 {
-    if (owning_actor_->is_player())
+    if (owner_->is_player())
     {
         msg_log::add("AAAARGH IT BURNS!!!", colors::light_red());
     }
 
-    owning_actor_->hit(rnd::dice(1, 3), DmgType::fire);
+    owner_->hit(rnd::dice(1, 3), DmgType::fire);
 
-    return this;
+    return PropEnded::no;
 }
 
 bool PropBurning::allow_read_chance(const Verbosity verbosity) const
 {
     if (!rnd::coin_toss())
     {
-        if (owning_actor_->is_player() &&
+        if (owner_->is_player() &&
             (verbosity == Verbosity::verbose))
         {
             msg_log::add("I fail to concentrate!");
@@ -3103,7 +3003,7 @@ bool PropBurning::allow_cast_intr_spell_chance(const Verbosity verbosity) const
 {
     if (!rnd::coin_toss())
     {
-        if (owning_actor_->is_player() &&
+        if (owner_->is_player() &&
             (verbosity == Verbosity::verbose))
         {
             msg_log::add("I fail to concentrate!");
@@ -3117,7 +3017,7 @@ bool PropBurning::allow_cast_intr_spell_chance(const Verbosity verbosity) const
 
 bool PropBurning::allow_attack_ranged(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         (verbosity == Verbosity::verbose))
     {
         msg_log::add("Not while burning.");
@@ -3126,9 +3026,26 @@ bool PropBurning::allow_attack_ranged(const Verbosity verbosity) const
     return false;
 }
 
+PropActResult PropRecloaks::on_act()
+{
+    if (owner_->is_alive() &&
+        !owner_->has_prop(PropId::cloaked) &&
+        rnd::one_in(20))
+    {
+        owner_->apply_prop(
+            new PropCloaked(PropTurns::indefinite));
+
+        game_time::tick();
+
+        return PropActResult(DidAction::yes, PropEnded::no);
+    }
+
+    return PropActResult();
+}
+
 bool PropBlind::allow_read_absolute(const Verbosity verbosity) const
 {
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         (verbosity == Verbosity::verbose))
     {
         msg_log::add("I cannot read while blind.");
@@ -3139,14 +3056,14 @@ bool PropBlind::allow_read_absolute(const Verbosity verbosity) const
 
 bool PropBlind::need_update_vision_when_start_or_end() const
 {
-    return owning_actor_->is_player();
+    return owner_->is_player();
 }
 
 void PropParalyzed::on_start()
 {
     auto* const player = map::player;
 
-    if (owning_actor_->is_player())
+    if (owner_->is_player())
     {
         auto* const active_explosive = player->active_explosive;
 
@@ -3159,33 +3076,33 @@ void PropParalyzed::on_start()
 
 bool PropFainted::need_update_vision_when_start_or_end() const
 {
-    return owning_actor_->is_player();
+    return owner_->is_player();
 }
 
-Prop* PropFlared::on_tick()
+PropEnded PropFlared::on_tick()
 {
-    owning_actor_->hit(1, DmgType::fire);
+    owner_->hit(1, DmgType::fire);
 
     if (nr_turns_left_ <= 1)
     {
-        owning_actor_->prop_handler().apply(new PropBurning(PropTurns::std));
-        owning_actor_->prop_handler().end_prop(id());
+        owner_->apply_prop(new PropBurning(PropTurns::std));
+        owner_->prop_handler().end_prop(id());
 
-        return nullptr;
+        return PropEnded::yes;
     }
 
-    return this;
+    return PropEnded::no;
 }
 
 DmgResistData PropRAcid::is_resisting_dmg(const DmgType dmg_type) const
 {
     DmgResistData d;
 
-    d.is_resisted = dmg_type == DmgType::acid;
+    d.is_resisted = (dmg_type == DmgType::acid);
 
-    d.resist_msg_player = "I feel a faint burning sensation.";
+    d.msg_resist_player = "I feel a faint burning sensation.";
 
-    d.resist_msg_mon = "seems unaffected.";
+    d.msg_resist_mon = "seems unaffected.";
 
     return d;
 }
@@ -3194,11 +3111,11 @@ DmgResistData PropRElec::is_resisting_dmg(const DmgType dmg_type) const
 {
     DmgResistData d;
 
-    d.is_resisted = dmg_type == DmgType::electric;
+    d.is_resisted = (dmg_type == DmgType::electric);
 
-    d.resist_msg_player = "I feel a faint tingle.";
+    d.msg_resist_player = "I feel a faint tingle.";
 
-    d.resist_msg_mon = "seems unaffected.";
+    d.msg_resist_mon = "seems unaffected.";
 
     return d;
 }
@@ -3210,7 +3127,7 @@ bool PropRConf::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRConf::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::confused);
+    owner_->prop_handler().end_prop(PropId::confused);
 }
 
 bool PropRFear::is_resisting_other_prop(const PropId prop_id) const
@@ -3220,9 +3137,9 @@ bool PropRFear::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRFear::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::terrified);
+    owner_->prop_handler().end_prop(PropId::terrified);
 
-    if (owning_actor_->is_player() &&
+    if (owner_->is_player() &&
         turns_init_type_ == PropTurns::indefinite)
     {
         insanity::on_permanent_rfear();
@@ -3236,7 +3153,7 @@ bool PropRSlow::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRSlow::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::slowed);
+    owner_->prop_handler().end_prop(PropId::slowed);
 }
 
 bool PropRPhys::is_resisting_other_prop(const PropId prop_id) const
@@ -3254,11 +3171,11 @@ DmgResistData PropRPhys::is_resisting_dmg(const DmgType dmg_type) const
 {
     DmgResistData d;
 
-    d.is_resisted = dmg_type == DmgType::physical;
+    d.is_resisted = (dmg_type == DmgType::physical);
 
-    d.resist_msg_player = "I resist harm.";
+    d.msg_resist_player = "I resist harm.";
 
-    d.resist_msg_mon = "seems unharmed.";
+    d.msg_resist_mon = "seems unharmed.";
 
     return d;
 }
@@ -3270,18 +3187,18 @@ bool PropRFire::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRFire::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::burning);
+    owner_->prop_handler().end_prop(PropId::burning);
 }
 
 DmgResistData PropRFire::is_resisting_dmg(const DmgType dmg_type) const
 {
     DmgResistData d;
 
-    d.is_resisted = dmg_type == DmgType::fire;
+    d.is_resisted = (dmg_type == DmgType::fire);
 
-    d.resist_msg_player = "I feel warm.";
+    d.msg_resist_player = "I feel warm.";
 
-    d.resist_msg_mon = "seems unaffected.";
+    d.msg_resist_mon = "seems unaffected.";
 
     return d;
 }
@@ -3293,7 +3210,7 @@ bool PropRPoison::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRPoison::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::poisoned);
+    owner_->prop_handler().end_prop(PropId::poisoned);
 }
 
 bool PropRSleep::is_resisting_other_prop(const PropId prop_id) const
@@ -3303,7 +3220,7 @@ bool PropRSleep::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRSleep::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::fainted);
+    owner_->prop_handler().end_prop(PropId::fainted);
 }
 
 bool PropRDisease::is_resisting_other_prop(const PropId prop_id) const
@@ -3313,8 +3230,8 @@ bool PropRDisease::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRDisease::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::diseased);
-    owning_actor_->prop_handler().end_prop(PropId::infected);
+    owner_->prop_handler().end_prop(PropId::diseased);
+    owner_->prop_handler().end_prop(PropId::infected);
 }
 
 bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
@@ -3324,7 +3241,7 @@ bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRBlind::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::blind);
+    owner_->prop_handler().end_prop(PropId::blind);
 }
 
 bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
@@ -3334,7 +3251,7 @@ bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRPara::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::paralyzed);
+    owner_->prop_handler().end_prop(PropId::paralyzed);
 }
 
 bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
@@ -3344,16 +3261,481 @@ bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
 
 void PropSeeInvis::on_start()
 {
-    owning_actor_->prop_handler().end_prop(PropId::blind);
+    owner_->prop_handler().end_prop(PropId::blind);
 }
 
-Prop* PropBurrowing::on_tick()
+PropEnded PropBurrowing::on_tick()
 {
-    const P& p = owning_actor_->pos;
+    const P& p = owner_->pos;
 
     map::cells[p.x][p.y].rigid->hit(1, // Doesn't matter
                                     DmgType::physical,
                                     DmgMethod::forced);
 
-    return this;
+    return PropEnded::no;
+}
+
+PropActResult PropVortex::on_act()
+{
+    TRACE_FUNC_BEGIN;
+
+    // Not supported yet
+    if (owner_->is_player())
+    {
+        return PropActResult();
+    }
+
+    if (!owner_->is_alive())
+    {
+        return PropActResult();
+    }
+
+    if (pull_cooldown > 0)
+    {
+        --pull_cooldown;
+    }
+
+    auto* const mon = static_cast<Mon*>(owner_);
+
+    if ((mon->aware_of_player_counter_ <= 0) ||
+        (pull_cooldown > 0))
+    {
+        return PropActResult();
+    }
+
+    const P& player_pos = map::player->pos;
+
+    if (!is_pos_adj(mon->pos, player_pos, true) &&
+        rnd::coin_toss())
+    {
+        TRACE << "Monster with vortex property attempting to pull player"
+              << std::endl;
+
+        const P delta = player_pos - mon->pos;
+
+        P knockback_from_pos = player_pos;
+
+        if (delta.x >  1)
+        {
+            ++knockback_from_pos.x;
+        }
+
+        if (delta.x < -1)
+        {
+            --knockback_from_pos.x;
+        }
+
+        if (delta.y >  1)
+        {
+            ++knockback_from_pos.y;
+        }
+
+        if (delta.y < -1)
+        {
+            --knockback_from_pos.y;
+        }
+
+        if (knockback_from_pos != player_pos)
+        {
+            TRACE << "Pos found to knockback player from: "
+                  << knockback_from_pos.x << ", "
+                  << knockback_from_pos.y << std::endl;
+
+            TRACE << "Player pos: "
+                  << player_pos.x << ", " << player_pos.y << std::endl;
+
+            bool blocked_los[map_w][map_h];
+
+             const R fov_rect = fov::get_fov_rect(mon->pos);
+
+             map_parsers::BlocksLos()
+                 .run(blocked_los,
+                      MapParseMode::overwrite,
+                      fov_rect);
+
+            if (mon->can_see_actor(*(map::player), blocked_los))
+            {
+                TRACE << "Is seeing player" << std::endl;
+
+                mon->set_player_aware_of_me();
+
+                if (map::player->can_see_actor(*mon))
+                {
+                    const auto name_the = text_format::first_to_upper(
+                        owner_->name_the());
+
+                    msg_log::add(name_the + " pulls me!");
+                }
+                else
+                {
+                    msg_log::add("A powerful wind is pulling me!");
+                }
+
+                TRACE << "Attempt pull (knockback)" << std::endl;
+
+                // TODO: Add sfx
+                knockback::run(*map::player,
+                               knockback_from_pos,
+                               false,
+                               Verbosity::silent);
+
+                pull_cooldown = 2;
+
+                game_time::tick();
+
+                return PropActResult(DidAction::yes, PropEnded::no);
+            }
+        }
+    }
+
+    return PropActResult();
+}
+
+void PropExplodesOnDeath::on_death()
+{
+    TRACE_FUNC_BEGIN;
+
+    explosion::run(owner_->pos, ExplType::expl);
+
+    TRACE_FUNC_END;
+}
+
+void PropSplitsOnDeath::on_death()
+{
+    // Not supported yet
+    if (owner_->is_player())
+    {
+        return;
+    }
+
+    const int actor_max_hp = owner_->hp_max(true);
+
+    // Do not allow splitting if HP is reduced to this point (if the monster is
+    // killed "hard" enough, it doesn't split)
+    const int hp_limit_allow_split = actor_max_hp * (-5);
+
+    const P pos = owner_->pos;
+
+    if ((owner_->hp() <= hp_limit_allow_split) ||
+        map::cells[pos.x][pos.y].rigid->is_bottomless() ||
+        game_time::actors.size() >= max_nr_actors_on_map)
+    {
+        return;
+    }
+
+    auto* const leader = static_cast<Mon*>(owner_)->leader_;
+
+    const auto summoned =
+        actor_factory::spawn(pos, {2, owner_->id()})
+        .make_aware_of_player()
+        .set_leader(leader)
+        .for_each([this](Mon* const mon)
+        {
+            mon->apply_prop(new PropWaiting(PropTurns::specific, 1));
+
+            // The new actors should usually not also split
+            if (rnd::fraction(4, 5))
+            {
+                mon->prop_handler().end_prop(PropId::splits_on_death);
+            }
+
+            // If the original actor is burning, the spawned actors should too
+            if (owner_->has_prop(PropId::burning))
+            {
+                mon->prop_handler().apply(
+                    new PropBurning(PropTurns::std),
+                    PropSrc::intr,
+                    false, // Do not force effect
+                    Verbosity::silent);
+            }
+        });
+
+    // If no leader has been set, assign the first actor as leader of the second
+    if (!leader && (summoned.monsters.size() == 2))
+    {
+        summoned.monsters[1]->leader_ = summoned.monsters[0];
+    }
+}
+
+PropActResult PropCorpseEater::on_act()
+{
+    auto did_action = DidAction::no;
+
+    if (owner_->is_alive() &&
+        rnd::coin_toss())
+    {
+        did_action = owner_->try_eat_corpse();
+
+        if (did_action == DidAction::yes)
+        {
+            game_time::tick();
+        }
+    }
+
+    return PropActResult(did_action, PropEnded::no);
+}
+
+PropActResult PropTeleports::on_act()
+{
+    auto did_action = DidAction::no;
+
+    const int teleport_one_in_n = 12;
+
+    if (owner_->is_alive() &&
+        rnd::one_in(teleport_one_in_n))
+    {
+        owner_->teleport();
+
+        game_time::tick();
+
+        did_action = DidAction::yes;
+    }
+
+    return PropActResult(did_action, PropEnded::no);
+}
+
+PropActResult PropCorruptsEnvColor::on_act()
+{
+    const auto pos = owner_->pos;
+
+    Rigid* r = map::cells[pos.x][pos.y].rigid;
+
+    r->corrupt_color();
+
+    return PropActResult();
+}
+
+void PropRegenerates::on_std_turn()
+{
+    if (owner_->is_alive() &&
+        !owner_->has_prop(PropId::burning))
+    {
+        owner_->restore_hp(2, false, Verbosity::silent);
+    }
+}
+
+PropActResult PropCorpseRises::on_act()
+{
+    if (owner_->is_player() ||
+        !owner_->is_corpse() ||
+        !rnd::one_in(rise_one_in_n_) ||
+        map::actor_at_pos(owner_->pos))
+    {
+        return PropActResult();
+    }
+
+    owner_->set_state(ActorState::alive);
+
+    owner_->set_hp(owner_->hp_max(true) / 2);
+
+    --owner_->data().nr_kills;
+
+    if (map::cells[owner_->pos.x][owner_->pos.y].is_seen_by_player)
+    {
+        const std::string name =
+            text_format::first_to_upper(
+                owner_->corpse_name_the());
+
+        msg_log::add(
+            name +
+            " rises again!!",
+            colors::text(),
+            true);
+
+        map::player->incr_shock(ShockLvl::frightening,
+                                ShockSrc::see_mon);
+    }
+
+    static_cast<Mon*>(owner_)->become_aware_player(false);
+
+    // Make it less likely to rise again
+    rise_one_in_n_ *= 3;
+
+    game_time::tick();
+
+    return PropActResult(DidAction::yes, PropEnded::no);
+}
+
+void PropBreeds::on_std_turn()
+{
+    const int spawn_new_one_in_n = 50;
+
+    if (owner_->is_player() ||
+        !owner_->is_alive() ||
+        owner_->has_prop(PropId::burning) ||
+        (game_time::actors.size() >= max_nr_actors_on_map) ||
+        !rnd::one_in(spawn_new_one_in_n))
+    {
+        return;
+    }
+
+    auto* const mon = static_cast<Mon*>(owner_);
+
+    Actor* const leader_of_spawned_mon = mon->leader_ ? mon->leader_ : mon;
+
+    const auto area_allowed = R(mon->pos - 1, mon->pos + 1);
+
+    auto summoned =
+        actor_factory::spawn_random_position({mon->id()}, area_allowed)
+        .set_leader(leader_of_spawned_mon)
+        .for_each([](Mon* const mon)
+        {
+            mon->apply_prop(
+                new PropWaiting(PropTurns::specific, 2));
+        });
+
+    if (mon->aware_of_player_counter_ > 0)
+    {
+        summoned.make_aware_of_player();
+    }
+}
+
+void PropConfusesAdjacent::on_std_turn()
+{
+    if (!owner_->is_alive() ||
+        !map::player->can_see_actor(*owner_) ||
+        !map::player->pos.is_adjacent_to(owner_->pos))
+    {
+        return;
+    }
+
+    if (!map::player->prop_handler().has_prop(PropId::confused))
+    {
+        const std::string msg =
+            text_format::first_to_upper(owner_->name_the()) +
+            " bewilders me.";
+
+        msg_log::add(msg);
+    }
+
+    const int nr_turns_confused = rnd::range(8, 12);
+
+    map::player->apply_prop(
+        new PropConfused(PropTurns::specific, nr_turns_confused));
+}
+
+PropActResult PropSpeaksCurses::on_act()
+{
+    if (owner_->is_player())
+    {
+        return PropActResult();
+    }
+
+    auto* const mon = static_cast<Mon*>(owner_);
+
+    if (!mon->is_alive() ||
+        (mon->aware_of_player_counter_ <= 0) ||
+        !rnd::one_in(4))
+    {
+        return PropActResult();
+    }
+
+    bool blocked_los[map_w][map_h];
+
+    const R fov_rect = fov::get_fov_rect(mon->pos);
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             fov_rect);
+
+    if (mon->can_see_actor(*map::player, blocked_los))
+    {
+        const bool player_see_owner = map::player->can_see_actor(*mon);
+
+        std::string snd_msg =
+            player_see_owner ?
+            text_format::first_to_upper(mon->name_the()) :
+            "Someone";
+
+        snd_msg += " spews forth a litany of curses.";
+
+        Snd snd(snd_msg,
+                SfxId::END,
+                IgnoreMsgIfOriginSeen::no,
+                mon->pos,
+                mon,
+                SndVol::high,
+                AlertsMon::no);
+
+        snd_emit::run(snd);
+
+        map::player->apply_prop(new PropCursed(PropTurns::std));
+
+        game_time::tick();
+
+        return PropActResult(DidAction::yes, PropEnded::no);
+    }
+
+    return PropActResult();
+}
+
+PropActResult PropMajorClaphamSummon::on_act()
+{
+    if (owner_->is_player())
+    {
+        return PropActResult();
+    }
+
+    auto* const mon = static_cast<Mon*>(owner_);
+
+    if (!mon->is_alive() ||
+        (mon->aware_of_player_counter_ <= 0))
+    {
+        return PropActResult();
+    }
+
+    bool blocked_los[map_w][map_h];
+
+    const R fov_rect = fov::get_fov_rect(mon->pos);
+
+    map_parsers::BlocksLos()
+        .run(blocked_los,
+             MapParseMode::overwrite,
+             fov_rect);
+
+    if (!mon->can_see_actor(*(map::player), blocked_los))
+    {
+        return PropActResult();
+    }
+
+    mon->set_player_aware_of_me();
+
+    msg_log::add("Major Clapham Lee calls forth his Tomb-Legions!");
+
+    std::vector<ActorId> ids_to_summon = {ActorId::dean_halsey};
+
+    const int nr_of_extra_spawns = 4;
+
+    const std::vector<ActorId> possible_random_id_choices =
+        {
+            ActorId::zombie,
+            ActorId::zombie_axe,
+            ActorId::bloated_zombie
+        };
+
+    for (int i = 0; i < nr_of_extra_spawns; ++i)
+    {
+        ids_to_summon.push_back(
+            rnd::element(possible_random_id_choices));
+    }
+
+    auto spawned =
+        actor_factory::spawn(mon->pos, ids_to_summon)
+        .make_aware_of_player()
+        .set_leader(mon)
+        .for_each([](Mon* const mon)
+        {
+            mon->apply_prop(new PropSummoned(PropTurns::indefinite));
+
+            mon->is_player_feeling_msg_allowed_ = false;
+        });
+
+    map::player->incr_shock(ShockLvl::terrifying, ShockSrc::misc);
+
+    mon->prop_handler().end_prop(id());
+
+    game_time::tick();
+
+    return PropActResult(DidAction::yes, PropEnded::yes);
 }

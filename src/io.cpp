@@ -446,7 +446,9 @@ void draw_character_at_px(const char character,
     {
         const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
-        draw_rectangle_solid(px_pos, cell_dims, bg_color.sdl_color());
+        draw_rectangle_solid(px_pos,
+                             cell_dims,
+                             bg_color.sdl_color());
 
         // Draw contour if neither the foreground nor background is black
         if ((color != colors::black()) &&
@@ -457,7 +459,9 @@ void draw_character_at_px(const char character,
             const auto& contour_px_data =
                 font_contour_px_data_[character_pos.x][character_pos.y];
 
-            put_pixels_on_scr(contour_px_data, px_pos, sdl_color_black);
+            put_pixels_on_scr(contour_px_data,
+                              px_pos,
+                              sdl_color_black);
         }
     }
 
@@ -934,7 +938,9 @@ void draw_tile(const TileId tile,
 
     const P cell_dims(config::cell_px_w(), config::cell_px_h());
 
-    draw_rectangle_solid(px_pos, cell_dims, bg_color);
+    draw_rectangle_solid(px_pos,
+                         cell_dims,
+                         bg_color);
 
     // Draw contour if neither the foreground nor background is black
     if ((color != colors::black()) &&

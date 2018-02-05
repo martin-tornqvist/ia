@@ -493,7 +493,7 @@ bool mk_leng_lvl()
             {
                 map::put(new Floor(p));
 
-                map::cells[p.x][p.y].is_dark = true;
+                map::dark[p.x][p.y] = true;
 
                 if (c == 'E')
                 {
@@ -592,8 +592,7 @@ bool mk_rat_cave_level()
                         actor = actor_factory::mk(ActorId::rat, p);
                     }
 
-                    actor->prop_handler().apply(
-                        new PropFrenzied(PropTurns::indefinite));
+                    actor->apply_prop(new PropFrenzied(PropTurns::indefinite));
                 }
             }
             break;
@@ -780,7 +779,7 @@ bool mk_trapez_lvl()
     {
         for (int y = 0; y < templ_dims.y; ++y)
         {
-            map::cells[x][y].is_dark = true;
+            map::dark[x][y] = true;
 
             const P p(x, y);
 

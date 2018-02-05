@@ -219,7 +219,9 @@ void run()
 
                 for (auto* const corpse : corpses_here)
                 {
-                    const std::string name = corpse->corpse_name_a();
+                    const std::string name =
+                        text_format::first_to_upper(
+                            corpse->corpse_name_a());
 
                     msg_log::add(name + ".");
                 }

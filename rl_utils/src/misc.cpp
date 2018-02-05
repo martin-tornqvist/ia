@@ -40,16 +40,17 @@ int constr_in_range(const double min, const double val, const double max)
 }
 
 std::vector<P> to_vec(const bool a[map_w][map_h],
-                      const bool value_to_store)
+                      const bool value_to_store,
+                      const R& area_to_parse)
 {
     std::vector<P> result;
 
     // Reserve space for worst case of push-backs
-    result.reserve(nr_map_cells);
+    result.reserve(area_to_parse.area());
 
-    for (int x = 0; x < map_w; ++x)
+    for (int x = area_to_parse.p0.x; x < area_to_parse.p1.x; ++x)
     {
-        for (int y = 0; y < map_h; ++y)
+        for (int y = area_to_parse.p0.y; y < area_to_parse.p1.y; ++y)
         {
             if (a[x][y] == value_to_store)
             {

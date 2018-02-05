@@ -344,7 +344,8 @@ ConsumeItem DeviceTranslocator::run_effect()
             msg_log::add(text_format::first_to_upper(actor->name_the()) +
                          " is teleported.");
 
-            io::draw_blast_at_cells(std::vector<P> {actor->pos}, colors::yellow());
+            io::draw_blast_at_cells(std::vector<P> {actor->pos},
+                                    colors::yellow());
 
             actor->teleport();
         }
@@ -360,10 +361,9 @@ ConsumeItem DeviceSentryDrone::run_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
 
-    actor_factory::spawn(map::player->pos,
-                          {ActorId::sentry_drone},
-                          MakeMonAware::yes,
-                          map::player);
+    actor_factory::spawn(map::player->pos, {ActorId::sentry_drone})
+        .make_aware_of_player()
+        .set_leader(map::player);
 
     return ConsumeItem::yes;
 }
@@ -382,7 +382,7 @@ ConsumeItem DeviceDeafening::run_effect()
             continue;
         }
 
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropDeaf(PropTurns::std));
     }
 

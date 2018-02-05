@@ -42,6 +42,7 @@ enum class PropId
     radiant,
     invis,
     cloaked,
+    recloaks,
     see_invis,
     darkvision,
     poisoned,
@@ -59,8 +60,18 @@ enum class PropId
     cursed,
     tele_ctrl,
     spell_reflect,
-    strangled,
     conflict,
+    vortex, // Vortex monsters pulling the player
+    explodes_on_death,
+    splits_on_death,
+    corpse_eater,
+    teleports,
+    corrupts_env_color, // "Strange color" monster corrupting the area
+    regenerates,
+    corpse_rises,
+    breeds,
+    confuses_adjacent,
+    speaks_curses,
 
     // Properties describing the actors body and/or method of moving around
     flying,
@@ -77,6 +88,7 @@ enum class PropId
     // Special (for supporting very specific game mechanics)
     descend,
     poss_by_zuul,
+    major_clapham_summon,
     aiming,
     nailed,
     flared,
@@ -113,6 +125,7 @@ const std::unordered_map<std::string, PropId> str_to_prop_id_map = {
     {"radiant", PropId::radiant},
     {"invis", PropId::invis},
     {"cloaked", PropId::cloaked},
+    {"recloaks", PropId::recloaks},
     {"see_invis", PropId::see_invis},
     {"darkvision", PropId::darkvision},
     {"poisoned", PropId::poisoned},
@@ -130,12 +143,23 @@ const std::unordered_map<std::string, PropId> str_to_prop_id_map = {
     {"cursed", PropId::cursed},
     {"tele_ctrl", PropId::tele_ctrl},
     {"spell_reflect", PropId::spell_reflect},
-    {"strangled", PropId::strangled},
     {"conflict", PropId::conflict},
+    {"vortex", PropId::vortex},
+    {"explodes_on_death", PropId::explodes_on_death},
+    {"splits_on_death", PropId::splits_on_death},
+    {"corpse_eater", PropId::corpse_eater},
+    {"teleports", PropId::teleports},
+    {"corrupts_environment_color", PropId::corrupts_env_color},
+    {"regenerates", PropId::regenerates},
+    {"corpse_rises", PropId::corpse_rises},
+    {"breeds", PropId::breeds},
+    {"confuses_adjacent", PropId::confuses_adjacent},
+    {"speaks_curses", PropId::speaks_curses},
     {"flying", PropId::flying},
     {"ethereal", PropId::ethereal},
     {"ooze", PropId::ooze},
-    {"burrowing", PropId::burrowing}
+    {"burrowing", PropId::burrowing},
+    {"major_clapham_summon", PropId::major_clapham_summon}
 };
 
 const std::unordered_map<PropId, std::string> prop_id_to_str_map = {
@@ -161,6 +185,7 @@ const std::unordered_map<PropId, std::string> prop_id_to_str_map = {
     {PropId::radiant, "radiant"},
     {PropId::invis, "invis"},
     {PropId::cloaked, "cloaked"},
+    {PropId::recloaks, "recloaks"},
     {PropId::see_invis, "see_invis"},
     {PropId::darkvision, "darkvision"},
     {PropId::poisoned, "poisoned"},
@@ -178,12 +203,22 @@ const std::unordered_map<PropId, std::string> prop_id_to_str_map = {
     {PropId::cursed, "cursed"},
     {PropId::tele_ctrl, "tele_ctrl"},
     {PropId::spell_reflect, "spell_reflect"},
-    {PropId::strangled, "strangled"},
     {PropId::conflict, "conflict"},
+    {PropId::vortex, "vortex"},
+    {PropId::explodes_on_death, "explodes_on_death"},
+    {PropId::splits_on_death, "splits_on_death"},
+    {PropId::teleports, "teleports"},
+    {PropId::corrupts_env_color, "corrupts_environment_color"},
+    {PropId::regenerates, "regenerates"},
+    {PropId::corpse_rises, "corpse_rises"},
+    {PropId::breeds, "breeds"},
+    {PropId::confuses_adjacent, "confuses_adjacent"},
+    {PropId::speaks_curses, "speaks_curses"},
     {PropId::flying, "flying"},
     {PropId::ethereal, "ethereal"},
     {PropId::ooze, "ooze"},
-    {PropId::burrowing, "burrowing"}
+    {PropId::burrowing, "burrowing"},
+    {PropId::major_clapham_summon, "major_clapham_summon"}
 };
 
 enum class PropTurns
@@ -191,17 +226,6 @@ enum class PropTurns
     std,
     specific,
     indefinite
-};
-
-enum class PropMsg
-{
-    start_player,
-    start_mon,
-    end_player,
-    end_mon,
-    res_player,
-    res_mon,
-    END
 };
 
 enum class PropAlignment
@@ -226,29 +250,34 @@ enum class PropSrc
 struct PropDataT
 {
     PropDataT() :
-        id                              (PropId::END),
-        std_rnd_turns                   (Range(10, 10)),
-        name                            (""),
-        name_short                      (""),
-        descr                           (""),
-        is_making_mon_aware             (false),
-        allow_display_turns             (true),
-        update_vision_when_start_or_end (false),
-        allow_test_on_bot               (false),
-        alignment                       (PropAlignment::bad)
-    {
-        for (size_t i = 0; i < (size_t)PropMsg::END; ++i)
-        {
-            msg[i] = "";
-        }
-    }
+        id(PropId::END),
+        std_rnd_turns(Range(10, 10)),
+        name(""),
+        name_short(""),
+        descr(""),
+        msg_start_player(""),
+        msg_start_mon(""),
+        msg_end_player(""),
+        msg_end_mon(""),
+        msg_res_player(""),
+        msg_res_mon(""),
+        is_making_mon_aware(false),
+        allow_display_turns(true),
+        update_vision_when_start_or_end(false),
+        allow_test_on_bot(false),
+        alignment(PropAlignment::neutral) {}
 
     PropId id;
     Range std_rnd_turns;
     std::string name;
     std::string name_short;
     std::string descr;
-    std::string msg[(size_t)PropMsg::END];
+    std::string msg_start_player;
+    std::string msg_start_mon;
+    std::string msg_end_player;
+    std::string msg_end_mon;
+    std::string msg_res_player;
+    std::string msg_res_mon;
     bool is_making_mon_aware;
     bool allow_display_turns;
     bool update_vision_when_start_or_end;
@@ -259,28 +288,48 @@ struct PropDataT
 struct DmgResistData
 {
     DmgResistData() :
-        is_resisted         (false),
-        resist_msg_player   (),
-        resist_msg_mon      () {}
+        is_resisted(false),
+        msg_resist_player(),
+        msg_resist_mon() {}
 
     bool is_resisted;
-    std::string resist_msg_player;
+    std::string msg_resist_player;
     // Not including monster name, e.g. " seems unaffected"
-    std::string resist_msg_mon;
+    std::string msg_resist_mon;
 };
 
 struct PropListEntry
 {
     PropListEntry() :
-        title   (),
-        descr   (),
-        prop    (nullptr) {}
+        title(),
+        descr(),
+        prop(nullptr) {}
 
     ColoredString title;
 
     std::string descr;
 
     const Prop* prop;
+};
+
+enum class PropEnded
+{
+    no,
+    yes
+};
+
+struct PropActResult
+{
+    PropActResult() :
+        did_action(DidAction::no),
+        prop_ended(PropEnded::no) {}
+
+    PropActResult(DidAction did_action, PropEnded prop_ended) :
+        did_action(did_action),
+        prop_ended(prop_ended) {}
+
+    DidAction did_action;
+    PropEnded prop_ended;
 };
 
 namespace prop_data
@@ -296,7 +345,7 @@ void init();
 class PropHandler
 {
 public:
-    PropHandler(Actor* owning_actor);
+    PropHandler(Actor* owner);
 
     ~PropHandler();
 
@@ -371,15 +420,15 @@ public:
     // a random chance. For example, blindness never allows the player to read
     // scrolls, and the game won't let the player try, and waste a scroll. But
     // burning will allow the player to try, with a certain percent chance of
-    // success, and the scroll will be wasted. (All plain allow_* methods above
-    // are also considered "absolute".)
+    // success, and the scroll will be wasted on failure. (All plain
+    // allow_* methods above are also considered "absolute".)
     bool allow_read_absolute(const Verbosity verbosity) const;
     bool allow_read_chance(const Verbosity verbosity) const;
     bool allow_cast_intr_spell_absolute(const Verbosity verbosity) const;
     bool allow_cast_intr_spell_chance(const Verbosity verbosity) const;
 
     void on_hit();
-    void on_death(const bool is_player_see_owning_actor);
+    void on_death();
 
     int ability_mod(const AbilityId ability) const;
 
@@ -390,6 +439,16 @@ public:
 
     // Called when the actors turn ends
     void on_turn_end();
+
+    void on_std_turn();
+
+    // Called just before an actor is supposed to do an action (move,
+    // attack,...). This may "take over" the actor and do some special
+    // behavior instead (e.g. a Zombie rising, or a Vortex pulling),
+    // possibly ticking game time - if time is ticked, this method returns
+    // 'DidAction::yes' (each property implementing this callback must
+    // make sure to do this).
+    DidAction on_act();
 
     bool is_resisting_dmg(const DmgType dmg_type,
                           const Actor* const attacker,
@@ -416,7 +475,7 @@ private:
     // search through the vector as little as possible.
     int active_props_info_[(size_t)PropId::END];
 
-    Actor* owning_actor_;
+    Actor* owner_;
 };
 
 class Prop
@@ -480,15 +539,11 @@ public:
         return data_.descr;
     }
 
-    virtual void msg(const PropMsg msg_type, std::string& msg_ref) const
+    virtual std::string msg_end_player() const
     {
-        msg_ref = data_.msg[size_t(msg_type)];
+        return data_.msg_end_player;
     }
 
-    //
-    // TODO: This is ridiculous! Can't the properties just call vision updating
-    //       themselves (whatever is needed per case)???
-    //
     virtual bool need_update_vision_when_start_or_end() const
     {
         return data_.update_vision_when_start_or_end;
@@ -511,11 +566,16 @@ public:
 
     virtual void on_hit() {}
 
-    // Returns a pointer to the property if it's still active, otherwise
-    // nullptr is returned
-    virtual Prop* on_tick()
+    virtual PropEnded on_tick()
     {
-        return this;
+        return PropEnded::no;
+    }
+
+    virtual void on_std_turn() {}
+
+    virtual PropActResult on_act()
+    {
+        return PropActResult();
     }
 
     virtual void on_start() {}
@@ -525,10 +585,7 @@ public:
         (void)new_prop;
     }
 
-    virtual void on_death(const bool is_player_see_owning_actor)
-    {
-        (void)is_player_see_owning_actor;
-    }
+    virtual void on_death() {}
 
     virtual int affect_max_hp(const int hp_max) const
     {
@@ -643,10 +700,10 @@ protected:
     int nr_turns_left_;
 
     // How the prop turns was inited (std, specific, indefinite). This is used
-    // for example to make copies of a property to apply on melee attacks.
+    // for example to make copies of a property.
     PropTurns turns_init_type_;
 
-    Actor* owning_actor_;
+    Actor* owner_;
     PropSrc src_;
     const Item* item_applying_;
 };
@@ -694,7 +751,7 @@ public:
     PropInfected(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::infected, turns_init, nr_turns) {}
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropDiseased: public Prop
@@ -717,7 +774,7 @@ public:
     PropDescend(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::descend, turns_init, nr_turns) {}
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropFlying: public Prop
@@ -747,7 +804,7 @@ public:
     PropBurrowing(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::burrowing, turns_init, nr_turns) {}
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropPossByZuul: public Prop
@@ -756,7 +813,7 @@ public:
     PropPossByZuul(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::poss_by_zuul, turns_init, nr_turns) {}
 
-    void on_death(const bool is_player_see_owning_actor) override;
+    void on_death() override;
 
     int affect_max_hp(const int hp_max) const override
     {
@@ -770,7 +827,7 @@ public:
     PropPoisoned(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::poisoned, turns_init, nr_turns) {}
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropAiming: public Prop
@@ -870,6 +927,15 @@ public:
         Prop(PropId::cloaked, turns_init, nr_turns) {}
 };
 
+class PropRecloaks: public Prop
+{
+public:
+    PropRecloaks(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::recloaks, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
+};
+
 class PropSeeInvis: public Prop
 {
 public:
@@ -955,7 +1021,7 @@ public:
 
     bool allow_attack_ranged(const Verbosity verbosity) const override;
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropFlared: public Prop
@@ -964,7 +1030,7 @@ public:
     PropFlared(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::flared, turns_init, nr_turns) {}
 
-    Prop* on_tick() override;
+    PropEnded on_tick() override;
 };
 
 class PropConfused: public Prop
@@ -1030,7 +1096,13 @@ public:
 
     void load() override;
 
-    void msg(const PropMsg msg_type, std::string& msg_ref) const override;
+    std::string msg_end_player() const override
+    {
+        return
+            (nr_wounds_ > 1) ?
+            "All my wounds are healed!" :
+            "A wound is healed!";
+    }
 
     std::string name_short() const override
     {
@@ -1522,16 +1594,120 @@ public:
     ~PropConflict() override {}
 };
 
-class PropStrangled: public Prop
+class PropVortex: public Prop
 {
 public:
-    PropStrangled(PropTurns turns_init, int nr_turns = -1) :
-        Prop(PropId::strangled, turns_init, nr_turns) {}
+    PropVortex(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::vortex, turns_init, nr_turns),
+        pull_cooldown(0) {}
 
-    Prop* on_tick() override;
+    PropActResult on_act() override;
 
-    bool allow_speak(const Verbosity verbosity) const override;
-    bool allow_eat(const Verbosity verbosity) const override;
+private:
+    int pull_cooldown;
+};
+
+class PropExplodesOnDeath: public Prop
+{
+public:
+    PropExplodesOnDeath(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::explodes_on_death, turns_init, nr_turns) {}
+
+    void on_death() override;
+};
+
+class PropSplitsOnDeath: public Prop
+{
+public:
+    PropSplitsOnDeath(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::splits_on_death, turns_init, nr_turns) {}
+
+    void on_death() override;
+};
+
+class PropCorpseEater: public Prop
+{
+public:
+    PropCorpseEater(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::corpse_eater, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
+};
+
+class PropTeleports: public Prop
+{
+public:
+    PropTeleports(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::teleports, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
+};
+
+class PropCorruptsEnvColor: public Prop
+{
+public:
+    PropCorruptsEnvColor(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::corrupts_env_color, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
+};
+
+class PropRegenerates: public Prop
+{
+public:
+    PropRegenerates(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::regenerates, turns_init, nr_turns) {}
+
+    void on_std_turn() override;
+};
+
+class PropCorpseRises: public Prop
+{
+public:
+    PropCorpseRises(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::corpse_rises, turns_init, nr_turns),
+        rise_one_in_n_(8) {}
+
+    PropActResult on_act() override;
+
+private:
+    int rise_one_in_n_;
+};
+
+class PropBreeds: public Prop
+{
+public:
+    PropBreeds(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::breeds, turns_init, nr_turns) {}
+
+    void on_std_turn() override;
+};
+
+class PropConfusesAdjacent: public Prop
+{
+public:
+    PropConfusesAdjacent(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::confuses_adjacent, turns_init, nr_turns) {}
+
+    void on_std_turn() override;
+};
+
+class PropSpeaksCurses: public Prop
+{
+public:
+    PropSpeaksCurses(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::speaks_curses, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
+};
+
+class PropMajorClaphamSummon: public Prop
+{
+public:
+    PropMajorClaphamSummon(PropTurns turns_init, int nr_turns = -1) :
+        Prop(PropId::major_clapham_summon, turns_init, nr_turns) {}
+
+    PropActResult on_act() override;
 };
 
 #endif // PROPERTIES_HPP

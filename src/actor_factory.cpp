@@ -12,6 +12,26 @@
 #include "init.hpp"
 #include "io.hpp"
 
+MonSpawnResult& MonSpawnResult::set_leader(Actor* const leader)
+{
+    std::for_each(begin(monsters), end(monsters), [leader](auto mon)
+    {
+        mon->leader_ = leader;
+    });
+
+    return *this;
+}
+
+MonSpawnResult& MonSpawnResult::make_aware_of_player()
+{
+    std::for_each(begin(monsters), end(monsters), [](auto mon)
+    {
+        mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
+    });
+
+    return *this;
+}
+
 namespace actor_factory
 {
 
@@ -272,6 +292,58 @@ Actor* mk_actor_from_id(const ActorId id)
     return nullptr;
 }
 
+std::vector<P> free_spawn_positions(const R& area)
+{
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksMoveCommon(ParseActors::yes)
+        .run(blocked,
+             MapParseMode::overwrite,
+             area);
+
+    const auto free_positions = to_vec(blocked, false, area);
+
+    return free_positions;
+}
+
+Mon* spawn_at(const P& pos,
+              const ActorId id)
+{
+    ASSERT(map::is_pos_inside_map(pos, false));
+
+    Actor* const actor = mk(id, pos);
+
+    Mon* const mon = static_cast<Mon*>(actor);
+
+    if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player &&
+        !mon->is_sneaking())
+    {
+        mon->set_player_aware_of_me();
+    }
+
+    return mon;
+}
+
+MonSpawnResult spawn_at_positions(const std::vector<P>& positions,
+                                  const std::vector<ActorId>& ids)
+{
+    MonSpawnResult result;
+
+    const size_t nr_to_spawn = std::min(positions.size(), ids.size());
+
+    for (size_t i = 0; i < nr_to_spawn; ++i)
+    {
+        const P& pos = positions[i];
+
+        const ActorId id = ids[i];
+
+        result.monsters.emplace_back(
+            spawn_at(pos, id));
+    }
+
+    return result;
+}
+
 } // namespace
 
 Actor* mk(const ActorId id, const P& pos)
@@ -316,65 +388,49 @@ void delete_all_mon()
     }
 }
 
-std::vector<Mon*> spawn(const P& origin,
-                        const std::vector<ActorId>& monster_ids,
-                        const MakeMonAware make_aware,
-                        Actor* const actor_to_set_as_leader)
+MonSpawnResult spawn(const P& origin,
+                     const std::vector<ActorId>& monster_ids,
+                     const R& area_allowed)
 {
     TRACE_FUNC_BEGIN;
 
-    std::vector<Mon*> monsters_summoned;
+    auto free_positions = free_spawn_positions(area_allowed);
 
-    bool blocked[map_w][map_h];
-
-    map_parsers::BlocksMoveCommon(ParseActors::yes)
-        .run(blocked);
-
-    auto free_cells = to_vec(blocked, false);
-
-    std::sort(begin(free_cells), end(free_cells), IsCloserToPos(origin));
-
-    const size_t nr_free_cells = free_cells.size();
-
-    const size_t nr_monster_ids = monster_ids.size();
-
-    const int nr_to_spawn = std::min(nr_free_cells, nr_monster_ids);
-
-    for (int i = 0; i < nr_to_spawn; ++i)
+    if (free_positions.empty())
     {
-        const P& pos = free_cells[i];
-
-        const ActorId id = monster_ids[i];
-
-        Actor* const actor = mk(id, pos);
-
-        Mon* const mon = static_cast<Mon*>(actor);
-
-        ASSERT(map::is_pos_inside_map(pos, false));
-
-        // Should the player be aware of the monster?
-        if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player &&
-            !mon->is_sneaking())
-        {
-            mon->set_player_aware_of_me();
-        }
-
-        monsters_summoned.push_back(mon);
-
-        if (actor_to_set_as_leader)
-        {
-            mon->leader_ = actor_to_set_as_leader;
-        }
-
-        if (make_aware == MakeMonAware::yes)
-        {
-            mon->aware_of_player_counter_ = mon->data().nr_turns_aware;
-        }
+        return MonSpawnResult();
     }
+
+    std::sort(begin(free_positions),
+              end(free_positions),
+              IsCloserToPos(origin));
+
+    const auto result = spawn_at_positions(free_positions, monster_ids);
 
     TRACE_FUNC_END;
 
-    return monsters_summoned;
+    return result;
+}
+
+MonSpawnResult spawn_random_position(const std::vector<ActorId>& monster_ids,
+                                     const R& area_allowed)
+{
+    TRACE_FUNC_BEGIN;
+
+    auto free_positions = free_spawn_positions(area_allowed);
+
+    if (free_positions.empty())
+    {
+        return MonSpawnResult();
+    }
+
+    rnd::shuffle(free_positions);
+
+    const auto result = spawn_at_positions(free_positions, monster_ids);
+
+    TRACE_FUNC_END;
+
+    return result;
 }
 
 } // actor_factory

@@ -73,7 +73,12 @@ std::vector<ActorId> valid_auto_spawn_monsters(
             continue;
         }
 
-        if ((effective_dlvl < d.spawn_min_dlvl) ||
+        if (effective_dlvl < d.spawn_min_dlvl)
+        {
+            continue;
+        }
+
+        if ((d.spawn_max_dlvl != -1) &&
             (effective_dlvl > d.spawn_max_dlvl))
         {
             continue;

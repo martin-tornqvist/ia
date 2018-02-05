@@ -1296,7 +1296,7 @@ void LiquidShallow::bump(Actor& actor_bumping)
         return;
     }
 
-    actor_bumping.prop_handler().apply(new PropWaiting(PropTurns::std));
+    actor_bumping.apply_prop(new PropWaiting(PropTurns::std));
 
     if (actor_bumping.is_player())
     {
@@ -2864,7 +2864,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
     case TombTrait::cursed:
     {
-        map::player->prop_handler().apply(new PropCursed(PropTurns::std));
+        map::player->apply_prop(new PropCursed(PropTurns::std));
         did_trigger_trap = DidTriggerTrap::yes;
     }
     break;
@@ -2875,70 +2875,14 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
     if (id_to_spawn != ActorId::END)
     {
-        TRACE << "Summoning monster" << std::endl;
-
-        // First, try to spawn monster in an adjacent cell
-        P spawn_pos(-1, -1);
-
-        bool blocked[map_w][map_h];
-
-        map_parsers::BlocksMoveCommon(ParseActors::yes)
-            .run(blocked,
-                 MapParseMode::overwrite,
-                 R(pos_ - 1, pos_ + 1));
-
-        auto positions_to_try = dir_utils::dir_list;
-
-        random_shuffle(begin(positions_to_try), end(positions_to_try));
-
-        Mon* mon_spawned = nullptr;
-
-        for (const P& d : positions_to_try)
-        {
-            const P p(pos_ + d);
-
-            if (!blocked[p.x][p.y])
+        const auto summoned =
+            actor_factory::spawn(pos_, {1, id_to_spawn})
+            .make_aware_of_player()
+            .for_each([](Mon* const mon)
             {
-                Actor* actor_spawned = actor_factory::mk(id_to_spawn, p);
-
-                mon_spawned = static_cast<Mon*>(actor_spawned);
-
-                mon_spawned->become_aware_player(false);
-
-                break;
-            }
-        }
-
-        if (!mon_spawned)
-        {
-            // All adjacent space is occupied, use the summon method as fallback
-            // (Although the monster could spawn pretty far from the tomb...)
-
-            TRACE << "Could not spawn adjacent monster, "
-                  << "using summon method instead"
-                  << std::endl;
-
-            const auto summoned =
-                actor_factory::spawn(pos_,
-                                      {1, id_to_spawn},
-                                      MakeMonAware::yes,
-                                      nullptr);
-
-            ASSERT(summoned.size() == 1);
-
-            if (!summoned.empty())
-            {
-                mon_spawned = summoned[0];
-            }
-        }
-
-        ASSERT(mon_spawned);
-
-        if (mon_spawned)
-        {
-            mon_spawned->prop_handler().apply(
-                new PropWaiting(PropTurns::specific, 2));
-        }
+                mon->apply_prop(
+                    new PropWaiting(PropTurns::specific, 2));
+            });
     }
 
     trait_ = TombTrait::END;
@@ -3845,7 +3789,7 @@ void Cocoon::bump(Actor& actor_bumping)
         {
             if (insanity::has_sympt(InsSymptId::phobia_spider))
             {
-                map::player->prop_handler().apply(
+                map::player->apply_prop(
                     new PropTerrified(PropTurns::std));
             }
 
@@ -3906,18 +3850,14 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
                 msg_log::add("There are spiders inside!");
 
-                const int nr_spiders = rnd::range(2, 5);
+                const size_t nr_spiders = rnd::range(2, 5);
 
                 const int idx = rnd::range(0, nr_candidates - 1);
 
                 const ActorId actor_id_to_summon = spawn_bucket[idx];
 
-                const std::vector<ActorId>
-                    ids_to_summon(nr_spiders, actor_id_to_summon);
-
-                actor_factory::spawn(pos_,
-                                      ids_to_summon,
-                                      MakeMonAware::yes);
+                actor_factory::spawn(pos_, {nr_spiders, actor_id_to_summon})
+                    .make_aware_of_player();
 
                 is_trapped_ = false;
 

@@ -623,7 +623,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     {
         const int paralyze_duration = rnd::range(1, 2);
 
-        target->prop_handler().apply(
+        target->apply_prop(
             new PropParalyzed(PropTurns::specific, paralyze_duration));
     }
 
@@ -632,7 +632,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
     {
         const int burn_duration = rnd::range(2, 3);
 
-        target->prop_handler().apply(
+        target->apply_prop(
             new PropBurning(PropTurns::specific, burn_duration));
     }
 
@@ -785,14 +785,14 @@ void SpellAzaWrath::run_effect(Actor* const caster,
 
         if (target->is_alive())
         {
-            target->prop_handler().apply(
+            target->apply_prop(
                 new PropParalyzed(PropTurns::specific, 1));
         }
 
         if ((skill == SpellSkill::master) &&
             target->is_alive())
         {
-            target->prop_handler().apply(
+            target->apply_prop(
                 new PropBurning(PropTurns::specific, 2));
         }
 
@@ -1096,40 +1096,36 @@ void SpellPest::run_effect(Actor* const caster,
             caster;
     }
 
-    const auto mon_summoned =
-        actor_factory::spawn(
-            caster->pos,
-            {nr_mon, ActorId::rat},
-            MakeMonAware::yes,
-            leader);
-
-    if (mon_summoned.empty())
-    {
-        return;
-    }
-
     bool is_any_seen_by_player = false;
 
-    for (Mon* const mon : mon_summoned)
+    const auto mon_summoned =
+        actor_factory::spawn(caster->pos, {nr_mon, ActorId::rat})
+        .make_aware_of_player()
+        .set_leader(leader)
+        .for_each([skill, &is_any_seen_by_player](Mon* const mon)
+        {
+            mon->apply_prop(new PropSummoned(PropTurns::std));
+            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+
+            if (map::player->can_see_actor(*mon))
+            {
+                is_any_seen_by_player = true;
+            }
+
+            // Haste the rats if master
+            if (skill == SpellSkill::master)
+            {
+                mon->prop_handler().apply(
+                    new PropHasted(PropTurns::indefinite),
+                    PropSrc::intr,
+                    true,
+                    Verbosity::silent);
+            }
+        });
+
+    if (mon_summoned.monsters.empty())
     {
-        mon->prop_handler().apply(new PropSummoned(PropTurns::std));
-
-        mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
-
-        if (map::player->can_see_actor(*mon))
-        {
-            is_any_seen_by_player = true;
-        }
-
-        // Haste the rats if master
-        if (skill == SpellSkill::master)
-        {
-            mon->prop_handler().apply(
-                new PropHasted(PropTurns::indefinite),
-                PropSrc::intr,
-                true,
-                Verbosity::silent);
-        }
+        return;
     }
 
     if (caster->is_player() ||
@@ -1223,7 +1219,8 @@ void SpellAnimWpns::run_effect(Actor* const caster,
         if (anim_pos_bucket.empty())
         {
             msg_log::add(
-                "The dust and gravel on the ground starts shooting everywhere.");
+                "The dust and gravel on the ground starts shooting "
+                "everywhere.");
 
             return;
         }
@@ -1243,18 +1240,15 @@ void SpellAnimWpns::run_effect(Actor* const caster,
     for (const P& p : positions_to_anim)
     {
         const auto summoned =
-            actor_factory::spawn(
-                p,
-                {1, ActorId::animated_wpn},
-                MakeMonAware::no,
-                map::player);
+            actor_factory::spawn(p, { ActorId::animated_wpn})
+            .set_leader(map::player);
 
-        if (summoned.empty())
+        if (summoned.monsters.empty())
         {
             return;
         }
 
-        Mon* const anim_wpn = summoned[0];
+        Mon* const anim_wpn = summoned.monsters[0];
 
         Cell& cell = map::cells[p.x][p.y];
 
@@ -1286,7 +1280,7 @@ void SpellAnimWpns::run_effect(Actor* const caster,
                 Verbosity::silent);
         }
 
-        anim_wpn->prop_handler().apply(
+        anim_wpn->apply_prop(
             new PropWaiting(PropTurns::specific, 2));
     }
 }
@@ -1409,26 +1403,25 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
         ActorId::mummy :
         ActorId::croc_head_mummy;
 
-    const auto summoned_mon =
-        actor_factory::spawn(caster->pos,
-                              {actor_id},
-                              MakeMonAware::yes,
-                              leader);
+    const auto summoned =
+        actor_factory::spawn(caster->pos, {actor_id})
+        .make_aware_of_player()
+        .set_leader(leader)
+        .for_each([](Mon* const mon)
+        {
+            mon->apply_prop(new PropSummoned(PropTurns::std));
+            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
 
-    Mon* const mon = summoned_mon[0];
-
-    mon->prop_handler().apply(new PropSummoned(PropTurns::std));
-
-    mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
-
-    if (map::player->can_see_actor(*mon))
-    {
-        msg_log::add(text_format::first_to_upper(mon->name_a()) + " appears!");
-    }
-    else // Player cannot see monster
-    {
-        msg_log::add("I sense a new presence.");
-    }
+            if (map::player->can_see_actor(*mon))
+            {
+                msg_log::add(text_format::first_to_upper(mon->name_a()) +
+                             " appears!");
+            }
+            else // Player cannot see monster
+            {
+                msg_log::add("I sense a new presence.");
+            }
+        });
 }
 
 std::vector<std::string> SpellPharaohStaff::descr_specific(
@@ -1742,7 +1735,7 @@ void SpellFrenzy::run_effect(Actor* const caster,
 
     PropFrenzied* frenzy = new PropFrenzied(PropTurns::specific, nr_turns);
 
-    caster->prop_handler().apply(frenzy);
+    caster->apply_prop(frenzy);
 }
 
 std::vector<std::string> SpellFrenzy::descr_specific(
@@ -1765,7 +1758,7 @@ void SpellBless::run_effect(Actor* const caster,
 {
     const int nr_turns = 20 + (int)skill * 100;
 
-    caster->prop_handler().apply(
+    caster->apply_prop(
         new PropBlessed(PropTurns::specific, nr_turns));
 }
 
@@ -1794,7 +1787,7 @@ void SpellLight::run_effect(Actor* const caster,
 {
     const int nr_turns = 20 + (int)skill * 20;
 
-    caster->prop_handler().apply(
+    caster->apply_prop(
         new PropRadiant(PropTurns::specific, nr_turns));
 
     if (skill == SpellSkill::master)
@@ -1848,7 +1841,7 @@ void SpellSeeInvis::run_effect(Actor* const caster,
         (skill == SpellSkill::expert) ? Range(40, 80) :
         Range(400, 600);
 
-    caster->prop_handler().apply(
+    caster->apply_prop(
         new PropSeeInvis(PropTurns::specific, duration_range.roll()));
 }
 
@@ -1897,7 +1890,7 @@ void SpellSpellShield::run_effect(Actor* const caster,
 {
     (void)skill;
 
-    caster->prop_handler().apply(new PropRSpell(PropTurns::indefinite));
+    caster->apply_prop(new PropRSpell(PropTurns::indefinite));
 }
 
 std::vector<std::string> SpellSpellShield::descr_specific(
@@ -1932,7 +1925,7 @@ void SpellTeleport::run_effect(Actor* const caster,
     {
         const int nr_turns = 3;
 
-        caster->prop_handler().apply(
+        caster->apply_prop(
             new PropInvisible(PropTurns::specific, nr_turns));
     }
 
@@ -2270,7 +2263,7 @@ void SpellDisease::run_effect(Actor* const caster,
                      "!");
     }
 
-    target->prop_handler().apply(new PropDiseased(PropTurns::std));
+    target->apply_prop(new PropDiseased(PropTurns::std));
 }
 
 bool SpellDisease::allow_mon_cast_now(Mon& mon) const
@@ -2399,22 +2392,22 @@ void SpellSummonMon::run_effect(Actor* const caster,
             caster;
     }
 
-    const auto mon_summoned =
-        actor_factory::spawn(caster->pos,
-                             {mon_id},
-                             MakeMonAware::yes,
-                             leader);
+    const auto summoned =
+        actor_factory::spawn(caster->pos, {mon_id})
+        .make_aware_of_player()
+        .set_leader(leader)
+        .for_each([](Mon* const mon)
+        {
+            mon->apply_prop(new PropSummoned(PropTurns::std));
+            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+        });
 
-    if (mon_summoned.empty())
+    if (summoned.monsters.empty())
     {
         return;
     }
 
-    Mon* const mon = mon_summoned[0];
-
-    mon->prop_handler().apply(new PropSummoned(PropTurns::std));
-
-    mon->prop_handler().apply(new PropWaiting(PropTurns::specific, 2));
+    Mon* const mon = summoned.monsters[0];
 
     if (map::player->can_see_actor(*mon))
     {
@@ -2574,7 +2567,7 @@ void SpellMiGoHypno::run_effect(Actor* const caster,
         Prop* const prop = new PropFainted(PropTurns::specific,
                                            rnd::range(2, 10));
 
-        target->prop_handler().apply(prop);
+        target->apply_prop(prop);
     }
     else
     {
@@ -2648,7 +2641,7 @@ void SpellBurn::run_effect(Actor* const caster,
 
     Prop* const prop = new PropBurning(PropTurns::specific, nr_turns);
 
-    target->prop_handler().apply(prop);
+    target->apply_prop(prop);
 }
 
 bool SpellBurn::allow_mon_cast_now(Mon& mon) const
@@ -2702,7 +2695,7 @@ void SpellDeafen::run_effect(Actor* const caster,
 
     Prop* const prop = new PropDeaf(PropTurns::specific, nr_turns);
 
-    target->prop_handler().apply(prop);
+    target->apply_prop(prop);
 }
 
 bool SpellDeafen::allow_mon_cast_now(Mon& mon) const

@@ -11,7 +11,7 @@ class Mob;
 class Actor;
 
 // NOTE: If append mode is used, the caller is responsible for initializing the
-//       array (e.g. with a previous "overwrite" parse call)
+// array (e.g. with a previous "overwrite" parse call)
 enum class MapParseMode
 {
     overwrite,

@@ -36,8 +36,9 @@ public:
         return *prop_handler_;
     }
 
-    // This is just a shortcut to the same function in the property handler
+    // Shortcut to the same functions in the property handler
     bool has_prop(const PropId id) const;
+    void apply_prop(Prop* const prop);
 
     ActorDataT& data()
     {
@@ -101,11 +102,10 @@ public:
 
     void destroy();
 
-    // Silently mark the monster as body-destroyed, without running any hooks
-    // etc (used e.g. by the Horn of Banishment)
-    void destroy_silent()
+    // Set state immediately, without running any hooks etc
+    void set_state(const ActorState state)
     {
-        state_ = ActorState::destroyed;
+        state_ = state;
     }
 
     // Used by Ghoul class and Ghoul monsters
@@ -140,6 +140,11 @@ public:
     int hp() const
     {
         return hp_;
+    }
+
+    void set_hp(const int hp)
+    {
+        hp_ = hp;
     }
 
     int spi() const

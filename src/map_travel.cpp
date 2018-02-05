@@ -245,7 +245,7 @@ void go_to_nxt()
     {
         msg_log::add("I am plagued by my phobia of deep places!");
 
-        map::player->prop_handler().apply(
+        map::player->apply_prop(
             new PropTerrified(PropTurns::std));
 
         return;

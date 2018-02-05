@@ -875,9 +875,7 @@ void Player::mon_feeling()
 
     for (Actor* actor : game_time::actors)
     {
-        //
         // Not a hostile, living monster?
-        //
         if (actor->is_player() ||
             map::player->is_leader_of(actor) ||
             !actor->is_alive())
@@ -887,11 +885,9 @@ void Player::mon_feeling()
 
         auto* mon = static_cast<Mon*>(actor);
 
-        //
         // Print monster feeling for new monsters spawned during the level?
         // (We do the actual printing once, after the loop, so that we don't
         // print something silly like "A chill runs down my spine (x2)")
-        //
         if (mon->data().is_unique &&
             mon->is_player_feeling_msg_allowed_)
         {
@@ -937,13 +933,12 @@ void Player::set_quick_move(const Dir dir)
 
 void Player::act()
 {
-#ifndef NDEBUG
-    // Sanity check: Disease and infection should never be active simultaneously
-    ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
-           !prop_handler_->has_prop(PropId::infected));
-#endif // NDEBUG
-
     if (!is_alive())
+    {
+        return;
+    }
+
+    if (prop_handler().on_act() == DidAction::yes)
     {
         return;
     }
@@ -1107,7 +1102,7 @@ void Player::act()
 
         bool should_abort = false;
 
-        if (map::cells[pos.x][pos.y].is_dark)
+        if (map::dark[pos.x][pos.y])
         {
             should_abort = true;
         }
@@ -1567,13 +1562,11 @@ void Player::update_tmp_shock()
 
     // Minimum temporary shock
 
-    //
     // NOTE: In case the total shock is currently at 100, we do NOT want to
-    //       allow lowering the shock e.g. by turning on the Electric Lantern,
-    //       since you could interrupt the 3 turns countdown until the insanity
-    //       event happens just ny turning the lantern on for one turn.
-    //       Therefore we only allow negative temporary shock while below 100%.
-    //
+    // allow lowering the shock e.g. by turning on the Electric Lantern, since
+    // you could interrupt the 3 turns countdown until the insanity event
+    // happens just ny turning the lantern on for one turn. Therefore we only
+    // allow negative temporary shock while below 100%.
     double shock_tmp_min =
         (tot_shock_before < 100) ?
         -999.0 :
@@ -1591,15 +1584,13 @@ void Player::update_tmp_shock()
 
     if (prop_handler_->allow_see())
     {
-        Cell& cell = map::cells[pos.x][pos.y];
-
         // Shock reduction from light?
-        if (cell.is_lit)
+        if (map::light[pos.x][pos.y])
         {
             shock_tmp_ -= 20.0;
         }
         // Not lit - shock from darkness?
-        else if (cell.is_dark &&
+        else if (map::dark[pos.x][pos.y] &&
                  (player_bon::bg() != Bg::ghoul))
         {
             double shock_value = 20.0;
@@ -1609,8 +1600,7 @@ void Player::update_tmp_shock()
                 shock_value = 30.0;
             }
 
-            shock_tmp_ += shock_taken_after_mods(shock_value,
-                                                 ShockSrc::misc);
+            shock_tmp_ += shock_taken_after_mods(shock_value, ShockSrc::misc);
         }
 
         // Temporary shock from seen features?
@@ -1821,11 +1811,9 @@ void Player::on_std_turn()
                     continue;
                 }
 
-                auto& cell = map::cells[x][y];
+                auto* f = map::cells[x][y].rigid;
 
-                auto* f = cell.rigid;
-
-                const int lit_mod = cell.is_lit ? 5 : 0;
+                const int lit_mod = map::light[x][y] ? 5 : 0;
 
                 const int dist = king_dist(pos, f->pos());
 
@@ -2520,7 +2508,7 @@ void Player::update_fov()
                 if (!los.is_blocked_hard &&
                     los.is_blocked_by_drk)
                 {
-                    ASSERT(!cell.is_lit);
+                    ASSERT(!map::light[x][y]);
                 }
 #endif // NDEBUG
             }
@@ -2582,12 +2570,12 @@ void Player::update_fov()
                 map_parsers::BlocksMoveCommon(ParseActors::no)
                 .cell(P(x, y));
 
-            Cell& cell = map::cells[x][y];
-
             const bool allow_explore =
-                !cell.is_dark ||
+                !map::dark[x][y] ||
                 is_blocking ||
                 has_darkvision;
+
+            Cell& cell = map::cells[x][y];
 
             // Do not explore dark floor cells
             if (cell.is_seen_by_player &&
@@ -2627,15 +2615,13 @@ void Player::fov_hack()
 
                     if (map::is_pos_inside_map(p_adj))
                     {
-                        const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
-
                         const bool allow_explore =
-                            (!adj_cell.is_dark ||
-                             adj_cell.is_lit ||
+                            (!map::dark[p_adj.x][p_adj.y] ||
+                             map::light[p_adj.x][p_adj.y] ||
                              has_darkvision) &&
                             !blocked[p_adj.x][p_adj.y];
 
-                        if (adj_cell.is_seen_by_player &&
+                        if (map::cells[p_adj.x][p_adj.y].is_seen_by_player &&
                             allow_explore)
                         {
                             Cell& cell = map::cells[x][y];

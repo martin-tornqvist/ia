@@ -13,6 +13,8 @@ class Rigid;
 class Mob;
 class Player;
 
+// TODO: This should probably be removed, and instead multiple smaller arrays
+// should be used (instead of a single array of a big data structure)
 struct Cell
 {
     Cell();
@@ -20,7 +22,7 @@ struct Cell
 
     void reset();
 
-    bool is_explored, is_seen_by_player, is_lit, is_dark;
+    bool is_explored, is_seen_by_player;
     LosResult player_los; // Updated when player updates FOV
     Item* item;
     Rigid* rigid;
@@ -42,9 +44,9 @@ enum class MapType
 struct ChokePointData
 {
     ChokePointData() :
-        p           (),
-        player_side (-1),
-        stairs_side (-1)
+        p(),
+        player_side(-1),
+        stairs_side(-1)
     {
         sides[0].resize(0);
         sides[1].resize(0);
@@ -75,6 +77,9 @@ extern Player* player;
 extern int dlvl;
 
 extern Cell cells[map_w][map_h];
+
+extern bool light[map_w][map_h];
+extern bool dark[map_w][map_h];
 
 extern Color wall_color;
 

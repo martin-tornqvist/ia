@@ -811,7 +811,7 @@ void SpikedMace::on_melee_hit(Actor& actor_hit, const int dmg)
     {
         Prop* const prop = new PropParalyzed(PropTurns::specific, 2);
 
-        actor_hit.prop_handler().apply(prop);
+        actor_hit.apply_prop(prop);
     }
 }
 
@@ -871,7 +871,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         {
             Prop* const poison = new PropPoisoned(PropTurns::std);
 
-            actor_hit.prop_handler().apply(poison);
+            actor_hit.apply_prop(poison);
         }
 
         // Terrify victim from Ghoul Indomitable Fury trait?
@@ -880,7 +880,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         {
             Prop* const fear = new PropTerrified(PropTurns::std);
 
-            actor_hit.prop_handler().apply(fear);
+            actor_hit.apply_prop(fear);
         }
     }
 }
@@ -901,10 +901,9 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
     {
         const size_t nr_worms = rnd::range(1, 2);
 
-        actor_factory::spawn(actor_killed.pos,
-                              {nr_worms, ActorId::worm_mass},
-                              MakeMonAware::yes,
-                              map::player);
+        actor_factory::spawn(actor_killed.pos, {nr_worms, ActorId::worm_mass})
+            .make_aware_of_player()
+            .set_leader(map::player);
     }
 }
 
@@ -916,7 +915,7 @@ void ZombieDust::on_ranged_hit(Actor& actor_hit)
     if (actor_hit.state() == ActorState::alive &&
         !actor_hit.data().is_undead)
     {
-        actor_hit.prop_handler().apply(
+        actor_hit.apply_prop(
             new PropParalyzed(PropTurns::std));
     }
 }
@@ -1010,7 +1009,7 @@ void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
 
     Prop* const prop = new PropBlind(PropTurns::specific, 2);
 
-    actor_hit.prop_handler().apply(prop);
+    actor_hit.apply_prop(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1061,18 +1060,18 @@ void MindLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
 
         if (mon->is_alive())
         {
-            mon->prop_handler().apply(new PropConfused(PropTurns::std));
+            mon->apply_prop(new PropConfused(PropTurns::std));
 
-            mon->prop_handler().apply(new PropTerrified(PropTurns::std));
+            mon->apply_prop(new PropTerrified(PropTurns::std));
         }
     }
     else // Player mind can be eaten
     {
-        map::player->prop_handler().apply(
+        map::player->apply_prop(
             new PropMindSap(PropTurns::indefinite));
 
         // Make the monster pause, so things don't get too crazy
-        mon->prop_handler().apply(
+        mon->apply_prop(
             new PropWaiting(PropTurns::specific, 2));
     }
 }
@@ -1090,7 +1089,7 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->prop_handler().apply(
+    map::player->apply_prop(
         new PropSpiSap(PropTurns::indefinite));
 
     auto* const mon = actor_carrying_;
@@ -1100,7 +1099,7 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
     mon->restore_spi(1, false, Verbosity::silent);
 
     // Make the monster pause, so things don't get too crazy
-    mon->prop_handler().apply(
+    mon->apply_prop(
         new PropWaiting(PropTurns::specific, 2));
 }
 
@@ -1117,7 +1116,7 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->prop_handler().apply(
+    map::player->apply_prop(
         new PropHpSap(PropTurns::indefinite));
 
     auto* const mon = actor_carrying_;
@@ -1127,7 +1126,7 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
     mon->restore_hp(1, false, Verbosity::silent);
 
     // Make the monster pause, so things don't get too crazy
-    mon->prop_handler().apply(
+    mon->apply_prop(
         new PropWaiting(PropTurns::specific, 2));
 }
 
@@ -1155,7 +1154,7 @@ void DustVortexEngulf::on_melee_hit(Actor& actor_hit, const int dmg)
 
     Prop* const prop = new PropBlind(PropTurns::std);
 
-    actor_hit.prop_handler().apply(prop);
+    actor_hit.apply_prop(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1180,7 +1179,7 @@ void SpittingCobraSpit::on_ranged_hit(Actor& actor_hit)
 
     Prop* const prop = new PropBlind(PropTurns::specific, 7);
 
-    actor_hit.prop_handler().apply(prop);
+    actor_hit.apply_prop(prop);
 }
 
 // -----------------------------------------------------------------------------
@@ -1504,7 +1503,7 @@ int MedicalBag::tot_turns_for_action(const MedBagAction action) const
 //            {
 //                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
 //                {
-//                    actor->prop_handler().apply(
+//                    actor->apply_prop(
 //                        new PropTerrified(PropTurns::std));
 //                }
 //            }

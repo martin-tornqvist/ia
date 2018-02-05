@@ -291,9 +291,9 @@ Room* mk_random_room(const R& r, const IsSubRoom is_subroom)
 // Room
 // -----------------------------------------------------------------------------
 Room::Room(R r, RoomType type) :
-    r_              (r),
-    type_           (type),
-    is_sub_room_    (false) {}
+    r_(r),
+    type_(type),
+    is_sub_room_(false) {}
 
 void Room::mk_drk() const
 {
@@ -303,7 +303,7 @@ void Room::mk_drk() const
         {
             if (map::room_map[x][y] == this)
             {
-                map::cells[x][y].is_dark = true;
+                map::dark[x][y] = true;
             }
         }
     }

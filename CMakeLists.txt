@@ -234,15 +234,10 @@ add_executable(ia-debug ${SRC} ${RC_FILE})
 set_target_properties(ia        PROPERTIES OUTPUT_NAME ia)
 set_target_properties(ia-debug  PROPERTIES OUTPUT_NAME ia-debug)
 
-#
 # NOTE: The test target must use exceptions (used by the test framework)
-#
 
-#
 # TODO: Enable this flag:
-#
 # -Wfloat-conversion
-#
 
 # GNU gcc and Clang specific compiler flags
 if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
@@ -263,6 +258,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
     -fno-exceptions
     -O0
     -g
+    # Uncomment to generate gmon.out for gprof (must also be done for linker
+    # flags, see below)
+    # -pg
     )
 
   set(RELEASE_COMPILE_FLAGS
@@ -303,9 +301,7 @@ target_include_directories(ia-debug PUBLIC
 
 # On Windows releases, remove the console window
 if(WIN32)
-  #
   # TODO: This solution only works with gcc/clang - not with MSVC
-  #
   if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     target_link_libraries(ia -mwindows)
   endif()
@@ -369,9 +365,7 @@ if(WIN32)
 
     else()
 
-        #
         # Not MSVC - e.g. gcc
-        #
 
         if("${ARCH}" EQUAL "32bit")
             set(SDL_ARCH_DIR i686-w64-mingw32)
@@ -453,9 +447,7 @@ if(WIN32)
 
 else()
 
-    #
     # Not windows (e.g. Unix)
-    #
 
     set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -481,6 +473,13 @@ else()
     target_link_libraries(ia PUBLIC         ${SDL_LIBS})
     target_link_libraries(ia-debug PUBLIC   ${SDL_LIBS})
 
+    # Uncomment to generate gmon.out for gprof (must also be done for compile
+    # flags, see above)
+    # NOTE: "-no-pie" is needed due to "a bug in gcc", see:
+    # https://stackoverflow.com/questions/42620074
+    # https://stackoverflow.com/questions/39827412
+    # target_link_libraries(ia-debug PUBLIC -pg -no-pie)
+
 endif()
 
 
@@ -488,9 +487,7 @@ endif()
 # Testing
 # ------------------------------------------------------------------------------
 
-#
 # TODO
-#
 
 
 # ------------------------------------------------------------------------------

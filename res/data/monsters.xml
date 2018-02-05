@@ -77,6 +77,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- zombie -->
     <!--************************************************************-->
@@ -132,6 +133,7 @@
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>corpse_rises</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -164,6 +166,7 @@
             <native_room>jail</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- zombie_axe -->
     <!--************************************************************-->
@@ -219,6 +222,7 @@
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>corpse_rises</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -251,6 +255,7 @@
             <native_room>jail</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- bloated_zombie -->
     <!--************************************************************-->
@@ -306,6 +311,7 @@
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>corpse_rises</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -336,6 +342,7 @@
             <native_room>jail</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- major_clapham_lee -->
     <!--************************************************************-->
@@ -391,6 +398,8 @@
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>major_clapham_summon</property>
+            <property>corpse_rises</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -419,6 +428,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- dean_halsey -->
     <!--************************************************************-->
@@ -474,6 +484,7 @@
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>corpse_rises</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -502,6 +513,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- crawling_intestines -->
     <!--************************************************************-->
@@ -584,6 +596,7 @@
             <native_room>monster</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- crawling_hand -->
     <!--************************************************************-->
@@ -667,6 +680,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- thing -->
     <!--************************************************************-->
@@ -751,6 +765,7 @@
             <native_room>human</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- floating_skull -->
     <!--************************************************************-->
@@ -806,6 +821,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>speaks_curses</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
@@ -837,6 +853,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- cultist -->
     <!--************************************************************-->
@@ -919,6 +936,7 @@
             <native_room>jail</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- bog_tcher -->
     <!--************************************************************-->
@@ -1002,6 +1020,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- keziah_mason -->
     <!--************************************************************-->
@@ -1084,6 +1103,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- brown_jenkin -->
     <!--************************************************************-->
@@ -1164,6 +1184,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- leng_spider -->
     <!--************************************************************-->
@@ -1249,6 +1270,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- cultist_priest -->
     <!--************************************************************-->
@@ -1332,6 +1354,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- cultist_wizard -->
     <!--************************************************************-->
@@ -1415,6 +1438,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- cultist_arch_wizard -->
     <!--************************************************************-->
@@ -1498,6 +1522,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- green_spider -->
     <!--************************************************************-->
@@ -1582,6 +1607,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- white_spider -->
     <!--************************************************************-->
@@ -1666,6 +1692,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- red_spider -->
     <!--************************************************************-->
@@ -1750,6 +1777,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- shadow_spider -->
     <!--************************************************************-->
@@ -1837,6 +1865,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- rat -->
     <!--************************************************************-->
@@ -1919,6 +1948,7 @@
             <group_size weight="1">swarm</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- rat_thing -->
     <!--************************************************************-->
@@ -2005,6 +2035,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- pit_viper -->
     <!--************************************************************-->
@@ -2089,6 +2120,7 @@
             <native_room>ritual</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- spitting_cobra -->
     <!--************************************************************-->
@@ -2173,6 +2205,7 @@
             <native_room>ritual</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- black_mamba -->
     <!--************************************************************-->
@@ -2257,6 +2290,7 @@
             <native_room>ritual</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- fire_hound -->
     <!--************************************************************-->
@@ -2343,6 +2377,7 @@
             <native_room>monster</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- energy_hound -->
     <!--************************************************************-->
@@ -2429,6 +2464,7 @@
             <native_room>monster</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- zuul -->
     <!--************************************************************-->
@@ -2515,6 +2551,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mi_go -->
     <!--************************************************************-->
@@ -2600,6 +2637,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mi_go_commander -->
     <!--************************************************************-->
@@ -2684,6 +2722,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- flying_polyp -->
     <!--************************************************************-->
@@ -2777,6 +2816,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- greater_polyp -->
     <!--************************************************************-->
@@ -2870,6 +2910,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mind_leech -->
     <!--************************************************************-->
@@ -2956,6 +2997,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- spirit_leech -->
     <!--************************************************************-->
@@ -3042,6 +3084,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- life_leech -->
     <!--************************************************************-->
@@ -3128,6 +3171,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ghoul -->
     <!--************************************************************-->
@@ -3183,6 +3227,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>corpse_eater</property>
             <property>r_disease</property>
             <property>darkvision</property>
         </properties>
@@ -3215,6 +3260,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- shadow -->
     <!--************************************************************-->
@@ -3300,6 +3346,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- invis_stalker -->
     <!--************************************************************-->
@@ -3386,6 +3433,7 @@
             <native_room>human</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- wolf -->
     <!--************************************************************-->
@@ -3469,6 +3517,7 @@
             <native_room>forest</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ghost -->
     <!--************************************************************-->
@@ -3555,6 +3604,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- phantasm -->
     <!--************************************************************-->
@@ -3610,6 +3660,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>recloaks</property>
             <property>r_fear</property>
             <property>r_conf</property>
             <property>cloaked</property>
@@ -3641,6 +3692,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- wraith -->
     <!--************************************************************-->
@@ -3727,6 +3779,7 @@
             <native_room>crypt</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- void_traveler -->
     <!--************************************************************-->
@@ -3781,7 +3834,9 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
+        <properties>
+            <property>teleports</property>
+        </properties>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -3810,6 +3865,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- elder_void_traveler -->
     <!--************************************************************-->
@@ -3864,7 +3920,9 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
+        <properties>
+            <property>teleports</property>
+        </properties>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -3893,6 +3951,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- raven -->
     <!--************************************************************-->
@@ -3977,6 +4036,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- giant_bat -->
     <!--************************************************************-->
@@ -4063,6 +4123,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- vampire_bat -->
     <!--************************************************************-->
@@ -4148,6 +4209,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- abaxu -->
     <!--************************************************************-->
@@ -4234,6 +4296,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- byakhee -->
     <!--************************************************************-->
@@ -4318,6 +4381,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- giant_mantis -->
     <!--************************************************************-->
@@ -4400,6 +4464,7 @@
             <native_room>forest</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- locust -->
     <!--************************************************************-->
@@ -4455,6 +4520,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>breeds</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
@@ -4483,6 +4549,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mummy -->
     <!--************************************************************-->
@@ -4563,6 +4630,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- croc_head_mummy -->
     <!--************************************************************-->
@@ -4646,6 +4714,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- khephren -->
     <!--************************************************************-->
@@ -4725,6 +4794,7 @@
             <native_room>plain</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- nitokris -->
     <!--************************************************************-->
@@ -4805,6 +4875,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- deep_one -->
     <!--************************************************************-->
@@ -4886,6 +4957,7 @@
             <native_room>muddy</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ape -->
     <!--************************************************************-->
@@ -4970,6 +5042,7 @@
             <native_room>monster</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- leng_elder -->
     <!--************************************************************-->
@@ -5050,6 +5123,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- worm_mass -->
     <!--************************************************************-->
@@ -5105,6 +5179,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>splits_on_death</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -5135,6 +5210,7 @@
             <native_room>forest</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mind_worms -->
     <!--************************************************************-->
@@ -5190,6 +5266,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>splits_on_death</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -5220,6 +5297,7 @@
             <native_room>forest</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- dust_vortex -->
     <!--************************************************************-->
@@ -5275,6 +5353,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>vortex</property>
             <property>r_poison</property>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -5308,6 +5387,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- fire_vortex -->
     <!--************************************************************-->
@@ -5363,6 +5443,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>vortex</property>
             <property>r_fire</property>
             <property>r_poison</property>
             <property>r_fear</property>
@@ -5397,6 +5478,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- energy_vortex -->
     <!--************************************************************-->
@@ -5452,6 +5534,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>vortex</property>
             <property>r_fire</property>
             <property>r_poison</property>
             <property>r_elec</property>
@@ -5487,6 +5570,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ooze_black -->
     <!--************************************************************-->
@@ -5542,6 +5626,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>regenerates</property>
             <property>r_poison</property>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -5578,6 +5663,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ooze_clear -->
     <!--************************************************************-->
@@ -5633,6 +5719,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>regenerates</property>
             <property>r_poison</property>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -5669,6 +5756,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ooze_putrid -->
     <!--************************************************************-->
@@ -5724,6 +5812,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>regenerates</property>
             <property>r_poison</property>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -5760,6 +5849,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- ooze_poison -->
     <!--************************************************************-->
@@ -5815,6 +5905,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>regenerates</property>
             <property>r_poison</property>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -5851,6 +5942,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- strange_color -->
     <!--************************************************************-->
@@ -5906,6 +5998,9 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>confuses_adjacent</property>
+            <property>corrupts_environment_color</property>
+            <property>regenerates</property>
             <property>r_phys</property>
             <property>r_poison</property>
             <property>r_fear</property>
@@ -5944,6 +6039,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- chthonian -->
     <!--************************************************************-->
@@ -6029,6 +6125,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- hunting_horror -->
     <!--************************************************************-->
@@ -6115,6 +6212,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- sentry_drone -->
     <!--************************************************************-->
@@ -6206,6 +6304,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- animated_wpn -->
     <!--************************************************************-->
@@ -6288,13 +6387,14 @@
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
-            <auto_spawn>true</auto_spawn>
+            <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <is_unique>false</is_unique>
             <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- mold -->
     <!--************************************************************-->
@@ -6350,6 +6450,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>breeds</property>
             <property>r_poison</property>
             <property>r_sleep</property>
             <property>r_fear</property>
@@ -6386,6 +6487,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- gas_spore -->
     <!--************************************************************-->
@@ -6441,6 +6543,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties>
+            <property>explodes_on_death</property>
             <property>r_poison</property>
             <property>r_sleep</property>
             <property>r_fear</property>
@@ -6480,6 +6583,7 @@
             <native_room>chasm</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- death_fiend -->
     <!--************************************************************-->
@@ -6567,6 +6671,7 @@
             <native_room>cave</native_room>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- the_high_priest -->
     <!--************************************************************-->
@@ -6650,6 +6755,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- high_priest_guard_war_vet -->
     <!--************************************************************-->
@@ -6731,6 +6837,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- high_priest_guard_rogue -->
     <!--************************************************************-->
@@ -6812,6 +6919,7 @@
             <group_size>alone</group_size>
         </spawning>
     </monster>
+
     <!--************************************************************-->
     <!-- high_priest_guard_ghoul -->
     <!--************************************************************-->

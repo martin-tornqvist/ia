@@ -17,12 +17,11 @@ int constr_in_range(const double min,
                     const double val,
                     const double max);
 
-// Takes a boolean map array, and populates a vector with positions matching the
-// value to store (true/false). This can for example be useful if you have a
-// parsed map of blocked and free cells, and you want a list of free cells to
-// (randomly) select from.
+// Takes a boolean map array, and populates a vector with positions inside the
+// given area matching the specified value to store (true/false).
 std::vector<P> to_vec(const bool a[map_w][map_h],
-                      const bool value_to_store);
+                      const bool value_to_store,
+                      const R& area_to_parse = R(0, 0, map_w - 1, map_h - 1));
 
 bool is_pos_inside(const P& pos, const R& area);
 

@@ -968,7 +968,7 @@ bool mk_std_lvl()
             {
                 for (int y = 0; y < map_h; ++y)
                 {
-                    map::cells[x][y].is_dark = true;
+                    map::dark[x][y] = true;
                 }
             }
         }

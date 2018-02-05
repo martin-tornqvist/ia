@@ -699,7 +699,8 @@ void print_location_info_msgs(const P& pos)
         }
 
         // Describe darkness
-        if (cell.is_dark && !cell.is_lit)
+        if (map::dark[pos.x][pos.y] &&
+            !map::light[pos.x][pos.y])
         {
             msg_log::add("It is very dark here.");
         }

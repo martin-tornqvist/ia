@@ -194,9 +194,6 @@ class Spider: public Mon
 public:
     Spider() : Mon() {}
     virtual ~Spider() {}
-
-private:
-    DidAction on_act() override;
 };
 
 class GreenSpider: public Spider
@@ -266,25 +263,14 @@ public:
 class Zombie: public Mon
 {
 public:
-    Zombie() : Mon()
-    {
-        dead_turn_counter = 0;
-        has_resurrected = false;
-    }
+    Zombie() : Mon() {}
 
     virtual ~Zombie() {}
 
 protected:
-    virtual DidAction on_act() override;
-
     void on_death() override;
 
     void on_destroyed() override;
-
-    DidAction try_resurrect();
-
-    int dead_turn_counter;
-    bool has_resurrected;
 };
 
 class ZombieClaw: public Zombie
@@ -316,13 +302,8 @@ class MajorClaphamLee: public ZombieClaw
 {
 public:
     MajorClaphamLee() :
-        ZombieClaw(), has_summoned_tomb_legions(false) {}
+        ZombieClaw() {}
     ~MajorClaphamLee() {}
-
-private:
-    DidAction on_act() override;
-
-    bool has_summoned_tomb_legions;
 };
 
 class DeanHalsey: public ZombieClaw
@@ -366,9 +347,6 @@ public:
     ~FloatingSkull() {}
 
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class MindLeech: public Mon
@@ -489,9 +467,6 @@ public:
     LordOfShadows() : Mon() {}
     ~LordOfShadows() {}
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class LordOfSpiders: public Mon
@@ -501,9 +476,6 @@ public:
     ~LordOfSpiders() {}
 
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class LordOfSpirits: public Mon
@@ -513,9 +485,6 @@ public:
     ~LordOfSpirits() {}
 
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class LordOfPestilence: public Mon
@@ -524,9 +493,6 @@ public:
     LordOfPestilence() : Mon() {}
     ~LordOfPestilence() {}
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class FireHound: public Mon
@@ -592,9 +558,6 @@ public:
     {
         return "The Phantasm is put to rest.";
     }
-
-private:
-    DidAction on_act() override;
 };
 
 class Wraith: public Ghost
@@ -742,9 +705,6 @@ public:
     void mk_start_items() override;
 
     virtual void place_hook() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class VoidTraveler: public Mon
@@ -754,9 +714,6 @@ public:
     ~VoidTraveler() {}
 
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
 };
 
 class ElderVoidTraveler: public VoidTraveler
@@ -782,6 +739,7 @@ class Ape: public Mon
 public:
     Ape() : Mon(), frenzy_cooldown_(0) {}
     ~Ape() {}
+
     void mk_start_items() override;
 
 private:
@@ -796,9 +754,6 @@ public:
     Mummy() : Mon() {}
     ~Mummy() {}
     virtual void mk_start_items() override;
-
-private:
-    virtual DidAction on_act() override;
 };
 
 class MummyCrocHead: public Mummy
@@ -806,6 +761,7 @@ class MummyCrocHead: public Mummy
 public:
     MummyCrocHead() : Mummy() {}
     ~MummyCrocHead() {}
+
     virtual void mk_start_items() override;
 };
 
@@ -814,6 +770,7 @@ class MummyUnique: public Mummy
 public:
     MummyUnique() : Mummy() {}
     ~MummyUnique() {}
+
     void mk_start_items() override;
 };
 
@@ -858,17 +815,11 @@ class WormMass: public Mon
 {
 public:
     WormMass() :
-        Mon             (),
-        allow_split_    (true) {}
+        Mon() {}
 
     ~WormMass() {}
 
     void mk_start_items() override;
-
-private:
-    bool allow_split_;
-
-    void on_death() override;
 };
 
 class MindWorms: public WormMass
@@ -886,33 +837,22 @@ class GiantLocust: public Mon
 {
 public:
     GiantLocust() :
-        Mon(),
-        spawn_new_one_in_n(45) {}
+        Mon() {}
 
     ~GiantLocust() {}
 
     void mk_start_items() override;
-
-private:
-    DidAction on_act() override;
-    int spawn_new_one_in_n;
 };
 
 class Vortex: public Mon
 {
 public:
     Vortex() :
-        Mon(),
-        pull_cooldown(0) {}
+        Mon() {}
 
     virtual ~Vortex() {}
 
     virtual void mk_start_items() override = 0;
-
-private:
-    DidAction on_act() override;
-
-    int pull_cooldown;
 };
 
 class DustVortex: public Vortex
@@ -950,9 +890,6 @@ public:
     {
         return "The Ooze disintegrates.";
     }
-
-private:
-    virtual void on_std_turn_hook() override;
 };
 
 class OozeBlack: public Ooze
@@ -1002,16 +939,14 @@ public:
     {
         return "The Color disintegrates.";
     }
-
-private:
-    DidAction on_act() override;
-    void on_std_turn_hook() override;
 };
 
 class Mold: public Mon
 {
 public:
-    Mold() : Mon(), spawn_new_one_in_n(40) {}
+    Mold() :
+        Mon() {}
+
     ~Mold() {}
 
     void mk_start_items() override;
@@ -1020,11 +955,6 @@ public:
     {
         return "The Mold is destroyed.";
     }
-
-private:
-    DidAction on_act() override;
-
-    int spawn_new_one_in_n;
 };
 
 class GasSpore: public Mon
@@ -1032,8 +962,6 @@ class GasSpore: public Mon
 public:
     GasSpore() : Mon() {}
     ~GasSpore() {}
-
-    void on_death() override;
 
     void mk_start_items() override {}
 };
@@ -1050,8 +978,6 @@ private:
     DidAction on_act() override;
 
     void on_death() override;
-
-    void on_std_turn_hook() override;
 
     bool has_become_aware_;
 };
@@ -1117,4 +1043,4 @@ private:
     int nr_turns_until_drop_;
 };
 
-#endif
+#endif // MON_HPP

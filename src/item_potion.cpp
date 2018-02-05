@@ -346,7 +346,7 @@ void PotionSpirit::collide_hook(const P& pos, Actor* const actor)
 
 void PotionBlindness::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropBlind(PropTurns::std));
+    actor.apply_prop(new PropBlind(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -366,7 +366,7 @@ void PotionBlindness::collide_hook(const P& pos, Actor* const actor)
 
 void PotionParal::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropParalyzed(PropTurns::std));
+    actor.apply_prop(new PropParalyzed(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -387,7 +387,7 @@ void PotionParal::collide_hook(const P& pos, Actor* const actor)
 
 void PotionDisease::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropDiseased(PropTurns::std));
+    actor.apply_prop(new PropDiseased(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -397,7 +397,7 @@ void PotionDisease::quaff_impl(Actor& actor)
 
 void PotionConf::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropConfused(PropTurns::std));
+    actor.apply_prop(new PropConfused(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -489,7 +489,7 @@ void PotionPoison::quaff_impl(Actor& actor)
         dmg_range.max *= 2;
     }
 
-    actor.prop_handler().apply(
+    actor.apply_prop(
         new PropPoisoned(
             PropTurns::specific,
             poison_dmg_n_turn * dmg_range.roll()));
@@ -512,7 +512,7 @@ void PotionPoison::collide_hook(const P& pos, Actor* const actor)
 
 void PotionRFire::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropRFire(PropTurns::std));
+    actor.apply_prop(new PropRFire(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -584,7 +584,7 @@ void PotionCuring::collide_hook(const P& pos, Actor* const actor)
 
 void PotionRElec::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropRElec(PropTurns::std));
+    actor.apply_prop(new PropRElec(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {
@@ -638,7 +638,7 @@ void PotionDescent::quaff_impl(Actor& actor)
     {
         if (!map::player->has_prop(PropId::descend))
         {
-            map::player->prop_handler().apply(new PropDescend(PropTurns::std));
+            map::player->apply_prop(new PropDescend(PropTurns::std));
         }
     }
     else // Dungeon level is near the end
@@ -652,7 +652,7 @@ void PotionDescent::quaff_impl(Actor& actor)
 
 void PotionInvis::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().apply(new PropCloaked(PropTurns::std));
+    actor.apply_prop(new PropCloaked(PropTurns::std));
 
     if (map::player->can_see_actor(actor))
     {

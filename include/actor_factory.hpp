@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "actor_data.hpp"
+#include "rl_utils.hpp"
 
 class Actor;
 class Mon;
@@ -14,6 +15,30 @@ enum class MakeMonAware
   yes
 };
 
+class MonSpawnResult
+{
+public:
+    MonSpawnResult() :
+        monsters() {}
+
+    MonSpawnResult& set_leader(Actor* const leader);
+
+    MonSpawnResult& make_aware_of_player();
+
+    // Generic for each function to perform any operation on the actors
+    template<typename Func>
+    MonSpawnResult& for_each(Func const& lambda)
+    {
+        std::for_each(begin(monsters),
+                      end(monsters),
+                      lambda);
+
+        return *this;
+    }
+
+    std::vector<Mon*> monsters;
+};
+
 namespace actor_factory
 {
 
@@ -21,10 +46,14 @@ void delete_all_mon();
 
 Actor* mk(const ActorId id, const P& pos);
 
-std::vector<Mon*> spawn(const P& origin,
-                        const std::vector<ActorId>& monster_ids,
-                        const MakeMonAware make_aware = MakeMonAware::yes,
-                        Actor* const actor_to_set_as_leader = nullptr);
+MonSpawnResult spawn(
+    const P& origin,
+    const std::vector<ActorId>& monster_ids,
+    const R& area_allowed = R(0, 0, map_w - 1, map_h -1));
+
+MonSpawnResult spawn_random_position(
+    const std::vector<ActorId>& monster_ids,
+    const R& area_allowed = R(0, 0, map_w - 1, map_h -1));
 
 } // actor_factory
 

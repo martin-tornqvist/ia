@@ -719,7 +719,6 @@ void handle_player_input(const InputData& input)
     // Character info
     case '@':
     {
-        // TODO: Push character description state
         std::unique_ptr<State> char_descr_state(new CharacterDescr);
 
         states::push(std::move(char_descr_state));
@@ -872,7 +871,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F8:
     {
-        map::player->prop_handler().apply(
+        map::player->apply_prop(
             new PropInfected(PropTurns::std));
     }
     break;
@@ -883,16 +882,17 @@ void handle_player_input(const InputData& input)
 
         io::draw_text(query_str, Panel::screen, P(0, 0), colors::yellow());
 
-        const int idx = query::number(P(query_str.size(), 0),
-                                      colors::light_white(),
-                                      0,
-                                      (int)ActorId::END,
-                                      0,
-                                      false);
+        const int idx =
+            query::number(P(query_str.size(), 0),
+                          colors::light_white(),
+                          0,
+                          (int)ActorId::END,
+                          0,
+                          false);
 
         const ActorId mon_id = ActorId(idx);
 
-        actor_factory::spawn(map::player->pos, {mon_id}, MakeMonAware::no);
+        actor_factory::spawn(map::player->pos, {mon_id});
     }
     break;
 #endif // NDEBUG
@@ -1373,7 +1373,7 @@ void GameState::draw_map()
 
                 if (f->is_los_passable() &&
                     !f->is_bottomless() &&
-                    cell.is_lit)
+                    map::light[x][y])
                 {
                     render_data->mark_lit = true;
                 }
@@ -1595,8 +1595,8 @@ void GameState::draw_map()
 
                     // Fade dark cells
                     if (!cell.rigid->is_bottomless() &&
-                        cell.is_dark &&
-                        !cell.is_lit)
+                        map::dark[x][y] &&
+                        !map::light[x][y])
                     {
                         const double div = 1.75;
 

@@ -83,7 +83,7 @@ void HornOfMaliceHeard::run(Actor& actor) const
 {
     if (!actor.is_player())
     {
-        actor.prop_handler().apply(
+        actor.apply_prop(
             new PropConflict(PropTurns::std));
     }
 }
@@ -159,7 +159,7 @@ void HornOfBanishmentHeard::run(Actor& actor) const
             msg_log::add(name_the + mon_disappear_msg);
         }
 
-        actor.destroy_silent();
+        actor.set_state(ActorState::destroyed);
     }
 }
 

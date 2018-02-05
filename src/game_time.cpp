@@ -59,14 +59,16 @@ void run_std_turn_events()
 
     ++turn_nr_;
 
-    for (auto it = begin(actors); it != end(actors); /* No increment */)
+    // NOTE: Iteration must be done by index, since new monsters may be spawned
+    // inside the loop when the standard turn hook is called (e.g. from the
+    // 'breeding' property)
+    for (size_t i = 0; i < actors.size(); /* No increment */)
     {
-        Actor* const actor = *it;
+        Actor* const actor = actors[i];
 
         // Delete destroyed actors
         if (actor->state() == ActorState::destroyed)
         {
-            // Do not delete player if player died, just return
             if (actor == map::player)
             {
                 return;
@@ -79,7 +81,7 @@ void run_std_turn_events()
 
             delete actor;
 
-            it = actors.erase(it);
+            actors.erase(actors.begin() + i);
 
             if (current_actor_idx_ >= actors.size())
             {
@@ -99,11 +101,12 @@ void run_std_turn_events()
                 }
             }
 
+            // NOTE: This may spawn new monsters, see NOTE above.
             actor->on_std_turn_common();
 
-            ++it;
+            ++i;
         }
-    }
+    } // Actor loop
 
     // Allow already burning features to damage stuff, spread fire, etc
     for (int x = 0; x < map_w; ++x)
@@ -192,7 +195,7 @@ void run_atomic_turn_events()
     }
 
     // NOTE: We add light AFTER ending burning for actors in liquid, since those
-    //       actors shouldn't add light.
+    // actors shouldn't add light.
     update_light_map();
 }
 
@@ -366,10 +369,8 @@ void tick(const int speed_pct_diff)
             {
                 // Increment the turn counter, and run standard turn events
 
-                //
                 // NOTE: This will prune destroyed actors, which will decrease
-                //       the actor vector size.
-                //
+                // the actor vector size.
                 run_std_turn_events();
 
                 std_turn_delay_ = ticks_per_turn_;
@@ -405,19 +406,11 @@ void tick(const int speed_pct_diff)
 
 void update_light_map()
 {
-    bool light[map_w][map_h];
-
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            map::cells[x][y].is_lit = light[x][y] = false;
-        }
-    }
+    bool light_tmp[map_w][map_h] = {};
 
     // Do not add light on Leng
     // TODO: This is a hard coded hack, specify if the map should be lit in the
-    //       data instead.
+    // data instead.
     if (map_travel::current_map_data().type == MapType::leng)
     {
         return;
@@ -425,32 +418,24 @@ void update_light_map()
 
     for (const auto* const a : actors)
     {
-        a->add_light(light);
+        a->add_light(light_tmp);
     }
 
     for (const auto* const m : mobs)
     {
-        m->add_light(light);
+        m->add_light(light_tmp);
     }
 
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
         {
-            map::cells[x][y].rigid->add_light(light);
+            map::cells[x][y].rigid->add_light(light_tmp);
         }
     }
 
-    // Copy the temp values to the real light map
-
-    // NOTE: Must be done separately - it cannot be done in the map loop above
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
-        {
-            map::cells[x][y].is_lit = light[x][y];
-        }
-    }
+    // Copy the temporary buffer to the real light map
+    memcpy(map::light, light_tmp, nr_map_cells);
 }
 
 Actor* current_actor()

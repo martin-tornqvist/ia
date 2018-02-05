@@ -30,6 +30,11 @@ public:
         return p1.y - p0.y + 1;
     }
 
+    int area() const
+    {
+        return w() * h();
+    }
+
     P dims() const
     {
         return P(w(), h());

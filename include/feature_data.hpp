@@ -69,15 +69,12 @@ public:
     {
         can_move_common_ = false;
 
-        for (int i = 0; i < (int)PropId::END; ++i)
-        {
-            can_move_if_have_prop_[i] = false;
-        }
+        props_allow_move_.clear();
     }
 
     void set_prop_can_move(const PropId id)
     {
-        can_move_if_have_prop_[int(id)] = true;
+        props_allow_move_.push_back(id);
     }
 
     void set_can_move_common()
@@ -94,7 +91,7 @@ public:
 
 private:
     bool can_move_common_;
-    bool can_move_if_have_prop_[(size_t)PropId::END];
+    std::vector<PropId> props_allow_move_;
 };
 
 class Feature;

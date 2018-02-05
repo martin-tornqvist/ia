@@ -348,7 +348,7 @@ void PylonBurning::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropBurning(PropTurns::std));
     }
 }
@@ -371,7 +371,7 @@ void PylonInvis::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropInvisible(PropTurns::std));
     }
 }
@@ -394,7 +394,7 @@ void PylonSlow::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropSlowed(PropTurns::std));
     }
 }
@@ -461,7 +461,7 @@ void PylonTerrify::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropTerrified(PropTurns::std));
     }
 }

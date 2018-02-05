@@ -61,6 +61,11 @@ bool Actor::has_prop(const PropId id) const
     return prop_handler_->has_prop(id);
 }
 
+void Actor::apply_prop(Prop* const prop)
+{
+    prop_handler_->apply(prop);
+}
+
 int Actor::ability(const AbilityId id,
                    const bool is_affected_by_props) const
 {
@@ -90,14 +95,16 @@ ActionResult Actor::roll_sneak(const Actor& actor_searching) const
     // 8         42
     const int dist_mod = (dist - 2) * 7;
 
-    const Cell& cell = map::cells[pos.x][pos.y];
+    const bool is_lit = map::light[pos.x][pos.y];
+
+    const bool is_dark = map::light[pos.x][pos.y];
 
     const int lgt_mod =
-        cell.is_lit ?
+        is_lit ?
         20 : 0;
 
     const int drk_mod =
-        (cell.is_dark && !cell.is_lit) ?
+        (is_dark && !is_lit) ?
         20 : 0;
 
     int sneak_tot =
@@ -115,10 +122,8 @@ ActionResult Actor::roll_sneak(const Actor& actor_searching) const
     //           << "drk_mod     : " << drk_mod << std::endl
     //           << "sneak_tot   : " << sneak_tot << std::endl;
 
-    //
     // NOTE: There is no need to cap the sneak value, since there's always
-    //       critical fails
-    //
+    // critical fails
 
     const auto result = ability_roll::roll(sneak_tot);
 
@@ -256,7 +261,7 @@ void Actor::place(const P& pos_, ActorDataT& actor_data)
 void Actor::on_std_turn_common()
 {
     // Do light damage if in lit cell
-    if (map::cells[pos.x][pos.y].is_lit)
+    if (map::light[pos.x][pos.y])
     {
         hit(1, DmgType::light);
     }
@@ -315,7 +320,10 @@ void Actor::on_std_turn_common()
         }
     }
 
+    // TODO: This will be removed eventually
     on_std_turn();
+
+    prop_handler_->on_std_turn();
 }
 
 void Actor::teleport(const ShouldCtrlTele ctrl_tele)
@@ -1142,8 +1150,6 @@ void Actor::die(const bool is_destroyed,
         }
     }
 
-    bool can_player_see_dying_actor = true;
-
     if (!is_player())
     {
         // If this monster is player's target, unset the target
@@ -1156,8 +1162,6 @@ void Actor::die(const bool is_destroyed,
 
         if (map::player->can_see_actor(*this))
         {
-            can_player_see_dying_actor = true;
-
             const std::string msg = death_msg();
 
             if (!msg.empty())
@@ -1236,7 +1240,7 @@ void Actor::die(const bool is_destroyed,
 
     on_death();
 
-    prop_handler_->on_death(can_player_see_dying_actor);
+    prop_handler_->on_death();
 
     if (!is_player())
     {
@@ -1285,7 +1289,7 @@ DidAction Actor::try_eat_corpse()
         }
     }
 
-    if (hp() >= hp_max(true) && !wound)
+    if ((hp() >= hp_max(true)) && !wound)
     {
         // Not "hungry"
         return DidAction::no;

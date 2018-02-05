@@ -119,7 +119,7 @@ void EventWallCrumble::on_new_turn()
                 continue;
             }
 
-            if (map::cells[p_adj.x][p_adj.y].is_dark)
+            if (map::dark[p_adj.x][p_adj.y])
             {
                 should_make_dark = true;
 
@@ -141,14 +141,12 @@ void EventWallCrumble::on_new_turn()
             continue;
         }
 
-        auto& cell = map::cells[p.x][p.y];
-
         if (should_make_dark)
         {
-            cell.is_dark = true;
+            map::dark[p.x][p.y] = true;
         }
 
-        auto* const f = cell.rigid;
+        auto* const f = map::cells[p.x][p.y].rigid;
 
         f->hit(1, // Doesn't matter
                DmgType::physical,
@@ -159,14 +157,12 @@ void EventWallCrumble::on_new_turn()
     // Destroy the inner walls
     for (const P& p : inner_cells_)
     {
-        auto& cell = map::cells[p.x][p.y];
-
         if (should_make_dark)
         {
-            cell.is_dark = true;
+            map::dark[p.x][p.y] = true;
         }
 
-        Rigid* const f = cell.rigid;
+        Rigid* const f = map::cells[p.x][p.y].rigid;
 
         f->hit(1, // Doesn't matter
                DmgType::physical,
@@ -428,7 +424,7 @@ void EventSnakeEmerge::on_new_turn()
 
         Actor* const actor = actor_factory::mk(id, p);
 
-        actor->prop_handler().apply(
+        actor->apply_prop(
             new PropWaiting(PropTurns::specific, 2));
 
         static_cast<Mon*>(actor)->become_aware_player(false);

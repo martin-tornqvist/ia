@@ -21,13 +21,11 @@
 #endif // NDEBUG
 
 Cell::Cell() :
-    is_explored         (false),
-    is_seen_by_player   (false),
-    is_lit              (false),
-    is_dark             (false),
-    player_los          (),
-    item                (nullptr),
-    rigid               (nullptr),
+    is_explored(false),
+    is_seen_by_player(false),
+    player_los(),
+    item(nullptr),
+    rigid(nullptr),
     player_visual_memory(CellRenderData()),
     pos(P(-1, -1)) {}
 
@@ -40,10 +38,13 @@ Cell::~Cell()
 
 void Cell::reset()
 {
-    is_explored = is_seen_by_player = is_lit = is_dark = false;
+    is_explored = false;
 
-    player_los.is_blocked_hard      = true;
-    player_los.is_blocked_by_drk    = false;
+    is_seen_by_player = false;
+
+    player_los.is_blocked_hard = true;
+
+    player_los.is_blocked_by_drk = false;
 
     player_visual_memory = CellRenderData();
 
@@ -66,6 +67,9 @@ int dlvl = 0;
 Color wall_color;
 
 Cell cells[map_w][map_h];
+
+bool light[map_w][map_h];
+bool dark[map_w][map_h];
 
 std::vector<Room*> room_list;
 
@@ -93,6 +97,10 @@ void reset_cells(const bool make_stone_walls)
             }
         }
     }
+
+    memset(light, 0, nr_map_cells);
+
+    memset(dark, 0, nr_map_cells);
 }
 
 } // namespace

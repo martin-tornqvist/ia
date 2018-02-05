@@ -219,6 +219,22 @@ public:
         set(tmp);
     }
 
+    bool is_adjacent_to(const P& p)
+    {
+        // Do not count the same position as adjacent
+        if (p == *this)
+        {
+            return false;
+        }
+
+        const auto d = *this - p;
+
+        const bool x_adj = (d.x >= -1) && (d.x <= 1);
+        const bool y_adj = (d.y >= -1) && (d.y <= 1);
+
+        return x_adj && y_adj;
+    }
+
     // NOTE: This assumes that both x and y is -1, 0, or 1
     Dir to_dir();
 
@@ -232,12 +248,12 @@ struct PosVal
         val(-1) {}
 
     PosVal(const P& pos_, const int val_) :
-        pos     (pos_),
-        val     (val_) {}
+        pos(pos_),
+        val(val_) {}
 
     PosVal(const PosVal& o) :
-        pos     (o.pos),
-        val     (o.val) {}
+        pos(o.pos),
+        val(o.val) {}
 
     P pos;
     int val;

@@ -253,10 +253,9 @@ void act()
 
     if (!has_allied_mon)
     {
-        actor_factory::spawn(map::player->pos,
-                             std::vector<ActorId>(1, ActorId::mi_go),
-                             MakeMonAware::yes,
-                             map::player);
+        actor_factory::spawn(map::player->pos, {ActorId::mi_go})
+            .set_leader(map::player)
+            .make_aware_of_player();
     }
 
     // Occasionally apply rFear to avoid getting stuck on fear-causing monsters
@@ -273,7 +272,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->prop_handler().apply(new PropBurning(PropTurns::std));
+            actor->apply_prop(new PropBurning(PropTurns::std));
         }
     }
 
