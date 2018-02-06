@@ -263,7 +263,7 @@ struct PropDataT
         msg_res_mon(""),
         is_making_mon_aware(false),
         allow_display_turns(true),
-        update_vision_when_start_or_end(false),
+        update_vision_on_toggled(false),
         allow_test_on_bot(false),
         alignment(PropAlignment::neutral) {}
 
@@ -280,7 +280,7 @@ struct PropDataT
     std::string msg_res_mon;
     bool is_making_mon_aware;
     bool allow_display_turns;
-    bool update_vision_when_start_or_end;
+    bool update_vision_on_toggled;
     bool allow_test_on_bot;
     PropAlignment alignment;
 };
@@ -349,9 +349,6 @@ public:
 
     ~PropHandler();
 
-    // Adds all natural properties set in the actor data
-    void init_natural_props();
-
     void save() const;
 
     void load();
@@ -363,7 +360,9 @@ public:
                const bool force_effect = false,
                const Verbosity verbosity = Verbosity::verbose);
 
-    void apply_from_att(const Wpn& wpn, const bool is_melee);
+    void apply_natural_props_from_actor_data();
+
+    void apply_from_attack(const Wpn& wpn, const bool is_melee);
 
     // The following two methods are supposed to be called by items
     void add_prop_from_equipped_item(const Item* const item,
@@ -375,27 +374,29 @@ public:
     // Fast method for checking if a certain property id is applied
     bool has_prop(const PropId id) const
     {
-        return active_props_info_[(size_t)id] > 0;
+        return prop_count_cache_[(size_t)id] > 0;
     }
 
     Prop* prop(const PropId id) const;
 
-    bool end_prop(const PropId id,
-                  const bool run_prop_end_effects = true);
+    bool end_prop(const PropId id);
+
+    bool end_prop_silent(const PropId id);
 
     // A line of property names of the short form
-    std::vector<ColoredString> props_line() const;
+    std::vector<ColoredString> text_line() const;
 
     // A list of properties names of the full form, with descriptions
-    std::vector<PropListEntry> props_list() const;
+    std::vector<PropListEntry> text_list() const;
+
+    // Used for monster description property list
+    std::vector<PropListEntry> text_list_temporary_negative_props();
+
+    bool has_temporary_negative_prop_mon();
 
     Prop* mk_prop(const PropId id,
                   PropTurns turns_init,
                   const int nr_turns = -1) const;
-
-    // Used for monster description property list
-    std::vector<PropListEntry> temporary_negative_prop_list();
-    bool has_temporary_negative_prop_mon();
 
     //--------------------------------------------------------------------------
     // Hooks called from various places
@@ -418,10 +419,10 @@ public:
     // NOTE: The allow_*_absolute methods below answer if some action could
     // EVER be performed, and the allow_*_chance methods allows the action with
     // a random chance. For example, blindness never allows the player to read
-    // scrolls, and the game won't let the player try, and waste a scroll. But
-    // burning will allow the player to try, with a certain percent chance of
-    // success, and the scroll will be wasted on failure. (All plain
-    // allow_* methods above are also considered "absolute".)
+    // scrolls, and the game won't let the player try. But burning will allow
+    // the player to try, with a certain percent chance of success, and the
+    // scroll will be wasted on failure. (All plain allow_* methods above are
+    // also considered "absolute".)
     bool allow_read_absolute(const Verbosity verbosity) const;
     bool allow_read_chance(const Verbosity verbosity) const;
     bool allow_cast_intr_spell_absolute(const Verbosity verbosity) const;
@@ -455,25 +456,29 @@ public:
                           const Verbosity verbosity) const;
 
 private:
-    bool is_temporary_negative_prop_mon(const Prop& prop);
+    void print_resist_msg(const Prop& prop);
+    void print_start_msg(const Prop& prop);
+
+    bool try_apply_more_on_existing_intr_prop(const Prop& new_prop);
+
+    bool is_temporary_negative_prop(const Prop& prop);
 
     bool is_resisting_prop(const PropId id) const;
 
-    // This prints messages, updates FOV, etc, and also calls the on_end()
-    // property hook. It does NOT remove the property from the vector or
-    // decrement the active property info. The caller is responsible for this.
+    // A hook that prints messages, updates FOV, etc, and also calls the
+    // on_end() property hook.
+    // NOTE: It does NOT remove the property from the vector or decrement the
+    // active property info. The caller is responsible for this.
     void on_prop_end(Prop* const prop);
 
-    void incr_active_props_info(const PropId id);
-    void decr_active_props_info(const PropId id);
+    void incr_prop_count(const PropId id);
+    void decr_prop_count(const PropId id);
 
-    std::vector<Prop*> props_;
+    std::vector< std::unique_ptr<Prop> > props_;
 
-    // This array is only used for optimization and convenience of asking the
-    // property handler which properties are currently active (see the
-    // "has_prop()" method above). It is used as a cache, so that we need to
-    // search through the vector as little as possible.
-    int active_props_info_[(size_t)PropId::END];
+    // This array is only used as an optimization when requesting which
+    // properties are currently active (see the "has_prop()" method above).
+    int prop_count_cache_[(size_t)PropId::END];
 
     Actor* owner_;
 };
@@ -544,9 +549,9 @@ public:
         return data_.msg_end_player;
     }
 
-    virtual bool need_update_vision_when_start_or_end() const
+    virtual bool should_update_vision_on_toggled() const
     {
-        return data_.update_vision_when_start_or_end;
+        return data_.update_vision_on_toggled;
     }
 
     virtual bool allow_see() const
@@ -579,7 +584,9 @@ public:
     }
 
     virtual void on_start() {}
+
     virtual void on_end() {}
+
     virtual void on_more(const Prop& new_prop)
     {
         (void)new_prop;
@@ -866,7 +873,7 @@ public:
     PropBlind(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::blind, turns_init, nr_turns) {}
 
-    bool need_update_vision_when_start_or_end() const override;
+    bool should_update_vision_on_toggled() const override;
 
     bool allow_read_absolute(const Verbosity verbosity) const override;
 
@@ -1313,7 +1320,7 @@ public:
     PropFainted(PropTurns turns_init, int nr_turns = -1) :
         Prop(PropId::fainted, turns_init, nr_turns) {}
 
-    bool need_update_vision_when_start_or_end() const override;
+    bool should_update_vision_on_toggled() const override;
 
     int ability_mod(const AbilityId ability) const override
     {

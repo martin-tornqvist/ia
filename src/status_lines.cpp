@@ -385,7 +385,7 @@ void draw()
 
     p.x = 0;
 
-    const auto props_line = player.prop_handler().props_line();
+    const auto props_line = player.prop_handler().text_line();
 
     for (const ColoredString& current_prop_label : props_line)
     {

@@ -247,8 +247,7 @@ void Actor::place(const P& pos_, ActorDataT& actor_data)
     inv_ = new Inventory(this);
 
     prop_handler_ = new PropHandler(this);
-
-    prop_handler_->init_natural_props();
+    prop_handler_->apply_natural_props_from_actor_data();
 
     if (data_->id != ActorId::player)
     {
@@ -1095,10 +1094,10 @@ void Actor::die(const bool is_destroyed,
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    // Save player with Talisman of Resurrection?
+    // Save player with Talisman of Resurrection? (If died by physical damage)
     if (is_player() &&
-        (map::player->ins() < 100) &&   // Not dead due to insanity?
-        (spi() > 0) &&                  // Not dead due to depleted spirit?
+        (map::player->ins() < 100) &&
+        (spi() > 0) &&
         inv_->has_item_in_backpack(ItemId::resurrect_talisman))
     {
         inv_->decr_item_type_in_backpack(ItemId::resurrect_talisman);
@@ -1119,7 +1118,7 @@ void Actor::die(const bool is_destroyed,
                    false,
                    Verbosity::silent);
 
-        prop_handler_->end_prop(PropId::wound, false);
+        prop_handler_->end_prop_silent(PropId::wound);
 
         // If player died due to falling down a chasm, go to next level
         if (map::cells[pos.x][pos.y].rigid->is_bottomless())

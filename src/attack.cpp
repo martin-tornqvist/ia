@@ -24,15 +24,15 @@
 AttData::AttData(Actor* const attacker,
                  Actor* const defender,
                  const Item& att_item) :
-    attacker        (attacker),
-    defender        (defender),
-    skill_mod       (0),
-    wpn_mod         (0),
-    dodging_mod     (0),
-    state_mod       (0),
-    hit_chance_tot  (0),
-    att_result      (ActionResult::fail),
-    dmg             (0),
+    attacker(attacker),
+    defender(defender),
+    skill_mod(0),
+    wpn_mod(0),
+    dodging_mod(0),
+    state_mod(0),
+    hit_chance_tot(0),
+    att_result(ActionResult::fail),
+    dmg(0),
     is_intrinsic_att(att_item.data().type == ItemType::melee_wpn_intr ||
                      att_item.data().type == ItemType::ranged_wpn_intr) {}
 
@@ -119,11 +119,9 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
     // Attacker gets a penalty against unseen targets
 
-    //
     // NOTE: The AI never attacks unseen targets, so in the case of a
-    //       monster attacker, we can assume the target is seen. We only
-    //       need to check if target is seen when player is attacking.
-    //
+    // monster attacker, we can assume the target is seen. We only need to
+    // check if target is seen when player is attacking.
     bool can_attacker_see_tgt = true;
 
     if (attacker == map::player)
@@ -220,15 +218,11 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         dodging_mod +
         state_mod;
 
-    //
     // NOTE: Total skill may be negative or above 100 (the attacker may still
-    //       critically hit or miss)
-    //
+    // critically hit or miss)
     att_result = ability_roll::roll(hit_chance_tot);
 
-    //
     // Roll the damage dice
-    //
     {
         Dice dmg_dice = wpn.dmg(AttMode::melee, attacker);
 
@@ -694,9 +688,6 @@ void print_melee_msg_and_mk_snd(const MeleeAttData& att_data, const Wpn& wpn)
     {
         SfxId sfx = wpn.data().melee.miss_sfx;
 
-        //
-        // Bad aiming
-        //
         if (att_data.attacker == map::player)
         {
             msg_log::add("I miss.");
@@ -994,7 +985,8 @@ void print_proj_at_actor_msgs(const RangedAttData& data,
                         data.defender->name_the());
             }
 
-            msg_log::add(other_name + " is hit" + dmg_punct, colors::msg_good());
+            msg_log::add(other_name + " is hit" + dmg_punct,
+                         colors::msg_good());
         }
     }
 }
@@ -1141,15 +1133,13 @@ void fire_projectiles(Actor* const attacker,
                         snd_msg_used = "";
                     }
 
-                    //
                     // NOTE: The initial attack sound(s) must NOT alert monsters
-                    //       since this would immediately make them aware before
-                    //       any attack data is set. This would result in the
-                    //       player never geting a ranged attack bonus against
-                    //       unaware monsters (unless the monster is deaf).
-                    //       Instead, an extra sound is run after the attack
-                    //       (without message or sound effect).
-                    //
+                    // since this would immediately make them aware before any
+                    // attack data is set. This would result in the player
+                    // never geting a ranged attack bonus against unaware
+                    // monsters (unless the monster is deaf). Instead, an extra
+                    // sound is run after the attack (without a message or
+                    // audio).
                     Snd snd(snd_msg_used,
                             sfx,
                             IgnoreMsgIfOriginSeen::yes,
@@ -1280,11 +1270,9 @@ void fire_projectiles(Actor* const attacker,
                             attacker);
                     }
 
-                    //
                     // NOTE: This is run regardless of if defender died or not,
-                    //       it is the hook implementors responsibility to check
-                    //       this if it matters.
-                    //
+                    // it is the hook implementors responsibility to check this
+                    // if it matters.
                     wpn.on_ranged_hit(*proj->actor_hit);
 
                     if (died == ActorDied::no)
@@ -1293,7 +1281,7 @@ void fire_projectiles(Actor* const attacker,
                         PropHandler& defender_prop_handler =
                             proj->actor_hit->prop_handler();
 
-                        defender_prop_handler.apply_from_att(wpn, false);
+                        defender_prop_handler.apply_from_attack(wpn, false);
 
                         // Knock-back?
                         if (wpn.data().ranged.knocks_back &&
@@ -1580,14 +1568,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const P& aim_pos)
 
         const SfxId sfx = wpn.data().ranged.att_sfx;
 
-        //
         // NOTE: The initial attack sound(s) must NOT alert monsters since
-        //       this would immediately make them aware before any attack data
-        //       is set. This would result in the player never geting a ranged
-        //       attack bonus against unaware monsters (unless the monster is
-        //       deaf). Instead, an extra sound is run after the attack (without
-        //       message or sound effect).
-        //
+        // this would immediately make them aware before any attack data is set.
+        // This would result in the player never geting a ranged attack bonus
+        // against unaware monsters (unless the monster is deaf). Instead, an
+        // extra sound is run after the attack (without a message or audio).
         Snd snd(snd_msg,
                 sfx,
                 IgnoreMsgIfOriginSeen::yes,
@@ -1875,9 +1860,7 @@ void melee(Actor* const attacker,
             allow_wound,
             attacker);
 
-        //
         // TODO: Why is light damage included here?
-        //
         if (defender.data().can_bleed &&
             (dmg_type == DmgType::physical ||
              dmg_type == DmgType::pure ||
@@ -1886,15 +1869,13 @@ void melee(Actor* const attacker,
             map::mk_blood(defender.pos);
         }
 
-        //
         // NOTE: This is run regardless of if defender died or not, it is the
-        //       hook implementors responsibility to check this, if it matters
-        //
+        // hook implementors responsibility to check this, if it matters
         wpn.on_melee_hit(defender, att_data.dmg);
 
         if (defender.is_alive())
         {
-            defender.prop_handler().apply_from_att(wpn, true);
+            defender.prop_handler().apply_from_attack(wpn, true);
 
             if (wpn.data().melee.knocks_back)
             {
@@ -1903,11 +1884,9 @@ void melee(Actor* const attacker,
         }
         else // Defender was killed
         {
-            //
             // NOTE: Destroyed actors are purged on standard turns, so it's no
-            //       problem calling this function even if defender was
-            //       destroyed (we haven't "ticked" game time yet)
-            //
+            // problem calling this function even if defender was destroyed
+            // (we haven't "ticked" game time yet)
             wpn.on_melee_kill(defender);
         }
     }
@@ -2036,9 +2015,7 @@ bool ranged(Actor* const attacker,
         if ((wpn.nr_ammo_loaded_ >= nr_of_projectiles) ||
             has_inf_ammo)
         {
-            //
             // TODO: A hack for the Mi-go gun - refactor
-            //
             if ((attacker == map::player) &&
                 (wpn.data().id == ItemId::mi_go_gun))
             {

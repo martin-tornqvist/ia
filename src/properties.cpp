@@ -285,7 +285,7 @@ void init_data_list()
     d.msg_res_mon = "resists burning.";
     d.is_making_mon_aware = true;
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
@@ -434,7 +434,7 @@ void init_data_list()
     d.msg_start_mon = "is perforated by a flare!";
     d.is_making_mon_aware = true;
     d.allow_display_turns = false;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.alignment = PropAlignment::bad;
     add_prop_data(d);
 
@@ -619,7 +619,7 @@ void init_data_list()
     d.msg_start_player = "A bright light shines around me.";
     d.msg_end_player = "It suddenly gets darker.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::neutral;
     add_prop_data(d);
@@ -634,7 +634,7 @@ void init_data_list()
     d.msg_end_player = "I am visible.";
     d.msg_end_mon = "is visible.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -651,7 +651,7 @@ void init_data_list()
     d.msg_end_player = "I am visible.";
     d.msg_end_mon = "is visible.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -669,7 +669,7 @@ void init_data_list()
     d.msg_end_player = "My eyes can no longer perceive the invisible.";
     d.msg_end_mon = "seems less keen.";
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -677,7 +677,7 @@ void init_data_list()
     d.id = PropId::darkvision;
     d.std_rnd_turns = Range(50, 100);
     d.allow_display_turns = true;
-    d.update_vision_when_start_or_end = true;
+    d.update_vision_on_toggled = true;
     d.allow_test_on_bot = true;
     d.alignment = PropAlignment::good;
     add_prop_data(d);
@@ -841,48 +841,45 @@ PropHandler::PropHandler(Actor* owner) :
     owner_(owner)
 {
     // Reset the active props info
-    std::fill(std::begin(active_props_info_),
-              std::end(active_props_info_),
+    std::fill(std::begin(prop_count_cache_),
+              std::end(prop_count_cache_),
               0);
 }
 
-void PropHandler::init_natural_props()
+void PropHandler::apply_natural_props_from_actor_data()
 {
     const ActorDataT& d = owner_->data();
 
     // Add natural properties
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
-        active_props_info_[i] = 0;
+        prop_count_cache_[i] = 0;
 
         if (d.natural_props[i])
         {
             Prop* const prop = mk_prop(PropId(i), PropTurns::indefinite);
 
             apply(prop,
-                    PropSrc::intr,
-                    true,
-                    Verbosity::silent);
+                  PropSrc::intr,
+                  true,
+                  Verbosity::silent);
         }
     }
 }
 
 PropHandler::~PropHandler()
 {
-    for (Prop* prop : props_)
-    {
 #ifndef NDEBUG
-        // For sanity check
-        decr_active_props_info(prop->id());
-#endif // NDEBUG
-        delete prop;
+    // Sanity check the property cache
+    for (auto& prop : props_)
+    {
+        decr_prop_count(prop->id_);
     }
 
-#ifndef NDEBUG
-    // Sanity check: all active props info should be exactly zero now
+    // All property counts should be exactly zero now
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
     {
-        if (active_props_info_[i] != 0)
+        if (prop_count_cache_[i] != 0)
         {
             TRACE << "Active property info at id " << i
                   << " not zero" << std::endl;
@@ -900,7 +897,7 @@ void PropHandler::save() const
 
     int nr_intr_props_ = 0;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (prop->src_ == PropSrc::intr)
         {
@@ -910,11 +907,11 @@ void PropHandler::save() const
 
     saving::put_int(nr_intr_props_);
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (prop->src_ == PropSrc::intr)
         {
-            saving::put_int((int)prop->id());
+            saving::put_int((int)prop->id_);
             saving::put_int(prop->nr_turns_left_);
 
             prop->save();
@@ -949,9 +946,9 @@ void PropHandler::load()
 
         prop->src_ = PropSrc::intr;
 
-        props_.push_back(prop);
+        props_.push_back(std::unique_ptr<Prop>(prop));
 
-        incr_active_props_info(prop_id);
+        incr_prop_count(prop_id);
 
         prop->load();
     }
@@ -1200,177 +1197,155 @@ void PropHandler::apply(Prop* const prop,
                         const bool force_effect,
                         const Verbosity verbosity)
 {
-    ASSERT(prop);
-
     prop->owner_ = owner_;
 
     prop->src_ = src;
 
-    const bool is_player = owner_->is_player();
-
-    const bool player_see_owner = map::player->can_see_actor(*owner_);
+    std::unique_ptr<Prop> prop_owned(prop);
 
     // Check if property is resisted
     if (!force_effect)
     {
-        if (is_resisting_prop(prop->id()))
+        if (is_resisting_prop(prop->id_))
         {
-            // Resist message
             if (verbosity == Verbosity::verbose &&
                 owner_->is_alive())
             {
-                if (is_player)
-                {
-                    const auto msg = prop->data_.msg_res_player;
-
-                    if (!msg.empty())
-                    {
-                        msg_log::add(msg,
-                                     colors::text(),
-                                     true);
-                    }
-                }
-                else // Is a monster
-                {
-                    if (player_see_owner)
-                    {
-                        const auto msg = prop->data_.msg_res_mon;
-
-                        if (!msg.empty())
-                        {
-                            const std::string monster_name =
-                                text_format::first_to_upper(
-                                    owner_->name_the());
-
-                            msg_log::add(monster_name + " " + msg);
-                        }
-                    }
-                }
+                print_resist_msg(*prop);
             }
 
-            delete prop;
             return;
         }
     }
 
-    // This point reached means nothing is blocking the property.
+    // The property can be applied
 
-    // Is this an intrinsic property, and actor already has an intrinsic
-    // property of the same type? If so, the new property will just be "merged"
-    // into the old one ("on_more()").
     if (prop->src_ == PropSrc::intr)
     {
-        for (Prop* old_prop : props_)
+        const bool did_apply_more = try_apply_more_on_existing_intr_prop(*prop);
+
+        if (did_apply_more)
         {
-            // Is this an intrinsic property of the same type?
-            if ((old_prop->src_ == PropSrc::intr) &&
-                (prop->id() == old_prop->id()))
-            {
-                const int turns_left_old = old_prop->nr_turns_left_;
-                const int turns_left_new = prop->nr_turns_left_;
-
-                // TODO: Should messages be printed here? It can get spammy...
-
-                // Start message
-                // if (verbosity == Verbosity::verbose &&
-                //     owner_->is_alive())
-                // {
-                //     if (is_player)
-                //     {
-                //         std::string msg = "";
-                //         prop->msg(PropMsg::start_player, msg);
-
-                //         if (!msg.empty())
-                //         {
-                //             msg_log::add(msg, colors::text(), true);
-                //         }
-                //     }
-                //     else // Not player
-                //     {
-                //         if (player_see_owner)
-                //         {
-                //             std::string msg = "";
-                //             prop->msg(PropMsg::start_mon, msg);
-
-                //             if (!msg.empty())
-                //             {
-                //                 msg_log::add(
-                //                     owner_->name_the() + " " + msg);
-                //             }
-                //         }
-                //     }
-                // }
-
-                old_prop->on_more(*prop);
-
-                const bool is_turns_nr_indefinite =
-                    (turns_left_old < 0) ||
-                    (turns_left_new < 0);
-
-                old_prop->nr_turns_left_ =
-                    is_turns_nr_indefinite ?
-                    -1 :
-                    std::max(turns_left_old, turns_left_new);
-
-                if (prop->turns_init_type() == PropTurns::indefinite)
-                {
-                    old_prop->turns_init_type_ = PropTurns::indefinite;
-                }
-
-                delete prop;
-                return;
-            }
+            return;
         }
     }
 
-    // This part reached means the property should be applied on its own
+    // The property should be applied individually
 
-    props_.push_back(prop);
+    props_.push_back(std::move(prop_owned));
 
-    incr_active_props_info(prop->id());
+    incr_prop_count(prop->id_);
 
     prop->on_start();
 
     if (verbosity == Verbosity::verbose &&
         owner_->is_alive())
     {
-        if (prop->need_update_vision_when_start_or_end())
+        if (prop->should_update_vision_on_toggled())
         {
             map::update_vision();
         }
 
-        // Start message
-        if (is_player)
+        print_start_msg(*prop);
+    }
+}
+
+void PropHandler::print_resist_msg(const Prop& prop)
+{
+    if (owner_->is_player())
+    {
+        const auto msg = prop.data_.msg_res_player;
+
+        if (!msg.empty())
         {
-            const auto msg = prop->data_.msg_start_player;
+            msg_log::add(msg,
+                         colors::text(),
+                         true);
+        }
+    }
+    else // Is a monster
+    {
+        if (map::player->can_see_actor(*owner_))
+        {
+            const auto msg = prop.data_.msg_res_mon;
 
             if (!msg.empty())
             {
-                const bool is_interrupting =
-                    (prop->alignment() != PropAlignment::good);
+                const std::string monster_name =
+                    text_format::first_to_upper(
+                        owner_->name_the());
 
-                msg_log::add(msg,
-                             colors::text(),
-                             is_interrupting);
-            }
-        }
-        else // Is monster
-        {
-            if (player_see_owner)
-            {
-                const auto msg = prop->data_.msg_start_mon;
-
-                if (!msg.empty())
-                {
-                    const std::string actor_name_the =
-                        text_format::first_to_upper(
-                            owner_->name_the());
-
-                    msg_log::add(actor_name_the + " " + msg);
-                }
+                msg_log::add(monster_name + " " + msg);
             }
         }
     }
+}
+
+void PropHandler::print_start_msg(const Prop& prop)
+{
+    if (owner_->is_player())
+    {
+        const auto msg = prop.data_.msg_start_player;
+
+        if (!msg.empty())
+        {
+            const bool is_interrupting =
+                (prop.alignment() != PropAlignment::good);
+
+            msg_log::add(msg,
+                         colors::text(),
+                         is_interrupting);
+        }
+    }
+    else // Is monster
+    {
+        if (map::player->can_see_actor(*owner_))
+        {
+            const auto msg = prop.data_.msg_start_mon;
+
+            if (!msg.empty())
+            {
+                const std::string actor_name_the =
+                    text_format::first_to_upper(
+                        owner_->name_the());
+
+                msg_log::add(actor_name_the + " " + msg);
+            }
+        }
+    }
+}
+
+bool PropHandler::try_apply_more_on_existing_intr_prop(const Prop& new_prop)
+{
+    for (auto& old_prop : props_)
+    {
+        if ((old_prop->src_ == PropSrc::intr) &&
+            (new_prop.id_ == old_prop->id_))
+        {
+            const int turns_left_old = old_prop->nr_turns_left_;
+            const int turns_left_new = new_prop.nr_turns_left_;
+
+            old_prop->on_more(new_prop);
+
+            const bool is_turns_nr_indefinite =
+                (turns_left_old < 0) ||
+                (turns_left_new < 0);
+
+            old_prop->nr_turns_left_ =
+                is_turns_nr_indefinite ?
+                -1 :
+                std::max(turns_left_old, turns_left_new);
+
+            if (new_prop.turns_init_type() == PropTurns::indefinite)
+            {
+                old_prop->turns_init_type_ = PropTurns::indefinite;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void PropHandler::add_prop_from_equipped_item(const Item* const item,
@@ -1389,11 +1364,11 @@ Prop* PropHandler::prop(const PropId id) const
 {
     if (has_prop(id))
     {
-        for (Prop* const prop : props_)
+        for (auto& prop : props_)
         {
-            if (prop->id() == id)
+            if (prop->id_ == id)
             {
-                return prop;
+                return prop.get();
             }
         }
     }
@@ -1403,9 +1378,9 @@ Prop* PropHandler::prop(const PropId id) const
 
 void PropHandler::remove_props_for_item(const Item* const item)
 {
-    for (size_t i = 0; i < props_.size(); /* No increment */)
+    for (auto it = begin(props_); it != end(props_); /* No increment */)
     {
-        Prop* const prop = props_[i];
+        auto* const prop = it->get();
 
         if (prop->item_applying_ == item)
         {
@@ -1413,21 +1388,22 @@ void PropHandler::remove_props_for_item(const Item* const item)
 
             ASSERT(prop->turns_init_type_ == PropTurns::indefinite);
 
-            props_.erase(begin(props_) + i);
+            auto moved_prop = std::move(*it);
 
-            decr_active_props_info(prop->id());
+            it = props_.erase(it);
 
-            on_prop_end(prop);
+            decr_prop_count(moved_prop->id_);
+
+            on_prop_end(moved_prop.get());
         }
         else // Property was not added by this item
         {
-            ++i;
+            ++it;
         }
     }
 }
 
-void PropHandler::apply_from_att(const Wpn& wpn,
-                                 const bool is_melee)
+void PropHandler::apply_from_attack(const Wpn& wpn, const bool is_melee)
 {
     const auto& d = wpn.data();
 
@@ -1461,7 +1437,7 @@ void PropHandler::apply_from_att(const Wpn& wpn,
                 -1;
 
             // Make a copy of the weapon effect
-            auto* const prop_cpy = mk_prop(att_prop.prop->id(),
+            auto* const prop_cpy = mk_prop(att_prop.prop->id_,
                                            att_prop.prop->turns_init_type_,
                                            nr_turns);
 
@@ -1470,9 +1446,9 @@ void PropHandler::apply_from_att(const Wpn& wpn,
     }
 }
 
-void PropHandler::incr_active_props_info(const PropId id)
+void PropHandler::incr_prop_count(const PropId id)
 {
-    int& v = active_props_info_[(size_t)id];
+    int& v = prop_count_cache_[(size_t)id];
 
 #ifndef NDEBUG
     if (v < 0)
@@ -1487,9 +1463,9 @@ void PropHandler::incr_active_props_info(const PropId id)
     ++v;
 }
 
-void PropHandler::decr_active_props_info(const PropId id)
+void PropHandler::decr_prop_count(const PropId id)
 {
-    int& v = active_props_info_[(size_t)id];
+    int& v = prop_count_cache_[(size_t)id];
 
 #ifndef NDEBUG
     if (v <= 0)
@@ -1506,14 +1482,14 @@ void PropHandler::decr_active_props_info(const PropId id)
 
 void PropHandler::on_prop_end(Prop* const prop)
 {
-    if (prop->need_update_vision_when_start_or_end())
+    if (prop->should_update_vision_on_toggled())
     {
         map::update_vision();
     }
 
     // Print end message if this is the last active property of this type
     if ((owner_->state() == ActorState::alive) &&
-        active_props_info_[(size_t)prop->id_] == 0)
+        prop_count_cache_[(size_t)prop->id_] == 0)
     {
         if (owner_->is_player())
         {
@@ -1545,25 +1521,44 @@ void PropHandler::on_prop_end(Prop* const prop)
     prop->on_end();
 }
 
-bool PropHandler::end_prop(const PropId id, const bool run_prop_end_effects)
+bool PropHandler::end_prop(const PropId id)
 {
     for (auto it = begin(props_); it != end(props_); ++it)
     {
-        Prop* const prop = *it;
+        Prop* const prop = it->get();
 
         if ((prop->id_ == id) &&
             (prop->src_ == PropSrc::intr))
         {
+            auto moved_prop = std::move(*it);
+
             props_.erase(it);
 
-            decr_active_props_info(prop->id_);
+            decr_prop_count(moved_prop->id_);
 
-            if (run_prop_end_effects)
-            {
-                on_prop_end(prop);
-            }
+            on_prop_end(moved_prop.get());
 
-            delete prop;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool PropHandler::end_prop_silent(const PropId id)
+{
+    for (auto it = begin(props_); it != end(props_); ++it)
+    {
+        Prop* const prop = it->get();
+
+        if ((prop->id_ == id) &&
+            (prop->src_ == PropSrc::intr))
+        {
+            auto moved_prop = std::move(*it);
+
+            props_.erase(it);
+
+            decr_prop_count(moved_prop->id_);
 
             return true;
         }
@@ -1576,7 +1571,7 @@ void PropHandler::on_turn_begin()
 {
     for (size_t i = 0; i < props_.size(); /* No increment */)
     {
-        Prop* prop = props_[i];
+        Prop* prop = props_[i].get();
 
         // Count down number of turns
         if (prop->nr_turns_left_ > 0)
@@ -1585,9 +1580,6 @@ void PropHandler::on_turn_begin()
 
             --prop->nr_turns_left_;
         }
-
-        // TODO: This crashes...
-        // * Property id was 'waiting'
 
         // Aggravates monster?
         if (!owner_->is_player() &&
@@ -1613,30 +1605,30 @@ void PropHandler::on_turn_begin()
 
 void PropHandler::on_turn_end()
 {
-    for (size_t i = 0; i < props_.size(); /* No increment */)
+    for (auto it = begin(props_); it != end(props_); /* No increment */)
     {
-        Prop* prop = props_[i];
+        Prop* prop = it->get();
 
         if (prop->is_finished())
         {
-            props_.erase(begin(props_) + i);
+            auto prop_moved = std::move(*it);
 
-            decr_active_props_info(prop->id());
+            it = props_.erase(it);
 
-            on_prop_end(prop);
+            decr_prop_count(prop_moved->id_);
 
-            delete prop;
+            on_prop_end(prop_moved.get());
         }
         else  // Property has not been removed
         {
-            ++i;
+            ++it;
         }
     }
 }
 
 void PropHandler::on_std_turn()
 {
-    for (auto* const prop: props_)
+    for (auto& prop: props_)
     {
         prop->on_std_turn();
     }
@@ -1646,7 +1638,7 @@ DidAction PropHandler::on_act()
 {
     for (size_t i = 0; i < props_.size(); /* No increment */)
     {
-        Prop* prop = props_[i];
+        Prop* prop = props_[i].get();
 
         const auto result = prop->on_act();
 
@@ -1668,11 +1660,9 @@ DidAction PropHandler::on_act()
     return DidAction::no;
 }
 
-bool PropHandler::is_temporary_negative_prop_mon(const Prop& prop)
+bool PropHandler::is_temporary_negative_prop(const Prop& prop)
 {
-    ASSERT(owner_ != map::player);
-
-    const auto id = prop.id();
+    const auto id = prop.id_;
 
     const bool is_natural_prop = owner_->data().natural_props[(size_t)id];
 
@@ -1682,11 +1672,11 @@ bool PropHandler::is_temporary_negative_prop_mon(const Prop& prop)
         (prop.alignment() == PropAlignment::bad);
 }
 
-std::vector<PropListEntry> PropHandler::temporary_negative_prop_list()
+std::vector<PropListEntry> PropHandler::text_list_temporary_negative_props()
 {
     ASSERT(owner_ != map::player);
 
-    auto prop_list = owner_->prop_handler().props_list();
+    auto prop_list = owner_->prop_handler().text_list();
 
     // Remove all non-negative properties (we should not show temporary spell
     // resistance for example), and all natural properties (properties which all
@@ -1695,7 +1685,7 @@ std::vector<PropListEntry> PropHandler::temporary_negative_prop_list()
     {
         auto* const prop = it->prop;
 
-        if (is_temporary_negative_prop_mon(*prop))
+        if (is_temporary_negative_prop(*prop))
         {
             ++it;
         }
@@ -1712,9 +1702,9 @@ bool PropHandler::has_temporary_negative_prop_mon()
 {
     ASSERT(owner_ != map::player);
 
-    for (const auto* const prop: props_)
+    for (const auto& prop: props_)
     {
-        if (is_temporary_negative_prop_mon(*prop))
+        if (is_temporary_negative_prop(*prop))
         {
             return true;
         }
@@ -1723,11 +1713,11 @@ bool PropHandler::has_temporary_negative_prop_mon()
     return false;
 }
 
-std::vector<ColoredString> PropHandler::props_line() const
+std::vector<ColoredString> PropHandler::text_line() const
 {
     std::vector<ColoredString> line;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         std::string str = prop->name_short();
 
@@ -1786,12 +1776,12 @@ std::vector<ColoredString> PropHandler::props_line() const
     return line;
 }
 
-// TODO: Lots of copy paste from 'props_line' above, refactor
-std::vector<PropListEntry> PropHandler::props_list() const
+// TODO: Lots of copy paste from 'text_line' above, refactor
+std::vector<PropListEntry> PropHandler::text_list() const
 {
     std::vector<PropListEntry> list;
 
-    for (Prop* prop : props_)
+    for (const auto& prop : props_)
     {
         const std::string name_long = prop->name();
 
@@ -1862,7 +1852,7 @@ std::vector<PropListEntry> PropHandler::props_list() const
 
         entry.descr = descr;
 
-        entry.prop = prop;
+        entry.prop = prop.get();
     }
 
     return list;
@@ -1870,9 +1860,9 @@ std::vector<PropListEntry> PropHandler::props_list() const
 
 bool PropHandler::is_resisting_prop(const PropId id) const
 {
-    for (Prop* p : props_)
+    for (auto& prop : props_)
     {
-        if (p->is_resisting_other_prop(id))
+        if (prop->is_resisting_other_prop(id))
         {
             return true;
         }
@@ -1887,9 +1877,9 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
 {
     DmgResistData res_data;
 
-    for (Prop* p : props_)
+    for (auto& prop : props_)
     {
-        res_data = p->is_resisting_dmg(dmg_type);
+        res_data = prop->is_resisting_dmg(dmg_type);
 
         if (res_data.is_resisted)
         {
@@ -1934,9 +1924,9 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
 
 bool PropHandler::allow_see() const
 {
-    for (Prop* p : props_)
+    for (auto& prop : props_)
     {
-        if (!p->allow_see())
+        if (!prop->allow_see())
         {
             return false;
         }
@@ -1949,7 +1939,7 @@ int PropHandler::affect_max_hp(const int hp_max) const
 {
     int new_hp_max = hp_max;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         new_hp_max = prop->affect_max_hp(new_hp_max);
     }
@@ -1961,7 +1951,7 @@ int PropHandler::affect_max_spi(const int spi_max) const
 {
     int new_spi_max = spi_max;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         new_spi_max = prop->affect_max_spi(new_spi_max);
     }
@@ -1973,7 +1963,7 @@ int PropHandler::affect_shock(const int shock) const
 {
     int new_shock = shock;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         new_shock = prop->affect_shock(new_shock);
     }
@@ -1983,7 +1973,7 @@ int PropHandler::affect_shock(const int shock) const
 
 void PropHandler::affect_move_dir(const P& actor_pos, Dir& dir) const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         prop->affect_move_dir(actor_pos, dir);
     }
@@ -1991,7 +1981,7 @@ void PropHandler::affect_move_dir(const P& actor_pos, Dir& dir) const
 
 bool PropHandler::allow_attack(const Verbosity verbosity) const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_attack_melee(verbosity) &&
             !prop->allow_attack_ranged(verbosity))
@@ -2005,7 +1995,7 @@ bool PropHandler::allow_attack(const Verbosity verbosity) const
 
 bool PropHandler::allow_attack_melee(const Verbosity verbosity) const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_attack_melee(verbosity))
         {
@@ -2018,7 +2008,7 @@ bool PropHandler::allow_attack_melee(const Verbosity verbosity) const
 
 bool PropHandler::allow_attack_ranged(const Verbosity verbosity) const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_attack_ranged(verbosity))
         {
@@ -2031,7 +2021,7 @@ bool PropHandler::allow_attack_ranged(const Verbosity verbosity) const
 
 bool PropHandler::allow_move() const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_move())
         {
@@ -2044,7 +2034,7 @@ bool PropHandler::allow_move() const
 
 bool PropHandler::allow_act() const
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_act())
         {
@@ -2057,7 +2047,7 @@ bool PropHandler::allow_act() const
 
 bool PropHandler::allow_read_absolute(const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_read_absolute(verbosity))
         {
@@ -2070,7 +2060,7 @@ bool PropHandler::allow_read_absolute(const Verbosity verbosity) const
 
 bool PropHandler::allow_read_chance(const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_read_chance(verbosity))
         {
@@ -2084,7 +2074,7 @@ bool PropHandler::allow_read_chance(const Verbosity verbosity) const
 bool PropHandler::allow_cast_intr_spell_absolute(
     const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_cast_intr_spell_absolute(verbosity))
         {
@@ -2098,7 +2088,7 @@ bool PropHandler::allow_cast_intr_spell_absolute(
 bool PropHandler::allow_cast_intr_spell_chance(
     const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_cast_intr_spell_chance(verbosity))
         {
@@ -2111,7 +2101,7 @@ bool PropHandler::allow_cast_intr_spell_chance(
 
 bool PropHandler::allow_speak(const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_speak(verbosity))
         {
@@ -2124,7 +2114,7 @@ bool PropHandler::allow_speak(const Verbosity verbosity) const
 
 bool PropHandler::allow_eat(const Verbosity verbosity) const
 {
-    for (auto prop : props_)
+    for (auto& prop : props_)
     {
         if (!prop->allow_eat(verbosity))
         {
@@ -2137,7 +2127,7 @@ bool PropHandler::allow_eat(const Verbosity verbosity) const
 
 void PropHandler::on_hit()
 {
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         prop->on_hit();
     }
@@ -2147,7 +2137,7 @@ void PropHandler::on_death()
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         prop->on_death();
     }
@@ -2159,7 +2149,7 @@ int PropHandler::ability_mod(const AbilityId ability) const
 {
     int modifier = 0;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         modifier += prop->ability_mod(ability);
     }
@@ -2171,7 +2161,7 @@ bool PropHandler::affect_actor_color(Color& color) const
 {
     bool did_affect_color = false;
 
-    for (Prop* prop : props_)
+    for (auto& prop : props_)
     {
         if (prop->affect_actor_color(color))
         {
@@ -2240,7 +2230,7 @@ Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
 
 void PropBlessed::on_start()
 {
-    owner_->prop_handler().end_prop(PropId::cursed, false);
+    owner_->prop_handler().end_prop_silent(PropId::cursed);
 
     bless_adjacent();
 }
@@ -2291,7 +2281,7 @@ void PropBlessed::bless_adjacent() const
 
 void PropCursed::on_start()
 {
-    owner_->prop_handler().end_prop(PropId::blessed, false);
+    owner_->prop_handler().end_prop_silent(PropId::blessed);
 
     curse_adjacent();
 
@@ -2362,12 +2352,12 @@ void PropCursed::curse_adjacent() const
 
 void PropSlowed::on_start()
 {
-    owner_->prop_handler().end_prop(PropId::hasted, false);
+    owner_->prop_handler().end_prop_silent(PropId::hasted);
 }
 
 void PropHasted::on_start()
 {
-    owner_->prop_handler().end_prop(PropId::slowed, false);
+    owner_->prop_handler().end_prop_silent(PropId::slowed);
 }
 
 void PropSummoned::on_end()
@@ -2424,7 +2414,7 @@ int PropDiseased::affect_max_hp(const int hp_max) const
 void PropDiseased::on_start()
 {
     // End infection
-    owner_->prop_handler().end_prop(PropId::infected, false);
+    owner_->prop_handler().end_prop_silent(PropId::infected);
 
     // If this is a permanent disease that the player caught, log it as a
     // historic event
@@ -3054,7 +3044,7 @@ bool PropBlind::allow_read_absolute(const Verbosity verbosity) const
     return false;
 }
 
-bool PropBlind::need_update_vision_when_start_or_end() const
+bool PropBlind::should_update_vision_on_toggled() const
 {
     return owner_->is_player();
 }
@@ -3074,7 +3064,7 @@ void PropParalyzed::on_start()
     }
 }
 
-bool PropFainted::need_update_vision_when_start_or_end() const
+bool PropFainted::should_update_vision_on_toggled() const
 {
     return owner_->is_player();
 }
