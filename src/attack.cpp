@@ -20,6 +20,9 @@
 #include "knockback.hpp"
 #include "drop.hpp"
 #include "text_format.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 AttData::AttData(Actor* const attacker,
                  Actor* const defender,

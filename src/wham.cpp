@@ -12,6 +12,8 @@
 #include "text_format.hpp"
 #include "item_factory.hpp"
 #include "feature_door.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace wham
 {

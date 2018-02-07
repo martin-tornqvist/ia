@@ -15,6 +15,7 @@
 #include "query.hpp"
 #include "map.hpp"
 #include "saving.hpp"
+#include "property_handler.hpp"
 
 namespace player_spells
 {

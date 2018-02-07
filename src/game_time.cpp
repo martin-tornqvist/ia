@@ -19,6 +19,8 @@
 #include "item.hpp"
 #include "saving.hpp"
 #include "msg_log.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace game_time
 {

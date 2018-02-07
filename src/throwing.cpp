@@ -23,6 +23,8 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "text_format.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace throwing
 {
@@ -268,12 +270,9 @@ void throw_item(Actor& actor_throwing,
 
                 // If throwing a potion on an actor, let it make stuff happen
 
-                //
                 // TODO: Couldn't the potion handle this itself via
-                //       "on_ranged_hit" called above? It would be good to make
-                //       the throwing code more generic - it should not know
-                //       about potions!
-                //
+                // "on_ranged_hit" called above? It would be good to make the
+                // throwing code more generic, it should not know about potions!
                 if (is_potion)
                 {
                     Potion* const potion = static_cast<Potion*>(&item_thrown);

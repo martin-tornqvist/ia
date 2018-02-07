@@ -7,6 +7,7 @@
 #include "actor_mon.hpp"
 #include "actor_factory.hpp"
 #include "actor_player.hpp"
+#include "property_handler.hpp"
 
 Monolith::Monolith(const P& p) :
     Rigid           (p),

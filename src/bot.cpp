@@ -5,7 +5,10 @@
 #include <algorithm>
 #include <vector>
 
-#include "properties.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
+#include "property_factory.hpp"
 #include "actor.hpp"
 #include "actor_mon.hpp"
 #include "feature.hpp"
@@ -324,7 +327,7 @@ void act()
 
         for (size_t i = 0; i < (size_t)PropId::END; ++i)
         {
-            if (prop_data::data[i].allow_test_on_bot)
+            if (property_data::data[i].allow_test_on_bot)
             {
                 prop_bucket.push_back(PropId(i));
             }
@@ -332,9 +335,10 @@ void act()
 
         PropId prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
 
-        Prop* const prop = prop_handler.mk_prop(prop_id,
-                                                PropTurns::specific,
-                                                5);
+        Prop* const prop =
+            property_factory::mk(prop_id,
+                                 PropTurns::specific,
+                                 5);
 
         prop_handler.apply(prop);
     }

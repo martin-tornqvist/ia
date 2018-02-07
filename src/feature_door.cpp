@@ -12,18 +12,19 @@
 #include "text_format.hpp"
 #include "game.hpp"
 #include "game_time.hpp"
+#include "property_handler.hpp"
 
 Door::Door(const P& feature_pos,
            const Rigid* const mimic_feature,
            DoorType type,
            DoorSpawnState spawn_state) :
-    Rigid                   (feature_pos),
-    mimic_feature_          (mimic_feature),
-    nr_spikes_              (0),
-    is_open_                (false),
-    is_stuck_               (false),
-    is_secret_              (false),
-    type_                   (type)
+    Rigid(feature_pos),
+    mimic_feature_(mimic_feature),
+    nr_spikes_(0),
+    is_open_(false),
+    is_stuck_(false),
+    is_secret_(false),
+    type_(type)
 {
     // Gates should never be secret
     ASSERT(!(type_ == DoorType::gate &&

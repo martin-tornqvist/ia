@@ -16,6 +16,8 @@
 #include "feature_rigid.hpp"
 #include "saving.hpp"
 #include "actor_player.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
 
 namespace map_travel
 {
@@ -36,12 +38,9 @@ void mk_lvl(const MapType& map_type)
     auto start_time = std::chrono::steady_clock::now();
 #endif
 
-    //
     // TODO: When the map is invalid, any unique items spawned are lost forever.
-    //       Currently, the only effect of this should be that slightly fewever
-    //       unique items are found by the player. It is bad design however, and
-    //       should be fixed.
-    //
+    // Currently, the only effect of this should be that slightly fewever unique
+    // items are found by the player. It should be fixed however.
 
     while (!map_ok)
     {

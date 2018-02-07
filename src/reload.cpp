@@ -16,6 +16,8 @@
 #include "audio.hpp"
 #include "io.hpp"
 #include "text_format.hpp"
+#include "property_handler.hpp"
+#include "property_data.hpp"
 
 namespace reload
 {

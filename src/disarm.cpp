@@ -8,6 +8,7 @@
 #include "map.hpp"
 #include "feature_trap.hpp"
 #include "inventory.hpp"
+#include "property_factory.hpp"
 
 namespace disarm
 {

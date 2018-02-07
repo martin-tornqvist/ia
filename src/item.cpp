@@ -5,7 +5,8 @@
 #include "map.hpp"
 #include "game_time.hpp"
 #include "map_parsing.hpp"
-#include "properties.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
 #include "msg_log.hpp"
 #include "explosion.hpp"
 #include "io.hpp"
@@ -26,12 +27,12 @@
 // Item
 // -----------------------------------------------------------------------------
 Item::Item(ItemDataT* item_data) :
-    nr_items_       (1),
-    melee_dmg_plus_ (0),
-    data_           (item_data),
-    actor_carrying_ (nullptr),
-    carrier_props_  (),
-    carrier_spells_ ()
+    nr_items_(1),
+    melee_dmg_plus_(0),
+    data_(item_data),
+    actor_carrying_(nullptr),
+    carrier_props_(),
+    carrier_spells_()
 {
     melee_dmg_plus_ = data_->melee.dmg.plus;
 }
@@ -1473,43 +1474,6 @@ int MedicalBag::tot_turns_for_action(const MedBagAction action) const
 
     return 0;
 }
-
-// -----------------------------------------------------------------------------
-// Hideous mask
-// -----------------------------------------------------------------------------
-//HideousMask::HideousMask(ItemDataT* item_data) : Headwear(item_data)
-//{
-//    item_data->allow_spawn = false;
-//}
-//
-//void HideousMask::on_std_turn_in_inv(const InvType inv_type)
-//{
-//    if (inv_type == InvType::slots)
-//    {
-//        std::vector<Actor*> adj_actors;
-//        const P p(map::player->pos);
-//        for (auto* const actor : game_time::actors)
-//        {
-//            if (actor->is_alive() && is_pos_adj(p, actor->pos, false))
-//            {
-//                adj_actors.push_back(actor);
-//            }
-//        }
-//        if (!adj_actors.empty())
-//        {
-//            bool blocked_los[map_w][map_h];
-//            map_parse::run(cell_check::BlocksLos(), blocked_los);
-//            for (auto* const actor : adj_actors)
-//            {
-//                if (rnd::one_in(4) && actor->can_see_actor(*map::player, blocked_los))
-//                {
-//                    actor->apply_prop(
-//                        new PropTerrified(PropTurns::std));
-//                }
-//            }
-//        }
-//    }
-//}
 
 // -----------------------------------------------------------------------------
 // Gas mask

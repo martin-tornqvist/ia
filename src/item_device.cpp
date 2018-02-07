@@ -19,6 +19,8 @@
 #include "game.hpp"
 #include "text_format.hpp"
 #include "map_parsing.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
 
 // -----------------------------------------------------------------------------
 // Device

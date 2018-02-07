@@ -11,6 +11,8 @@
 #include "feature_monolith.hpp"
 #include "feature_pylon.hpp"
 #include "game_time.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 // -----------------------------------------------------------------------------
 // Move rules

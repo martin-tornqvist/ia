@@ -16,6 +16,8 @@
 #include "feature_trap.hpp"
 #include "feature_mob.hpp"
 #include "text_format.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
 
 namespace knockback
 {
@@ -94,8 +96,7 @@ void run(Actor& defender,
 
             if (!f->is_los_passable())
             {
-                defender.apply_prop(
-                    new PropNailed(PropTurns::indefinite));
+                defender.apply_prop(new PropNailed(PropTurns::indefinite));
             }
         }
 

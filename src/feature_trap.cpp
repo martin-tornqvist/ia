@@ -21,6 +21,9 @@
 #include "item_factory.hpp"
 #include "attack.hpp"
 #include "text_format.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 // -----------------------------------------------------------------------------
 // Trap
@@ -28,11 +31,11 @@
 Trap::Trap(const P& feature_pos,
            Rigid* const mimic_feature,
            TrapId id) :
-    Rigid                   (feature_pos),
-    mimic_feature_          (mimic_feature),
-    is_hidden_              (true),
+    Rigid(feature_pos),
+    mimic_feature_(mimic_feature),
+    is_hidden_(true),
     nr_turns_until_trigger_ (-1),
-    trap_impl_              (nullptr)
+    trap_impl_(nullptr)
 {
     ASSERT(id != TrapId::END);
 
@@ -314,10 +317,8 @@ void Trap::bump(Actor& actor_bumping)
 
     const std::string trap_name_a = trap_impl_->name(Article::a);
 
-    //
     // TODO: Reimplement something affecting chance of success, e.g.
-    //       dexterous traits
-    //
+    // dexterous traits
 
     const int dodge_skill = 50;
 

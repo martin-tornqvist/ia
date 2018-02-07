@@ -14,7 +14,10 @@
 #include "item.hpp"
 #include "msg_log.hpp"
 #include "map_parsing.hpp"
+#include "actor.hpp"
 #include "actor_player.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
 
 // -----------------------------------------------------------------------------
 // Smoke

@@ -8,6 +8,7 @@
 #include "msg_log.hpp"
 #include "sound.hpp"
 #include "knockback.hpp"
+#include "property.hpp"
 
 // -----------------------------------------------------------------------------
 // Pylon
@@ -348,8 +349,7 @@ void PylonBurning::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(
-            new PropBurning(PropTurns::std));
+        actor->apply_prop(new PropBurning(PropTurns::std));
     }
 }
 
@@ -371,8 +371,7 @@ void PylonInvis::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(
-            new PropInvisible(PropTurns::std));
+        actor->apply_prop(new PropInvisible(PropTurns::std));
     }
 }
 
@@ -394,8 +393,7 @@ void PylonSlow::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(
-            new PropSlowed(PropTurns::std));
+        actor->apply_prop(new PropSlowed(PropTurns::std));
     }
 }
 
@@ -461,7 +459,6 @@ void PylonTerrify::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(
-            new PropTerrified(PropTurns::std));
+        actor->apply_prop(new PropTerrified(PropTurns::std));
     }
 }

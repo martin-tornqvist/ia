@@ -25,6 +25,7 @@
 #include "saving.hpp"
 #include "insanity.hpp"
 #include "highscore.hpp"
+#include "property_data.hpp"
 
 namespace init
 {
@@ -84,7 +85,7 @@ void init_session()
 
     actor_data::init();
     feature_data::init();
-    prop_data::init();
+    property_data::init();
     item_data::init();
     scroll_handling::init();
     potion_handling::init();

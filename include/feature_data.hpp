@@ -4,7 +4,7 @@
 #include <functional>
 #include "gfx.hpp"
 #include "map_patterns.hpp"
-#include "properties.hpp"
+#include "property_data.hpp"
 
 enum class FeatureId
 {

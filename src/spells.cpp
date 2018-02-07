@@ -24,6 +24,9 @@
 #include "explosion.hpp"
 #include "text_format.hpp"
 #include "item_factory.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace spell_handling
 {
@@ -200,10 +203,8 @@ void Spell::cast(Actor* const caster,
     // If this is an intrinsic cast, check properties which NEVER allows casting
     // or speaking
 
-    //
     // NOTE: If this is a non-intrinsic cast (e.g. from a scroll), then we
-    //       assume that the caller has made all checks themselves
-    //
+    // assume that the caller has made all checks themselves
     if ((intrinsic == IsIntrinsic::yes) &&
         (!prop_handler.allow_cast_intr_spell_absolute(Verbosity::verbose) ||
          !prop_handler.allow_speak(Verbosity::verbose)))

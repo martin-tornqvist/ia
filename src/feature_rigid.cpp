@@ -21,6 +21,9 @@
 #include "wham.hpp"
 #include "text_format.hpp"
 #include "actor_player.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 // -----------------------------------------------------------------------------
 // Rigid

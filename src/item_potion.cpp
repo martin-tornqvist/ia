@@ -1,7 +1,9 @@
 #include "item_potion.hpp"
 
 #include "init.hpp"
-#include "properties.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "map.hpp"

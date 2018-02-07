@@ -4,7 +4,7 @@
 
 #include "actor_player.hpp"
 #include "player_bon.hpp"
-#include "properties.hpp"
+#include "property_handler.hpp"
 #include "map.hpp"
 
 int AbilityVals::val(const AbilityId id,

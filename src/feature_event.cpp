@@ -10,6 +10,8 @@
 #include "popup.hpp"
 #include "sdl_base.hpp"
 #include "init.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
 
 // -----------------------------------------------------------------------------
 // Event

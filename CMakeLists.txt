@@ -79,7 +79,10 @@ set(SRC
   include/populate_traps.hpp
   include/popup.hpp
   include/postmortem.hpp
-  include/properties.hpp
+  include/property.hpp
+  include/property_data.hpp
+  include/property_handler.hpp
+  include/property_factory.hpp
   include/query.hpp
   include/reload.hpp
   include/room.hpp
@@ -174,7 +177,10 @@ set(SRC
   src/populate_traps.cpp
   src/popup.cpp
   src/postmortem.cpp
-  src/properties.cpp
+  src/property.cpp
+  src/property_data.cpp
+  src/property_handler.cpp
+  src/property_factory.cpp
   src/query.cpp
   src/reload.cpp
   src/room.cpp

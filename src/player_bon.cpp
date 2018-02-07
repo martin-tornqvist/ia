@@ -11,6 +11,8 @@
 #include "map_parsing.hpp"
 #include "create_character.hpp"
 #include "saving.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
 
 namespace player_bon
 {

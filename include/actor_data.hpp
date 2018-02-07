@@ -7,10 +7,11 @@
 
 #include "ability_values.hpp"
 #include "global.hpp"
-#include "properties.hpp"
+#include "property_data.hpp"
 #include "audio.hpp"
 #include "room.hpp"
 #include "spells.hpp"
+#include "audio.hpp"
 
 enum class ActorId
 {

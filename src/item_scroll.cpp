@@ -13,6 +13,7 @@
 #include "item_factory.hpp"
 #include "saving.hpp"
 #include "game.hpp"
+#include "property_handler.hpp"
 
 const std::string Scroll::real_name() const
 {

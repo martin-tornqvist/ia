@@ -11,6 +11,7 @@
 #include "game_time.hpp"
 #include "fov.hpp"
 #include "text_format.hpp"
+#include "property_handler.hpp"
 
 namespace ai
 {

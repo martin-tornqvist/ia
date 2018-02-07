@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "actor.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"

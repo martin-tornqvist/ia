@@ -13,7 +13,8 @@
 #include "saving.hpp"
 #include "game.hpp"
 #include "actor_player.hpp"
-
+#include "property.hpp"
+#include "property_data.hpp"
 
 // -----------------------------------------------------------------------------
 // Staff of the pharaohs

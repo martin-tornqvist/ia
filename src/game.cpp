@@ -40,6 +40,9 @@
 #include "mapgen.hpp"
 #include "actor_data.hpp"
 #include "colors.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace game
 {

@@ -5,7 +5,6 @@
 #include <string>
 
 #include "item.hpp"
-#include "properties.hpp"
 #include "player_bon.hpp"
 
 class Actor;

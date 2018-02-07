@@ -18,6 +18,9 @@
 #include "io.hpp"
 #include "feature_mob.hpp"
 #include "feature_rigid.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 namespace
 {

@@ -22,19 +22,22 @@
 #include "popup.hpp"
 #include "feature_door.hpp"
 #include "text_format.hpp"
+#include "property.hpp"
+#include "property_data.hpp"
+#include "property_handler.hpp"
 
 Actor::Actor() :
-    pos             (),
-    delay_          (0),
-    state_          (ActorState::alive),
-    hp_             (-1),
-    hp_max_         (-1),
-    spi_            (-1),
-    spi_max_        (-1),
-    lair_pos_       (),
-    prop_handler_   (nullptr),
-    data_           (nullptr),
-    inv_            (nullptr) {}
+    pos(),
+    delay_(0),
+    state_(ActorState::alive),
+    hp_(-1),
+    hp_max_(-1),
+    spi_(-1),
+    spi_max_(-1),
+    lair_pos_(),
+    prop_handler_(nullptr),
+    data_(nullptr),
+    inv_(nullptr) {}
 
 Actor::~Actor()
 {

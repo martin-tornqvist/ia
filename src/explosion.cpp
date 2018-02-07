@@ -12,6 +12,7 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "game.hpp"
+#include "property_factory.hpp"
 
 namespace
 {
@@ -322,14 +323,12 @@ void run(const P& origin,
 
                 if (should_apply_on_living_actor)
                 {
-                    PropHandler& prop_hlr = living_actor->prop_handler();
+                    Prop* const prop_cpy =
+                        property_factory::mk(prop->id(),
+                                             PropTurns::specific,
+                                             prop->nr_turns_left());
 
-                    Prop* prop_cpy =
-                        prop_hlr.mk_prop(prop->id(),
-                                         PropTurns::specific,
-                                         prop->nr_turns_left());
-
-                    prop_hlr.apply(prop_cpy);
+                    living_actor->apply_prop(prop_cpy);
                 }
 
                 // If property is burning, also apply it to corpses and the
@@ -345,14 +344,12 @@ void run(const P& origin,
 
                     for (Actor* corpse : corpses_here)
                     {
-                        PropHandler& prop_hlr = corpse->prop_handler();
+                        Prop* const prop_cpy =
+                            property_factory::mk(prop->id(),
+                                                 PropTurns::specific,
+                                                 prop->nr_turns_left());
 
-                        Prop* prop_cpy =
-                            prop_hlr.mk_prop(prop->id(),
-                                             PropTurns::specific,
-                                             prop->nr_turns_left());
-
-                        prop_hlr.apply(prop_cpy);
+                        corpse->prop_handler().apply(prop_cpy);
                     }
                 }
             }

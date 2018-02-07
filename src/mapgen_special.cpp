@@ -21,6 +21,7 @@
 #include "game_time.hpp"
 #include "init.hpp"
 #include "rl_utils.hpp"
+#include "property.hpp"
 
 namespace mapgen
 {

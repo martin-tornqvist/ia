@@ -14,6 +14,7 @@
 #include "text_format.hpp"
 #include "item.hpp"
 #include "item_device.hpp"
+#include "property_handler.hpp"
 
 namespace status_lines
 {

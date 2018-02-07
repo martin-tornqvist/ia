@@ -12,6 +12,7 @@
 #include "item.hpp"
 #include "map.hpp"
 #include "game.hpp"
+#include "property_factory.hpp"
 
 namespace
 {

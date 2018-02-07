@@ -13,6 +13,7 @@
 #include "map.hpp"
 #include "saving.hpp"
 #include "game_time.hpp"
+#include "property.hpp"
 
 ItemDataT::ItemDataT() :
     id(ItemId::END),
