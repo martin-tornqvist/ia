@@ -348,7 +348,7 @@ void run(const P& origin,
 
                         prop_cpy->set_duration(prop->nr_turns_left());
 
-                        corpse->prop_handler().apply(prop_cpy);
+                        corpse->properties().apply(prop_cpy);
                     }
                 }
             }

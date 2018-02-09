@@ -315,7 +315,7 @@ ConsumeItem DeviceRejuvenator::run_effect()
 
     for (PropId prop_id : props_can_heal)
     {
-        map::player->prop_handler().end_prop(prop_id);
+        map::player->properties().end_prop(prop_id);
     }
 
     map::player->restore_hp(999);

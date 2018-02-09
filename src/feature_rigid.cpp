@@ -86,8 +86,8 @@ void Rigid::on_new_turn()
             // fire damage
             if (rnd::one_in(4))
             {
-                auto& prop_handler = actor->prop_handler();
-                prop_handler.apply(new PropBurning());
+                auto& properties = actor->properties();
+                properties.apply(new PropBurning());
             }
             else
             {
@@ -3275,7 +3275,7 @@ void Fountain::bump(Actor& actor_bumping)
 
     if (has_drinks_left_)
     {
-        PropHandler& prop_hlr = map::player->prop_handler();
+        PropHandler& properties = map::player->properties();
 
         if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -3293,7 +3293,7 @@ void Fountain::bump(Actor& actor_bumping)
             }
         }
 
-        if (!prop_hlr.allow_eat(Verbosity::verbose))
+        if (!properties.allow_eat(Verbosity::verbose))
         {
             return;
         }
@@ -3323,13 +3323,13 @@ void Fountain::bump(Actor& actor_bumping)
 
         case FountainEffect::curse:
         {
-            prop_hlr.apply(new PropCursed());
+            properties.apply(new PropCursed());
         }
         break;
 
         case FountainEffect::disease:
         {
-            prop_hlr.apply(new PropDiseased());
+            properties.apply(new PropDiseased());
         }
         break;
 
@@ -3341,25 +3341,25 @@ void Fountain::bump(Actor& actor_bumping)
 
             prop->set_duration(poison_dmg_n_turn * dmg_range.roll());
 
-            prop_hlr.apply(prop);
+            properties.apply(prop);
         }
         break;
 
         case FountainEffect::frenzy:
         {
-            prop_hlr.apply(new PropFrenzied());
+            properties.apply(new PropFrenzied());
         }
         break;
 
         case FountainEffect::paralyze:
         {
-            prop_hlr.apply(new PropParalyzed());
+            properties.apply(new PropParalyzed());
         }
         break;
 
         case FountainEffect::blind:
         {
-            prop_hlr.apply(new PropBlind());
+            properties.apply(new PropBlind());
         }
         break;
 
@@ -3369,7 +3369,7 @@ void Fountain::bump(Actor& actor_bumping)
 
             prop->set_duration(10);
 
-            prop_hlr.apply(prop);
+            properties.apply(prop);
         }
         break;
 

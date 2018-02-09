@@ -191,7 +191,7 @@ void RodCuring::run_effect()
 
     for (PropId prop_id : props_can_heal)
     {
-        if (player.prop_handler().end_prop(prop_id))
+        if (player.properties().end_prop(prop_id))
         {
             is_something_healed = true;
         }

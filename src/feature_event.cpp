@@ -99,7 +99,7 @@ void EventWallCrumble::on_new_turn()
 
     // OK, everything seems to be in a good state, go!
 
-    if (map::player->prop_handler().allow_see())
+    if (map::player->properties().allow_see())
     {
         msg_log::add("Suddenly, the walls collapse!",
                      colors::msg_note(),

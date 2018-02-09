@@ -278,7 +278,7 @@ void Mon::act()
     // -------------------------------------------------------------------------
     // Property actions (e.g. Zombie rising, Vortex pulling, ...)
     // -------------------------------------------------------------------------
-    if (prop_handler().on_act() == DidAction::yes)
+    if (properties().on_act() == DidAction::yes)
     {
         return;
     }
@@ -495,7 +495,7 @@ bool Mon::is_actor_seeable(const Actor& other,
     }
 
     // Monster is blind?
-    if (!prop_handler_->allow_see())
+    if (!properties_->allow_see())
     {
         return false;
     }
@@ -735,7 +735,7 @@ void Mon::move(Dir dir)
     }
 #endif // NDEBUG
 
-    prop_handler().affect_move_dir(pos, dir);
+    properties().affect_move_dir(pos, dir);
 
     // Trap affects leaving?
     if (dir != Dir::center)
@@ -788,7 +788,7 @@ Color Mon::color() const
 
     Color tmp_color;
 
-    if (prop_handler_->affect_actor_color(tmp_color))
+    if (properties_->affect_actor_color(tmp_color))
     {
         return tmp_color;
     }
@@ -1057,7 +1057,7 @@ bool Mon::try_attack(Actor& defender)
 
         prop->set_duration(data_->ranged_cooldown_turns);
 
-        prop_handler_->apply(prop);
+        properties_->apply(prop);
 
         const bool did_attack =
             attack::ranged(this,
@@ -1073,7 +1073,7 @@ bool Mon::try_attack(Actor& defender)
 
 void Mon::avail_attacks(Actor& defender, AiAvailAttacksData& dst)
 {
-    if (prop_handler_->allow_attack(Verbosity::silent))
+    if (properties_->allow_attack(Verbosity::silent))
     {
         dst.is_melee = is_pos_adj(pos, defender.pos, false);
 
@@ -1082,7 +1082,7 @@ void Mon::avail_attacks(Actor& defender, AiAvailAttacksData& dst)
 
         if (dst.is_melee)
         {
-            if (prop_handler_->allow_attack_melee(Verbosity::silent))
+            if (properties_->allow_attack_melee(Verbosity::silent))
             {
                 // Melee weapon in wielded slot?
                 wpn = static_cast<Wpn*>(inv_->item_in_slot(SlotId::wpn));
@@ -1109,7 +1109,7 @@ void Mon::avail_attacks(Actor& defender, AiAvailAttacksData& dst)
         }
         else // Ranged attack
         {
-            if (prop_handler_->allow_attack_ranged(Verbosity::silent))
+            if (properties_->allow_attack_ranged(Verbosity::silent))
             {
                 // Ranged weapon in wielded slot?
                 wpn = static_cast<Wpn*>(inv_->item_in_slot(SlotId::wpn));
@@ -1554,7 +1554,7 @@ void Zuul::place_hook()
 
         prop->set_indefinite();
 
-        actor->prop_handler().apply(prop,
+        actor->properties().apply(prop,
                                     PropSrc::intr,
                                     true,
                                     Verbosity::silent);
@@ -1862,7 +1862,7 @@ DidAction Ape::on_act()
 
         prop->set_duration(rnd::range(4, 6));
 
-        prop_handler_->apply(prop);
+        properties_->apply(prop);
     }
 
     return DidAction::no;

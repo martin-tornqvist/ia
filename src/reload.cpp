@@ -200,7 +200,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     }
 
     // Being blinded or terrified makes it harder to reload
-    const bool is_blind = !actor.prop_handler().allow_see();
+    const bool is_blind = !actor.properties().allow_see();
 
     const bool is_terrified = actor.has_prop(PropId::terrified);
 

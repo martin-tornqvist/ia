@@ -183,7 +183,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
     if (!is_big_att_bon &&
         !is_small_att_bon)
     {
-        if (!defender.prop_handler().allow_see())
+        if (!defender.properties().allow_see())
         {
             is_small_att_bon = true;
         }
@@ -452,7 +452,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
             if (attacker == map::player)
             {
                 const Prop* const prop =
-                    attacker->prop_handler().prop(PropId::aiming);
+                    attacker->properties().prop(PropId::aiming);
 
                 if (prop)
                 {
@@ -626,7 +626,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
             if (attacker == map::player)
             {
                 const Prop* const prop =
-                    attacker->prop_handler().prop(PropId::aiming);
+                    attacker->properties().prop(PropId::aiming);
 
                 if (prop)
                 {
@@ -1281,10 +1281,10 @@ void fire_projectiles(Actor* const attacker,
                     if (died == ActorDied::no)
                     {
                         // Hit properties
-                        PropHandler& defender_prop_handler =
-                            proj->actor_hit->prop_handler();
+                        PropHandler& defender_properties =
+                            proj->actor_hit->properties();
 
-                        defender_prop_handler.apply_from_attack(wpn, false);
+                        defender_properties.apply_from_attack(wpn, false);
 
                         // Knock-back?
                         if (wpn.data().ranged.knocks_back &&
@@ -1878,7 +1878,7 @@ void melee(Actor* const attacker,
 
         if (defender.is_alive())
         {
-            defender.prop_handler().apply_from_attack(wpn, true);
+            defender.properties().apply_from_attack(wpn, true);
 
             if (wpn.data().melee.knocks_back)
             {
@@ -1970,7 +1970,7 @@ void melee(Actor* const attacker,
         }
 
         // Attacking ends cloaking
-        attacker->prop_handler().end_prop(PropId::cloaked);
+        attacker->properties().end_prop(PropId::cloaked);
 
         game_time::tick(speed_pct_diff);
     }
@@ -2095,7 +2095,7 @@ bool ranged(Actor* const attacker,
         }
 
         // Attacking ends cloaking
-        attacker->prop_handler().end_prop(PropId::cloaked);
+        attacker->properties().end_prop(PropId::cloaked);
 
         game_time::tick(speed_pct_diff);
     }

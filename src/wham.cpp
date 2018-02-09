@@ -96,7 +96,7 @@ void run()
             TRACE << "Actor found at kick pos" << std::endl;
 
             const bool melee_allowed =
-                map::player->prop_handler().allow_attack_melee(
+                map::player->properties().allow_attack_melee(
                     Verbosity::verbose);
 
             if (melee_allowed)
@@ -116,7 +116,7 @@ void run()
                 try_sprain_player();
 
                 // Attacking ends cloaking
-                map::player->prop_handler().end_prop(PropId::cloaked);
+                map::player->properties().end_prop(PropId::cloaked);
 
                 game_time::tick();
             }
@@ -231,7 +231,7 @@ void run()
         }
 
         // Attacking ends cloaking
-        map::player->prop_handler().end_prop(PropId::cloaked);
+        map::player->properties().end_prop(PropId::cloaked);
 
         game_time::tick();
 
@@ -307,7 +307,7 @@ void run()
                      map::player);
 
         // Attacking ends cloaking
-        map::player->prop_handler().end_prop(PropId::cloaked);
+        map::player->properties().end_prop(PropId::cloaked);
 
         game_time::tick();
     }

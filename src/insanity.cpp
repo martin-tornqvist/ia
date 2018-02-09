@@ -438,7 +438,7 @@ void InsPhobiaDark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
     if (rnd::one_in(10))
     {
         const P p(map::player->pos);
-        const PropHandler& props = map::player->prop_handler();
+        const PropHandler& props = map::player->properties();
 
         if ((props.allow_act() && !props.allow_see()) ||
             (map::dark[p.x][p.y] && !map::light[p.x][p.y]))

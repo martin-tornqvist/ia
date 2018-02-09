@@ -45,7 +45,7 @@ void Monolith::bump(Actor& actor_bumping)
 {
     if (actor_bumping.is_player())
     {
-        if (!map::player->prop_handler().allow_see())
+        if (!map::player->properties().allow_see())
         {
             msg_log::add("There is a carved rock here.");
 

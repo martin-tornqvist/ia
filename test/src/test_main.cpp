@@ -697,15 +697,15 @@ TEST_FIXTURE(BasicFixture, explosions)
                    ExplExclCenter::no,
                    {new PropBurning()});
 
-    CHECK(a1->prop_handler().prop(PropId::burning));
-    CHECK(a2->prop_handler().prop(PropId::burning));
+    CHECK(a1->properties().prop(PropId::burning));
+    CHECK(a2->properties().prop(PropId::burning));
 
     CHECK(a1->has_prop(PropId::burning));
     CHECK(a2->has_prop(PropId::burning));
 
     for (int i = 0; i < nr_corpses; ++i)
     {
-        PropHandler& props = corpses[i]->prop_handler();
+        PropHandler& props = corpses[i]->properties();
 
         CHECK(props.prop(PropId::burning));
         CHECK(props.has_prop(PropId::burning));
@@ -830,7 +830,7 @@ TEST_FIXTURE(BasicFixture, using_inventory)
 
     body_slot.item = nullptr;
 
-    PropHandler& props = map::player->prop_handler();
+    PropHandler& props = map::player->properties();
 
     // Check that no props are enabled
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
@@ -1072,7 +1072,7 @@ TEST_FIXTURE(BasicFixture, saving_game)
     player_spells::learn_spell(SpellId::aza_wrath, Verbosity::silent);
 
     // Applied properties
-    PropHandler& props = map::player->prop_handler();
+    PropHandler& props = map::player->properties();
     props.apply(new PropRSleep(PropTurns::specific, 3));
     props.apply(new PropDiseased(PropTurns::indefinite));
     props.apply(new PropBlessed());
@@ -1199,7 +1199,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK_EQUAL(false, player_spells::is_spell_learned(SpellId::mayhem));
 
     // Properties
-    PropHandler& props = map::player->prop_handler();
+    PropHandler& props = map::player->properties();
     Prop* prop = props.prop(PropId::diseased);
     CHECK(prop);
     CHECK(props.has_prop(PropId::diseased));

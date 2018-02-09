@@ -21,7 +21,7 @@ void player_try_close_or_jam_feature(Feature* const feature)
 {
     if (feature->id() != FeatureId::door)
     {
-        const bool player_can_see = map::player->prop_handler().allow_see();
+        const bool player_can_see = map::player->properties().allow_see();
 
         if (player_can_see)
         {

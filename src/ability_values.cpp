@@ -20,7 +20,7 @@ int AbilityVals::val(const AbilityId id,
 
     if (is_affected_by_props)
     {
-        ret += actor.prop_handler().ability_mod(id);
+        ret += actor.properties().ability_mod(id);
     }
 
     if (actor.is_player())

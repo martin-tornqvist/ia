@@ -18,7 +18,7 @@ void player_disarm()
     //TODO: Disarming should be allowed while blind
 
     //Abort if blind
-    if (!map::player->prop_handler().allow_see())
+    if (!map::player->properties().allow_see())
     {
         msg_log::add("Not while blind.");
 

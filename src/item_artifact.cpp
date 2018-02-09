@@ -259,7 +259,7 @@ ConsumeItem Clockwork::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    auto& props = map::player->prop_handler();
+    auto& props = map::player->properties();
 
     if (props.has_prop(PropId::clockwork_hasted))
     {

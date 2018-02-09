@@ -76,7 +76,7 @@ void try_cast(const SpellOpt& spell_opt)
 {
     ASSERT(spell_opt.spell);
 
-    const auto& props = map::player->prop_handler();
+    const auto& props = map::player->properties();
 
     bool allow_cast = props.allow_cast_intr_spell_absolute(Verbosity::verbose);
 

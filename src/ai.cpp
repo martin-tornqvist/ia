@@ -21,11 +21,9 @@ namespace action
 
 bool try_cast_random_spell(Mon& mon)
 {
-    const auto& prop_handler = mon.prop_handler();
-
     if (!mon.is_alive() ||
         mon.spells_.empty() ||
-        !prop_handler.allow_cast_intr_spell_absolute(Verbosity::silent))
+        !mon.properties().allow_cast_intr_spell_absolute(Verbosity::silent))
     {
         return false;
     }

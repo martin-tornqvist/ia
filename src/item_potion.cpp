@@ -46,7 +46,7 @@ ConsumeItem Potion::activate(Actor* const actor)
 {
     ASSERT(actor);
 
-    if (!actor->prop_handler().allow_eat(Verbosity::verbose))
+    if (!actor->properties().allow_eat(Verbosity::verbose))
     {
         return ConsumeItem::no;
     }
@@ -293,7 +293,7 @@ void PotionVitality::quaff_impl(Actor& actor)
 
     for (PropId prop_id : props_can_heal)
     {
-        actor.prop_handler().end_prop(prop_id);
+        actor.properties().end_prop(prop_id);
     }
 
     // HP is always restored at least up to maximum hp, but can go beyond
@@ -321,7 +321,7 @@ void PotionVitality::collide_hook(const P& pos, Actor* const actor)
 
 void PotionSpirit::quaff_impl(Actor& actor)
 {
-    actor.prop_handler().end_prop(PropId::spi_sap);
+    actor.properties().end_prop(PropId::spi_sap);
 
     // SPI is always restored at least up to maximum spi, but can go beyond
     const int spi = actor.spi();
@@ -431,14 +431,14 @@ void PotionFortitude::quaff_impl(Actor& actor)
 
     prop_r_sleep->set_duration(duration);
 
-    PropHandler& prop_handler = actor.prop_handler();
+    PropHandler& properties = actor.properties();
 
-    prop_handler.apply(prop_r_fear);
-    prop_handler.apply(prop_r_conf);
-    prop_handler.apply(prop_r_sleep);
+    properties.apply(prop_r_fear);
+    properties.apply(prop_r_conf);
+    properties.apply(prop_r_sleep);
 
-    prop_handler.end_prop(PropId::frenzied);
-    prop_handler.end_prop(PropId::mind_sap);
+    properties.end_prop(PropId::frenzied);
+    properties.end_prop(PropId::mind_sap);
 
     // Remove a random insanity symptom if this is the player
     if (actor.is_player())
@@ -548,7 +548,7 @@ void PotionCuring::quaff_impl(Actor& actor)
 
     for (PropId prop_id : props_can_heal)
     {
-        if (actor.prop_handler().end_prop(prop_id))
+        if (actor.properties().end_prop(prop_id))
         {
             is_noticable = true;
         }

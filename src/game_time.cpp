@@ -192,7 +192,7 @@ void run_atomic_turn_events()
 
         if (rigid->data().matl_type == Matl::fluid)
         {
-            actor->prop_handler().end_prop(PropId::burning);
+            actor->properties().end_prop(PropId::burning);
         }
     }
 
@@ -352,7 +352,7 @@ void tick(const int speed_pct_diff)
         actor->delay_ = delay_to_set;
     }
 
-    actor->prop_handler().on_turn_end();
+    actor->properties().on_turn_end();
 
     // Find next actor who can act
     while (true)
@@ -401,7 +401,7 @@ void tick(const int speed_pct_diff)
 
     run_atomic_turn_events();
 
-    current_actor()->prop_handler().on_turn_begin();
+    current_actor()->properties().on_turn_begin();
 
     current_actor()->on_actor_turn();
 }

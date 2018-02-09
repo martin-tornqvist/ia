@@ -239,7 +239,7 @@ void act()
                         Verbosity::silent);
     }
 
-    PropHandler& prop_handler = map::player->prop_handler();
+    PropHandler& properties = map::player->properties();
 
     // Keep an allied Mi-go around (to help getting out of sticky situations,
     // and for some allied monster code exercise)
@@ -268,7 +268,7 @@ void act()
 
         prop->set_duration(4);
 
-        prop_handler.apply(prop);
+        properties.apply(prop);
     }
 
     // Occasionally apply Burning to a random actor (to avoid getting stuck)
@@ -343,7 +343,7 @@ void act()
 
         prop->set_duration(5);
 
-        prop_handler.apply(prop);
+        properties.apply(prop);
     }
 
     // Occasionally swap weapon (just some code exercise)

@@ -301,14 +301,14 @@ void handle_player_input(const InputData& input)
     {
         if (player_bon::traits[(size_t)Trait::steady_aimer])
         {
-            PropHandler& prop_hlr = map::player->prop_handler();
+            PropHandler& properties = map::player->properties();
 
             PropAiming* aiming = nullptr;
 
             if (player_bon::traits[(size_t)Trait::sharpshooter])
             {
                 aiming = static_cast<PropAiming*>(
-                    prop_hlr.prop(PropId::aiming));
+                    properties.prop(PropId::aiming));
 
                 if (aiming)
                 {
@@ -324,7 +324,7 @@ void handle_player_input(const InputData& input)
 
                 aiming->set_duration(1);
 
-                prop_hlr.apply(aiming);
+                properties.apply(aiming);
             }
         }
 
@@ -420,7 +420,7 @@ void handle_player_input(const InputData& input)
     case 'f':
     {
         const bool is_allowed =
-            map::player->prop_handler().
+            map::player->properties().
             allow_attack_ranged(Verbosity::verbose);
 
         if (is_allowed)
@@ -607,7 +607,7 @@ void handle_player_input(const InputData& input)
         {
             msg_log::add(msg_mon_prevent_cmd);
         }
-        else if (!map::player->prop_handler().allow_see())
+        else if (!map::player->properties().allow_see())
         {
             msg_log::add("Not while blind.");
         }
@@ -664,7 +664,7 @@ void handle_player_input(const InputData& input)
             }
 
             const bool is_allowed =
-                map::player->prop_handler().
+                map::player->properties().
                 allow_attack_ranged(Verbosity::verbose);
 
             if (is_allowed)
@@ -691,7 +691,7 @@ void handle_player_input(const InputData& input)
     // View
     case 'v':
     {
-        if (map::player->prop_handler().allow_see())
+        if (map::player->properties().allow_see())
         {
             std::unique_ptr<State> view_state(
                 new Viewing(map::player->pos));
@@ -1256,7 +1256,7 @@ void GameState::update()
         // Let the current actor act
         Actor* actor = game_time::current_actor();
 
-        const bool allow_act = actor->prop_handler().allow_act();
+        const bool allow_act = actor->properties().allow_act();
 
         const bool is_gibbed = actor->state() == ActorState::destroyed;
 
@@ -1530,7 +1530,7 @@ void GameState::draw_map()
                             // If the monster has any negative properties, draw
                             // it with a colored background
                             const bool has_temporary_negative_prop =
-                                actor->prop_handler()
+                                actor->properties()
                                 .has_temporary_negative_prop_mon();
 
                             if (has_temporary_negative_prop)

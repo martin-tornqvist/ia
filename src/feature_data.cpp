@@ -25,11 +25,11 @@ bool MoveRules::can_move(Actor& actor) const
     }
 
     // If not allowing normal move, check if any property overrides this
-    auto& prop_handler = actor.prop_handler();
+    auto& properties = actor.properties();
 
     for (const auto id : props_allow_move_)
     {
-        if (prop_handler.has_prop(id))
+        if (properties.has_prop(id))
         {
             return true;
         }

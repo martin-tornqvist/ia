@@ -742,7 +742,7 @@ bool Door::try_jam(Actor* actor_trying)
 {
     const bool is_player = actor_trying == map::player;
 
-    const bool tryer_is_blind = !actor_trying->prop_handler().allow_see();
+    const bool tryer_is_blind = !actor_trying->properties().allow_see();
 
     if (is_secret_ || is_open_)
     {
@@ -773,7 +773,7 @@ void Door::try_close(Actor* actor_trying)
 {
     const bool is_player = actor_trying == map::player;
 
-    const bool tryer_is_blind = !actor_trying->prop_handler().allow_see();
+    const bool tryer_is_blind = !actor_trying->properties().allow_see();
 
     if (is_player &&
         type_ == DoorType::metal)
@@ -1042,7 +1042,7 @@ void Door::try_open(Actor* actor_trying)
     {
         TRACE << "Is not stuck" << std::endl;
 
-        const bool tryer_can_see = actor_trying->prop_handler().allow_see();
+        const bool tryer_can_see = actor_trying->properties().allow_see();
 
         if (tryer_can_see)
         {

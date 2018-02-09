@@ -1129,21 +1129,21 @@ void pick_bg(const Bg bg)
 
         prop_r_disease->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop_r_disease,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop_r_disease,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
 
         auto prop_darkvis = new PropDarkvis();
 
         prop_darkvis->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop_darkvis,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop_darkvis,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
 
         player_spells::learn_spell(SpellId::frenzy,
                                    Verbosity::silent);
@@ -1284,7 +1284,7 @@ void pick_trait(const Trait id)
 
         prop->set_indefinite();
 
-        map::player->prop_handler().apply(
+        map::player->properties().apply(
             prop,
             PropSrc::intr,
             true,
@@ -1312,11 +1312,11 @@ void pick_trait(const Trait id)
 
         prop->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
     }
     break;
 
@@ -1326,11 +1326,11 @@ void pick_trait(const Trait id)
 
         prop->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
     }
     break;
 
@@ -1340,11 +1340,11 @@ void pick_trait(const Trait id)
 
         prop->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
     }
     break;
 
@@ -1354,11 +1354,11 @@ void pick_trait(const Trait id)
 
         prop->set_indefinite();
 
-        map::player->prop_handler()
-            .apply(prop,
-                   PropSrc::intr,
-                   true,
-                   Verbosity::silent);
+        map::player->properties().apply(
+            prop,
+            PropSrc::intr,
+            true,
+            Verbosity::silent);
     }
     break;
 

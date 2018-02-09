@@ -569,7 +569,7 @@ void Item::add_carrier_prop(Prop* const prop, const Verbosity verbosity)
     ASSERT(actor_carrying_);
     ASSERT(prop);
 
-    actor_carrying_->prop_handler()
+    actor_carrying_->properties()
         .add_prop_from_equipped_item(this,
                                      prop,
                                      verbosity);
@@ -579,7 +579,7 @@ void Item::clear_carrier_props()
 {
     ASSERT(actor_carrying_);
 
-    actor_carrying_->prop_handler().remove_props_for_item(this);
+    actor_carrying_->properties().remove_props_for_item(this);
 }
 
 void Item::add_carrier_spell(Spell* const spell)
@@ -863,7 +863,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
     const bool is_ethereal = actor_hit.has_prop(PropId::ethereal);
 
     const bool is_hp_missing = map::player->hp() < map::player->hp_max(true);
-    const bool is_wounded = map::player->prop_handler().prop(PropId::wound);
+    const bool is_wounded = map::player->properties().prop(PropId::wound);
     const bool is_feed_needed = is_hp_missing || is_wounded;
 
     if (!is_ethereal &&
@@ -1431,7 +1431,7 @@ void MedicalBag::finish_current_action()
     case MedBagAction::treat_wound:
     {
         Prop* const wound_prop =
-            map::player->prop_handler().prop(PropId::wound);
+            map::player->properties().prop(PropId::wound);
 
         ASSERT(wound_prop);
 
@@ -1443,7 +1443,7 @@ void MedicalBag::finish_current_action()
 
     case MedBagAction::sanitize_infection:
     {
-        map::player->prop_handler().end_prop(PropId::infected);
+        map::player->properties().end_prop(PropId::infected);
     }
     break;
 

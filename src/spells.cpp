@@ -154,9 +154,7 @@ Range Spell::spi_cost(const SpellSkill skill, Actor* const caster) const
 
     if (caster == map::player)
     {
-        //
         // Standing next to an altar reduces the cost
-        //
         const int x0 = std::max(0, caster->pos.x - 1);
         const int y0 = std::max(0, caster->pos.y - 1);
         const int x1 = std::min(map_w - 1, caster->pos.x + 1);
@@ -198,7 +196,7 @@ void Spell::cast(Actor* const caster,
 
     ASSERT(caster);
 
-    auto& prop_handler = caster->prop_handler();
+    auto& properties = caster->properties();
 
     // If this is an intrinsic cast, check properties which NEVER allows casting
     // or speaking
@@ -206,8 +204,8 @@ void Spell::cast(Actor* const caster,
     // NOTE: If this is a non-intrinsic cast (e.g. from a scroll), then we
     // assume that the caller has made all checks themselves
     if ((intrinsic == IsIntrinsic::yes) &&
-        (!prop_handler.allow_cast_intr_spell_absolute(Verbosity::verbose) ||
-         !prop_handler.allow_speak(Verbosity::verbose)))
+        (!properties.allow_cast_intr_spell_absolute(Verbosity::verbose) ||
+         !properties.allow_speak(Verbosity::verbose)))
     {
         return;
     }
@@ -297,7 +295,7 @@ void Spell::cast(Actor* const caster,
 
         // Check properties which MAY allow casting, with a random chance
         allow_cast =
-            prop_handler.allow_cast_intr_spell_chance(
+            properties.allow_cast_intr_spell_chance(
                 Verbosity::verbose);
     }
 
@@ -308,7 +306,7 @@ void Spell::cast(Actor* const caster,
     }
 
     // Casting spells ends cloaking
-    caster->prop_handler().end_prop(PropId::cloaked);
+    caster->properties().end_prop(PropId::cloaked);
 
     game_time::tick();
 
@@ -334,7 +332,7 @@ void Spell::on_resist(Actor& target) const
     }
 
     // TODO: Only end r_spell if this is not a natural property
-    target.prop_handler().end_prop(PropId::r_spell);
+    target.properties().end_prop(PropId::r_spell);
 
     if (is_player &&
         player_bon::traits[(size_t)Trait::absorb])
@@ -685,12 +683,9 @@ std::vector<std::string> SpellDarkbolt::descr_specific(
 
 bool SpellDarkbolt::allow_mon_cast_now(Mon& mon) const
 {
-    //
     // NOTE: Monsters with master spell skill level COULD cast this spell
-    //       without LOS to the player, but we do not allow the AI to do this,
-    //       since it would probably be very hard and/or annoying for the player
-    //       to deal with
-    //
+    // without LOS to the player, but we do not allow the AI to do this, since
+    // it would probably be very hard or annoying for the player to deal with
     return mon.tgt_ && mon.is_tgt_seen_;
 }
 
@@ -977,9 +972,7 @@ void SpellMayhem::run_effect(Actor* const caster,
         }
     }
 
-    //
     // Destroy the surrounding environment
-    //
     const int nr_sweeps = 2 + (int)skill;
 
     for (int i = 0; i < nr_sweeps; ++i)
@@ -1133,7 +1126,7 @@ void SpellPest::run_effect(Actor* const caster,
 
                 prop_hasted->set_indefinite();
 
-                mon->prop_handler().apply(
+                mon->properties().apply(
                     prop_hasted,
                     PropSrc::intr,
                     true,
@@ -1295,7 +1288,7 @@ void SpellAnimWpns::run_effect(Actor* const caster,
 
             prop_see_invis->set_indefinite();
 
-            anim_wpn->prop_handler().apply(
+            anim_wpn->properties().apply(
                 prop_see_invis,
                 PropSrc::intr,
                 true,
@@ -2019,7 +2012,7 @@ void SpellRes::run_effect(Actor* const caster,
 {
     int nr_turns = 15 + (int)skill * 35;
 
-    PropHandler& prop_hlr = caster->prop_handler();
+    PropHandler& properties = caster->properties();
 
     auto prop_r_fire = new PropRFire;
     auto prop_r_elec = new PropRElec;
@@ -2027,8 +2020,8 @@ void SpellRes::run_effect(Actor* const caster,
     prop_r_fire->set_duration(nr_turns);
     prop_r_elec->set_duration(nr_turns);
 
-    prop_hlr.apply(prop_r_fire);
-    prop_hlr.apply(prop_r_elec);
+    properties.apply(prop_r_fire);
+    properties.apply(prop_r_elec);
 }
 
 std::vector<std::string> SpellRes::descr_specific(
@@ -2051,8 +2044,8 @@ std::vector<std::string> SpellRes::descr_specific(
 
 bool SpellRes::allow_mon_cast_now(Mon& mon) const
 {
-    const bool has_rfire = mon.prop_handler().has_prop(PropId::r_fire);
-    const bool has_relec = mon.prop_handler().has_prop(PropId::r_elec);
+    const bool has_rfire = mon.properties().has_prop(PropId::r_fire);
+    const bool has_relec = mon.properties().has_prop(PropId::r_elec);
 
     return
         (!has_rfire || !has_relec) &&
@@ -2172,7 +2165,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
 
     for (Actor* const target : targets)
     {
-        PropHandler& prop_handler = target->prop_handler();
+        PropHandler& properties = target->properties();
 
         // Spell resistance?
         if (target->has_prop(PropId::r_spell))
@@ -2197,11 +2190,11 @@ void SpellEnfeeble::run_effect(Actor* const caster,
             continue;
         }
 
-        prop_handler.apply(new PropWeakened());
+        properties.apply(new PropWeakened());
 
         if ((int)skill >= (int)SpellSkill::expert)
         {
-            prop_handler.apply(new PropSlowed());
+            properties.apply(new PropSlowed());
         }
 
         if (skill >= SpellSkill::master)
@@ -2210,7 +2203,7 @@ void SpellEnfeeble::run_effect(Actor* const caster,
 
             prop->set_duration(2);
 
-            prop_handler.apply(prop);
+            properties.apply(prop);
         }
     }
 }
@@ -2495,21 +2488,21 @@ void SpellHeal::run_effect(Actor* const caster,
 
     if ((int)skill >= (int)SpellSkill::expert)
     {
-        caster->prop_handler().end_prop(PropId::infected);
-        caster->prop_handler().end_prop(PropId::diseased);
-        caster->prop_handler().end_prop(PropId::weakened);
-        caster->prop_handler().end_prop(PropId::hp_sap);
+        caster->properties().end_prop(PropId::infected);
+        caster->properties().end_prop(PropId::diseased);
+        caster->properties().end_prop(PropId::weakened);
+        caster->properties().end_prop(PropId::hp_sap);
     }
 
     if (skill == SpellSkill::master)
     {
-        caster->prop_handler().end_prop(PropId::blind);
-        caster->prop_handler().end_prop(PropId::poisoned);
+        caster->properties().end_prop(PropId::blind);
+        caster->properties().end_prop(PropId::poisoned);
 
         if (caster->is_player())
         {
             Prop* const wound_prop =
-                map::player->prop_handler().prop(PropId::wound);
+                map::player->properties().prop(PropId::wound);
 
             if (wound_prop)
             {

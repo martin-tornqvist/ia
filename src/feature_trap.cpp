@@ -313,7 +313,7 @@ void Trap::bump(Actor& actor_bumping)
         return;
     }
 
-    const bool actor_can_see = actor_bumping.prop_handler().allow_see();
+    const bool actor_can_see = actor_bumping.properties().allow_see();
 
     const std::string trap_name_a = trap_impl_->name(Article::a);
 
@@ -1015,7 +1015,7 @@ void TrapTeleport::trigger()
 
     const bool is_player = actor_here->is_player();
 
-    const bool can_see = actor_here->prop_handler().allow_see();
+    const bool can_see = actor_here->properties().allow_see();
 
     const bool can_player_see_actor = map::player->can_see_actor(*actor_here);
 
@@ -1084,7 +1084,7 @@ void TrapSummonMon::trigger()
         return;
     }
 
-    const bool can_see = actor_here->prop_handler().allow_see();
+    const bool can_see = actor_here->properties().allow_see();
     TRACE_VERBOSE << "Actor can see: " << can_see << std::endl;
 
     const std::string actor_name = actor_here->name_the();
@@ -1192,7 +1192,7 @@ void TrapSpiDrain::trigger()
         return;
     }
 
-    const bool can_see = actor_here->prop_handler().allow_see();
+    const bool can_see = actor_here->properties().allow_see();
 
     TRACE_VERBOSE << "Actor can see: " << can_see << std::endl;
 
@@ -1329,7 +1329,7 @@ void TrapWeb::trigger()
     is_holding_actor_ = true;
 
     const bool is_player = actor_here->is_player();
-    const bool can_see = actor_here->prop_handler().allow_see();
+    const bool can_see = actor_here->properties().allow_see();
     const bool can_player_see_actor = map::player->can_see_actor(*actor_here);
 
     const std::string actor_name =
@@ -1397,7 +1397,7 @@ Dir TrapWeb::actor_try_leave(Actor& actor, const Dir dir)
 
     TRACE_VERBOSE << "Is holding actor" << std::endl;
 
-    const bool player_can_see = map::player->prop_handler().allow_see();
+    const bool player_can_see = map::player->properties().allow_see();
     const bool player_can_see_actor = map::player->can_see_actor(actor);
 
     const std::string actor_name =

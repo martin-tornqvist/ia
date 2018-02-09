@@ -282,7 +282,7 @@ void throw_item(Actor& actor_throwing,
                     delete &item_thrown;
 
                     // Attacking ends cloaking
-                    actor_throwing.prop_handler().end_prop(PropId::cloaked);
+                    actor_throwing.properties().end_prop(PropId::cloaked);
 
                     game_time::tick(speed_pct_diff);
 
@@ -352,7 +352,7 @@ void throw_item(Actor& actor_throwing,
         delete &item_thrown;
 
         // Attacking ends cloaking
-        actor_throwing.prop_handler().end_prop(PropId::cloaked);
+        actor_throwing.properties().end_prop(PropId::cloaked);
 
         game_time::tick(speed_pct_diff);
 
@@ -439,7 +439,7 @@ void throw_item(Actor& actor_throwing,
     }
 
     // Attacking ends cloaking
-    actor_throwing.prop_handler().end_prop(PropId::cloaked);
+    actor_throwing.properties().end_prop(PropId::cloaked);
 
     game_time::tick(speed_pct_diff);
 }

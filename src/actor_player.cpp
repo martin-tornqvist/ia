@@ -62,23 +62,23 @@ void print_aware_invis_mon_msg(const Mon& mon)
 
 Player::Player() :
     Actor(),
-    thrown_item                         (),
-    active_medical_bag                  (nullptr),
-    nr_turns_until_handle_armor_done    (0),
-    armor_putting_on_backpack_idx       (-1),
-    is_dropping_armor_from_body_slot    (false),
-    active_explosive                    (nullptr),
-    tgt_                                (nullptr),
-    wait_turns_left                     (-1),
-    ins_                                (0),
-    shock_                              (0.0),
-    shock_tmp_                          (0.0),
-    perm_shock_taken_current_turn_      (0.0),
-    nr_turns_until_ins_                 (-1),
-    quick_move_dir_                     (Dir::END),
-    has_taken_quick_move_step_          (false),
-    nr_turns_until_rspell_              (-1),
-    unarmed_wpn_                        (nullptr) {}
+    thrown_item(),
+    active_medical_bag(nullptr),
+    nr_turns_until_handle_armor_done(0),
+    armor_putting_on_backpack_idx(-1),
+    is_dropping_armor_from_body_slot(false),
+    active_explosive(nullptr),
+    tgt_(nullptr),
+    wait_turns_left(-1),
+    ins_(0),
+    shock_(0.0),
+    shock_tmp_(0.0),
+    perm_shock_taken_current_turn_(0.0),
+    nr_turns_until_ins_(-1),
+    quick_move_dir_(Dir::END),
+    has_taken_quick_move_step_(false),
+    nr_turns_until_rspell_(-1),
+    unarmed_wpn_(nullptr) {}
 
 Player::~Player()
 {
@@ -300,7 +300,7 @@ void Player::mk_start_items()
 
 void Player::save() const
 {
-    prop_handler_->save();
+    properties_->save();
 
     saving::put_int(ins_);
     saving::put_int((int)shock_);
@@ -326,7 +326,7 @@ void Player::save() const
 
 void Player::load()
 {
-    prop_handler_->load();
+    properties_->load();
 
     ins_ = saving::get_int();
     shock_ = double(saving::get_int());
@@ -381,7 +381,7 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Player is blind?
-    if (!prop_handler_->allow_see())
+    if (!properties_->allow_see())
     {
         return false;
     }
@@ -405,7 +405,7 @@ bool Player::can_see_actor(const Actor& other) const
     }
 
     // Blocked by darkness, and not seeing monster with infravision?
-    const bool has_darkvision = prop_handler_->has_prop(PropId::darkvision);
+    const bool has_darkvision = properties_->has_prop(PropId::darkvision);
 
     const bool can_see_other_in_drk =
         can_see_invis ||
@@ -482,7 +482,7 @@ void Player::on_hit(int& dmg,
     // Ghoul trait Indomitable Fury makes player immune to Wounds while Frenzied
     const bool is_ghoul_resist_wound =
         player_bon::traits[(size_t)Trait::indomitable_fury] &&
-        prop_handler_->has_prop(PropId::frenzied);
+        properties_->has_prop(PropId::frenzied);
 
     if (allow_wound == AllowWound::yes &&
         (hp() - dmg) > 0 &&
@@ -497,9 +497,9 @@ void Player::on_hit(int& dmg,
 
         auto nr_wounds = [&]()
         {
-            if (prop_handler_->has_prop(PropId::wound))
+            if (properties_->has_prop(PropId::wound))
             {
-                const Prop* const prop = prop_handler_->prop(PropId::wound);
+                const Prop* const prop = properties_->prop(PropId::wound);
 
                 const PropWound* const wound =
                     static_cast<const PropWound*>(prop);
@@ -512,7 +512,7 @@ void Player::on_hit(int& dmg,
 
         const int nr_wounds_before = nr_wounds();
 
-        prop_handler_->apply(prop);
+        properties_->apply(prop);
 
         const int nr_wounds_after = nr_wounds();
 
@@ -941,7 +941,7 @@ void Player::act()
         return;
     }
 
-    if (prop_handler().on_act() == DidAction::yes)
+    if (properties().on_act() == DidAction::yes)
     {
         return;
     }
@@ -1368,7 +1368,7 @@ void Player::on_actor_turn()
 
     add_shock_from_seen_monsters();
 
-    if (prop_handler_->allow_act())
+    if (properties_->allow_act())
     {
         //
         // Passive shock taken over time
@@ -1481,7 +1481,7 @@ void Player::on_actor_turn()
 
 void Player::add_shock_from_seen_monsters()
 {
-    if (!prop_handler_->allow_see())
+    if (!properties_->allow_see())
     {
         return;
     }
@@ -1585,7 +1585,7 @@ void Player::update_tmp_shock()
         shock_tmp_min = (double)shock_from_obsession;
     }
 
-    if (prop_handler_->allow_see())
+    if (properties_->allow_see())
     {
         // Shock reduction from light?
         if (map::light[pos.x][pos.y])
@@ -1641,7 +1641,7 @@ int Player::shock_tot() const
 
     int result = (int)shock_tot_db;
 
-    result = prop_handler_->affect_shock(result);
+    result = properties_->affect_shock(result);
 
     return result;
 }
@@ -1659,8 +1659,8 @@ void Player::on_std_turn()
 {
 #ifndef NDEBUG
     // Sanity check: Disease and infection should not be active at the same time
-    ASSERT(!prop_handler_->has_prop(PropId::diseased) ||
-           !prop_handler_->has_prop(PropId::infected));
+    ASSERT(!properties_->has_prop(PropId::diseased) ||
+           !properties_->has_prop(PropId::infected));
 #endif // NDEBUG
 
     if (!is_alive())
@@ -1690,7 +1690,7 @@ void Player::on_std_turn()
 
     // If we already have spell resistance (e.g. due to the Spell Shield spell),
     // then always (re)set the cooldown to max number of turns
-    if (prop_handler_->has_prop(PropId::r_spell))
+    if (properties_->has_prop(PropId::r_spell))
     {
         nr_turns_until_rspell_ = nr_turns_to_recharge_full;
     }
@@ -1708,7 +1708,7 @@ void Player::on_std_turn()
 
                 prop->set_indefinite();
 
-                prop_handler_->apply(prop);
+                properties_->apply(prop);
 
                 msg_log::more_prompt();
             }
@@ -1716,7 +1716,7 @@ void Player::on_std_turn()
             nr_turns_until_rspell_ = nr_turns_to_recharge_full;
         }
 
-        if (!prop_handler_->has_prop(PropId::r_spell) &&
+        if (!properties_->has_prop(PropId::r_spell) &&
             (nr_turns_until_rspell_ > 0))
         {
             // Spell resistance is in cooldown state, decrement number of
@@ -1749,9 +1749,9 @@ void Player::on_std_turn()
         // Wounds affect hp regen?
         int nr_wounds = 0;
 
-        if (prop_handler_->has_prop(PropId::wound))
+        if (properties_->has_prop(PropId::wound))
         {
-            Prop* const prop = prop_handler_->prop(PropId::wound);
+            Prop* const prop = properties_->prop(PropId::wound);
 
             nr_wounds = static_cast<PropWound*>(prop)->nr_wounds();
         }
@@ -1799,7 +1799,7 @@ void Player::on_std_turn()
         map::player->ability(AbilityId::searching, true);
 
     if (!has_prop(PropId::confused) &&
-        prop_handler_->allow_see())
+        properties_->allow_see())
     {
         for (int x = 0; x < map_w; ++x)
         {
@@ -1984,7 +1984,7 @@ void Player::move(Dir dir)
 
     const Dir intended_dir = dir;
 
-    prop_handler_->affect_move_dir(pos, dir);
+    properties_->affect_move_dir(pos, dir);
 
     // Trap affects leaving?
     if (dir != Dir::center)
@@ -2035,7 +2035,7 @@ void Player::move(Dir dir)
 
             if (is_aware_of_mon)
             {
-                if (prop_handler_->allow_attack_melee(Verbosity::verbose))
+                if (properties_->allow_attack_melee(Verbosity::verbose))
                 {
                     Item* const wpn_item = inv_->item_in_slot(SlotId::wpn);
 
@@ -2114,7 +2114,7 @@ void Player::move(Dir dir)
             // Encumbrance, wounds, or spraining affecting movement
             const int enc = enc_percent();
 
-            Prop* const wound_prop = prop_handler_->prop(PropId::wound);
+            Prop* const wound_prop = properties_->prop(PropId::wound);
 
             int nr_wounds = 0;
 
@@ -2138,7 +2138,7 @@ void Player::move(Dir dir)
             {
                 msg_log::add("I stagger.", colors::msg_note());
 
-                prop_handler_->apply(new PropWaiting());
+                properties_->apply(new PropWaiting());
             }
 
             // Displace allied monster
@@ -2278,7 +2278,7 @@ Color Player::color() const
 
     Color tmp_color;
 
-    if (prop_handler_->affect_actor_color(tmp_color))
+    if (properties_->affect_actor_color(tmp_color))
     {
         return tmp_color;
     }
@@ -2469,7 +2469,7 @@ void Player::update_fov()
 
     const bool has_darkvision = has_prop(PropId::darkvision);
 
-    if (prop_handler_->allow_see())
+    if (properties_->allow_see())
     {
         bool hard_blocked[map_w][map_h];
 

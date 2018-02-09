@@ -623,7 +623,7 @@ std::vector<PropTextListEntry> PropHandler::text_list_temporary_negative_props()
 {
     ASSERT(owner_ != map::player);
 
-    auto prop_list = owner_->prop_handler().text_list();
+    auto prop_list = owner_->properties().text_list();
 
     // Remove all non-negative properties (we should not show temporary spell
     // resistance for example), and all natural properties (properties which all

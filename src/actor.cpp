@@ -35,7 +35,7 @@ Actor::Actor() :
     spi_(-1),
     spi_max_(-1),
     lair_pos_(),
-    prop_handler_(nullptr),
+    properties_(nullptr),
     data_(nullptr),
     inv_(nullptr) {}
 
@@ -56,17 +56,17 @@ Actor::~Actor()
     }
 
     delete inv_;
-    delete prop_handler_;
+    delete properties_;
 }
 
 bool Actor::has_prop(const PropId id) const
 {
-    return prop_handler_->has_prop(id);
+    return properties_->has_prop(id);
 }
 
 void Actor::apply_prop(Prop* const prop)
 {
-    prop_handler_->apply(prop);
+    properties_->apply(prop);
 }
 
 int Actor::ability(const AbilityId id,
@@ -139,7 +139,7 @@ int Actor::hp_max(const bool with_modifiers) const
 
     if (with_modifiers)
     {
-        result = prop_handler_->affect_max_hp(result);
+        result = properties_->affect_max_hp(result);
 
         result = std::max(1, result);
     }
@@ -151,7 +151,7 @@ int Actor::spi_max() const
 {
     int result = spi_max_;
 
-    result = prop_handler_->affect_max_spi(result);
+    result = properties_->affect_max_spi(result);
 
     result = std::max(1, result);
 
@@ -170,22 +170,22 @@ int Actor::speed_pct() const
     int speed = data_->speed_pct;
 
     // Speed modifications due to properties
-    if (prop_handler_->has_prop(PropId::slowed))
+    if (properties_->has_prop(PropId::slowed))
     {
         speed -= 50;
     }
 
-    if (prop_handler_->has_prop(PropId::hasted))
+    if (properties_->has_prop(PropId::hasted))
     {
         speed += 100;
     }
 
-    if (prop_handler_->has_prop(PropId::frenzied))
+    if (properties_->has_prop(PropId::frenzied))
     {
         speed += 100;
     }
 
-    if (prop_handler_->has_prop(PropId::clockwork_hasted))
+    if (properties_->has_prop(PropId::clockwork_hasted))
     {
         speed += 2000;
     }
@@ -247,8 +247,8 @@ void Actor::place(const P& pos_, ActorDataT& actor_data)
 
     inv_ = new Inventory(this);
 
-    prop_handler_ = new PropHandler(this);
-    prop_handler_->apply_natural_props_from_actor_data();
+    properties_ = new PropHandler(this);
+    properties_->apply_natural_props_from_actor_data();
 
     if (data_->id != ActorId::player)
     {
@@ -323,7 +323,7 @@ void Actor::on_std_turn_common()
     // TODO: This will be removed eventually
     on_std_turn();
 
-    prop_handler_->on_std_turn();
+    properties_->on_std_turn();
 }
 
 void Actor::teleport(const ShouldCtrlTele ctrl_tele)
@@ -385,8 +385,8 @@ void Actor::teleport(const ShouldCtrlTele ctrl_tele)
     //
     const bool can_actor_use_tele_ctrl =
         is_player() &&
-        prop_handler_->has_prop(PropId::tele_ctrl) &&
-        !prop_handler_->has_prop(PropId::confused);
+        properties_->has_prop(PropId::tele_ctrl) &&
+        !properties_->has_prop(PropId::confused);
 
     if ((ctrl_tele == ShouldCtrlTele::always) ||
         ((ctrl_tele == ShouldCtrlTele::if_tele_ctrl_prop) &&
@@ -465,7 +465,7 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
             if (is_void_traveler &&
                 (actor->state() == ActorState::alive) &&
-                actor->prop_handler().allow_act() &&
+                actor->properties().allow_act() &&
                 !actor->is_actor_my_leader(map::player) &&
                 (static_cast<Mon*>(actor)->aware_of_player_counter_ > 0))
             {
@@ -543,8 +543,8 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
     }
 
     if (is_player() &&
-        (!prop_handler_->has_prop(PropId::tele_ctrl) ||
-         prop_handler_->has_prop(PropId::confused) ||
+        (!properties_->has_prop(PropId::tele_ctrl) ||
+         properties_->has_prop(PropId::confused) ||
          is_affected_by_void_traveler))
     {
         msg_log::add("I suddenly find myself in a different location!");
@@ -553,7 +553,7 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
 
         prop->set_duration(8);
 
-        prop_handler_->apply(prop);
+        properties_->apply(prop);
     }
 }
 
@@ -769,7 +769,7 @@ ActorDied Actor::hit(int dmg,
 
     // Damage type is "light", and actor is not light sensitive?
     if (dmg_type == DmgType::light &&
-        !prop_handler_->has_prop(PropId::light_sensitive))
+        !properties_->has_prop(PropId::light_sensitive))
     {
         return ActorDied::no;
     }
@@ -863,7 +863,7 @@ ActorDied Actor::hit(int dmg,
         Verbosity::silent;
 
     const bool is_dmg_resisted =
-        prop_handler_->is_resisting_dmg(
+        properties_->is_resisting_dmg(
             dmg_type,
             attacker,
             verbosity);
@@ -898,7 +898,7 @@ ActorDied Actor::hit(int dmg,
            method,
            allow_wound);
 
-    prop_handler_->on_hit();
+    properties_->on_hit();
 
     // TODO: Perhaps allow zero damage?
     dmg = std::max(1, dmg);
@@ -974,7 +974,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
         }
     }
 
-    prop_handler_->on_hit();
+    properties_->on_hit();
 
     if (!is_player() || !config::is_bot_playing())
     {
@@ -1123,7 +1123,7 @@ void Actor::die(const bool is_destroyed,
                    false,
                    Verbosity::silent);
 
-        prop_handler_->end_prop_silent(PropId::wound);
+        properties_->end_prop_silent(PropId::wound);
 
         // If player died due to falling down a chasm, go to next level
         if (map::cells[pos.x][pos.y].rigid->is_bottomless())
@@ -1244,7 +1244,7 @@ void Actor::die(const bool is_destroyed,
 
     on_death();
 
-    prop_handler_->on_death();
+    properties_->on_death();
 
     if (!is_player())
     {
@@ -1285,7 +1285,7 @@ DidAction Actor::try_eat_corpse()
 
     if (actor_is_player)
     {
-        Prop* prop = prop_handler_->prop(PropId::wound);
+        Prop* prop = properties_->prop(PropId::wound);
 
         if (prop)
         {
@@ -1414,7 +1414,7 @@ void Actor::on_feed()
 
     if (is_player())
     {
-        Prop* const prop = prop_handler_->prop(PropId::wound);
+        Prop* const prop = properties_->prop(PropId::wound);
 
         if (prop && rnd::one_in(6))
         {
@@ -1428,7 +1428,7 @@ void Actor::on_feed()
 void Actor::add_light(bool light_map[map_w][map_h]) const
 {
     if (state_ == ActorState::alive &&
-        prop_handler_->has_prop(PropId::radiant))
+        properties_->has_prop(PropId::radiant))
     {
         // TODO: Much of the code below is duplicated from
         // ActorPlayer::add_light_hook(), some refactoring is needed.
@@ -1457,7 +1457,7 @@ void Actor::add_light(bool light_map[map_w][map_h]) const
             }
         }
     }
-    else if (prop_handler_->has_prop(PropId::burning))
+    else if (properties_->has_prop(PropId::burning))
     {
         for (int dx = -1; dx <= 1; ++dx)
         {

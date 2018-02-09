@@ -27,14 +27,14 @@ public:
     Actor();
     virtual ~Actor();
 
-    PropHandler& prop_handler()
+    PropHandler& properties()
     {
-        return *prop_handler_;
+        return *properties_;
     }
 
-    const PropHandler& prop_handler() const
+    const PropHandler& properties() const
     {
-        return *prop_handler_;
+        return *properties_;
     }
 
     // Shortcut to the same functions in the property handler
@@ -261,7 +261,7 @@ protected:
 
     P lair_pos_;
 
-    PropHandler* prop_handler_;
+    PropHandler* properties_;
     ActorDataT* data_;
     Inventory* inv_;
 };
