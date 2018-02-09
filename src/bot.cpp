@@ -264,7 +264,11 @@ void act()
     // Occasionally apply rFear to avoid getting stuck on fear-causing monsters
     if (rnd::one_in(7))
     {
-        prop_handler.apply(new PropRFear(PropTurns::specific, 4));
+        auto prop = new PropRFear();
+
+        prop->set_duration(4);
+
+        prop_handler.apply(prop);
     }
 
     // Occasionally apply Burning to a random actor (to avoid getting stuck)
@@ -275,7 +279,7 @@ void act()
 
         if (actor != map::player)
         {
-            actor->apply_prop(new PropBurning(PropTurns::std));
+            actor->apply_prop(new PropBurning());
         }
     }
 
@@ -335,10 +339,9 @@ void act()
 
         PropId prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
 
-        Prop* const prop =
-            property_factory::mk(prop_id,
-                                 PropTurns::specific,
-                                 5);
+        auto* const prop = property_factory::mk(prop_id);
+
+        prop->set_duration(5);
 
         prop_handler.apply(prop);
     }

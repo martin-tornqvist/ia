@@ -324,7 +324,7 @@ void ViewActorDescr::on_start()
         const bool is_natural_prop = actor_.data().natural_props[(size_t)id];
 
         if (is_natural_prop ||
-            (prop->turns_init_type() == PropTurns::indefinite) ||
+            (prop->duration_mode() == PropDurationMode::indefinite) ||
             (prop->alignment() != PropAlignment::bad))
         {
             it = prop_list.erase(it);

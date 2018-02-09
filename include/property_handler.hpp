@@ -13,6 +13,9 @@ class Actor;
 class Item;
 class Wpn;
 
+// -----------------------------------------------------------------------------
+// Support types
+// -----------------------------------------------------------------------------
 enum class PropSrc
 {
     // Properties applied by potions, spells, etc, or "natural" properties for

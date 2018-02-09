@@ -1027,9 +1027,7 @@ void unpicked_traits_for_bg(const Bg bg,
 {
     for (size_t i = 0; i < (size_t)Trait::END; ++i)
     {
-        //
         // Already picked?
-        //
         if (traits[i])
         {
             continue;
@@ -1037,9 +1035,7 @@ void unpicked_traits_for_bg(const Bg bg,
 
         const auto trait = (Trait)i;
 
-        //
         // Check if trait is explicitly blocked for this background
-        //
         const bool is_blocked_for_bg = is_trait_blocked_for_bg(trait, bg);
 
         if (is_blocked_for_bg)
@@ -1047,9 +1043,7 @@ void unpicked_traits_for_bg(const Bg bg,
             continue;
         }
 
-        //
         // Check trait prerequisites (traits and background)
-        //
 
         std::vector<Trait> trait_prereq_list;
 
@@ -1057,10 +1051,8 @@ void unpicked_traits_for_bg(const Bg bg,
 
         int clvl_prereq = -1;
 
-        //
         // NOTE: Traits blocked for the current background are not
-        //       considered prerequisites
-        //
+        // considered prerequisites
         trait_prereqs(trait,
                       bg,
                       trait_prereq_list,
@@ -1132,40 +1124,56 @@ void pick_bg(const Bg bg)
     switch (bg_)
     {
     case Bg::ghoul:
-        map::player->prop_handler()
-            .apply(new PropRDisease(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+    {
+        auto prop_r_disease = new PropRDisease();
+
+        prop_r_disease->set_indefinite();
 
         map::player->prop_handler()
-            .apply(new PropDarkvis(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+            .apply(prop_r_disease,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
+
+        auto prop_darkvis = new PropDarkvis();
+
+        prop_darkvis->set_indefinite();
+
+        map::player->prop_handler()
+            .apply(prop_darkvis,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
 
         player_spells::learn_spell(SpellId::frenzy,
                                    Verbosity::silent);
 
         map::player->change_max_hp(6, Verbosity::silent);
-        break;
+    }
+    break;
 
     case Bg::occultist:
+    {
         pick_trait(Trait::stout_spirit);
         map::player->change_max_spi(2, Verbosity::silent);
         map::player->change_max_hp(-2, Verbosity::silent);
-        break;
+    }
+    break;
 
     case Bg::rogue:
+    {
         pick_trait(Trait::stealthy);
-        break;
+    }
+    break;
 
     case Bg::war_vet:
+    {
         pick_trait(Trait::adept_melee_fighter);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
         pick_trait(Trait::healer);
-        break;
+    }
+    break;
 
     case Bg::END:
         break;
@@ -1272,8 +1280,12 @@ void pick_trait(const Trait id)
                                  false, // Not allowed above max
                                  Verbosity::silent);
 
+        auto prop = new PropRSpell();
+
+        prop->set_indefinite();
+
         map::player->prop_handler().apply(
-            new PropRSpell(PropTurns::indefinite),
+            prop,
             PropSrc::intr,
             true,
             Verbosity::silent);
@@ -1296,41 +1308,57 @@ void pick_trait(const Trait id)
 
     case Trait::self_aware:
     {
+        auto prop = new PropRConf();
+
+        prop->set_indefinite();
+
         map::player->prop_handler()
-            .apply(new PropRConf(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+            .apply(prop,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
     }
     break;
 
     case Trait::survivalist:
     {
+        auto prop = new PropRDisease();
+
+        prop->set_indefinite();
+
         map::player->prop_handler()
-            .apply(new PropRDisease(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+            .apply(prop,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
     }
     break;
 
     case Trait::fearless:
     {
+        auto prop = new PropRFear();
+
+        prop->set_indefinite();
+
         map::player->prop_handler()
-            .apply(new PropRFear(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+            .apply(prop,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
     }
     break;
 
     case Trait::toxic:
     {
+        auto prop = new PropRPoison();
+
+        prop->set_indefinite();
+
         map::player->prop_handler()
-            .apply(new PropRPoison(PropTurns::indefinite),
-                     PropSrc::intr,
-                     true,
-                     Verbosity::silent);
+            .apply(prop,
+                   PropSrc::intr,
+                   true,
+                   Verbosity::silent);
     }
     break;
 

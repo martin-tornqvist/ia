@@ -37,9 +37,11 @@ ReflTalisman::ReflTalisman(ItemDataT* const item_data) :
 
 void ReflTalisman::on_pickup_hook()
 {
-    add_carrier_prop(
-        new PropSpellReflect(PropTurns::indefinite),
-        Verbosity::silent);
+    auto prop = new PropSpellReflect();
+
+    prop->set_indefinite();
+
+    add_carrier_prop(prop, Verbosity::silent);
 }
 
 void ReflTalisman::on_removed_from_inv_hook()
@@ -67,9 +69,11 @@ TeleCtrlTalisman::TeleCtrlTalisman(ItemDataT* const item_data) :
 
 void TeleCtrlTalisman::on_pickup_hook()
 {
-    add_carrier_prop(
-        new PropTeleControl(PropTurns::indefinite),
-        Verbosity::silent);
+    auto prop = new PropTeleControl();
+
+    prop->set_indefinite();
+
+    add_carrier_prop(prop, Verbosity::silent);
 }
 
 void TeleCtrlTalisman::on_removed_from_inv_hook()
@@ -85,7 +89,7 @@ void HornOfMaliceHeard::run(Actor& actor) const
     if (!actor.is_player())
     {
         actor.apply_prop(
-            new PropConflict(PropTurns::std));
+            new PropConflict());
     }
 }
 
@@ -274,7 +278,7 @@ ConsumeItem Clockwork::activate(Actor* const actor)
         return ConsumeItem::no;
     }
 
-    props.apply(new PropClockworkHasted(PropTurns::std));
+    props.apply(new PropClockworkHasted());
 
     --charges_;
 
@@ -285,9 +289,11 @@ ConsumeItem Clockwork::activate(Actor* const actor)
 
 void Clockwork::on_pickup_hook()
 {
-    add_carrier_prop(
-        new PropRSlow(PropTurns::indefinite),
-        Verbosity::verbose);
+    auto prop = new PropRSlow();
+
+    prop->set_indefinite();
+
+    add_carrier_prop(prop, Verbosity::verbose);
 }
 
 void Clockwork::on_removed_from_inv_hook()
@@ -332,13 +338,17 @@ void OrbOfLife::on_pickup_hook()
 {
     map::player->change_max_hp(4, Verbosity::verbose);
 
-    add_carrier_prop(
-        new PropRPoison(PropTurns::indefinite),
-        Verbosity::verbose);
+    auto prop_r_poison = new PropRPoison();
 
-    add_carrier_prop(
-        new PropRDisease(PropTurns::indefinite),
-        Verbosity::verbose);
+    prop_r_poison->set_indefinite();
+
+    add_carrier_prop(prop_r_poison, Verbosity::verbose);
+
+    auto prop_r_disease = new PropRDisease();
+
+    prop_r_disease->set_indefinite();
+
+    add_carrier_prop(prop_r_disease, Verbosity::verbose);
 }
 
 void OrbOfLife::on_removed_from_inv_hook()

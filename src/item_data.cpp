@@ -650,8 +650,13 @@ void init_data_list()
     d.ranged.dmg = Dice(3, 4, 1);
     d.ranged.hit_chance_mod = 5;
     d.ranged.effective_range = 4;
-    d.ranged.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2));
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(2);
+
+        d.ranged.prop_applied = ItemAttProp(prop);
+    }
     d.ranged.dmg_type = DmgType::electric;
     d.ranged.has_infinite_ammo = true;
     d.ranged.projectile_leaves_trail = true;
@@ -681,7 +686,7 @@ void init_data_list()
     d.ranged.att_msgs = {"fire", "fires a flare gun"};
     d.ranged.snd_msg = "I hear a flare gun being fired.";
     d.ranged.prop_applied =
-        ItemAttProp(new PropFlared(PropTurns::std));
+        ItemAttProp(new PropFlared());
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::cabinet);
     d.native_containers.push_back(FeatureId::cocoon);
@@ -735,7 +740,7 @@ void init_data_list()
     d = data[(size_t)ItemId::trap_dart];
     d.id = ItemId::trap_dart_poison;
     d.ranged.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::std));
+        ItemAttProp(new PropPoisoned());
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn);
@@ -754,7 +759,7 @@ void init_data_list()
     d = data[(size_t)ItemId::trap_spear];
     d.id = ItemId::trap_spear_poison;
     d.ranged.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::std));
+        ItemAttProp(new PropPoisoned());
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::explosive);
@@ -1207,7 +1212,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::slashing;
     set_dmg_from_mon_id(d, ActorId::zombie);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std),
+        ItemAttProp(new PropInfected(),
                     25);
     data[(size_t)d.id] = d;
 
@@ -1270,7 +1275,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::rat);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std),
+        ItemAttProp(new PropInfected(),
                     25);
     data[(size_t)d.id] = d;
 
@@ -1300,8 +1305,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::mind_worms);
-    d.melee.prop_applied =
-        ItemAttProp(new PropConfused(PropTurns::specific, 9));
+    {
+        auto prop = new PropConfused();
+
+        prop->set_duration(9);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1316,8 +1326,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::green_spider);
-    d.melee.prop_applied =
-        ItemAttProp(new PropBlind(PropTurns::specific, 3));
+    {
+        auto prop = new PropBlind();
+
+        prop->set_duration(3);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1325,9 +1340,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::white_spider);
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2),
-                    30);
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(2);
+
+        d.melee.prop_applied = ItemAttProp(prop, 30);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1336,7 +1355,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::red_spider);
     d.melee.prop_applied =
-        ItemAttProp(new PropWeakened(PropTurns::std));
+        ItemAttProp(new PropWeakened());
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1369,9 +1388,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::pit_viper);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 4));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 4);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1379,9 +1402,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::spitting_cobra);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 4));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 4);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1399,9 +1426,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     d.melee.dmg_method = DmgMethod::piercing;
     set_dmg_from_mon_id(d, ActorId::black_mamba);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 4));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 4);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::ranged_wpn_intr);
@@ -1410,7 +1441,7 @@ void init_data_list()
     d.ranged.snd_msg = "I hear a burst of flames.";
     set_dmg_from_mon_id(d, ActorId::fire_hound);
     d.ranged.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std));
+        ItemAttProp(new PropBurning());
     d.ranged.projectile_color = colors::light_red();
     d.ranged.projectile_character = '*';
     d.ranged.projectile_tile = TileId::blast1;
@@ -1430,8 +1461,13 @@ void init_data_list()
     d.ranged.att_msgs = {"", "breathes lightning at me"};
     d.ranged.snd_msg = "I hear a burst of lightning.";
     set_dmg_from_mon_id(d, ActorId::energy_hound);
-    d.ranged.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 60);
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(2);
+
+        d.ranged.prop_applied = ItemAttProp(prop, 60);
+    }
     d.ranged.projectile_color = colors::yellow();
     d.ranged.projectile_character = '*';
     d.ranged.projectile_tile = TileId::blast1;
@@ -1466,7 +1502,7 @@ void init_data_list()
     d.melee.dmg_method = DmgMethod::elemental;
     set_dmg_from_mon_id(d, ActorId::fire_vortex);
     d.melee.prop_applied =
-        ItemAttProp(new PropBurning(PropTurns::std));
+        ItemAttProp(new PropBurning());
     d.melee.dmg_type = DmgType::fire;
     data[(size_t)d.id] = d;
 
@@ -1475,8 +1511,13 @@ void init_data_list()
     d.melee.att_msgs = {"", "engulfs me"};
     d.melee.dmg_method = DmgMethod::elemental;
     set_dmg_from_mon_id(d, ActorId::energy_vortex);
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 2), 30);
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(2);
+
+        d.melee.prop_applied = ItemAttProp(prop, 30);
+    }
     d.melee.dmg_type = DmgType::electric;
     data[(size_t)d.id] = d;
 
@@ -1485,7 +1526,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::ghost);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::std));
+        ItemAttProp(new PropTerrified());
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1495,7 +1536,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "slices me with an ethereal sickle"};
     set_dmg_from_mon_id(d, ActorId::phantasm);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::std));
+        ItemAttProp(new PropTerrified());
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1505,7 +1546,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::wraith);
     d.melee.prop_applied =
-        ItemAttProp(new PropTerrified(PropTurns::std));
+        ItemAttProp(new PropTerrified());
     d.melee.dmg_type = DmgType::spirit;
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
@@ -1541,9 +1582,13 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::polyp_tentacle;
     d.melee.att_msgs = {"", "stings me"};
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 1),
-                    25);
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(1);
+
+        d.melee.prop_applied = ItemAttProp(prop, 25);
+    }
     set_dmg_from_mon_id(d, ActorId::flying_polyp);
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
@@ -1551,9 +1596,13 @@ void init_data_list()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::greater_polyp_tentacle;
     d.melee.att_msgs = {"", "stings me"};
-    d.melee.prop_applied =
-        ItemAttProp(new PropParalyzed(PropTurns::specific, 1),
-                    25);
+    {
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(1);
+
+        d.melee.prop_applied = ItemAttProp(prop, 25);
+    }
     set_dmg_from_mon_id(d, ActorId::greater_polyp);
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
@@ -1585,7 +1634,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::ghoul);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std));
+        ItemAttProp(new PropInfected());
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 
@@ -1642,8 +1691,13 @@ void init_data_list()
     d.id = ItemId::mummy_maul;
     d.melee.att_msgs = {"", "mauls me"};
     set_dmg_from_mon_id(d, ActorId::mummy);
-    d.melee.prop_applied =
-        ItemAttProp(new PropCursed(PropTurns::indefinite));
+    {
+        auto prop = new PropCursed();
+
+        prop->set_indefinite();
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     d.melee.knocks_back = true;
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
@@ -1698,7 +1752,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "spews infected pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_putrid);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std));
+        ItemAttProp(new PropInfected());
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
@@ -1707,7 +1761,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "spews poisonous pus on me"};
     set_dmg_from_mon_id(d, ActorId::ooze_poison);
     d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::std));
+        ItemAttProp(new PropPoisoned());
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
@@ -1739,7 +1793,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "bites me"};
     set_dmg_from_mon_id(d, ActorId::hunting_horror);
     d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::std));
+        ItemAttProp(new PropPoisoned());
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
@@ -1747,9 +1801,13 @@ void init_data_list()
     d.id = ItemId::mold_spores;
     d.melee.att_msgs = {"", "releases spores at me"};
     set_dmg_from_mon_id(d, ActorId::mold);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 3));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 3);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
@@ -1757,9 +1815,13 @@ void init_data_list()
     d.id = ItemId::mi_go_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::mi_go);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 2));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 2);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
@@ -1767,9 +1829,13 @@ void init_data_list()
     d.id = ItemId::mi_go_commander_sting;
     d.melee.att_msgs = {"", "stings me"};
     set_dmg_from_mon_id(d, ActorId::mi_go_commander);
-    d.melee.prop_applied =
-        ItemAttProp(new PropPoisoned(PropTurns::specific,
-                                     poison_dmg_n_turn * 2));
+    {
+        auto prop = new PropPoisoned();
+
+        prop->set_duration(poison_dmg_n_turn * 2);
+
+        d.melee.prop_applied = ItemAttProp(prop);
+    }
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
@@ -1785,7 +1851,7 @@ void init_data_list()
     d.melee.att_msgs = {"", "claws me"};
     set_dmg_from_mon_id(d, ActorId::high_priest_guard_ghoul);
     d.melee.prop_applied =
-        ItemAttProp(new PropInfected(PropTurns::std));
+        ItemAttProp(new PropInfected());
     d.melee.dmg_method = DmgMethod::slashing;
     data[(size_t)d.id] = d;
 

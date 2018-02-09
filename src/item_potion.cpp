@@ -348,7 +348,7 @@ void PotionSpirit::collide_hook(const P& pos, Actor* const actor)
 
 void PotionBlindness::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropBlind(PropTurns::std));
+    actor.apply_prop(new PropBlind());
 
     if (map::player->can_see_actor(actor))
     {
@@ -368,7 +368,7 @@ void PotionBlindness::collide_hook(const P& pos, Actor* const actor)
 
 void PotionParal::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropParalyzed(PropTurns::std));
+    actor.apply_prop(new PropParalyzed());
 
     if (map::player->can_see_actor(actor))
     {
@@ -389,7 +389,7 @@ void PotionParal::collide_hook(const P& pos, Actor* const actor)
 
 void PotionDisease::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropDiseased(PropTurns::std));
+    actor.apply_prop(new PropDiseased());
 
     if (map::player->can_see_actor(actor))
     {
@@ -399,7 +399,7 @@ void PotionDisease::quaff_impl(Actor& actor)
 
 void PotionConf::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropConfused(PropTurns::std));
+    actor.apply_prop(new PropConfused());
 
     if (map::player->can_see_actor(actor))
     {
@@ -419,26 +419,25 @@ void PotionConf::collide_hook(const P& pos, Actor* const actor)
 
 void PotionFortitude::quaff_impl(Actor& actor)
 {
+    auto prop_r_fear = new PropRFear();
+    auto prop_r_conf = new PropRConf();
+    auto prop_r_sleep = new PropRSleep();
+
+    // The duration of the last two properties is decided by the randomized
+    // duration of the first property
+    const int duration = prop_r_fear->nr_turns_left();
+
+    prop_r_conf->set_duration(duration);
+
+    prop_r_sleep->set_duration(duration);
+
     PropHandler& prop_handler = actor.prop_handler();
 
-    PropRFear* const r_fear =
-        new PropRFear(PropTurns::std);
-
-    const int nr_turns_left =
-        r_fear->nr_turns_left();
-
-    PropRConf* const r_conf =
-        new PropRConf(PropTurns::specific,  nr_turns_left);
-
-    PropRSleep* const r_sleep =
-        new PropRSleep(PropTurns::specific, nr_turns_left);
-
-    prop_handler.apply(r_fear);
-    prop_handler.apply(r_conf);
-    prop_handler.apply(r_sleep);
+    prop_handler.apply(prop_r_fear);
+    prop_handler.apply(prop_r_conf);
+    prop_handler.apply(prop_r_sleep);
 
     prop_handler.end_prop(PropId::frenzied);
-
     prop_handler.end_prop(PropId::mind_sap);
 
     // Remove a random insanity symptom if this is the player
@@ -491,10 +490,11 @@ void PotionPoison::quaff_impl(Actor& actor)
         dmg_range.max *= 2;
     }
 
-    actor.apply_prop(
-        new PropPoisoned(
-            PropTurns::specific,
-            poison_dmg_n_turn * dmg_range.roll()));
+    auto prop = new PropPoisoned();
+
+    prop->set_duration(poison_dmg_n_turn * dmg_range.roll());
+
+    actor.apply_prop(prop);
 
     if (map::player->can_see_actor(actor))
     {
@@ -514,7 +514,7 @@ void PotionPoison::collide_hook(const P& pos, Actor* const actor)
 
 void PotionRFire::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropRFire(PropTurns::std));
+    actor.apply_prop(new PropRFire());
 
     if (map::player->can_see_actor(actor))
     {
@@ -586,7 +586,7 @@ void PotionCuring::collide_hook(const P& pos, Actor* const actor)
 
 void PotionRElec::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropRElec(PropTurns::std));
+    actor.apply_prop(new PropRElec());
 
     if (map::player->can_see_actor(actor))
     {
@@ -640,7 +640,7 @@ void PotionDescent::quaff_impl(Actor& actor)
     {
         if (!map::player->has_prop(PropId::descend))
         {
-            map::player->apply_prop(new PropDescend(PropTurns::std));
+            map::player->apply_prop(new PropDescend());
         }
     }
     else // Dungeon level is near the end
@@ -654,7 +654,7 @@ void PotionDescent::quaff_impl(Actor& actor)
 
 void PotionInvis::quaff_impl(Actor& actor)
 {
-    actor.apply_prop(new PropCloaked(PropTurns::std));
+    actor.apply_prop(new PropCloaked());
 
     if (map::player->can_see_actor(actor))
     {

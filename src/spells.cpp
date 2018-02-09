@@ -622,19 +622,21 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
     if (target->is_alive())
     {
-        const int paralyze_duration = rnd::range(1, 2);
+        auto prop = new PropParalyzed();
 
-        target->apply_prop(
-            new PropParalyzed(PropTurns::specific, paralyze_duration));
+        prop->set_duration(rnd::range(1, 2));
+
+        target->apply_prop(prop);
     }
 
     if ((skill == SpellSkill::master) &&
         target->is_alive())
     {
-        const int burn_duration = rnd::range(2, 3);
+        auto prop = new PropBurning();
 
-        target->apply_prop(
-            new PropBurning(PropTurns::specific, burn_duration));
+        prop->set_duration(rnd::range(2, 3));
+
+        target->apply_prop(prop);
     }
 
     Snd snd("",
@@ -786,15 +788,21 @@ void SpellAzaWrath::run_effect(Actor* const caster,
 
         if (target->is_alive())
         {
-            target->apply_prop(
-                new PropParalyzed(PropTurns::specific, 1));
+            auto prop = new PropParalyzed();
+
+            prop->set_duration(1);
+
+            target->apply_prop(prop);
         }
 
         if ((skill == SpellSkill::master) &&
             target->is_alive())
         {
-            target->apply_prop(
-                new PropBurning(PropTurns::specific, 2));
+            auto prop = new PropBurning();
+
+            prop->set_duration(2);
+
+            target->apply_prop(prop);
         }
 
         Snd snd("",
@@ -964,7 +972,7 @@ void SpellMayhem::run_effect(Actor* const caster,
                                EmitExplSnd::yes,
                                0,
                                ExplExclCenter::yes,
-                               {new PropBurning(PropTurns::std)});
+                               {new PropBurning()});
             }
         }
     }
@@ -1105,8 +1113,13 @@ void SpellPest::run_effect(Actor* const caster,
         .set_leader(leader)
         .for_each([skill, &is_any_seen_by_player](Mon* const mon)
         {
-            mon->apply_prop(new PropSummoned(PropTurns::std));
-            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+            mon->apply_prop(new PropSummoned());
+
+            auto prop_waiting = new PropWaiting();
+
+            prop_waiting->set_duration(2);
+
+            mon->apply_prop(prop_waiting);
 
             if (map::player->can_see_actor(*mon))
             {
@@ -1116,8 +1129,12 @@ void SpellPest::run_effect(Actor* const caster,
             // Haste the rats if master
             if (skill == SpellSkill::master)
             {
+                auto prop_hasted = new PropHasted();
+
+                prop_hasted->set_indefinite();
+
                 mon->prop_handler().apply(
-                    new PropHasted(PropTurns::indefinite),
+                    prop_hasted,
                     PropSrc::intr,
                     true,
                     Verbosity::silent);
@@ -1274,15 +1291,22 @@ void SpellAnimWpns::run_effect(Actor* const caster,
 
         if (skill == SpellSkill::master)
         {
+            auto prop_see_invis = new PropSeeInvis();
+
+            prop_see_invis->set_indefinite();
+
             anim_wpn->prop_handler().apply(
-                new PropSeeInvis(PropTurns::indefinite),
+                prop_see_invis,
                 PropSrc::intr,
                 true,
                 Verbosity::silent);
         }
 
-        anim_wpn->apply_prop(
-            new PropWaiting(PropTurns::specific, 2));
+        auto prop_waiting = new PropWaiting();
+
+        prop_waiting->set_duration(2);
+
+        anim_wpn->apply_prop(prop_waiting);
     }
 }
 
@@ -1410,8 +1434,13 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
         .set_leader(leader)
         .for_each([](Mon* const mon)
         {
-            mon->apply_prop(new PropSummoned(PropTurns::std));
-            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+            mon->apply_prop(new PropSummoned());
+
+            auto prop_waiting = new PropWaiting();
+
+            prop_waiting->set_duration(2);
+
+            mon->apply_prop(prop_waiting);
 
             if (map::player->can_see_actor(*mon))
             {
@@ -1732,11 +1761,11 @@ void SpellFrenzy::run_effect(Actor* const caster,
 {
     (void)skill;
 
-    const int nr_turns = rnd::range(30, 40);
+    auto prop = new PropFrenzied();
 
-    PropFrenzied* frenzy = new PropFrenzied(PropTurns::specific, nr_turns);
+    prop->set_duration(rnd::range(30, 40));
 
-    caster->apply_prop(frenzy);
+    caster->apply_prop(prop);
 }
 
 std::vector<std::string> SpellFrenzy::descr_specific(
@@ -1757,10 +1786,11 @@ std::vector<std::string> SpellFrenzy::descr_specific(
 void SpellBless::run_effect(Actor* const caster,
                             const SpellSkill skill) const
 {
-    const int nr_turns = 20 + (int)skill * 100;
+    auto prop = new PropBlessed();
 
-    caster->apply_prop(
-        new PropBlessed(PropTurns::specific, nr_turns));
+    prop->set_duration(20 + (int)skill * 100);
+
+    caster->apply_prop(prop);
 }
 
 std::vector<std::string> SpellBless::descr_specific(
@@ -1786,23 +1816,20 @@ std::vector<std::string> SpellBless::descr_specific(
 void SpellLight::run_effect(Actor* const caster,
                             const SpellSkill skill) const
 {
-    const int nr_turns = 20 + (int)skill * 20;
+    auto prop = new PropRadiant();
 
-    caster->apply_prop(
-        new PropRadiant(PropTurns::specific, nr_turns));
+    prop->set_duration(20 + (int)skill * 20);
+
+    caster->apply_prop(prop);
 
     if (skill == SpellSkill::master)
     {
-        std::vector<Prop*> props;
-
-        props.push_back(new PropBlind(PropTurns::std));
-
         explosion::run(caster->pos,
                        ExplType::apply_prop,
                        EmitExplSnd::no,
                        0,
                        ExplExclCenter::yes,
-                       props,
+                       {new PropBlind()},
                        colors::yellow());
     }
 }
@@ -1842,8 +1869,11 @@ void SpellSeeInvis::run_effect(Actor* const caster,
         (skill == SpellSkill::expert) ? Range(40, 80) :
         Range(400, 600);
 
-    caster->apply_prop(
-        new PropSeeInvis(PropTurns::specific, duration_range.roll()));
+    auto prop = new PropSeeInvis();
+
+    prop->set_duration(duration_range.roll());
+
+    caster->apply_prop(prop);
 }
 
 std::vector<std::string> SpellSeeInvis::descr_specific(
@@ -1891,7 +1921,11 @@ void SpellSpellShield::run_effect(Actor* const caster,
 {
     (void)skill;
 
-    caster->apply_prop(new PropRSpell(PropTurns::indefinite));
+    auto prop = new PropRSpell();
+
+    prop->set_indefinite();
+
+    caster->apply_prop(prop);
 }
 
 std::vector<std::string> SpellSpellShield::descr_specific(
@@ -1924,10 +1958,11 @@ void SpellTeleport::run_effect(Actor* const caster,
 {
     if ((int)skill >= (int)SpellSkill::expert)
     {
-        const int nr_turns = 3;
+        auto prop = new PropInvisible();
 
-        caster->apply_prop(
-            new PropInvisible(PropTurns::specific, nr_turns));
+        prop->set_duration(3);
+
+        caster->apply_prop(prop);
     }
 
     auto should_ctrl = ShouldCtrlTele::if_tele_ctrl_prop;
@@ -1986,8 +2021,14 @@ void SpellRes::run_effect(Actor* const caster,
 
     PropHandler& prop_hlr = caster->prop_handler();
 
-    prop_hlr.apply(new PropRFire(PropTurns::specific, nr_turns));
-    prop_hlr.apply(new PropRElec(PropTurns::specific, nr_turns));
+    auto prop_r_fire = new PropRFire;
+    auto prop_r_elec = new PropRElec;
+
+    prop_r_fire->set_duration(nr_turns);
+    prop_r_elec->set_duration(nr_turns);
+
+    prop_hlr.apply(prop_r_fire);
+    prop_hlr.apply(prop_r_elec);
 }
 
 std::vector<std::string> SpellRes::descr_specific(
@@ -2156,22 +2197,20 @@ void SpellEnfeeble::run_effect(Actor* const caster,
             continue;
         }
 
-        prop_handler.apply(new PropWeakened(PropTurns::std));
+        prop_handler.apply(new PropWeakened());
 
         if ((int)skill >= (int)SpellSkill::expert)
         {
-            prop_handler.apply(new PropSlowed(PropTurns::std));
+            prop_handler.apply(new PropSlowed());
         }
 
         if (skill >= SpellSkill::master)
         {
-            //
-            // NOTE: Being slowed effectively causes longer paralyze duration
-            //       (property turns counts down on the actor's turn), so
-            //       applying a full standard paralyze here would probably be
-            //       overpowered - just do a couple turns
-            //
-            prop_handler.apply(new PropParalyzed(PropTurns::specific, 2));
+            auto prop = new PropParalyzed();
+
+            prop->set_duration(2);
+
+            prop_handler.apply(prop);
         }
     }
 }
@@ -2264,7 +2303,7 @@ void SpellDisease::run_effect(Actor* const caster,
                      "!");
     }
 
-    target->apply_prop(new PropDiseased(PropTurns::std));
+    target->apply_prop(new PropDiseased());
 }
 
 bool SpellDisease::allow_mon_cast_now(Mon& mon) const
@@ -2399,8 +2438,13 @@ void SpellSummonMon::run_effect(Actor* const caster,
         .set_leader(leader)
         .for_each([](Mon* const mon)
         {
-            mon->apply_prop(new PropSummoned(PropTurns::std));
-            mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+            mon->apply_prop(new PropSummoned());
+
+            auto prop_waiting = new PropWaiting();
+
+            prop_waiting->set_duration(2);
+
+            mon->apply_prop(prop_waiting);
         });
 
     if (summoned.monsters.empty())
@@ -2565,10 +2609,11 @@ void SpellMiGoHypno::run_effect(Actor* const caster,
 
     if (rnd::coin_toss())
     {
-        Prop* const prop = new PropFainted(PropTurns::specific,
-                                           rnd::range(2, 10));
+        auto prop_fainted = new PropFainted();
 
-        target->apply_prop(prop);
+        prop_fainted->set_duration(rnd::range(2, 10));
+
+        target->apply_prop(prop_fainted);
     }
     else
     {
@@ -2638,9 +2683,9 @@ void SpellBurn::run_effect(Actor* const caster,
         msg_log::add("Flames are rising around " + target_str + "!");
     }
 
-    const int nr_turns = 2 + (int)skill;
+    auto prop = new PropBurning();
 
-    Prop* const prop = new PropBurning(PropTurns::specific, nr_turns);
+    prop->set_duration(2 + (int)skill);
 
     target->apply_prop(prop);
 }
@@ -2692,9 +2737,9 @@ void SpellDeafen::run_effect(Actor* const caster,
         }
     }
 
-    const int nr_turns = 75 + (int)skill * 75;
+    auto prop = new PropDeaf();
 
-    Prop* const prop = new PropDeaf(PropTurns::specific, nr_turns);
+    prop->set_duration(75 + (int)skill * 75);
 
     target->apply_prop(prop);
 }

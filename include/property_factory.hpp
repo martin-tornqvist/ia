@@ -2,16 +2,13 @@
 #define PROPERTY_FACTORY_H
 
 #include "property_data.hpp"
-#include "property.hpp"
 
 class Prop;
 
 namespace property_factory
 {
 
-Prop* mk(const PropId id,
-         PropTurns turns_init,
-         const int nr_turns = -1);
+Prop* mk(const PropId id);
 
 } // prop_factory
 

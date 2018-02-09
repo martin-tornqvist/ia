@@ -695,7 +695,7 @@ TEST_FIXTURE(BasicFixture, explosions)
                    EmitExplSnd::no,
                    0,
                    ExplExclCenter::no,
-                   {new PropBurning(PropTurns::std)});
+                   {new PropBurning()});
 
     CHECK(a1->prop_handler().prop(PropId::burning));
     CHECK(a2->prop_handler().prop(PropId::burning));
@@ -1075,7 +1075,7 @@ TEST_FIXTURE(BasicFixture, saving_game)
     PropHandler& props = map::player->prop_handler();
     props.apply(new PropRSleep(PropTurns::specific, 3));
     props.apply(new PropDiseased(PropTurns::indefinite));
-    props.apply(new PropBlessed(PropTurns::std));
+    props.apply(new PropBlessed());
 
     // Check a a few of the props applied
     Prop* prop = props.prop(PropId::diseased);

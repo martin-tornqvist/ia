@@ -693,7 +693,11 @@ void Mon::on_std_turn()
         // If the monster became aware, give it some reaction time
         if (did_become_aware_now)
         {
-            apply_prop(new PropWaiting(PropTurns::specific, 1));
+            auto prop = new PropWaiting();
+
+            prop->set_duration(1);
+
+            apply_prop(prop);
         }
     }
 
@@ -836,7 +840,11 @@ void Mon::hear_sound(const Snd& snd)
         if (!was_aware_before &&
             !is_actor_my_leader(map::player))
         {
-            apply_prop(new PropWaiting(PropTurns::specific, 1));
+            auto prop = new PropWaiting();
+
+            prop->set_duration(1);
+
+            apply_prop(prop);
         }
     }
 }
@@ -1045,17 +1053,17 @@ bool Mon::try_attack(Actor& defender)
             return false;
         }
 
-        const int nr_turns_no_ranged = data_->ranged_cooldown_turns;
+        auto prop = new PropDisabledRanged();
 
-        PropDisabledRanged* ranged_cooldown_prop =
-            new PropDisabledRanged(PropTurns::specific, nr_turns_no_ranged);
+        prop->set_duration(data_->ranged_cooldown_turns);
 
-        prop_handler_->apply(ranged_cooldown_prop);
+        prop_handler_->apply(prop);
 
-        const bool did_attack = attack::ranged(this,
-                                               pos,
-                                               defender.pos,
-                                               *att.wpn);
+        const bool did_attack =
+            attack::ranged(this,
+                           pos,
+                           defender.pos,
+                           *att.wpn);
 
         return did_attack;
     }
@@ -1542,14 +1550,14 @@ void Zuul::place_hook()
 
         Actor* actor = actor_factory::mk(ActorId::cultist_priest, pos);
 
-        auto& priest_prop_handler = actor->prop_handler();
+        auto* prop = new PropPossByZuul();
 
-        auto* poss_by_zuul_prop = new PropPossByZuul(PropTurns::indefinite);
+        prop->set_indefinite();
 
-        priest_prop_handler.apply(poss_by_zuul_prop,
-                                  PropSrc::intr,
-                                  true,
-                                  Verbosity::silent);
+        actor->prop_handler().apply(prop,
+                                    PropSrc::intr,
+                                    true,
+                                    Verbosity::silent);
 
         actor->restore_hp(999, false, Verbosity::silent);
     }
@@ -1595,8 +1603,7 @@ DidAction Ghost::on_act()
 
         msg_log::add(name + " reaches for me...");
 
-        map::player->apply_prop(
-            new PropWeakened(PropTurns::std));
+        map::player->apply_prop(new PropWeakened());
 
         game_time::tick();
 
@@ -1812,7 +1819,11 @@ DidAction Khephren::on_act()
         .make_aware_of_player()
         .for_each([](Mon* const mon)
         {
-            mon->apply_prop(new PropSummoned(PropTurns::indefinite));
+            auto prop = new PropSummoned();
+
+            prop->set_indefinite();
+
+            mon->apply_prop(prop);
         });
 
     has_summoned_locusts = true;
@@ -1847,10 +1858,11 @@ DidAction Ape::on_act()
     {
         frenzy_cooldown_ = 30;
 
-        const int nr_frenzy_turns = rnd::range(4, 6);
+        auto prop = new PropFrenzied();
 
-        prop_handler_->apply(
-            new PropFrenzied(PropTurns::specific, nr_frenzy_turns));
+        prop->set_duration(rnd::range(4, 6));
+
+        prop_handler_->apply(prop);
     }
 
     return DidAction::no;

@@ -385,7 +385,7 @@ ConsumeItem DeviceDeafening::run_effect()
         }
 
         actor->apply_prop(
-            new PropDeaf(PropTurns::std));
+            new PropDeaf());
     }
 
     return ConsumeItem::no;

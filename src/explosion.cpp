@@ -12,6 +12,7 @@
 #include "feature_rigid.hpp"
 #include "feature_mob.hpp"
 #include "game.hpp"
+#include "property.hpp"
 #include "property_factory.hpp"
 
 namespace
@@ -323,10 +324,9 @@ void run(const P& origin,
 
                 if (should_apply_on_living_actor)
                 {
-                    Prop* const prop_cpy =
-                        property_factory::mk(prop->id(),
-                                             PropTurns::specific,
-                                             prop->nr_turns_left());
+                    Prop* const prop_cpy = property_factory::mk(prop->id());
+
+                    prop_cpy->set_duration(prop->nr_turns_left());
 
                     living_actor->apply_prop(prop_cpy);
                 }
@@ -344,10 +344,9 @@ void run(const P& origin,
 
                     for (Actor* corpse : corpses_here)
                     {
-                        Prop* const prop_cpy =
-                            property_factory::mk(prop->id(),
-                                                 PropTurns::specific,
-                                                 prop->nr_turns_left());
+                        Prop* const prop_cpy = property_factory::mk(prop->id());
+
+                        prop_cpy->set_duration(prop->nr_turns_left());
 
                         corpse->prop_handler().apply(prop_cpy);
                     }

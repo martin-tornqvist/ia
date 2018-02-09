@@ -87,7 +87,7 @@ void Rigid::on_new_turn()
             if (rnd::one_in(4))
             {
                 auto& prop_handler = actor->prop_handler();
-                prop_handler.apply(new PropBurning(PropTurns::std));
+                prop_handler.apply(new PropBurning());
             }
             else
             {
@@ -1299,7 +1299,7 @@ void LiquidShallow::bump(Actor& actor_bumping)
         return;
     }
 
-    actor_bumping.apply_prop(new PropWaiting(PropTurns::std));
+    actor_bumping.apply_prop(new PropWaiting());
 
     if (actor_bumping.is_player())
     {
@@ -2183,7 +2183,7 @@ void Brazier::on_hit(const int dmg,
                            EmitExplSnd::no,
                            expl_d,
                            ExplExclCenter::no,
-                           {new PropBurning(PropTurns::std)});
+                           {new PropBurning()});
         }
 
         map::update_vision();
@@ -2804,24 +2804,23 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             {
                 const Range dmg_range(8, 11);
 
-                prop = new PropPoisoned(
-                    PropTurns::specific,
-                    poison_dmg_n_turn * dmg_range.roll());
+                prop = new PropPoisoned();
 
+                prop->set_duration(poison_dmg_n_turn * dmg_range.roll());
 
                 fume_color = colors::light_green();
             }
             else if (rnd < 40)
             {
-                prop = new PropDiseased(PropTurns::std);
+                prop = new PropDiseased();
 
                 fume_color = colors::green();
             }
             else
             {
-                prop = new PropParalyzed(PropTurns::std);
+                prop = new PropParalyzed();
 
-                prop->set_nr_turns_left(prop->nr_turns_left() * 2);
+                prop->set_duration(prop->nr_turns_left() * 2);
             }
 
             explosion::run(pos_,
@@ -2867,7 +2866,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
     case TombTrait::cursed:
     {
-        map::player->apply_prop(new PropCursed(PropTurns::std));
+        map::player->apply_prop(new PropCursed());
         did_trigger_trap = DidTriggerTrap::yes;
     }
     break;
@@ -2883,8 +2882,11 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             .make_aware_of_player()
             .for_each([](Mon* const mon)
             {
-                mon->apply_prop(
-                    new PropWaiting(PropTurns::specific, 2));
+                auto prop = new PropWaiting();
+
+                prop->set_duration(2);
+
+                mon->apply_prop(prop);
             });
     }
 
@@ -3321,13 +3323,13 @@ void Fountain::bump(Actor& actor_bumping)
 
         case FountainEffect::curse:
         {
-            prop_hlr.apply(new PropCursed(PropTurns::std));
+            prop_hlr.apply(new PropCursed());
         }
         break;
 
         case FountainEffect::disease:
         {
-            prop_hlr.apply(new PropDiseased(PropTurns::std));
+            prop_hlr.apply(new PropDiseased());
         }
         break;
 
@@ -3335,34 +3337,39 @@ void Fountain::bump(Actor& actor_bumping)
         {
             const Range dmg_range(8, 11);
 
-            prop_hlr.apply(
-                new PropPoisoned(
-                    PropTurns::specific,
-                    poison_dmg_n_turn * dmg_range.roll()));
+            auto prop = new PropPoisoned();
+
+            prop->set_duration(poison_dmg_n_turn * dmg_range.roll());
+
+            prop_hlr.apply(prop);
         }
         break;
 
         case FountainEffect::frenzy:
         {
-            prop_hlr.apply(new PropFrenzied(PropTurns::std));
+            prop_hlr.apply(new PropFrenzied());
         }
         break;
 
         case FountainEffect::paralyze:
         {
-            prop_hlr.apply(new PropParalyzed(PropTurns::std));
+            prop_hlr.apply(new PropParalyzed());
         }
         break;
 
         case FountainEffect::blind:
         {
-            prop_hlr.apply(new PropBlind(PropTurns::std));
+            prop_hlr.apply(new PropBlind());
         }
         break;
 
         case FountainEffect::faint:
         {
-            prop_hlr.apply(new PropFainted(PropTurns::specific, 10));
+            auto prop = new PropFainted();
+
+            prop->set_duration(10);
+
+            prop_hlr.apply(prop);
         }
         break;
 
@@ -3793,7 +3800,7 @@ void Cocoon::bump(Actor& actor_bumping)
             if (insanity::has_sympt(InsSymptId::phobia_spider))
             {
                 map::player->apply_prop(
-                    new PropTerrified(PropTurns::std));
+                    new PropTerrified());
             }
 
             if (is_open_)

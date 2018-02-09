@@ -426,8 +426,11 @@ void EventSnakeEmerge::on_new_turn()
 
         Actor* const actor = actor_factory::mk(id, p);
 
-        actor->apply_prop(
-            new PropWaiting(PropTurns::specific, 2));
+        auto prop = new PropWaiting();
+
+        prop->set_duration(2);
+
+        actor->apply_prop(prop);
 
         static_cast<Mon*>(actor)->become_aware_player(false);
     }

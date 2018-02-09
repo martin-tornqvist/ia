@@ -96,7 +96,11 @@ void run(Actor& defender,
 
             if (!f->is_los_passable())
             {
-                defender.apply_prop(new PropNailed(PropTurns::indefinite));
+                auto prop = new PropNailed();
+
+                prop->set_indefinite();
+
+                defender.apply_prop(prop);
             }
         }
 
@@ -127,11 +131,11 @@ void run(Actor& defender,
             }
         }
 
-        const int nr_turns_paralyze = 1 + paralyze_extra_turns;
+        auto prop = new PropParalyzed();
 
-        defender.apply_prop(
-            new PropParalyzed(PropTurns::specific,
-                              nr_turns_paralyze));
+        prop->set_duration(1 + paralyze_extra_turns);
+
+        defender.apply_prop(prop);
 
         defender.pos = new_pos;
 

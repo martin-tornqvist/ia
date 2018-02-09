@@ -698,9 +698,29 @@ void ArmorAsbSuit::on_equip_hook(const Verbosity verbosity)
 {
     (void)verbosity;
 
-    add_carrier_prop(new PropRFire(PropTurns::indefinite), Verbosity::silent);
-    add_carrier_prop(new PropRAcid(PropTurns::indefinite), Verbosity::silent);
-    add_carrier_prop(new PropRElec(PropTurns::indefinite), Verbosity::silent);
+    {
+        auto prop_r_fire = new PropRFire();
+
+        prop_r_fire->set_indefinite();
+
+        add_carrier_prop(prop_r_fire, Verbosity::silent);
+    }
+
+    {
+        auto prop_r_acid = new PropRAcid();
+
+        prop_r_acid->set_indefinite();
+
+        add_carrier_prop(prop_r_acid, Verbosity::silent);
+    }
+
+    {
+        auto prop_r_elec = new PropRElec();
+
+        prop_r_elec->set_indefinite();
+
+        add_carrier_prop(prop_r_elec, Verbosity::silent);
+    }
 }
 
 void ArmorAsbSuit::on_unequip_hook()
@@ -810,7 +830,9 @@ void SpikedMace::on_melee_hit(Actor& actor_hit, const int dmg)
 
     if (rnd::percent(stun_pct))
     {
-        Prop* const prop = new PropParalyzed(PropTurns::specific, 2);
+        auto prop = new PropParalyzed();
+
+        prop->set_duration(2);
 
         actor_hit.apply_prop(prop);
     }
@@ -870,7 +892,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         if (player_bon::traits[(size_t)Trait::toxic] &&
             rnd::one_in(4))
         {
-            Prop* const poison = new PropPoisoned(PropTurns::std);
+            Prop* const poison = new PropPoisoned();
 
             actor_hit.apply_prop(poison);
         }
@@ -879,7 +901,7 @@ void PlayerGhoulClaw::on_melee_hit(Actor& actor_hit, const int dmg)
         if (player_bon::traits[(size_t)Trait::indomitable_fury] &&
             map::player->has_prop(PropId::frenzied))
         {
-            Prop* const fear = new PropTerrified(PropTurns::std);
+            Prop* const fear = new PropTerrified();
 
             actor_hit.apply_prop(fear);
         }
@@ -917,7 +939,7 @@ void ZombieDust::on_ranged_hit(Actor& actor_hit)
         !actor_hit.data().is_undead)
     {
         actor_hit.apply_prop(
-            new PropParalyzed(PropTurns::std));
+            new PropParalyzed());
     }
 }
 
@@ -1008,7 +1030,9 @@ void RavenPeck::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    Prop* const prop = new PropBlind(PropTurns::specific, 2);
+    auto const prop = new PropBlind();
+
+    prop->set_duration(2);
 
     actor_hit.apply_prop(prop);
 }
@@ -1061,19 +1085,25 @@ void MindLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
 
         if (mon->is_alive())
         {
-            mon->apply_prop(new PropConfused(PropTurns::std));
+            mon->apply_prop(new PropConfused());
 
-            mon->apply_prop(new PropTerrified(PropTurns::std));
+            mon->apply_prop(new PropTerrified());
         }
     }
     else // Player mind can be eaten
     {
-        map::player->apply_prop(
-            new PropMindSap(PropTurns::indefinite));
+        auto prop_mind_sap = new PropMindSap();
+
+        prop_mind_sap->set_indefinite();
+
+        map::player->apply_prop(prop_mind_sap);
 
         // Make the monster pause, so things don't get too crazy
-        mon->apply_prop(
-            new PropWaiting(PropTurns::specific, 2));
+        auto prop_waiting = new PropWaiting();
+
+        prop_waiting->set_duration(2);
+
+        mon->apply_prop(prop_waiting);
     }
 }
 
@@ -1090,8 +1120,11 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->apply_prop(
-        new PropSpiSap(PropTurns::indefinite));
+    auto prop_spi_sap = new PropSpiSap();
+
+    prop_spi_sap->set_indefinite();
+
+    map::player->apply_prop(prop_spi_sap);
 
     auto* const mon = actor_carrying_;
 
@@ -1100,8 +1133,11 @@ void SpiritLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
     mon->restore_spi(1, false, Verbosity::silent);
 
     // Make the monster pause, so things don't get too crazy
-    mon->apply_prop(
-        new PropWaiting(PropTurns::specific, 2));
+    auto prop_waiting = new PropWaiting();
+
+    prop_waiting->set_duration(2);
+
+    mon->apply_prop(prop_waiting);
 }
 
 // -----------------------------------------------------------------------------
@@ -1117,8 +1153,11 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    map::player->apply_prop(
-        new PropHpSap(PropTurns::indefinite));
+    auto prop_hp_sap = new PropHpSap();
+
+    prop_hp_sap->set_indefinite();
+
+    map::player->apply_prop(prop_hp_sap);
 
     auto* const mon = actor_carrying_;
 
@@ -1127,8 +1166,11 @@ void LifeLeechSting::on_melee_hit(Actor& actor_hit, const int dmg)
     mon->restore_hp(1, false, Verbosity::silent);
 
     // Make the monster pause, so things don't get too crazy
-    mon->apply_prop(
-        new PropWaiting(PropTurns::specific, 2));
+    auto prop_waiting = new PropWaiting();
+
+    prop_waiting->set_duration(2);
+
+    mon->apply_prop(prop_waiting);
 }
 
 // -----------------------------------------------------------------------------
@@ -1153,7 +1195,7 @@ void DustVortexEngulf::on_melee_hit(Actor& actor_hit, const int dmg)
         return;
     }
 
-    Prop* const prop = new PropBlind(PropTurns::std);
+    Prop* const prop = new PropBlind();
 
     actor_hit.apply_prop(prop);
 }
@@ -1178,7 +1220,9 @@ void SpittingCobraSpit::on_ranged_hit(Actor& actor_hit)
         return;
     }
 
-    Prop* const prop = new PropBlind(PropTurns::specific, 7);
+    auto prop = new PropBlind();
+
+    prop->set_duration(7);
 
     actor_hit.apply_prop(prop);
 }
@@ -1685,7 +1729,7 @@ void Molotov::on_std_turn_player_hold_ignited()
                        EmitExplSnd::no,
                        0,
                        ExplExclCenter::no,
-                       {new PropBurning(PropTurns::std)});
+                       {new PropBurning()});
 
         delete this;
     }
@@ -1708,7 +1752,7 @@ void Molotov::on_thrown_ignited_landing(const P& p)
                    EmitExplSnd::no,
                    0,
                    ExplExclCenter::no,
-                   {new PropBurning(PropTurns::std)});
+                   {new PropBurning()});
 }
 
 
@@ -1735,7 +1779,7 @@ void Molotov::on_player_paralyzed()
                    EmitExplSnd::no,
                    0,
                    ExplExclCenter::no,
-                   {new PropBurning(PropTurns::std)});
+                   {new PropBurning()});
 
     delete this;
 }

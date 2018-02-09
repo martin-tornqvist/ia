@@ -314,13 +314,15 @@ void handle_player_input(const InputData& input)
                 {
                     ++aiming->nr_turns_aiming_;
 
-                    aiming->set_nr_turns_left(aiming->nr_turns_left() + 1);
+                    aiming->set_duration(aiming->nr_turns_left() + 1);
                 }
             }
 
             if (!aiming)
             {
-                aiming = new PropAiming(PropTurns::specific, 1);
+                aiming = new PropAiming();
+
+                aiming->set_duration(1);
 
                 prop_hlr.apply(aiming);
             }
@@ -875,7 +877,7 @@ void handle_player_input(const InputData& input)
     case SDLK_F8:
     {
         map::player->apply_prop(
-            new PropInfected(PropTurns::std));
+            new PropInfected());
     }
     break;
 

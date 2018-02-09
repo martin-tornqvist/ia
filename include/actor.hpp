@@ -6,6 +6,7 @@
 
 #include "global.hpp"
 
+#include "property_handler.hpp"
 #include "actor_data.hpp"
 #include "sound.hpp"
 #include "config.hpp"

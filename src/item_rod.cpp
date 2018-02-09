@@ -242,7 +242,9 @@ void RodBless::run_effect()
 {
     const int nr_turns = rnd::range(8, 12);
 
-    Prop* const prop = new PropBlessed(PropTurns::specific, nr_turns);
+    auto prop = new PropBlessed();
+
+    prop->set_duration(nr_turns);
 
     map::player->apply_prop(prop);
 

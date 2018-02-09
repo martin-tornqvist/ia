@@ -491,7 +491,9 @@ void Player::on_hit(int& dmg,
         !is_ghoul_resist_wound &&
         !config::is_bot_playing())
     {
-        Prop* const prop = new PropWound(PropTurns::indefinite);
+        Prop* const prop = new PropWound();
+
+        prop->set_indefinite();
 
         auto nr_wounds = [&]()
         {
@@ -1666,9 +1668,7 @@ void Player::on_std_turn()
         return;
     }
 
-    //
     // Spell resistance
-    //
     const int spi_trait_lvl =
         player_bon::traits[(size_t)Trait::mighty_spirit]    ? 3 :
         player_bon::traits[(size_t)Trait::strong_spirit]    ? 2 :
@@ -1704,7 +1704,11 @@ void Player::on_std_turn()
             if (nr_turns_until_rspell_ == 0)
             {
                 // Cooldown has finished
-                prop_handler_->apply(new PropRSpell(PropTurns::indefinite));
+                auto prop = new PropRSpell();
+
+                prop->set_indefinite();
+
+                prop_handler_->apply(prop);
 
                 msg_log::more_prompt();
             }
@@ -1726,9 +1730,7 @@ void Player::on_std_turn()
         active_explosive->on_std_turn_player_hold_ignited();
     }
 
-    //
     // Regenerate Hit Points
-    //
     if (!has_prop(PropId::poisoned) &&
         player_bon::bg() != Bg::ghoul)
     {
@@ -1790,13 +1792,9 @@ void Player::on_std_turn()
         }
     }
 
-    //
     // Try to spot hidden traps and doors
-    //
 
-    //
     // NOTE: Skill value retrieved here is always at least 1
-    //
     const int player_search_skill =
         map::player->ability(AbilityId::searching, true);
 
@@ -1843,10 +1841,8 @@ void Player::on_std_turn()
 
 void Player::on_log_msg_printed()
 {
-    //
     // NOTE: There cannot be any calls to msg_log::add() in this function, as
-    //       that would cause infinite recursion!
-    //
+    // that would cause infinite recursion!
 
     // All messages abort waiting
     wait_turns_left = -1;
@@ -2142,7 +2138,7 @@ void Player::move(Dir dir)
             {
                 msg_log::add("I stagger.", colors::msg_note());
 
-                prop_handler_->apply(new PropWaiting(PropTurns::std));
+                prop_handler_->apply(new PropWaiting());
             }
 
             // Displace allied monster

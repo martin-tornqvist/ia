@@ -33,8 +33,9 @@ void PropHandler::apply_natural_props_from_actor_data()
 
         if (d.natural_props[i])
         {
-            Prop* const prop =
-                property_factory::mk(PropId(i), PropTurns::indefinite);
+            Prop* const prop = property_factory::mk(PropId(i));
+
+            prop->set_indefinite();
 
             apply(prop,
                   PropSrc::intr,
@@ -110,15 +111,16 @@ void PropHandler::load()
 
         const int nr_turns = saving::get_int();
 
-        const auto turns_init =
-            (nr_turns == -1) ?
-            PropTurns::indefinite :
-            PropTurns::specific;
+        Prop* const prop = property_factory::mk(prop_id);
 
-        Prop* const prop =
-            property_factory::mk(prop_id,
-                                 turns_init,
-                                 nr_turns);
+        if (nr_turns == -1)
+        {
+            prop->set_indefinite();
+        }
+        else
+        {
+            prop->set_duration(nr_turns);
+        }
 
         prop->owner_ = owner_;
 
@@ -188,6 +190,8 @@ void PropHandler::apply(Prop* const prop,
 
         print_start_msg(*prop);
     }
+
+    return;
 }
 
 void PropHandler::print_resist_msg(const Prop& prop)
@@ -276,9 +280,9 @@ bool PropHandler::try_apply_more_on_existing_intr_prop(const Prop& new_prop)
                 -1 :
                 std::max(turns_left_old, turns_left_new);
 
-            if (new_prop.turns_init_type() == PropTurns::indefinite)
+            if (new_prop.duration_mode_ == PropDurationMode::indefinite)
             {
-                old_prop->turns_init_type_ = PropTurns::indefinite;
+                old_prop->duration_mode_ = PropDurationMode::indefinite;
             }
 
             return true;
@@ -326,7 +330,7 @@ void PropHandler::remove_props_for_item(const Item* const item)
         {
             ASSERT(prop->src_ == PropSrc::inv);
 
-            ASSERT(prop->turns_init_type_ == PropTurns::indefinite);
+            ASSERT(prop->duration_mode_ == PropDurationMode::indefinite);
 
             auto moved_prop = std::move(*it);
 
@@ -369,18 +373,20 @@ void PropHandler::apply_from_attack(const Wpn& wpn, const bool is_melee)
 
         if (!is_dmg_resisted)
         {
-            const auto turns_init_type = att_prop.prop->turns_init_type();
-
-            const int nr_turns =
-                (turns_init_type == PropTurns::specific) ?
-                att_prop.prop->nr_turns_left_ :
-                -1;
-
             // Make a copy of the weapon effect
             auto* const prop_cpy =
-                property_factory::mk(att_prop.prop->id_,
-                                     att_prop.prop->turns_init_type_,
-                                     nr_turns);
+                property_factory::mk(att_prop.prop->id_);
+
+            const auto duration_mode = att_prop.prop->duration_mode_;
+
+            if (duration_mode == PropDurationMode::specific)
+            {
+                prop_cpy->set_duration(att_prop.prop->nr_turns_left_);
+            }
+            else if (duration_mode == PropDurationMode::indefinite)
+            {
+                prop_cpy->set_indefinite();
+            }
 
             apply(prop_cpy);
         }
@@ -609,7 +615,7 @@ bool PropHandler::is_temporary_negative_prop(const Prop& prop)
 
     return
         !is_natural_prop &&
-        (prop.turns_init_type() != PropTurns::indefinite) &&
+        (prop.duration_mode_ != PropDurationMode::indefinite) &&
         (prop.alignment() == PropAlignment::bad);
 }
 
@@ -669,7 +675,7 @@ std::vector<ColoredString> PropHandler::text_line() const
 
         const int turns_left  = prop->nr_turns_left_;
 
-        if (prop->turns_init_type() == PropTurns::indefinite)
+        if (prop->duration_mode_ == PropDurationMode::indefinite)
         {
             // Indefinite intrinsic properties are printed in upper case
             if (prop->src() == PropSrc::intr)
@@ -737,7 +743,7 @@ std::vector<PropTextListEntry> PropHandler::text_list() const
         {
             const int turns_left  = prop->nr_turns_left_;
 
-            if (prop->turns_init_type() == PropTurns::indefinite &&
+            if (prop->duration_mode_ == PropDurationMode::indefinite &&
                 prop->src() == PropSrc::intr)
             {
                 // Indefinite intrinsic properties are printed in upper case

@@ -169,9 +169,7 @@ int Actor::speed_pct() const
 
     int speed = data_->speed_pct;
 
-    //
     // Speed modifications due to properties
-    //
     if (prop_handler_->has_prop(PropId::slowed))
     {
         speed -= 50;
@@ -551,7 +549,11 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
     {
         msg_log::add("I suddenly find myself in a different location!");
 
-        prop_handler_->apply(new PropConfused(PropTurns::specific, 8));
+        auto prop = new PropConfused();
+
+        prop->set_duration(8);
+
+        prop_handler_->apply(prop);
     }
 }
 

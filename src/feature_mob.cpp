@@ -80,8 +80,11 @@ void Smoke::on_new_turn()
                 msg_log::add("I am getting smoke in my eyes.");
             }
 
-            actor->apply_prop(
-                new PropBlind(PropTurns::specific, rnd::range(1, 3)));
+            auto prop = new PropBlind();
+
+            prop->set_duration(rnd::range(1, 3));
+
+            actor->apply_prop(prop);
         }
 
         // Coughing?

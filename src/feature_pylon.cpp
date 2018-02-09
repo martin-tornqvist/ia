@@ -103,9 +103,9 @@ void Pylon::on_hit(const int dmg,
     (void)dmg_method;
     (void)actor;
 
-    //
+
     // TODO
-    //
+
 }
 
 void Pylon::on_new_turn_hook()
@@ -266,10 +266,8 @@ Actor* PylonImpl::rnd_reached_living_actor() const
 // -----------------------------------------------------------------------------
 void PylonBurning::on_new_turn_activated()
 {
-    //
     // Do a floodfill from the pylon, and apply burning on each feature reached.
     // The flood distance is increased every N turn.
-    //
     bool blocks_flood[map_w][map_h];
 
     map_parsers::BlocksProjectiles()
@@ -305,10 +303,8 @@ void PylonBurning::on_new_turn_activated()
 
     const int nr_turns_per_flood_step = 10;
 
-    //
     // NOTE: The distance may also be limited by the number of turns which the
-    //       Pylon remains active (it shuts itself down after a while)
-    //
+    // Pylon remains active (it shuts itself down after a while)
     const int flood_max_dist = 10;
 
     const int flood_dist =
@@ -335,9 +331,7 @@ void PylonBurning::on_new_turn_activated()
         }
     }
 
-    //
     // Occasionally also directly burn adjacent actors
-    //
     if (!rnd::fraction(2, 3))
     {
         return;
@@ -349,7 +343,7 @@ void PylonBurning::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(new PropBurning(PropTurns::std));
+        actor->apply_prop(new PropBurning());
     }
 }
 
@@ -371,7 +365,7 @@ void PylonInvis::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(new PropInvisible(PropTurns::std));
+        actor->apply_prop(new PropInvisible());
     }
 }
 
@@ -393,7 +387,7 @@ void PylonSlow::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(new PropSlowed(PropTurns::std));
+        actor->apply_prop(new PropSlowed());
     }
 }
 
@@ -415,9 +409,9 @@ void PylonKnockback::on_new_turn_activated()
     {
         knockback::run(*actor,
                        pos_,
-                       false,               // Not spike gun
+                       false, // Not spike gun
                        Verbosity::verbose,
-                       2);                  // Extra paralyze turns
+                       2); // Extra paralyze turns
     }
 }
 
@@ -459,6 +453,6 @@ void PylonTerrify::on_new_turn_activated()
 
     for (auto actor : actors)
     {
-        actor->apply_prop(new PropTerrified(PropTurns::std));
+        actor->apply_prop(new PropTerrified());
     }
 }

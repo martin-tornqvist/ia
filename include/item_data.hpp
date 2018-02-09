@@ -218,12 +218,12 @@ struct ItemContainerSpawnRule
 struct ItemAttProp
 {
     ItemAttProp() :
-        prop        (nullptr),
-        pct_chance  (100) {}
+        prop(nullptr),
+        pct_chance(100) {}
 
     ItemAttProp(Prop* const prop, int pct_chance = 100) :
-        prop        (prop),
-        pct_chance  (pct_chance) {}
+        prop(prop),
+        pct_chance(pct_chance) {}
 
     Prop* prop;
 

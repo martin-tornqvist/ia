@@ -1,238 +1,231 @@
 #include "property_factory.hpp"
 
+#include "property.hpp"
+
 namespace property_factory
 {
 
-Prop* mk(const PropId id,
-         PropTurns turns_init,
-         const int nr_turns)
+Prop* mk(const PropId id)
 {
     ASSERT(id != PropId::END);
-
-    // Prop turns init type should either be:
-    // * "specific", and number of turns specified greater than zero, OR
-    // * NOT "specific" (i.e. "indefinite" or "std"), and number of turns NOT
-    //   specified (-1)
-    ASSERT(((turns_init == PropTurns::specific) && (nr_turns > 0)) ||
-           ((turns_init != PropTurns::specific) && (nr_turns == -1)));
 
     switch (id)
     {
     case PropId::nailed:
-        return new PropNailed(turns_init, nr_turns);
+        return new PropNailed();
 
     case PropId::wound:
-        return new PropWound(turns_init, nr_turns);
+        return new PropWound();
 
     case PropId::blind:
-        return new PropBlind(turns_init, nr_turns);
+        return new PropBlind();
 
     case PropId::deaf:
-        return new PropDeaf(turns_init, nr_turns);
+        return new PropDeaf();
 
     case PropId::burning:
-        return new PropBurning(turns_init, nr_turns);
+        return new PropBurning();
 
     case PropId::flared:
-        return new PropFlared(turns_init, nr_turns);
+        return new PropFlared();
 
     case PropId::paralyzed:
-        return new PropParalyzed(turns_init, nr_turns);
+        return new PropParalyzed();
 
     case PropId::terrified:
-        return new PropTerrified(turns_init, nr_turns);
+        return new PropTerrified();
 
     case PropId::weakened:
-        return new PropWeakened(turns_init, nr_turns);
+        return new PropWeakened();
 
     case PropId::confused:
-        return new PropConfused(turns_init, nr_turns);
+        return new PropConfused();
 
     case PropId::stunned:
-        return new PropStunned(turns_init, nr_turns);
+        return new PropStunned();
 
     case PropId::waiting:
-        return new PropWaiting(turns_init, nr_turns);
+        return new PropWaiting();
 
     case PropId::slowed:
-        return new PropSlowed(turns_init, nr_turns);
+        return new PropSlowed();
 
     case PropId::hasted:
-        return new PropHasted(turns_init, nr_turns);
+        return new PropHasted();
 
     case PropId::clockwork_hasted:
-        return new PropClockworkHasted(turns_init, nr_turns);
+        return new PropClockworkHasted();
 
     case PropId::summoned:
-        return new PropSummoned(turns_init, nr_turns);
+        return new PropSummoned();
 
     case PropId::infected:
-        return new PropInfected(turns_init, nr_turns);
+        return new PropInfected();
 
     case PropId::diseased:
-        return new PropDiseased(turns_init, nr_turns);
+        return new PropDiseased();
 
     case PropId::descend:
-        return new PropDescend(turns_init, nr_turns);
+        return new PropDescend();
 
     case PropId::poisoned:
-        return new PropPoisoned(turns_init, nr_turns);
+        return new PropPoisoned();
 
     case PropId::fainted:
-        return new PropFainted(turns_init, nr_turns);
+        return new PropFainted();
 
     case PropId::frenzied:
-        return new PropFrenzied(turns_init, nr_turns);
+        return new PropFrenzied();
 
     case PropId::aiming:
-        return new PropAiming(turns_init, nr_turns);
+        return new PropAiming();
 
     case PropId::disabled_attack:
-        return new PropDisabledAttack(turns_init, nr_turns);
+        return new PropDisabledAttack();
 
     case PropId::disabled_melee:
-        return new PropDisabledMelee(turns_init, nr_turns);
+        return new PropDisabledMelee();
 
     case PropId::disabled_ranged:
-        return new PropDisabledRanged(turns_init, nr_turns);
+        return new PropDisabledRanged();
 
     case PropId::blessed:
-        return new PropBlessed(turns_init, nr_turns);
+        return new PropBlessed();
 
     case PropId::cursed:
-        return new PropCursed(turns_init, nr_turns);
+        return new PropCursed();
 
     case PropId::r_acid:
-        return new PropRAcid(turns_init, nr_turns);
+        return new PropRAcid();
 
     case PropId::r_conf:
-        return new PropRConf(turns_init, nr_turns);
+        return new PropRConf();
 
     case PropId::r_breath:
-        return new PropRBreath(turns_init, nr_turns);
+        return new PropRBreath();
 
     case PropId::r_elec:
-        return new PropRElec(turns_init, nr_turns);
+        return new PropRElec();
 
     case PropId::r_fear:
-        return new PropRFear(turns_init, nr_turns);
+        return new PropRFear();
 
     case PropId::r_slow:
-        return new PropRSlow(turns_init, nr_turns);
+        return new PropRSlow();
 
     case PropId::r_phys:
-        return new PropRPhys(turns_init, nr_turns);
+        return new PropRPhys();
 
     case PropId::r_fire:
-        return new PropRFire(turns_init, nr_turns);
+        return new PropRFire();
 
     case PropId::r_spell:
-        return new PropRSpell(turns_init, nr_turns);
+        return new PropRSpell();
 
     case PropId::r_poison:
-        return new PropRPoison(turns_init, nr_turns);
+        return new PropRPoison();
 
     case PropId::r_sleep:
-        return new PropRSleep(turns_init, nr_turns);
+        return new PropRSleep();
 
     case PropId::light_sensitive:
-        return new PropLgtSens(turns_init, nr_turns);
+        return new PropLgtSens();
 
     case PropId::poss_by_zuul:
-        return new PropPossByZuul(turns_init, nr_turns);
+        return new PropPossByZuul();
 
     case PropId::major_clapham_summon:
-        return new PropMajorClaphamSummon(turns_init, nr_turns);
+        return new PropMajorClaphamSummon();
 
     case PropId::flying:
-        return new PropFlying(turns_init, nr_turns);
+        return new PropFlying();
 
     case PropId::ethereal:
-        return new PropEthereal(turns_init, nr_turns);
+        return new PropEthereal();
 
     case PropId::ooze:
-        return new PropOoze(turns_init, nr_turns);
+        return new PropOoze();
 
     case PropId::burrowing:
-        return new PropBurrowing(turns_init, nr_turns);
+        return new PropBurrowing();
 
     case PropId::radiant:
-        return new PropRadiant(turns_init, nr_turns);
+        return new PropRadiant();
 
     case PropId::darkvision:
-        return new PropDarkvis(turns_init, nr_turns);
+        return new PropDarkvis();
 
     case PropId::r_disease:
-        return new PropRDisease(turns_init, nr_turns);
+        return new PropRDisease();
 
     case PropId::r_blind:
-        return new PropRBlind(turns_init, nr_turns);
+        return new PropRBlind();
 
     case PropId::r_para:
-        return new PropRPara(turns_init, nr_turns);
+        return new PropRPara();
 
     case PropId::tele_ctrl:
-        return new PropTeleControl(turns_init, nr_turns);
+        return new PropTeleControl();
 
     case PropId::spell_reflect:
-        return new PropSpellReflect(turns_init, nr_turns);
+        return new PropSpellReflect();
 
     case PropId::conflict:
-        return new PropConflict(turns_init, nr_turns);
+        return new PropConflict();
 
     case PropId::vortex:
-        return new PropVortex(turns_init, nr_turns);
+        return new PropVortex();
 
     case PropId::explodes_on_death:
-        return new PropExplodesOnDeath(turns_init, nr_turns);
+        return new PropExplodesOnDeath();
 
     case PropId::splits_on_death:
-        return new PropSplitsOnDeath(turns_init, nr_turns);
+        return new PropSplitsOnDeath();
 
     case PropId::corpse_eater:
-        return new PropCorpseEater(turns_init, nr_turns);
+        return new PropCorpseEater();
 
     case PropId::teleports:
-        return new PropTeleports(turns_init, nr_turns);
+        return new PropTeleports();
 
     case PropId::corrupts_env_color:
-        return new PropCorruptsEnvColor(turns_init, nr_turns);
+        return new PropCorruptsEnvColor();
 
     case PropId::regenerates:
-        return new PropRegenerates(turns_init, nr_turns);
+        return new PropRegenerates();
 
     case PropId::corpse_rises:
-        return new PropCorpseRises(turns_init, nr_turns);
+        return new PropCorpseRises();
 
     case PropId::breeds:
-        return new PropBreeds(turns_init, nr_turns);
+        return new PropBreeds();
 
     case PropId::confuses_adjacent:
-        return new PropConfusesAdjacent(turns_init, nr_turns);
+        return new PropConfusesAdjacent();
 
     case PropId::speaks_curses:
-        return new PropSpeaksCurses(turns_init, nr_turns);
+        return new PropSpeaksCurses();
 
     case PropId::invis:
-        return new PropInvisible(turns_init, nr_turns);
+        return new PropInvisible();
 
     case PropId::cloaked:
-        return new PropCloaked(turns_init, nr_turns);
+        return new PropCloaked();
 
     case PropId::recloaks:
-        return new PropRecloaks(turns_init, nr_turns);
+        return new PropRecloaks();
 
     case PropId::see_invis:
-        return new PropSeeInvis(turns_init, nr_turns);
+        return new PropSeeInvis();
 
     case PropId::hp_sap:
-        return new PropHpSap(turns_init, nr_turns);
+        return new PropHpSap();
 
     case PropId::spi_sap:
-        return new PropSpiSap(turns_init, nr_turns);
+        return new PropSpiSap();
 
     case PropId::mind_sap:
-        return new PropMindSap(turns_init, nr_turns);
+        return new PropMindSap();
 
     case PropId::END:
         break;

@@ -593,7 +593,11 @@ bool mk_rat_cave_level()
                         actor = actor_factory::mk(ActorId::rat, p);
                     }
 
-                    actor->apply_prop(new PropFrenzied(PropTurns::indefinite));
+                    auto prop = new PropFrenzied();
+
+                    prop->set_indefinite();
+
+                    actor->apply_prop(prop);
                 }
             }
             break;

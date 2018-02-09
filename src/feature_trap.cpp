@@ -891,7 +891,7 @@ void TrapGasConfusion::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropConfused(PropTurns::std)},
+                   {new PropConfused()},
                    colors::magenta(),
                    ExplIsGas::yes);
 
@@ -921,7 +921,7 @@ void TrapGasParalyzation::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropParalyzed(PropTurns::std)},
+                   {new PropParalyzed()},
                    colors::magenta(),
                    ExplIsGas::yes);
 
@@ -952,7 +952,7 @@ void TrapGasFear::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropTerrified(PropTurns::std)},
+                   {new PropTerrified()},
                    colors::magenta(),
                    ExplIsGas::yes);
 
@@ -973,7 +973,7 @@ void TrapBlindingFlash::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropBlind(PropTurns::std)},
+                   {new PropBlind()},
                    colors::yellow());
 
     TRACE_FUNC_END_VERBOSE;
@@ -993,7 +993,7 @@ void TrapDeafening::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropDeaf(PropTurns::std)},
+                   {new PropDeaf()},
                    colors::light_white());
 
     TRACE_FUNC_END_VERBOSE;
@@ -1141,8 +1141,17 @@ void TrapSummonMon::trigger()
             .make_aware_of_player()
             .for_each([](Mon* const mon)
             {
-                mon->apply_prop(new PropSummoned(PropTurns::indefinite));
-                mon->apply_prop(new PropWaiting(PropTurns::specific, 2));
+                auto prop_summoned = new PropSummoned();
+
+                prop_summoned->set_indefinite();
+
+                mon->apply_prop(prop_summoned);
+
+                auto prop_waiting = new PropWaiting();
+
+                prop_waiting->set_duration(2);
+
+                mon->apply_prop(prop_waiting);
 
                 if (map::player->can_see_actor(*mon))
                 {
@@ -1276,7 +1285,7 @@ void TrapFire::trigger()
                    EmitExplSnd::no,
                    -1,
                    ExplExclCenter::no,
-                   {new PropBurning(PropTurns::std)});
+                   {new PropBurning()});
 
     TRACE_FUNC_END_VERBOSE;
 }

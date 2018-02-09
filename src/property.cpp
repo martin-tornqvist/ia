@@ -21,48 +21,16 @@
 // -----------------------------------------------------------------------------
 // Property base class
 // -----------------------------------------------------------------------------
-Prop::Prop(PropId id, PropTurns turns_init, int nr_turns) :
+Prop::Prop(PropId id) :
     id_(id),
     data_(property_data::data[(size_t)id]),
-    nr_turns_left_(nr_turns),
-    turns_init_type_(turns_init),
+    nr_turns_left_(data_.std_rnd_turns.roll()),
+    duration_mode_(PropDurationMode::standard),
     owner_(nullptr),
     src_(PropSrc::END),
     item_applying_(nullptr)
 {
-    switch (turns_init)
-    {
-    case PropTurns::std:
-#ifndef NDEBUG
-        if (nr_turns_left_ != -1)
-        {
-            TRACE << "Prop turns is \"std\", but " << nr_turns_left_
-                  << " turns specified" << std::endl;
-            ASSERT(false);
-        }
-#endif // NDEBUG
-        ASSERT(nr_turns_left_ == -1);
-        nr_turns_left_ = data_.std_rnd_turns.roll();
-        break;
 
-    case PropTurns::indefinite:
-#ifndef NDEBUG
-        if (nr_turns_left_ != -1)
-        {
-            TRACE << "Prop turns is \"indefinite\", but " << nr_turns_left_
-                  << " turns specified" << std::endl;
-            ASSERT(false);
-        }
-#endif // NDEBUG
-
-        nr_turns_left_ = -1; // Robustness for release builds
-        break;
-
-    case PropTurns::specific:
-        // Use the number of turns specified in the ctor argument
-        ASSERT(nr_turns_left_ > 0);
-        break;
-    }
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +95,7 @@ void PropCursed::on_start()
 
     // If this is a permanent curse, log it as a historic event
     if (owner_->is_player() &&
-        turns_init_type_ == PropTurns::indefinite)
+        duration_mode_ == PropDurationMode::indefinite)
     {
         game::add_history_event("A terrible curse was put upon me.");
     }
@@ -144,7 +112,7 @@ void PropCursed::on_end()
 {
     // If this was a permanent curse, log it as a historic event
     if (owner_->is_player() &&
-        turns_init_type_ == PropTurns::indefinite)
+        duration_mode_ == PropDurationMode::indefinite)
     {
         game::add_history_event("A terrible curse was lifted from me.");
     }
@@ -230,7 +198,11 @@ PropEnded PropInfected::on_tick()
     {
         PropHandler& prop_hlr = owner_->prop_handler();
 
-        prop_hlr.apply(new PropDiseased(PropTurns::indefinite));
+        auto prop_diseased = new PropDiseased();
+
+        prop_diseased->set_indefinite();
+
+        prop_hlr.apply(prop_diseased);
 
         // NOTE: Disease ends infection, this property object is now deleted!
 
@@ -258,7 +230,8 @@ void PropDiseased::on_start()
 
     // If this is a permanent disease that the player caught, log it as a
     // historic event
-    if (owner_->is_player() && turns_init_type_ == PropTurns::indefinite)
+    if (owner_->is_player() &&
+        (duration_mode_ == PropDurationMode::indefinite))
     {
         game::add_history_event("Caught a horrible disease.");
     }
@@ -273,7 +246,7 @@ void PropDiseased::on_end()
     // If this is a permanent disease that the player caught, log it as a
     // historic event
     if (owner_->is_player() &&
-        turns_init_type_ == PropTurns::indefinite)
+        (duration_mode_ == PropDurationMode::indefinite))
     {
         game::add_history_event("My body was cured from a horrible disease.");
     }
@@ -536,9 +509,9 @@ void PropWound::on_more(const Prop& new_prop)
     }
 }
 
-PropHpSap::PropHpSap(PropTurns turns_init, int nr_turns) :
-    Prop        (PropId::hp_sap, turns_init, nr_turns),
-    nr_drained_ (rnd::range(1, 3)) {}
+PropHpSap::PropHpSap() :
+    Prop(PropId::hp_sap),
+    nr_drained_(rnd::range(1, 3)) {}
 
 void PropHpSap::save() const
 {
@@ -560,9 +533,9 @@ void PropHpSap::on_more(const Prop& new_prop)
     nr_drained_ += static_cast<const PropHpSap*>(&new_prop)->nr_drained_;
 }
 
-PropSpiSap::PropSpiSap(PropTurns turns_init, int nr_turns) :
-    Prop        (PropId::spi_sap, turns_init, nr_turns),
-    nr_drained_ (1) {}
+PropSpiSap::PropSpiSap() :
+    Prop(PropId::spi_sap),
+    nr_drained_(1) {}
 
 void PropSpiSap::save() const
 {
@@ -584,9 +557,9 @@ void PropSpiSap::on_more(const Prop& new_prop)
     nr_drained_ += static_cast<const PropSpiSap*>(&new_prop)->nr_drained_;
 }
 
-PropMindSap::PropMindSap(PropTurns turns_init, int nr_turns) :
-    Prop        (PropId::mind_sap, turns_init, nr_turns),
-    nr_drained_ (rnd::range(1, 3)) {}
+PropMindSap::PropMindSap() :
+    Prop(PropId::mind_sap),
+    nr_drained_(rnd::range(1, 3)) {}
 
 void PropMindSap::save() const
 {
@@ -776,7 +749,7 @@ void PropFrenzied::on_end()
     if (owner_->is_player() &&
         (player_bon::bg() != Bg::ghoul))
     {
-        owner_->apply_prop(new PropWeakened(PropTurns::std));
+        owner_->apply_prop(new PropWeakened());
     }
 }
 
@@ -863,8 +836,11 @@ PropActResult PropRecloaks::on_act()
         !owner_->has_prop(PropId::cloaked) &&
         rnd::one_in(20))
     {
-        owner_->apply_prop(
-            new PropCloaked(PropTurns::indefinite));
+        auto prop_cloaked = new PropCloaked();
+
+        prop_cloaked->set_indefinite();
+
+        owner_->apply_prop(prop_cloaked);
 
         game_time::tick();
 
@@ -916,7 +892,7 @@ PropEnded PropFlared::on_tick()
 
     if (nr_turns_left_ <= 1)
     {
-        owner_->apply_prop(new PropBurning(PropTurns::std));
+        owner_->apply_prop(new PropBurning());
         owner_->prop_handler().end_prop(id());
 
         return PropEnded::yes;
@@ -971,7 +947,7 @@ void PropRFear::on_start()
     owner_->prop_handler().end_prop(PropId::terrified);
 
     if (owner_->is_player() &&
-        turns_init_type_ == PropTurns::indefinite)
+        duration_mode_ == PropDurationMode::indefinite)
     {
         insanity::on_permanent_rfear();
     }
@@ -1262,7 +1238,11 @@ void PropSplitsOnDeath::on_death()
         .set_leader(leader)
         .for_each([this](Mon* const mon)
         {
-            mon->apply_prop(new PropWaiting(PropTurns::specific, 1));
+            auto prop_waiting = new PropWaiting();
+
+            prop_waiting->set_duration(1);
+
+            mon->apply_prop(prop_waiting);
 
             // The new actors should usually not also split
             if (rnd::fraction(4, 5))
@@ -1274,7 +1254,7 @@ void PropSplitsOnDeath::on_death()
             if (owner_->has_prop(PropId::burning))
             {
                 mon->prop_handler().apply(
-                    new PropBurning(PropTurns::std),
+                    new PropBurning(),
                     PropSrc::intr,
                     false, // Do not force effect
                     Verbosity::silent);
@@ -1411,8 +1391,11 @@ void PropBreeds::on_std_turn()
         .set_leader(leader_of_spawned_mon)
         .for_each([](Mon* const mon)
         {
-            mon->apply_prop(
-                new PropWaiting(PropTurns::specific, 2));
+            auto prop_waiting = new PropWaiting();
+
+            prop_waiting->set_duration(2);
+
+            mon->apply_prop(prop_waiting);
         });
 
     if (mon->aware_of_player_counter_ > 0)
@@ -1439,10 +1422,11 @@ void PropConfusesAdjacent::on_std_turn()
         msg_log::add(msg);
     }
 
-    const int nr_turns_confused = rnd::range(8, 12);
+    auto prop_confusd = new PropConfused();
 
-    map::player->apply_prop(
-        new PropConfused(PropTurns::specific, nr_turns_confused));
+    prop_confusd->set_duration(rnd::range(8, 12));
+
+    map::player->apply_prop(prop_confusd);
 }
 
 PropActResult PropSpeaksCurses::on_act()
@@ -1491,7 +1475,7 @@ PropActResult PropSpeaksCurses::on_act()
 
         snd_emit::run(snd);
 
-        map::player->apply_prop(new PropCursed(PropTurns::std));
+        map::player->apply_prop(new PropCursed());
 
         game_time::tick();
 
@@ -1557,7 +1541,11 @@ PropActResult PropMajorClaphamSummon::on_act()
         .set_leader(mon)
         .for_each([](Mon* const mon)
         {
-            mon->apply_prop(new PropSummoned(PropTurns::indefinite));
+            auto prop_summoned = new PropSummoned();
+
+            prop_summoned->set_indefinite();
+
+            mon->apply_prop(prop_summoned);
 
             mon->is_player_feeling_msg_allowed_ = false;
         });
