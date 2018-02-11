@@ -182,8 +182,6 @@ void blit_surface(SDL_Surface& srf, const P& px_pos)
 void load_contour(const std::vector<P>& source_px_data,
                   std::vector<P>& dest_px_data)
 {
-    TRACE_FUNC_BEGIN;
-
     const int cell_w = config::cell_px_w();
     const int cell_h = config::cell_px_h();
 
@@ -214,8 +212,6 @@ void load_contour(const std::vector<P>& source_px_data,
             }
         }
     }
-
-    TRACE_FUNC_END;
 }
 
 void load_images()

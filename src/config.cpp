@@ -26,7 +26,7 @@ const std::vector<std::string> font_image_names
     "8x12_DOS.png",
     "11x19.png",
     "11x22.png",
-    "12xtile_px_w.png",
+    "12x24.png",
     "16x24_v1.png",
     "16x24_v2.png",
     "16x24_v3.png",
@@ -67,13 +67,8 @@ bool is_tiles_mode_ = false;
 int cell_px_w_ = -1;
 int cell_px_h_ = -1;
 
-void update_render_dims()
+P parse_dims_from_font_name(std::string font_name)
 {
-    TRACE_FUNC_BEGIN;
-
-    // Parse cell dimensions from the font name
-    std::string font_name = font_name_;
-
     char ch = font_name.front();
 
     while (ch < '0' || ch > '9')
@@ -112,8 +107,20 @@ void update_render_dims()
     TRACE << "Parsed font image name, found dims: "
           << w_str << "x" << h_str << std::endl;
 
-    cell_px_w_ = to_int(w_str);
-    cell_px_h_ = to_int(h_str);
+    const int w = to_int(w_str);
+    const int h = to_int(h_str);
+
+    return P(w, h);
+}
+
+void update_render_dims()
+{
+    TRACE_FUNC_BEGIN;
+
+    const P font_dims = parse_dims_from_font_name(font_name_);
+
+    cell_px_w_ = font_dims.x;
+    cell_px_h_ = font_dims.y;
 
     map_px_h_ = cell_px_h_ * map_h;
 
@@ -185,11 +192,23 @@ void player_sets_option(const MenuBrowser& browser)
     {
         is_tiles_mode_ = !is_tiles_mode_;
 
+        // If we do not have a font loaded with the same size as the tiles, use
+        // the first font with matching size
         if (is_tiles_mode_ &&
             ((cell_px_w_ != tile_px_w) ||
              (cell_px_h_ != tile_px_h)))
         {
-            font_name_ = "16x24_v1.png";
+            for (const auto& font_name : font_image_names)
+            {
+                const P font_dims = parse_dims_from_font_name(font_name);
+
+                if (font_dims == P(tile_px_w, tile_px_h))
+                {
+                    font_name_ = font_name;
+
+                    break;
+                }
+            }
         }
 
         update_render_dims();
