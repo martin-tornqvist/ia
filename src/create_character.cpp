@@ -1,6 +1,7 @@
 #include "create_character.hpp"
 
 #include "io.hpp"
+#include "global.hpp"
 #include "actor_player.hpp"
 #include "browser.hpp"
 #include "text_format.hpp"

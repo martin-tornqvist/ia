@@ -16,10 +16,18 @@ const std::string version_str = "v19.2";
 
 const std::string date_str = __DATE__;
 
+// TODO: Create paths.hpp and define all paths there
 const std::string gfx_path = "res/gfx";
-const std::string tiles_img_name = gfx_path + "/gfx_16x24.png";
-const std::string logo_img_name = gfx_path + "/main_menu_logo.png";
-const std::string skull_img_name = gfx_path + "/skull.png";
+
+const std::string fonts_path = gfx_path + "/fonts";
+const std::string tiles_path = gfx_path + "/tiles/16x24";
+const std::string images_path = gfx_path + "/images";
+
+const std::string logo_img_path = images_path + "/main_menu_logo.png";
+const std::string skull_img_path = images_path + "/skull.png";
+
+const int tile_px_w = 16;
+const int tile_px_h = 24;
 
 const int screen_bpp = 32;
 
@@ -89,9 +97,7 @@ const int nr_cell_jumps_mg_projectiles = 2;
 
 const int mi_go_gun_hp_drained = 3;
 
-//
 // NOTE: Number of rolls is reduced by one for each step away from the center
-//
 const int expl_dmg_rolls = 5;
 const int expl_dmg_sides = 6;
 const int expl_dmg_plus = 10;

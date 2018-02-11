@@ -26,7 +26,7 @@ const std::vector<std::string> font_image_names
     "8x12_DOS.png",
     "11x19.png",
     "11x22.png",
-    "12x24.png",
+    "12xtile_px_w.png",
     "16x24_v1.png",
     "16x24_v2.png",
     "16x24_v3.png",
@@ -71,9 +71,7 @@ void update_render_dims()
 {
     TRACE_FUNC_BEGIN;
 
-    //
     // Parse cell dimensions from the font name
-    //
     std::string font_name = font_name_;
 
     char ch = font_name.front();
@@ -188,8 +186,8 @@ void player_sets_option(const MenuBrowser& browser)
         is_tiles_mode_ = !is_tiles_mode_;
 
         if (is_tiles_mode_ &&
-            ((cell_px_w_ != 16) ||
-             (cell_px_h_ != 24)))
+            ((cell_px_w_ != tile_px_w) ||
+             (cell_px_h_ != tile_px_h)))
         {
             font_name_ = "16x24_v1.png";
         }
@@ -219,11 +217,11 @@ void player_sets_option(const MenuBrowser& browser)
 
         update_render_dims();
 
-        // If this is tiles mode - skip fonts until we find one with 16x24 size
+        // In tiles mode - skip fonts until we find one with matching size
         if (is_tiles_mode_)
         {
-            while ((cell_px_w_ != 16) ||
-                   (cell_px_h_ != 24))
+            while ((cell_px_w_ != tile_px_w) ||
+                   (cell_px_h_ != tile_px_h))
             {
                 for (size_t i = 0; i < font_image_names.size(); ++i)
                 {

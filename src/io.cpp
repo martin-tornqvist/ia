@@ -38,16 +38,13 @@ SDL_Texture* scr_texture_ = nullptr;
 SDL_Surface* main_menu_logo_srf_ = nullptr;
 SDL_Surface* skull_srf_ = nullptr;
 
-const size_t tiles_nr_x_ = 21;
-const size_t tiles_nr_y_ = 12;
-
 const size_t font_nr_x_ = 16;
 const size_t font_nr_y_ = 7;
 
-std::vector<P> tile_px_data_[tiles_nr_x_][tiles_nr_y_];
+std::vector<P> tile_px_data_[(size_t)TileId::END];
 std::vector<P> font_px_data_[font_nr_x_][font_nr_y_];
 
-std::vector<P> tile_contour_px_data_[tiles_nr_x_][tiles_nr_y_];
+std::vector<P> tile_contour_px_data_[(size_t)TileId::END];
 std::vector<P> font_contour_px_data_[font_nr_x_][font_nr_y_];
 
 SDL_Event sdl_event_;
@@ -182,12 +179,51 @@ void blit_surface(SDL_Surface& srf, const P& px_pos)
     SDL_BlitSurface(&srf, nullptr, scr_srf_, &dst_rect);
 }
 
-void load_pictures()
+void load_contour(const std::vector<P>& source_px_data,
+                  std::vector<P>& dest_px_data)
+{
+    TRACE_FUNC_BEGIN;
+
+    const int cell_w = config::cell_px_w();
+    const int cell_h = config::cell_px_h();
+
+    for (const P& source_px_pos : source_px_data)
+    {
+        const int size = 1;
+
+        const int px_x0 = std::max(0, source_px_pos.x - size);
+        const int px_y0 = std::max(0, source_px_pos.y - size);
+        const int px_x1 = std::min(cell_w - 1, source_px_pos.x + size);
+        const int px_y1 = std::min(cell_h - 1, source_px_pos.y + size);
+
+        for (int px_x = px_x0; px_x <= px_x1; ++px_x)
+        {
+            for (int px_y = px_y0; px_y <= px_y1; ++px_y)
+            {
+                const P p(px_x, px_y);
+
+                // Only mark pixel as contour if it's not marked on the source
+                const auto it = std::find(begin(source_px_data),
+                                          end(source_px_data),
+                                          p);
+
+                if (it == end(source_px_data))
+                {
+                    dest_px_data.push_back(p);
+                }
+            }
+        }
+    }
+
+    TRACE_FUNC_END;
+}
+
+void load_images()
 {
     TRACE_FUNC_BEGIN;
 
     // Main menu logo
-    SDL_Surface* tmp_srf = IMG_Load(logo_img_name.c_str());
+    SDL_Surface* tmp_srf = IMG_Load(logo_img_path.c_str());
 
     ASSERT(tmp_srf && "Failed to load main menu logo image");
 
@@ -196,7 +232,7 @@ void load_pictures()
     SDL_FreeSurface(tmp_srf);
 
     // Skull
-    tmp_srf = IMG_Load(skull_img_name.c_str());
+    tmp_srf = IMG_Load(skull_img_path.c_str());
 
     ASSERT(tmp_srf && "Failed to load skull image");
 
@@ -211,7 +247,7 @@ void load_font()
 {
     TRACE_FUNC_BEGIN;
 
-    const std::string font_path = gfx_path + "/" + config::font_name();
+    const std::string font_path = fonts_path + "/" + config::font_name();
 
     SDL_Surface* const font_srf_tmp = IMG_Load(font_path.c_str());
 
@@ -254,6 +290,8 @@ void load_font()
                     }
                 }
             }
+
+            load_contour(px_data, font_contour_px_data_[x][y]);
         }
     }
 
@@ -266,100 +304,67 @@ void load_tiles()
 {
     TRACE_FUNC_BEGIN;
 
-    SDL_Surface* const tile_srf_tmp =
-        IMG_Load(tiles_img_name.data());
-
-    const Uint32 img_color =
-        SDL_MapRGB(tile_srf_tmp->format, 255, 255, 255);
-
-    const int cell_w = config::cell_px_w();
-    const int cell_h = config::cell_px_h();
-
-    for (int x = 0; x < (int)tiles_nr_x_; ++x)
+    for (size_t i = 0; i < (size_t)TileId::END; ++i)
     {
-        for (int y = 0; y < (int)tiles_nr_y_; ++y)
+        const auto id = (TileId)i;
+
+        const std::string img_name = tile_id_to_str_map.at(id);
+
+        const std::string img_path = tiles_path + "/" + img_name + ".png";
+
+        SDL_Surface* const tile_srf_tmp = IMG_Load(img_path.c_str());
+
+        if (!tile_srf_tmp)
         {
-            auto& px_data = tile_px_data_[x][y];
+            TRACE_ERROR_RELEASE << "Could not load tile image, at: "
+                                << img_path
+                                << std::endl;
 
-            px_data.clear();
+            PANIC
+        }
 
-            const int sheet_x0 = x * cell_w;
-            const int sheet_y0 = y * cell_h;
-            const int sheet_x1 = sheet_x0 + cell_w - 1;
-            const int sheet_y1 = sheet_y0 + cell_h - 1;
+        // Verify width and height of loaded image
+        if ((tile_srf_tmp->w != tile_px_w) ||
+            (tile_srf_tmp->h != tile_px_h))
+        {
+            TRACE_ERROR_RELEASE << "Tile image at \""
+                                << img_path
+                                << "\" has wrong size: "
+                                << tile_srf_tmp->w
+                                << "x"
+                                << tile_srf_tmp->h
+                                << ", expected: "
+                                << tile_px_w
+                                << "x"
+                                << tile_px_h
+                                << std::endl;
 
-            for (int sheet_x = sheet_x0; sheet_x <= sheet_x1; ++sheet_x)
+            PANIC
+        }
+
+        const Uint32 img_color =
+            SDL_MapRGB(tile_srf_tmp->format, 255, 255, 255);
+
+        auto& px_data = tile_px_data_[i];
+
+        px_data.clear();
+
+        for (int x = 0; x < tile_px_w; ++x)
+        {
+            for (int y = 0; y <= tile_px_h; ++y)
             {
-                for (int sheet_y = sheet_y0; sheet_y <= sheet_y1; ++sheet_y)
+                const bool is_img_px = (px(*tile_srf_tmp, x, y) == img_color);
+
+                if (is_img_px)
                 {
-                    const bool is_img_px =
-                        px(*tile_srf_tmp, sheet_x, sheet_y) == img_color;
-
-                    if (is_img_px)
-                    {
-                        const int x_relative = sheet_x - sheet_x0;
-                        const int y_relative = sheet_y - sheet_y0;
-
-                        px_data.push_back(P(x_relative, y_relative));
-                    }
+                    px_data.push_back(P(x, y));
                 }
             }
         }
-    }
 
-    SDL_FreeSurface(tile_srf_tmp);
+        load_contour(px_data, tile_contour_px_data_[i]);
 
-    TRACE_FUNC_END;
-}
-
-void load_contours(const std::vector<P>* base,
-                   const int nr_x,
-                   const int nr_y,
-                   std::vector<P>* out)
-{
-    TRACE_FUNC_BEGIN;
-
-    const int cell_w = config::cell_px_w();
-    const int cell_h = config::cell_px_h();
-
-    for (int x = 0; x < nr_x; ++x)
-    {
-        for (int y = 0; y < nr_y; ++y)
-        {
-            const int offset = (x * nr_y) + y;
-
-            const auto& base_px_data = *(base + offset);
-            auto& dest_px_data = *(out + offset);
-
-            for (const P& base_px_pos : base_px_data)
-            {
-                const int size = 1;
-
-                const int px_x0 = std::max(0, base_px_pos.x - size);
-                const int px_y0 = std::max(0, base_px_pos.y - size);
-                const int px_x1 = std::min(cell_w - 1, base_px_pos.x + size);
-                const int px_y1 = std::min(cell_h - 1, base_px_pos.y + size);
-
-                for (int px_x = px_x0; px_x <= px_x1; ++px_x)
-                {
-                    for (int px_y = px_y0; px_y <= px_y1; ++px_y)
-                    {
-                        const P p(px_x, px_y);
-
-                        // Only mark pixel as contour if it's not marked on the
-                        // base image
-                        const auto it = std::find(begin(base_px_data),
-                                                  end(base_px_data),
-                                                  p);
-
-                        if (it == end(base_px_data))
-                        {
-                            dest_px_data.push_back(p);
-                        }
-                    }
-                }
-            }
-        }
+        SDL_FreeSurface(tile_srf_tmp);
     }
 
     TRACE_FUNC_END;
@@ -415,9 +420,7 @@ void put_pixels_on_scr_for_tile(const TileId tile,
                                 const P& scr_px_pos,
                                 const Color& color)
 {
-    const P sheet_pos(gfx::tile_pos(tile));
-
-    const auto& pixel_data = tile_px_data_[sheet_pos.x][sheet_pos.y];
+    const auto& pixel_data = tile_px_data_[(size_t)tile];
 
     put_pixels_on_scr(pixel_data,
                       /*art::tile_pos(tile),*/
@@ -567,11 +570,12 @@ void init()
         break;
     }
 
-    scr_texture_ = SDL_CreateTexture(sdl_renderer_,
-                                     SDL_PIXELFORMAT_ARGB8888,
-                                     SDL_TEXTUREACCESS_STREAMING,
-                                     scr_px_w,
-                                     scr_px_h);
+    scr_texture_ = SDL_CreateTexture(
+        sdl_renderer_,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        scr_px_w,
+        scr_px_h);
 
     if (!scr_texture_)
     {
@@ -585,20 +589,8 @@ void init()
     {
         load_tiles();
 
-        load_pictures();
-
-        load_contours(
-            reinterpret_cast<const std::vector<P>*>(tile_px_data_),
-            tiles_nr_x_,
-            tiles_nr_y_,
-            reinterpret_cast<std::vector<P>*>(tile_contour_px_data_));
+        load_images();
     }
-
-    load_contours(
-        reinterpret_cast<const std::vector<P>*>(font_px_data_),
-        font_nr_x_,
-        font_nr_y_,
-        reinterpret_cast<std::vector<P>*>(font_contour_px_data_));
 
     TRACE_FUNC_END;
 }
@@ -946,10 +938,7 @@ void draw_tile(const TileId tile,
     if ((color != colors::black()) &&
         (bg_color != colors::black()))
     {
-        const P tile_pos(gfx::tile_pos(tile));
-
-        const auto& contour_px_data =
-            tile_contour_px_data_[tile_pos.x][tile_pos.y];
+        const auto& contour_px_data = tile_contour_px_data_[(size_t)tile];
 
         put_pixels_on_scr(contour_px_data,
                           px_pos,

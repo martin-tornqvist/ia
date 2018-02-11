@@ -4,11 +4,6 @@
 #include <string>
 #include <unordered_map>
 
-const int font_sheet_x_cells = 16;
-const int font_sheet_y_cells = 7;
-const int tile_sheet_x_cells = 21;
-const int tile_sheet_y_cells = 13;
-
 // NOTE: When updating this, also update the two maps below
 enum class TileId
 {
@@ -197,6 +192,8 @@ enum class TileId
     weight,
     spirit,
     stopwatch,
+
+    END
 };
 
 const std::unordered_map<std::string, TileId> str_to_tile_id_map = {
@@ -579,8 +576,6 @@ class P;
 
 namespace gfx
 {
-
-P tile_pos(const TileId tile);
 
 P character_pos(const char character);
 
