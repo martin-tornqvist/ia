@@ -316,7 +316,7 @@ void load_tiles()
                                 << img_path
                                 << std::endl;
 
-            PANIC
+            PANIC;
         }
 
         // Verify width and height of loaded image
@@ -335,7 +335,7 @@ void load_tiles()
                                 << tile_px_h
                                 << std::endl;
 
-            PANIC
+            PANIC;
         }
 
         const Uint32 img_color =
@@ -1188,43 +1188,6 @@ void draw_line_hor(const P& px_pos, const int w, const Color& color)
 void draw_line_ver(const P& px_pos, const int h, const Color& color)
 {
     draw_rectangle_solid(px_pos, P(1, h), color);
-}
-
-void draw_projectiles(std::vector<Projectile*>& projectiles,
-                      const bool draw_map_before)
-{
-    if (draw_map_before)
-    {
-        states::draw();
-    }
-
-    for (Projectile* p : projectiles)
-    {
-        if (!p->is_done_rendering && p->is_seen_by_player)
-        {
-            cover_cell_in_map(p->pos);
-
-            if (config::is_tiles_mode())
-            {
-                if (p->tile != TileId::empty)
-                {
-                    draw_tile(p->tile, Panel::map, p->pos, p->color);
-                }
-            }
-            else // Text mode
-            {
-                if (p->character != -1)
-                {
-                    draw_character(p->character,
-                                   Panel::map,
-                                   p->pos,
-                                   p->color);
-                }
-            }
-        }
-    }
-
-    update_screen();
 }
 
 void draw_box(const R& border,

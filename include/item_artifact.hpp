@@ -10,7 +10,7 @@
 class PharaohStaff: public Wpn
 {
 public:
-    PharaohStaff(ItemDataT* const item_data);
+    PharaohStaff(ItemData* const item_data);
 };
 
 // -----------------------------------------------------------------------------
@@ -19,7 +19,7 @@ public:
 class ReflTalisman: public Item
 {
 public:
-    ReflTalisman(ItemDataT* const item_data);
+    ReflTalisman(ItemData* const item_data);
 
 private:
     void on_pickup_hook() override;
@@ -33,7 +33,7 @@ private:
 class ResurrectTalisman: public Item
 {
 public:
-    ResurrectTalisman(ItemDataT* const item_data);
+    ResurrectTalisman(ItemData* const item_data);
 };
 
 // -----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ public:
 class TeleCtrlTalisman: public Item
 {
 public:
-    TeleCtrlTalisman(ItemDataT* const item_data);
+    TeleCtrlTalisman(ItemData* const item_data);
 
 private:
     void on_pickup_hook() override;
@@ -66,7 +66,7 @@ public:
 class HornOfMalice: public Item
 {
 public:
-    HornOfMalice(ItemDataT* const item_data);
+    HornOfMalice(ItemData* const item_data);
 
     std::string name_inf() const override;
 
@@ -96,7 +96,7 @@ public:
 class HornOfBanishment: public Item
 {
 public:
-    HornOfBanishment(ItemDataT* const item_data);
+    HornOfBanishment(ItemData* const item_data);
 
     std::string name_inf() const override;
 
@@ -117,7 +117,7 @@ private:
 class Clockwork: public Item
 {
 public:
-    Clockwork(ItemDataT* const item_data);
+    Clockwork(ItemData* const item_data);
 
     ConsumeItem activate(Actor* const actor) override;
 
@@ -141,7 +141,7 @@ private:
 class SpiritDagger: public Wpn
 {
 public:
-    SpiritDagger(ItemDataT* const item_data);
+    SpiritDagger(ItemData* const item_data);
 
     void on_melee_hit(Actor& actor_hit, const int dmg) override;
 };
@@ -152,7 +152,7 @@ public:
 class OrbOfLife: public Item
 {
 public:
-    OrbOfLife(ItemDataT* const item_data);
+    OrbOfLife(ItemData* const item_data);
 
 private:
     void on_pickup_hook() override;

@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    PylonImpl* mk_pylon_impl_from_id(const PylonId id);
+    PylonImpl* make_pylon_impl_from_id(const PylonId id);
 
     virtual void on_new_turn_hook() override;
 

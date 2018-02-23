@@ -219,9 +219,9 @@ enum class PropAlignment
     neutral
 };
 
-struct PropDataT
+struct PropData
 {
-    PropDataT() :
+    PropData() :
         id(PropId::END),
         std_rnd_turns(Range(10, 10)),
         name(""),
@@ -260,7 +260,7 @@ struct PropDataT
 namespace property_data
 {
 
-extern PropDataT data[(size_t)PropId::END];
+extern PropData data[(size_t)PropId::END];
 
 void init();
 

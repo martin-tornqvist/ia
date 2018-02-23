@@ -16,7 +16,7 @@
 #include "drop.hpp"
 #include "inventory.hpp"
 #include "item_factory.hpp"
-#include "attack.hpp"
+#include "attack_data.hpp"
 #include "line_calc.hpp"
 #include "player_bon.hpp"
 #include "sdl_base.hpp"
@@ -31,20 +31,19 @@ namespace throwing
 
 void player_throw_lit_explosive(const P& aim_cell)
 {
-    ASSERT(map::player->active_explosive);
+    ASSERT(map::player->active_explosive_);
 
-    std::vector<P> path;
-
-    auto* const explosive = map::player->active_explosive;
+    auto* const explosive = map::player->active_explosive_;
 
     const int max_range = explosive->data().ranged.max_range;
 
-    line_calc::calc_new_line(map::player->pos,
-                             aim_cell,
-                             true,
-                             max_range,
-                             false,
-                             path);
+    auto path =
+        line_calc::calc_new_line(
+            map::player->pos,
+            aim_cell,
+            true,
+            max_range,
+            false);
 
     // Remove cells after blocked cells
     for (size_t i = 1; i < path.size(); ++i)
@@ -101,7 +100,7 @@ void player_throw_lit_explosive(const P& aim_cell)
 
     delete explosive;
 
-    map::player->active_explosive = nullptr;
+    map::player->active_explosive_ = nullptr;
 
     game_time::tick();
 }
@@ -135,18 +134,15 @@ void throw_item(Actor& actor_throwing,
                           actor_throwing.pos,
                           item_thrown);
 
-    const ActorSize aim_lvl = att_data.intended_aim_lvl;
+    const auto path =
+            line_calc::calc_new_line(
+                    actor_throwing.pos,
+                    tgt_pos,
+                    false,
+                    999,
+                    false);
 
-    std::vector<P> path;
-
-    line_calc::calc_new_line(actor_throwing.pos,
-                             tgt_pos,
-                             false,
-                             999,
-                             false,
-                             path);
-
-    const ItemDataT& item_thrown_data = item_thrown.data();
+    const ItemData& item_thrown_data = item_thrown.data();
 
     const std::string item_name_a = item_thrown.name(ItemRefType::a);
 
@@ -212,8 +208,7 @@ void throw_item(Actor& actor_throwing,
             att_data = ThrowAttData(&actor_throwing,
                                     tgt_pos,
                                     pos,
-                                    item_thrown,
-                                    aim_lvl);
+                                    item_thrown);
 
             if (att_data.att_result >= ActionResult::success)
             {
@@ -260,8 +255,7 @@ void throw_item(Actor& actor_throwing,
                     actor_here->hit(att_data.dmg,
                                     DmgType::physical,
                                     DmgMethod::END,
-                                    AllowWound::yes,
-                                    &actor_throwing);
+                                    AllowWound::yes);
                 }
 
                 item_thrown.on_ranged_hit(*actor_here);
@@ -332,7 +326,7 @@ void throw_item(Actor& actor_throwing,
         }
 
         if ((pos == tgt_pos) &&
-            (att_data.intended_aim_lvl == ActorSize::floor))
+            (att_data.aim_lvl == ActorSize::floor))
         {
             break;
         }

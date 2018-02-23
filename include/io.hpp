@@ -11,8 +11,6 @@
 #include "config.hpp"
 #include "gfx.hpp"
 
-struct Projectile;
-
 enum class Panel
 {
     screen,
@@ -120,9 +118,6 @@ void draw_blast_at_seen_actors(const std::vector<Actor*>& actors,
 void draw_main_menu_logo(const int y_pos);
 
 void draw_skull(const P& p);
-
-void draw_projectiles(std::vector<Projectile*>& projectiles,
-                      const bool draw_map_before);
 
 void draw_box(const R& area,
               const Panel panel = Panel::screen,

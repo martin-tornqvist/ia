@@ -22,7 +22,7 @@
 #include "text_format.hpp"
 #include "query.hpp"
 
-Potion::Potion(ItemDataT* const item_data) :
+Potion::Potion(ItemData* const item_data) :
     Item(item_data),
     alignment_feeling_dlvl_countdown_(rnd::range(1, 3)),
     alignment_feeling_turn_countdown_(rnd::range(100, 200))
@@ -737,7 +737,7 @@ void init()
 
             // True name
             const Potion* const potion =
-                static_cast<const Potion*>(item_factory::mk(d.id, 1));
+                static_cast<const Potion*>(item_factory::make(d.id, 1));
 
             const std::string real_type_name = potion->real_name();
 
@@ -765,7 +765,7 @@ void save()
 {
     for (int i = 0; i < int(ItemId::END); ++i)
     {
-        ItemDataT& d = item_data::data[i];
+        ItemData& d = item_data::data[i];
 
         if (d.type == ItemType::potion)
         {
@@ -787,7 +787,7 @@ void load()
 {
     for (int i = 0; i < int(ItemId::END); ++i)
     {
-        ItemDataT& d = item_data::data[i];
+        ItemData& d = item_data::data[i];
 
         if (d.type == ItemType::potion)
         {

@@ -224,7 +224,7 @@ void act()
 
             inv.put_in_slot(
                 SlotId::wpn,
-                item_factory::mk(ItemId::incinerator),
+                item_factory::make(ItemId::incinerator),
                 Verbosity::silent);
         }
     }
@@ -235,7 +235,7 @@ void act()
         rnd::one_in(20))
     {
         inv.put_in_slot(SlotId::body,
-                        item_factory::mk(ItemId::armor_asb_suit),
+                        item_factory::make(ItemId::armor_asb_suit),
                         Verbosity::silent);
     }
 
@@ -316,7 +316,7 @@ void act()
         {
             auto* wpn = static_cast<Wpn*>(wpn_item);
 
-            wpn->nr_ammo_loaded_ = wpn->data().ranged.max_ammo;
+            wpn->ammo_loaded_ = wpn->data().ranged.max_ammo;
 
             game::handle_player_input(InputData('f'));
 
@@ -339,7 +339,7 @@ void act()
 
         PropId prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
 
-        auto* const prop = property_factory::mk(prop_id);
+        auto* const prop = property_factory::make(prop_id);
 
         prop->set_duration(5);
 

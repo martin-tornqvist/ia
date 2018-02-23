@@ -44,7 +44,7 @@ namespace actor_factory
 
 void delete_all_mon();
 
-Actor* mk(const ActorId id, const P& pos);
+Actor* make(const ActorId id, const P& pos);
 
 MonSpawnResult spawn(
     const P& origin,

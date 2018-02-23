@@ -8,14 +8,14 @@
 
 #include "global.hpp"
 
-struct ActorDataT;
+struct ActorData;
 
 enum class Trait
 {
     // Common (except some traits can be blocked for certain backgrounds)
-    adept_melee_fighter,
-    expert_melee_fighter,
-    master_melee_fighter,
+    adept_melee,
+    expert_melee,
+    master_melee,
     adept_marksman,
     expert_marksman,
     master_marksman,
@@ -134,7 +134,7 @@ void pick_bg(const Bg bg);
 
 void set_all_traits_to_picked();
 
-bool gets_undead_bane_bon(const ActorDataT& actor_data);
+bool gets_undead_bane_bon(const ActorData& actor_data);
 
 } // player_bon
 

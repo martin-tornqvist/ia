@@ -43,15 +43,15 @@ enum class ActionResult
 };
 
 // Each actor has an instance of this class
-class AbilityVals
+class AbilityValues
 {
 public:
-    AbilityVals()
+    AbilityValues()
     {
         reset();
     }
 
-    AbilityVals& operator=(const AbilityVals& other)
+    AbilityValues& operator=(const AbilityValues& other)
     {
         for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
         {

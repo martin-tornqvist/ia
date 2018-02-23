@@ -60,7 +60,7 @@ void msg_reloaded(const Actor& actor,
                 wpn.name(ItemRefType::plain, ItemRefInf::none);
 
             msg_log::add("I reload my " + wpn_name +
-                         " (" + std::to_string(wpn.nr_ammo_loaded_) +
+                         " (" + std::to_string(wpn.ammo_loaded_) +
                          "/" +
                          std::to_string(wpn.data().ranged.max_ammo) + ").");
         }
@@ -69,7 +69,7 @@ void msg_reloaded(const Actor& actor,
             const std::string ammo_name = ammo.name(ItemRefType::a);
 
             msg_log::add("I load " + ammo_name +
-                         " (" + std::to_string(wpn.nr_ammo_loaded_) +
+                         " (" + std::to_string(wpn.ammo_loaded_) +
                          "/" +
                          std::to_string(wpn.data().ranged.max_ammo) + ").");
         }
@@ -112,7 +112,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
         return;
     }
 
-    const int ammo_loaded_before = wpn->nr_ammo_loaded_;
+    const int ammo_loaded_before = wpn->ammo_loaded_;
 
     if (ammo_loaded_before >= wpn_max_ammo)
     {
@@ -125,7 +125,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
 
     const ItemId ammo_item_id = wpn->data().ranged.ammo_item_id;
 
-    const ItemDataT& ammo_data = item_data::data[(size_t)ammo_item_id];
+    const ItemData& ammo_data = item_data::data[(size_t)ammo_item_id];
 
     const bool is_using_mag = ammo_data.type == ItemType::ammo_mag;
 
@@ -240,7 +240,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
         {
             AmmoMag* mag_item = static_cast<AmmoMag*>(ammo_item);
 
-            wpn->nr_ammo_loaded_ = mag_item->ammo_;
+            wpn->ammo_loaded_ = mag_item->ammo_;
 
             msg_reloaded(actor, *wpn, *ammo_item);
 
@@ -250,7 +250,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
             // If weapon previously contained ammo, create a new mag item
             if (ammo_loaded_before > 0)
             {
-                ammo_item = item_factory::mk(ammo_item_id);
+                ammo_item = item_factory::make(ammo_item_id);
 
                 mag_item = static_cast<AmmoMag*>(ammo_item);
 
@@ -261,7 +261,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
         }
         else // Not using mag
         {
-            ++wpn->nr_ammo_loaded_;
+            ++wpn->ammo_loaded_;
 
             msg_reloaded(actor, *wpn, *ammo_item);
 
@@ -318,11 +318,10 @@ void player_arrange_pistol_mags()
         }
 
         // NOTE: For min mag, we check for lesser OR EQUAL rounds loaded - this
-        //       way, when several "least full mags" are found, the last one
-        //       will be picked as THE max mag to use. The purpose of this is
-        //       that we should try avoid picking the same mag as min and max
-        //       (e.g. if we have two mags with 6 bullets each, then we want to
-        //       move a bullet).
+        // way, when several "least full mags" are found, the last one will be
+        // picked as THE max mag to use. The purpose of this is that we should
+        // try avoid picking the same mag as min and max (e.g. if we have two
+        // mags with 6 bullets each, then we want to move a bullet).
         if (mag->ammo_ <= min_mag_ammo)
         {
             min_mag_ammo            = mag->ammo_;
@@ -347,10 +346,10 @@ void player_arrange_pistol_mags()
     //If wielded pistol is not fully loaded, move round from least full mag
     if (
         wielded_pistol &&
-        wielded_pistol->nr_ammo_loaded_ < pistol_max_ammo)
+        wielded_pistol->ammo_loaded_ < pistol_max_ammo)
     {
         --min_mag->ammo_;
-        ++wielded_pistol->nr_ammo_loaded_;
+        ++wielded_pistol->ammo_loaded_;
 
         const std::string name =
             wielded_pistol->name(ItemRefType::plain,

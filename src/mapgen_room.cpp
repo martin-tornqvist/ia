@@ -138,7 +138,7 @@ void put_templ_features(const Array2<char>& templ,
     } // x loop
 }
 
-Room* mk_template_room(const RoomTempl& templ, Region& region)
+Room* make_template_room(const RoomTempl& templ, Region& region)
 {
     const P dims(templ.symbols.dims());
 
@@ -168,11 +168,11 @@ Room* mk_template_room(const RoomTempl& templ, Region& region)
 
     return room;
 
-} // mk_template_room
+} // make_template_room
 
 } // namespace
 
-Room* mk_room(Region& region)
+Room* make_room(Region& region)
 {
     ASSERT(!region.main_room);
 
@@ -199,7 +199,7 @@ Room* mk_room(Region& region)
             }
             else
             {
-                Room* const room = mk_template_room(*templ, region);
+                Room* const room = make_template_room(*templ, region);
 
                 map_templates::on_base_room_template_placed(*templ);
 
@@ -214,11 +214,11 @@ Room* mk_room(Region& region)
 
     const R room_rect = region.rnd_room_rect();
 
-    auto* room = room_factory::mk_random_room(room_rect, IsSubRoom::no);
+    auto* room = room_factory::make_random_room(room_rect, IsSubRoom::no);
 
     register_room(*room);
 
-    mk_floor(*room);
+    make_floor(*room);
 
     region.main_room = room;
     region.is_free = false;
@@ -226,13 +226,13 @@ Room* mk_room(Region& region)
     return room;
 }
 
-Room* mk_room(const R& r, const IsSubRoom is_sub_room)
+Room* make_room(const R& r, const IsSubRoom is_sub_room)
 {
-    auto* room = room_factory::mk_random_room(r, is_sub_room);
+    auto* room = room_factory::make_random_room(r, is_sub_room);
 
     register_room(*room);
 
-    mk_floor(*room);
+    make_floor(*room);
 
     return room;
 }

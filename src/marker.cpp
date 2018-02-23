@@ -7,6 +7,7 @@
 #include "inventory_handling.hpp"
 #include "actor_player.hpp"
 #include "attack.hpp"
+#include "attack_data.hpp"
 #include "msg_log.hpp"
 #include "look.hpp"
 #include "throwing.hpp"
@@ -52,14 +53,13 @@ void MarkerState::on_start()
 
 void MarkerState::draw()
 {
-    std::vector<P> line;
-
-    line_calc::calc_new_line(origin_,
-                             pos_,
-                             true,      // Stop at target
-                             INT_MAX,   // Travel limit
-                             false,     // Allow outside map
-                             line);
+        auto line =
+            line_calc::calc_new_line(
+                origin_,
+                pos_,
+                true, // Stop at target
+                INT_MAX, // Travel limit
+                false); // Allow outside map
 
     // Remove origin position
     if (!line.empty())
@@ -112,9 +112,7 @@ void MarkerState::update()
     switch (input.key)
     {
 
-    //
     // Direction input is handle by the base class
-    //
     case SDLK_RIGHT:
     case '6':
     case 'l':
@@ -201,9 +199,7 @@ void MarkerState::update()
     }
     break;
 
-    //
     // Input other than direction keys is passed to the inherited marker state
-    //
     default:
     {
         handle_input(input);
@@ -511,9 +507,7 @@ void Aiming::handle_input(const InputData& input)
 
             states::pop();
 
-            //
             // NOTE: This object is now destroyed!
-            //
 
             attack::ranged(map::player,
                            map::player->pos,

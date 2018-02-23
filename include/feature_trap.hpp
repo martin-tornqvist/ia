@@ -114,7 +114,7 @@ public:
     void player_try_spot_hidden();
 
 private:
-    TrapImpl* mk_trap_impl_from_id(const TrapId trap_id);
+    TrapImpl* make_trap_impl_from_id(const TrapId trap_id);
 
     Color color_default() const override;
     Color color_bg_default() const override;

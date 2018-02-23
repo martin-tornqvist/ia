@@ -13,11 +13,11 @@
 namespace item_factory
 {
 
-Item* mk(const ItemId item_id, const int nr_items)
+Item* make(const ItemId item_id, const int nr_items)
 {
     Item* r = nullptr;
 
-    ItemDataT* d = &item_data::data[(size_t)item_id];
+    ItemData* d = &item_data::data[(size_t)item_id];
 
     switch (item_id)
     {
@@ -25,6 +25,12 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new Item(d);
         break;
 
+    case ItemId::sawed_off:
+    case ItemId::pump_shotgun:
+    case ItemId::machine_gun:
+    case ItemId::pistol:
+    case ItemId::flare_gun:
+    case ItemId::spike_gun:
     case ItemId::rock:
     case ItemId::thr_knife:
     case ItemId::iron_spike:
@@ -43,77 +49,51 @@ Item* mk(const ItemId item_id, const int nr_items)
     case ItemId::player_kick:
     case ItemId::player_stomp:
     case ItemId::player_punch:
-    case ItemId::zombie_axe:
-    case ItemId::zombie_claw:
-    case ItemId::bloated_zombie_punch:
-    case ItemId::bloated_zombie_spit:
-    case ItemId::crawling_intestines_strangle:
-    case ItemId::crawling_hand_strangle:
-    case ItemId::thing_strangle:
-    case ItemId::floating_skull_bite:
-    case ItemId::rat_bite:
-    case ItemId::rat_thing_bite:
-    case ItemId::brown_jenkin_bite:
-    case ItemId::worm_mass_bite:
-    case ItemId::mind_worms_bite:
-    case ItemId::green_spider_bite:
-    case ItemId::white_spider_bite:
-    case ItemId::red_spider_bite:
-    case ItemId::shadow_spider_bite:
-    case ItemId::leng_spider_bite:
-    case ItemId::leng_spider_bola:
-    case ItemId::pit_viper_bite:
-    case ItemId::spitting_cobra_bite:
-    case ItemId::black_mamba_bite:
-    case ItemId::fire_hound_breath:
-    case ItemId::fire_hound_bite:
-    case ItemId::energy_hound_breath:
-    case ItemId::energy_hound_bite:
-    case ItemId::zuul_bite:
-    case ItemId::giant_bat_bite:
-    case ItemId::wolf_bite:
-    case ItemId::ghost_claw:
-    case ItemId::phantasm_sickle:
-    case ItemId::wraith_claw:
-    case ItemId::polyp_tentacle:
-    case ItemId::greater_polyp_tentacle:
-    case ItemId::ghoul_claw:
-    case ItemId::high_priest_guard_ghoul_claw:
-    case ItemId::void_traveler_rip:
-    case ItemId::elder_void_traveler_rip:
-    case ItemId::shadow_claw:
-    case ItemId::invis_stalker_claw:
-    case ItemId::byakhee_claw:
-    case ItemId::giant_mantis_claw:
-    case ItemId::giant_locust_bite:
-    case ItemId::mummy_maul:
-    case ItemId::croc_head_mummy_spear:
-    case ItemId::deep_one_javelin_att:
-    case ItemId::deep_one_spear_att:
-    case ItemId::ape_maul:
-    case ItemId::ooze_black_spew_pus:
-    case ItemId::ooze_clear_spew_pus:
-    case ItemId::ooze_putrid_spew_pus:
-    case ItemId::ooze_poison_spew_pus:
-    case ItemId::strange_color_touch:
-    case ItemId::chthonian_bite:
-    case ItemId::death_fiend_claw:
-    case ItemId::hunting_horror_bite:
-    case ItemId::fire_vortex_engulf:
-    case ItemId::energy_vortex_engulf:
-    case ItemId::mold_spores:
-    case ItemId::mi_go_sting:
-    case ItemId::mi_go_commander_sting:
-    case ItemId::the_high_priest_claw:
+    case ItemId::intr_bite:
+    case ItemId::intr_claw:
+    case ItemId::intr_punch:
+    case ItemId::intr_zombie_axe:
+    case ItemId::intr_acid_spit:
+    case ItemId::intr_fire_breath:
+    case ItemId::intr_energy_breath:
+    case ItemId::intr_strangle:
+    case ItemId::intr_ghost_claw:
+    case ItemId::intr_ghost_sickle:
+    case ItemId::intr_sting:
+    case ItemId::intr_spear_thrust:
+    case ItemId::intr_javelin_thrust:
+    case ItemId::intr_javelin_throw:
+    case ItemId::intr_maul:
+    case ItemId::intr_pus_spew:
+    case ItemId::intr_touch:
+    case ItemId::intr_acid_touch:
+    case ItemId::intr_fire_engulf:
+    case ItemId::intr_energy_engulf:
+    case ItemId::intr_spores:
+    case ItemId::intr_web_bola:
         r = new Wpn(d);
+        break;
+
+    case ItemId::incinerator:
+        r = new Incinerator(d);
+        break;
+
+    case ItemId::mi_go_gun:
+        r = new MiGoGun(d);
         break;
 
     case ItemId::spiked_mace:
         r = new SpikedMace(d);
         break;
 
-    case ItemId::player_ghoul_claw:
-        r = new PlayerGhoulClaw(d);
+    case ItemId::shotgun_shell:
+        r = new Ammo(d);
+        break;
+
+    case ItemId::drum_of_bullets:
+    case ItemId::pistol_mag:
+    case ItemId::incinerator_ammo:
+        r = new AmmoMag(d);
         break;
 
     case ItemId::zombie_dust:
@@ -136,75 +116,36 @@ Item* mk(const ItemId item_id, const int nr_items)
         r = new SmokeGrenade(d);
         break;
 
-    case ItemId::sawed_off:
-        r = new SawedOff(d);
+    case ItemId::player_ghoul_claw:
+        r = new PlayerGhoulClaw(d);
         break;
 
-    case ItemId::pump_shotgun:
-        r = new PumpShotgun(d);
-        break;
-
-    case ItemId::shotgun_shell:
-        r = new Ammo(d);
-        break;
-
-    case ItemId::machine_gun:
-        r = new MachineGun(d);
-        break;
-
-    case ItemId::drum_of_bullets:
-    case ItemId::pistol_mag:
-    case ItemId::incinerator_ammo:
-        r = new AmmoMag(d);
-        break;
-
-    case ItemId::pistol:
-        r = new Pistol(d);
-        break;
-
-    case ItemId::flare_gun:
-        r = new FlareGun(d);
-        break;
-
-    case ItemId::incinerator:
-        r = new Incinerator(d);
-        break;
-
-    case ItemId::spike_gun:
-        r = new SpikeGun(d);
-        break;
-
-    case ItemId::raven_peck:
+    case ItemId::intr_raven_peck:
         r = new RavenPeck(d);
         break;
 
-    case ItemId::vampire_bat_bite:
-    case ItemId::abaxu_bite:
-        r = new VampireBatBite(d);
+    case ItemId::intr_vampiric_bite:
+        r = new VampiricBite(d);
         break;
 
-    case ItemId::mind_leech_sting:
+    case ItemId::intr_mind_leech_sting:
         r = new MindLeechSting(d);
         break;
 
-    case ItemId::spirit_leech_sting:
+    case ItemId::intr_spirit_leech_sting:
         r = new SpiritLeechSting(d);
         break;
 
-    case ItemId::life_leech_sting:
+    case ItemId::intr_life_leech_sting:
         r = new LifeLeechSting(d);
         break;
 
-    case ItemId::dust_vortex_engulf:
-        r = new DustVortexEngulf(d);
+    case ItemId::intr_dust_engulf:
+        r = new DustEngulf(d);
         break;
 
-    case ItemId::spitting_cobra_spit:
-        r = new SpittingCobraSpit(d);
-        break;
-
-    case ItemId::mi_go_gun:
-        r = new MiGoGun(d);
+    case ItemId::intr_snake_venom_spit:
+        r = new SnakeVenomSpit(d);
         break;
 
     case ItemId::armor_flak_jacket:
@@ -413,7 +354,7 @@ Item* mk(const ItemId item_id, const int nr_items)
 
 void set_item_randomized_properties(Item* item)
 {
-    const ItemDataT& d = item->data();
+    const ItemData& d = item->data();
 
     ASSERT(d.type != ItemType::melee_wpn_intr &&
            d.type != ItemType::ranged_wpn_intr);
@@ -422,19 +363,20 @@ void set_item_randomized_properties(Item* item)
     // randomize the extra damage
     if (d.melee.is_melee_wpn &&
         !d.ranged.is_ranged_wpn &&
-        (d.melee.dmg.plus == 0))
+        (item->melee_base_dmg_.plus == 0))
     {
         static_cast<Wpn*>(item)->set_random_melee_plus();
     }
 
     // If firearm, spawn with random amount of ammo
-    if (d.ranged.is_ranged_wpn && !d.ranged.has_infinite_ammo)
+    if (d.ranged.is_ranged_wpn &&
+        !d.ranged.has_infinite_ammo)
     {
         Wpn* const wpn = static_cast<Wpn*>(item);
 
         if (wpn->data().ranged.max_ammo == 1)
         {
-            wpn->nr_ammo_loaded_ = rnd::coin_toss() ? 1 : 0;
+            wpn->ammo_loaded_ = rnd::coin_toss() ? 1 : 0;
         }
         else // Weapon ammo capacity > 1
         {
@@ -448,13 +390,13 @@ void set_item_randomized_properties(Item* item)
                 const int cap_scaled = ammo_cap / nr_mg_projectiles;
                 const int min_scaled = cap_scaled / 4;
 
-                wpn->nr_ammo_loaded_ =
+                wpn->ammo_loaded_ =
                     rnd::range(min_scaled, cap_scaled) *
                     nr_mg_projectiles;
             }
             else // Not machinegun
             {
-                wpn->nr_ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
+                wpn->ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
             }
         }
     }
@@ -489,9 +431,9 @@ void set_item_randomized_properties(Item* item)
     }
 }
 
-Item* mk_item_on_floor(const ItemId item_id, const P& pos)
+Item* make_item_on_floor(const ItemId item_id, const P& pos)
 {
-    Item* item = mk(item_id);
+    Item* item = make(item_id);
 
     set_item_randomized_properties(item);
 
@@ -502,21 +444,21 @@ Item* mk_item_on_floor(const ItemId item_id, const P& pos)
 
 Item* copy_item(const Item& item_to_copy)
 {
-    Item* new_item = mk(item_to_copy.id());
+    Item* new_item = make(item_to_copy.id());
 
     *new_item = item_to_copy;
 
     return new_item;
 }
 
-Item* mk_random_scroll_or_potion(const bool allow_scrolls,
+Item* make_random_scroll_or_potion(const bool allow_scrolls,
                                  const bool allow_potions)
 {
     std::vector<ItemId> item_bucket;
 
     for (int i = 0; i < (int)ItemId::END; ++i)
     {
-        const ItemDataT& d = item_data::data[i];
+        const ItemData& d = item_data::data[i];
 
         if ((d.type == ItemType::scroll && allow_scrolls) ||
             (d.type == ItemType::potion && allow_potions))
@@ -529,7 +471,7 @@ Item* mk_random_scroll_or_potion(const bool allow_scrolls,
     {
         const int element = rnd::range(0, item_bucket.size() - 1);
 
-        return mk(item_bucket[element]);
+        return make(item_bucket[element]);
     }
 
     return nullptr;

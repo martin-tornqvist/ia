@@ -39,10 +39,8 @@ void try_pick()
 
     msg_log::add("I pick up " + item_name + ".");
 
-    //
     // NOTE: This calls the items pickup hook, which may destroy the item
-    //       (e.g. combine with others)
-    //
+    // (e.g. combine with others)
     inv.put_in_backpack(item);
 
     map::cells[pos.x][pos.y].item = nullptr;
@@ -54,7 +52,7 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
 {
     ASSERT(!wpn.data().ranged.has_infinite_ammo);
 
-    const int nr_ammo_loaded = wpn.nr_ammo_loaded_;
+    const int nr_ammo_loaded = wpn.ammo_loaded_;
 
     if (nr_ammo_loaded == 0)
     {
@@ -63,9 +61,9 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
 
     const ItemId ammo_id = wpn.data().ranged.ammo_item_id;
 
-    ItemDataT& ammo_data = item_data::data[(size_t)ammo_id];
+    ItemData& ammo_data = item_data::data[(size_t)ammo_id];
 
-    Item* spawned_ammo = item_factory::mk(ammo_id);
+    Item* spawned_ammo = item_factory::make(ammo_id);
 
     if (ammo_data.type == ItemType::ammo_mag)
     {
@@ -78,7 +76,7 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
         spawned_ammo->nr_items_ = nr_ammo_loaded;
     }
 
-    wpn.nr_ammo_loaded_ = 0;
+    wpn.ammo_loaded_ = 0;
 
     return static_cast<Ammo*>(spawned_ammo);
 }

@@ -459,7 +459,7 @@ bool Door::can_move_common() const
     return is_open_;
 }
 
-bool Door::can_move(Actor& actor) const
+bool Door::can_move(const Actor& actor) const
 {
     if (is_open_)
     {

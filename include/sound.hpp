@@ -9,30 +9,30 @@ class Actor;
 
 enum class SndVol
 {
-    low,
-    high
+        low,
+        high
 };
 
 enum class AlertsMon
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class IgnoreMsgIfOriginSeen
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 class SndHeardEffect
 {
 public:
-    SndHeardEffect() {}
+        SndHeardEffect() {}
 
-    virtual ~SndHeardEffect() {}
+        virtual ~SndHeardEffect() {}
 
-    virtual void run(Actor& actor) const = 0;
+        virtual void run(Actor& actor) const = 0;
 };
 
 // -----------------------------------------------------------------------------
@@ -41,85 +41,95 @@ public:
 class Snd
 {
 public:
-    Snd(const std::string& msg,
-        const SfxId sfx,
-        const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
-        const P& origin,
-        Actor* const actor_who_made_sound,
-        const SndVol vol,
-        const AlertsMon alerting_mon,
-        const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no,
-        std::shared_ptr<SndHeardEffect> snd_heard_effect = nullptr);
+        Snd(const std::string& msg,
+            const SfxId sfx,
+            const IgnoreMsgIfOriginSeen ignore_msg_if_origin_seen,
+            const P& origin,
+            Actor* const actor_who_made_sound,
+            const SndVol vol,
+            const AlertsMon alerting_mon,
+            const MorePromptOnMsg add_more_prompt_on_msg = MorePromptOnMsg::no,
+            std::shared_ptr<SndHeardEffect> snd_heard_effect = nullptr);
 
-    Snd() {}
+        Snd() {}
 
-    ~Snd();
+        ~Snd();
 
-    // Calls the snd_emit run function with this sound
-    void run();
+        void run();
 
-    const std::string& msg() const
-    {
-        return msg_;
-    }
+        const std::string& msg() const
+        {
+                return msg_;
+        }
 
-    SfxId sfx() const
-    {
-        return sfx_;
-    }
+        void clear_msg()
+        {
+                msg_ = "";
+        }
 
-    void clear_msg()
-    {
-        msg_ = "";
-    }
+        SfxId sfx() const
+        {
+                return sfx_;
+        }
 
-    bool is_msg_ignored_if_origin_seen() const
-    {
-        return is_msg_ignored_if_origin_seen_ == IgnoreMsgIfOriginSeen::yes;
-    }
+        void clear_sfx()
+        {
+                sfx_ = SfxId::END;
+        }
 
-    bool is_alerting_mon() const
-    {
-        return is_alerting_mon_ == AlertsMon::yes;
-    }
+        bool is_msg_ignored_if_origin_seen() const
+        {
+                return is_msg_ignored_if_origin_seen_ ==
+                        IgnoreMsgIfOriginSeen::yes;
+        }
 
-    MorePromptOnMsg should_add_more_prompt_on_msg() const
-    {
-        return add_more_prompt_on_msg_;
-    }
+        bool is_alerting_mon() const
+        {
+                return is_alerting_mon_ == AlertsMon::yes;
+        }
 
-    P origin() const
-    {
-        return origin_;
-    }
+        void set_alerts_mon(AlertsMon alerts)
+        {
+                is_alerting_mon_ = alerts;
+        }
 
-    Actor* actor_who_made_sound() const
-    {
-        return actor_who_made_sound_;
-    }
+        MorePromptOnMsg should_add_more_prompt_on_msg() const
+        {
+                return add_more_prompt_on_msg_;
+        }
 
-    int is_loud() const
-    {
-        return vol_ == SndVol::high;
-    }
+        P origin() const
+        {
+                return origin_;
+        }
 
-    void add_string(const std::string& str)
-    {
-        msg_ += str;
-    }
+        Actor* actor_who_made_sound() const
+        {
+                return actor_who_made_sound_;
+        }
 
-    void on_heard(Actor& actor) const;
+        int is_loud() const
+        {
+                return vol_ == SndVol::high;
+        }
+
+        void add_string(const std::string& str)
+        {
+                msg_ += str;
+        }
+
+        void on_heard(Actor& actor) const;
 
 private:
-    std::string msg_;
-    SfxId sfx_;
-    IgnoreMsgIfOriginSeen is_msg_ignored_if_origin_seen_;
-    P origin_;
-    Actor* actor_who_made_sound_;
-    SndVol vol_;
-    AlertsMon is_alerting_mon_;
-    MorePromptOnMsg add_more_prompt_on_msg_;
-    std::shared_ptr<SndHeardEffect> snd_heard_effect_;
+        std::string msg_;
+        SfxId sfx_;
+        IgnoreMsgIfOriginSeen is_msg_ignored_if_origin_seen_;
+        P origin_;
+        Actor* actor_who_made_sound_;
+        SndVol vol_;
+        AlertsMon is_alerting_mon_;
+        MorePromptOnMsg add_more_prompt_on_msg_;
+        std::shared_ptr<SndHeardEffect> snd_heard_effect_;
 };
 
 // -----------------------------------------------------------------------------

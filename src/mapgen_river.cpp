@@ -59,7 +59,7 @@ void reserve_river(Region regions[3][3])
                        P(1, 2));
     }
 
-    Room* const room = room_factory::mk(RoomType::river, room_rect);
+    Room* const room = room_factory::make(RoomType::river, room_rect);
 
     RiverRoom* const river_room = static_cast<RiverRoom*>(room);
 
@@ -80,7 +80,7 @@ void reserve_river(Region regions[3][3])
 
     map::room_list.push_back(room);
 
-    auto mk = [&](const int X0, const int X1, const int Y0, const int Y1)
+    auto make = [&](const int X0, const int X1, const int Y0, const int Y1)
     {
         TRACE_VERBOSE << "Reserving river space with floor cells "
                       <<  "X0: " << X0 << " X1: " << X1
@@ -100,14 +100,14 @@ void reserve_river(Region regions[3][3])
 
     if (axis == Axis::hor)
     {
-        mk(room_rect.p0.x + 1,
+        make(room_rect.p0.x + 1,
            room_rect.p1.x - 1,
            room_rect.p0.y,
            room_rect.p1.y);
     }
     else // Vertical axis
     {
-        mk(room_rect.p0.x,
+        make(room_rect.p0.x,
            room_rect.p1.x,
            room_rect.p0.y + 1,
            room_rect.p1.y - 1);

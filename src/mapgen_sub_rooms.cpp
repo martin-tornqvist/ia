@@ -6,11 +6,11 @@ namespace mapgen
 {
 
 // Assumes that all rooms are rectangular
-void mk_sub_rooms()
+void make_sub_rooms()
 {
     TRACE_FUNC_BEGIN;
 
-    const int nr_tries_to_mk_room = 100;
+    const int nr_tries_to_make_room = 100;
 
     const int max_nr_sub_rooms =
         rnd::one_in(3) ?
@@ -64,7 +64,7 @@ void mk_sub_rooms()
              ++nr_inner)
         {
             for (int try_count = 0;
-                 try_count < nr_tries_to_mk_room;
+                 try_count < nr_tries_to_make_room;
                  ++try_count)
             {
                 // Determine the rectangle (p0, p1) of the inner room's walls
@@ -146,7 +146,7 @@ void mk_sub_rooms()
                 // room area lies inside these points
                 const R sub_room_rect(p0 + 1, p1 - 1);
 
-                Room* const sub_room = mk_room(sub_room_rect, IsSubRoom::yes);
+                Room* const sub_room = make_room(sub_room_rect, IsSubRoom::yes);
 
                 outer_room->sub_rooms_.push_back(sub_room);
 
@@ -246,6 +246,6 @@ void mk_sub_rooms()
 
     TRACE_FUNC_END;
 
-} // mk_sub_rooms
+} // make_sub_rooms
 
-} // mk_sub_rooms
+} // make_sub_rooms

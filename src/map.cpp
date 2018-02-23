@@ -115,7 +115,7 @@ void init()
 
     const P player_pos(player_start_x, player_start_y);
 
-    Actor* actor = actor_factory::mk(ActorId::player, player_pos);
+    Actor* actor = actor_factory::make(ActorId::player, player_pos);
 
     player = static_cast<Player*>(actor);
 }
@@ -239,7 +239,7 @@ void update_vision()
     states::draw();
 }
 
-void mk_blood(const P& origin)
+void make_blood(const P& origin)
 {
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -253,14 +253,14 @@ void mk_blood(const P& origin)
             {
                 if (rnd::one_in(3))
                 {
-                    f->mk_bloody();
+                    f->make_bloody();
                 }
             }
         }
     }
 }
 
-void mk_gore(const P& origin)
+void make_gore(const P& origin)
 {
     for (int dx = -1; dx <= 1; ++dx)
     {
@@ -335,7 +335,7 @@ void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
     }
 }
 
-void mk_actor_array(Actor* a[map_w][map_h])
+void make_actor_array(Actor* a[map_w][map_h])
 {
     std::fill_n(*a, nr_map_cells, nullptr);
 
@@ -374,7 +374,7 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 
     ASSERT(dist_to_nearest != INT_MAX);
 
-    //Store all actors with distance equal to the nearest distance
+    // Store all actors with distance equal to the nearest distance
     std::vector<Actor*> closest_actors;
 
     for (Actor* actor : actors)

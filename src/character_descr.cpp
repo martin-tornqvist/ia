@@ -108,13 +108,13 @@ void CharacterDescr::on_start()
 
     for (int i = 0; i < (int)ItemId::END; ++i)
     {
-        const ItemDataT& d = item_data::data[i];
+        const ItemData& d = item_data::data[i];
 
         if (d.is_tried || d.is_identified)
         {
             if (d.type == ItemType::potion)
             {
-                Item* item = item_factory::mk(d.id);
+                Item* item = item_factory::make(d.id);
 
                 const std::string name = item->name(ItemRefType::plain);
 
@@ -125,7 +125,7 @@ void CharacterDescr::on_start()
             }
             else if (d.type == ItemType::scroll)
             {
-                Item* item = item_factory::mk(d.id);
+                Item* item = item_factory::make(d.id);
 
                 const std::string name = item->name(ItemRefType::plain);
 

@@ -7,9 +7,9 @@ void merge_regions(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
 
-    const int nr_merges_to_mk = rnd::range_binom(0, 3, 0.5);
+    const int nr_merges_to_make = rnd::range_binom(0, 3, 0.5);
 
-    if (nr_merges_to_mk == 0)
+    if (nr_merges_to_make == 0)
     {
         return;
     }
@@ -79,7 +79,7 @@ void merge_regions(Region regions[3][3])
         return true;
     };
 
-    for (int merge_nr = 0; merge_nr < nr_merges_to_mk; /* No increment */)
+    for (int merge_nr = 0; merge_nr < nr_merges_to_make; /* No increment */)
     {
         if (merge_idx_bucket.empty())
         {
@@ -138,7 +138,7 @@ void merge_regions(Region regions[3][3])
             }
         }
 
-        mk_room(region_0);
+        make_room(region_0);
 
         // Merge successful
         ++merge_nr;

@@ -98,7 +98,7 @@ void Inventory::load()
 
         if (id != ItemId::END)
         {
-            item = item_factory::mk(id);
+            item = item_factory::make(id);
 
             item->nr_items_ = saving::get_int();
 
@@ -127,7 +127,7 @@ void Inventory::load()
     {
         const ItemId id = (ItemId)saving::get_int();
 
-        Item* item = item_factory::mk(id);
+        Item* item = item_factory::make(id);
 
         item->nr_items_ = saving::get_int();
 
@@ -197,9 +197,9 @@ bool Inventory::try_stack_in_backpack(Item* item)
                 {
                     // If the old item was selected for throwing, then select
                     // the new stack instead (the old pointer is invalidated)
-                    if (map::player->thrown_item == other)
+                    if (map::player->thrown_item_ == other)
                     {
-                        map::player->thrown_item = item;
+                        map::player->thrown_item_ = item;
                     }
                 }
 
@@ -224,9 +224,7 @@ void Inventory::put_in_backpack(Item* item)
         sort_backpack();
     }
 
-    //
     // NOTE: This may destroy the item (e.g. combining with another item)
-    //
     item->on_pickup(*owning_actor_);
 }
 
@@ -316,9 +314,9 @@ Item* Inventory::remove_item_in_slot(const SlotId slot_id,
 
     Item* item = slot.item;
 
-    if (item == map::player->thrown_item)
+    if (item == map::player->thrown_item_)
     {
-        map::player->thrown_item = nullptr;
+        map::player->thrown_item_ = nullptr;
     }
 
     if (item)
@@ -347,9 +345,9 @@ Item* Inventory::remove_item_in_backpack_with_idx(const size_t idx,
 
     Item* item = backpack_[idx];
 
-    if (item == map::player->thrown_item)
+    if (item == map::player->thrown_item_)
     {
-        map::player->thrown_item = nullptr;
+        map::player->thrown_item_ = nullptr;
     }
 
     backpack_.erase(begin(backpack_) + idx);
@@ -684,9 +682,7 @@ Item* Inventory::last_item_in_backpack()
     return nullptr;
 }
 
-void Inventory::equip(const SlotId id,
-                      Item* const item,
-                      Verbosity verbosity)
+void Inventory::equip(const SlotId id, Item* const item, Verbosity verbosity)
 {
     ASSERT(id != SlotId::END);
 
@@ -765,9 +761,7 @@ void Inventory::put_in_slot(const SlotId id,
 {
     item->on_pickup(*owning_actor_);
 
-    equip(id,
-          item,
-          verbosity);
+    equip(id, item, verbosity);
 }
 
 int Inventory::total_item_weight() const

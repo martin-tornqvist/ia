@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "property_data.hpp"
+#include "property_factory.hpp"
 #include "actor.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
@@ -180,7 +181,7 @@ PropEnded PropInfected::on_tick()
 #endif // NDEBUG
 
     // Don't trigger the effect if the player is currently treating the infction
-    if (map::player->active_medical_bag)
+    if (map::player->active_medical_bag_)
     {
         ++nr_turns_left_;
 
@@ -292,9 +293,9 @@ void PropPossByZuul::on_death()
 
     const P& pos = owner_->pos;
 
-    map::mk_gore(pos);
+    map::make_gore(pos);
 
-    map::mk_blood(pos);
+    map::make_blood(pos);
 
     actor_factory::spawn(pos, {ActorId::zuul})
         .make_aware_of_player();
@@ -702,18 +703,17 @@ void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
     map_parsers::BlocksActor(*owner_, ParseActors::no)
         .run(blocked);
 
-    std::vector<P> line;
-
-    line_calc::calc_new_line(actor_pos,
-                             closest_mon_pos,
-                             true,
-                             999,
-                             false,
-                             line);
+    const auto line =
+        line_calc::calc_new_line(
+            actor_pos,
+            closest_mon_pos,
+            true,
+            999,
+            false);
 
     if (line.size() > 1)
     {
-        for (P& pos : line)
+        for (const P& pos : line)
         {
             if (blocked[pos.x][pos.y])
             {
@@ -872,7 +872,7 @@ void PropParalyzed::on_start()
 
     if (owner_->is_player())
     {
-        auto* const active_explosive = player->active_explosive;
+        auto* const active_explosive = player->active_explosive_;
 
         if (active_explosive)
         {

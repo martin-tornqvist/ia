@@ -9,6 +9,7 @@
 #include "highscore.hpp"
 #include "text_format.hpp"
 #include "query.hpp"
+#include "actor_items.hpp"
 #include "actor_player.hpp"
 #include "msg_log.hpp"
 #include "sdl_base.hpp"
@@ -429,13 +430,13 @@ void handle_player_input(const InputData& input)
 
             if (item)
             {
-                const ItemDataT& item_data = item->data();
+                const ItemData& item_data = item->data();
 
                 if (item_data.ranged.is_ranged_wpn)
                 {
                     auto* wpn = static_cast<Wpn*>(item);
 
-                    if ((wpn->nr_ammo_loaded_ >= 1) ||
+                    if ((wpn->ammo_loaded_ >= 1) ||
                         item_data.ranged.has_infinite_ammo)
                     {
                         // Not enough health for Mi-go gun?
@@ -645,7 +646,7 @@ void handle_player_input(const InputData& input)
     // Throw
     case 't':
     {
-        const Item* explosive = map::player->active_explosive;
+        const Item* explosive = map::player->active_explosive_;
 
         if (explosive)
         {
@@ -656,7 +657,7 @@ void handle_player_input(const InputData& input)
         }
         else // Not holding explosive - run throwing attack instead
         {
-            if (!map::player->thrown_item)
+                if (!map::player->thrown_item_)
             {
                 msg_log::add("No item selected for throwing (press [T]).");
 
@@ -671,7 +672,7 @@ void handle_player_input(const InputData& input)
             {
                 std::unique_ptr<State> throwing(
                     new Throwing(map::player->pos,
-                                 *map::player->thrown_item));
+                                 *map::player->thrown_item_));
 
                 states::push(std::move(throwing));
             }
@@ -854,7 +855,7 @@ void handle_player_input(const InputData& input)
 
     case SDLK_F6:
     {
-        item_factory::mk_item_on_floor(ItemId::gas_mask, map::player->pos);
+        item_factory::make_item_on_floor(ItemId::gas_mask, map::player->pos);
 
         for (size_t i = 0; i < (size_t)ItemId::END; ++i)
         {
@@ -862,7 +863,7 @@ void handle_player_input(const InputData& input)
 
             if (item_data.value != ItemValue::normal && item_data.allow_spawn)
             {
-                item_factory::mk_item_on_floor(ItemId(i), map::player->pos);
+                item_factory::make_item_on_floor(ItemId(i), map::player->pos);
             }
         }
     }
@@ -1143,7 +1144,7 @@ void on_mon_seen(Actor& actor)
 
 void on_mon_killed(Actor& actor)
 {
-    ActorDataT& d = actor.data();
+    ActorData& d = actor.data();
 
     d.nr_kills += 1;
 
@@ -1194,7 +1195,9 @@ void GameState::on_start()
         // current hp and spi to the maximum values
         map::player->set_hp_and_spi_to_max();
 
-        map::player->mk_start_items();
+        map::player->data().ability_values.reset();
+
+        actor_items::make_for_actor(*map::player);
 
         game::add_history_event("Started journey");
 
@@ -1229,7 +1232,7 @@ void GameState::on_start()
     else
     {
         // Build forest.
-        mapgen::mk_intro_lvl();
+        mapgen::make_intro_lvl();
     }
 
     map::player->update_fov();

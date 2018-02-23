@@ -18,7 +18,7 @@
 const std::string Scroll::real_name() const
 {
     Spell* spell =
-        spell_handling::mk_spell_from_id(
+        spell_handling::make_spell_from_id(
             data_->spell_cast_from_scroll);
 
     const std::string scroll_name = spell->name();
@@ -32,7 +32,7 @@ std::vector<std::string> Scroll::descr() const
 {
     if (data_->is_identified)
     {
-        const auto* const spell = mk_spell();
+        const auto* const spell = make_spell();
 
         const auto player_spell_skill = map::player->spell_skill(spell->id());
 
@@ -106,7 +106,7 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
     // OK, we are fully allowed to read the scroll - cast the spell
 
-    auto* const spell = mk_spell();
+    auto* const spell = make_spell();
 
     const SpellId id = spell->id();
 
@@ -133,9 +133,9 @@ ConsumeItem Scroll::activate(Actor* const actor)
     return ConsumeItem::yes;
 }
 
-Spell* Scroll::mk_spell() const
+Spell* Scroll::make_spell() const
 {
-    return spell_handling::mk_spell_from_id(
+    return spell_handling::make_spell_from_id(
         data_->spell_cast_from_scroll);
 }
 
@@ -266,7 +266,7 @@ void init()
 
             // True name
             const Scroll* const scroll =
-                static_cast<const Scroll*>(item_factory::mk(d.id, 1));
+                static_cast<const Scroll*>(item_factory::make(d.id, 1));
 
             const std::string real_type_name = scroll->real_name();
 

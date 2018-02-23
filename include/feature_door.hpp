@@ -3,10 +3,6 @@
 
 #include "feature_rigid.hpp"
 
-//
-// NOTE: Gates are *never* secret
-//
-
 enum class DoorSpawnState
 {
     open,
@@ -29,27 +25,23 @@ class Door: public Rigid
 public:
     Door(const P& feature_pos,
 
-         //
          // NOTE: This should always be nullptr if type is "gate"
-         //
          const Rigid* const mimic_feature,
 
          DoorType type = DoorType::wood,
 
-         //
          // NOTE: This should never be any "secret" variant if type is "gate"
-         //
          DoorSpawnState spawn_state = DoorSpawnState::any);
 
     // Spawn-by-id compliant ctor (do not use for normal cases):
     Door(const P& feature_pos) :
-        Rigid                   (feature_pos),
-        mimic_feature_          (nullptr),
-        nr_spikes_              (0),
-        is_open_                (false),
-        is_stuck_               (false),
-        is_secret_              (false),
-        type_                   (DoorType::wood) {}
+        Rigid(feature_pos),
+        mimic_feature_(nullptr),
+        nr_spikes_(0),
+        is_open_(false),
+        is_stuck_(false),
+        is_secret_(false),
+        type_(DoorType::wood) {}
 
     Door() = delete;
 
@@ -60,10 +52,8 @@ public:
         return FeatureId::door;
     }
 
-    //
     // Sometimes we want to refer to a door as just a "door", instead of
     // something verbose like "the open wooden door".
-    //
     std::string base_name() const; // E.g. "wooden door"
 
     std::string base_name_short() const; // E.g. "door"
@@ -80,7 +70,7 @@ public:
 
     bool can_move_common() const override;
 
-    bool can_move(Actor& actor) const override;
+    bool can_move(const Actor& actor) const override;
 
     bool is_los_passable() const override;
 

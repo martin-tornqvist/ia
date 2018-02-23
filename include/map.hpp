@@ -107,8 +107,8 @@ Rigid* put(Rigid* const rigid);
 // updates light map, player fov (etc).
 void update_vision();
 
-void mk_blood(const P& origin);
-void mk_gore(const P& origin);
+void make_blood(const P& origin);
+void make_gore(const P& origin);
 
 void delete_and_remove_room_from_list(Room* const room);
 
@@ -120,7 +120,7 @@ Mob* first_mob_at_pos(const P& pos);
 
 void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out);
 
-void mk_actor_array(Actor* a[map_w][map_h]);
+void make_actor_array(Actor* a[map_w][map_h]);
 
 Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
 

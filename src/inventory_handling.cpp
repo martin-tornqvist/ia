@@ -53,7 +53,7 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
         return false;
     }
 
-    const ItemDataT& data = item->data();
+    const ItemData& data = item->data();
 
     msg_log::clear();
 
@@ -426,7 +426,7 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
             is_plural ?
             "They are " : "It is ";
 
-        const ItemDataT& d = item->data();
+        const ItemData& d = item->data();
 
         // ---------------------------------------------------------------------
         // Damage dice?
@@ -435,11 +435,11 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
         {
             const std::string dmg_str =
                 item->dmg_str(ItemRefAttInf::wpn_main_att_mode,
-                              ItemRefDmgValue::dice);
+                              ItemRefDmg::dice);
 
             const std::string dmg_str_avg =
                 item->dmg_str(ItemRefAttInf::wpn_main_att_mode,
-                              ItemRefDmgValue::average);
+                              ItemRefDmg::average);
 
             if (!dmg_str.empty() && !dmg_str_avg.empty())
             {
@@ -731,7 +731,7 @@ void BrowseInv::update()
                 if (slot.id == SlotId::body)
                 {
                     // Start taking off the armor
-                    map::player->nr_turns_until_handle_armor_done =
+                    map::player->nr_turns_until_handle_armor_done_ =
                         nr_turns_to_handle_armor;
                 }
                 else // Not the body slot
@@ -784,10 +784,10 @@ void BrowseInv::update()
             (idx == (size_t)SlotId::body))
         {
             // Start dropping the armor
-            map::player->nr_turns_until_handle_armor_done =
+            map::player->nr_turns_until_handle_armor_done_ =
                 nr_turns_to_handle_armor;
 
-            map::player->is_dropping_armor_from_body_slot = true;
+            map::player->is_dropping_armor_from_body_slot_ = true;
 
             game_time::tick();
         }
@@ -840,7 +840,7 @@ void Apply::on_start()
     {
         const Item* const item = backpack[i];
 
-        const ItemDataT& d = item->data();
+        const ItemData& d = item->data();
 
         if (d.has_std_activate)
         {
@@ -1124,7 +1124,7 @@ void Equip::draw()
 
         Item* const item = inv.backpack_[backpack_idx];
 
-        const ItemDataT& d = item->data();
+        const ItemData& d = item->data();
 
         ItemRefAttInf att_inf = ItemRefAttInf::none;
 
@@ -1212,10 +1212,10 @@ void Equip::update()
             }
 
             // Start putting on armor
-            map::player->nr_turns_until_handle_armor_done =
+            map::player->nr_turns_until_handle_armor_done_ =
                 nr_turns_to_handle_armor;
 
-            map::player->armor_putting_on_backpack_idx = idx;
+            map::player->armor_putting_on_backpack_idx_ = idx;
         }
         else // Not the body slot
         {
@@ -1271,7 +1271,7 @@ void SelectThrow::on_start()
 
         if (item)
         {
-            const ItemDataT& d = item->data();
+            const ItemData& d = item->data();
 
             if (d.ranged.is_throwable_wpn)
             {
@@ -1430,7 +1430,7 @@ void SelectThrow::update()
     {
     case MenuAction::selected:
     {
-        map::player->thrown_item = item;
+        map::player->thrown_item_ = item;
 
         // Exit screen
         states::pop();
@@ -1487,7 +1487,7 @@ void SelectIdentify::on_start()
 
         if (item)
         {
-            const ItemDataT& d = item->data();
+            const ItemData& d = item->data();
 
             if (!d.is_identified)
             {
@@ -1503,7 +1503,7 @@ void SelectIdentify::on_start()
 
         if (item->id() != ItemId::potion_insight)
         {
-            const ItemDataT& d = item->data();
+            const ItemData& d = item->data();
 
             if (!d.is_identified)
             {

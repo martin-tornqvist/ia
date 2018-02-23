@@ -62,7 +62,7 @@ void PostmortemMenu::on_start()
 
     // Highscore entry
     const auto highscore_entry =
-        highscore::mk_entry_from_current_game_data(
+        highscore::make_entry_from_current_game_data(
             game_summary_file_path,
             is_win_);
 
@@ -309,7 +309,7 @@ void PostmortemMenu::on_start()
     });
 
     // Also dump the lines to a memorial file
-    mk_memorial_file(game_summary_file_path);
+    make_memorial_file(game_summary_file_path);
 
     // If running text mode, load the graveyard ascii art
     if (!config::is_tiles_mode())
@@ -417,7 +417,7 @@ void PostmortemMenu::draw()
     io::draw_box(R(0, 0, screen_w - 1, screen_h - 1));
 }
 
-void PostmortemMenu::mk_memorial_file(const std::string path) const
+void PostmortemMenu::make_memorial_file(const std::string path) const
 {
     // Write memorial file
     std::ofstream file;

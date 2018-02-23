@@ -7,7 +7,7 @@
 #include "property_handler.hpp"
 #include "map.hpp"
 
-int AbilityVals::val(const AbilityId id,
+int AbilityValues::val(const AbilityId id,
                      const bool is_affected_by_props,
                      const Actor& actor) const
 {
@@ -58,17 +58,17 @@ int AbilityVals::val(const AbilityId id,
         {
             ret += 60;
 
-            if (player_bon::traits[(size_t)Trait::adept_melee_fighter])
+            if (player_bon::traits[(size_t)Trait::adept_melee])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[(size_t)Trait::expert_melee_fighter])
+            if (player_bon::traits[(size_t)Trait::expert_melee])
             {
                 ret += 10;
             }
 
-            if (player_bon::traits[(size_t)Trait::master_melee_fighter])
+            if (player_bon::traits[(size_t)Trait::master_melee])
             {
                 ret += 10;
             }
@@ -163,7 +163,7 @@ int AbilityVals::val(const AbilityId id,
     return ret;
 }
 
-void AbilityVals::reset()
+void AbilityValues::reset()
 {
     for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
     {
@@ -171,12 +171,12 @@ void AbilityVals::reset()
     }
 }
 
-void AbilityVals::set_val(const AbilityId ability, const int val)
+void AbilityValues::set_val(const AbilityId ability, const int val)
 {
     ability_list[(size_t)ability] = val;
 }
 
-void AbilityVals::change_val(const AbilityId ability, const int change)
+void AbilityValues::change_val(const AbilityId ability, const int change)
 {
     ability_list[(size_t)ability] += change;
 }

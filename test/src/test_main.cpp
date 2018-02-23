@@ -1055,7 +1055,7 @@ TEST_FIXTURE(BasicFixture, saving_game)
     inv.put_in_backpack(item);
 
     // Player
-    ActorDataT& def = map::player->data();
+    ActorData& def = map::player->data();
 
     def.name_a = def.name_the = "TEST PLAYER";
 
@@ -1179,7 +1179,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
     CHECK(is_lantern_found);
 
     // Player
-    ActorDataT& def = map::player->data();
+    ActorData& def = map::player->data();
 
     CHECK_EQUAL("TEST PLAYER", def.name_a);
     CHECK_EQUAL("TEST PLAYER", def.name_the);

@@ -4,8 +4,9 @@
 
 #include "io.hpp"
 #include "game_time.hpp"
-#include "actor_player.hpp"
+#include "actor_items.hpp"
 #include "actor_mon.hpp"
+#include "actor_player.hpp"
 #include "map.hpp"
 #include "fov.hpp"
 #include "msg_log.hpp"
@@ -72,7 +73,7 @@ void Actor::apply_prop(Prop* const prop)
 int Actor::ability(const AbilityId id,
                    const bool is_affected_by_props) const
 {
-    return data_->ability_vals.val(id, is_affected_by_props, *this);
+    return data_->ability_values.val(id, is_affected_by_props, *this);
 }
 
 ActionResult Actor::roll_sneak(const Actor& actor_searching) const
@@ -231,13 +232,11 @@ int Actor::speed_pct() const
     return speed;
 }
 
-void Actor::place(const P& pos_, ActorDataT& actor_data)
+void Actor::init(const P& pos_, ActorData& actor_data)
 {
     pos = pos_;
 
     data_ = &actor_data;
-
-    state_ = ActorState::alive;
 
     hp_ = hp_max_ = data_->hp;
 
@@ -248,14 +247,16 @@ void Actor::place(const P& pos_, ActorDataT& actor_data)
     inv_ = new Inventory(this);
 
     properties_ = new PropHandler(this);
+
     properties_->apply_natural_props_from_actor_data();
 
     if (data_->id != ActorId::player)
     {
-        mk_start_items();
+        actor_items::make_for_actor(*this);
     }
 
-    place_hook();
+    // TODO: This will be removed
+    init_hook();
 }
 
 void Actor::on_std_turn_common()
@@ -755,8 +756,7 @@ void Actor::change_max_spi(const int change, const Verbosity verbosity)
 ActorDied Actor::hit(int dmg,
                      const DmgType dmg_type,
                      const DmgMethod method,
-                     const AllowWound allow_wound,
-                     const Actor* const attacker)
+                     const AllowWound allow_wound)
 {
     const int hp_pct_before = (hp() * 100) / hp_max(true);
 
@@ -814,7 +814,7 @@ ActorDied Actor::hit(int dmg,
 
             if (is_humanoid())
             {
-                map::mk_gore(pos);
+                map::make_gore(pos);
             }
 
             if (map::cells[pos.x][pos.y].is_seen_by_player)
@@ -863,10 +863,7 @@ ActorDied Actor::hit(int dmg,
         Verbosity::silent;
 
     const bool is_dmg_resisted =
-        properties_->is_resisting_dmg(
-            dmg_type,
-            attacker,
-            verbosity);
+        properties_->is_resisting_dmg(dmg_type, verbosity);
 
     if (is_dmg_resisted)
     {
@@ -913,7 +910,6 @@ ActorDied Actor::hit(int dmg,
         const bool is_on_bottomless =
             map::cells[pos.x][pos.y].rigid->is_bottomless();
 
-        //
         // Destroy the corpse if the killing blow damage is either:
         //
         // * Above a threshold relative to the actor's maximum hit points, or
@@ -925,7 +921,6 @@ ActorDied Actor::hit(int dmg,
         // The purpose of the second point is that powerful attacks like
         // explosions should always destroy the corpse, even if the creature
         // has a very high pool of hit points.
-        //
 
         const int dmg_threshold_relative = (hp_max(true) * 3) / 2;
 
@@ -1208,8 +1203,8 @@ void Actor::die(const bool is_destroyed,
     {
         if (data_->can_bleed && allow_gore)
         {
-            map::mk_gore(pos);
-            map::mk_blood(pos);
+            map::make_gore(pos);
+            map::make_blood(pos);
         }
     }
     else // Not destroyed
@@ -1362,8 +1357,8 @@ DidAction Actor::try_eat_corpse()
         {
             corpse->destroy();
 
-            map::mk_gore(pos);
-            map::mk_blood(pos);
+            map::make_gore(pos);
+            map::make_blood(pos);
         }
 
         if (actor_is_player && is_destroyed)

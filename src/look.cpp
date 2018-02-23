@@ -13,7 +13,7 @@
 #include "query.hpp"
 #include "marker.hpp"
 #include "inventory.hpp"
-#include "attack.hpp"
+#include "attack_data.hpp"
 #include "game_time.hpp"
 #include "io.hpp"
 #include "feature_mob.hpp"
@@ -141,13 +141,13 @@ void ViewActorDescr::on_start()
 
     std::unique_ptr<const ThrowAttData> player_throwing;
 
-    if (map::player->thrown_item)
+    if (map::player->thrown_item_)
     {
         player_throwing.reset(
             new ThrowAttData(map::player,
-                             actor_.pos,    // Aim position
-                             actor_.pos,    // Current position
-                             *map::player->thrown_item));
+                             actor_.pos, // Aim position
+                             actor_.pos, // Current position
+                             *map::player->thrown_item_));
 
     }
 
@@ -163,40 +163,40 @@ void ViewActorDescr::on_start()
 
     const int val_undefined = INT_MAX;
 
-    std::vector<int> player_melee_vals;
+    std::vector<int> player_melee_values;
 
     if (player_melee)
     {
-        player_melee_vals.push_back(player_melee->skill_mod);
-        player_melee_vals.push_back(player_melee->wpn_mod);
-        player_melee_vals.push_back(player_melee->dodging_mod);
-        player_melee_vals.push_back(val_undefined);
-        player_melee_vals.push_back(player_melee->state_mod);
-        player_melee_vals.push_back(player_melee->hit_chance_tot);
+        player_melee_values.push_back(player_melee->skill_mod);
+        player_melee_values.push_back(player_melee->wpn_mod);
+        player_melee_values.push_back(player_melee->dodging_mod);
+        player_melee_values.push_back(val_undefined);
+        player_melee_values.push_back(player_melee->state_mod);
+        player_melee_values.push_back(player_melee->hit_chance_tot);
     }
 
-    std::vector<int> player_ranged_vals;
+    std::vector<int> player_ranged_values;
 
     if (player_ranged)
     {
-        player_ranged_vals.push_back(player_ranged->skill_mod);
-        player_ranged_vals.push_back(player_ranged->wpn_mod);
-        player_ranged_vals.push_back(player_ranged->dodging_mod);
-        player_ranged_vals.push_back(player_ranged->dist_mod);
-        player_ranged_vals.push_back(player_ranged->state_mod);
-        player_ranged_vals.push_back(player_ranged->hit_chance_tot);
+        player_ranged_values.push_back(player_ranged->skill_mod);
+        player_ranged_values.push_back(player_ranged->wpn_mod);
+        player_ranged_values.push_back(player_ranged->dodging_mod);
+        player_ranged_values.push_back(player_ranged->dist_mod);
+        player_ranged_values.push_back(player_ranged->state_mod);
+        player_ranged_values.push_back(player_ranged->hit_chance_tot);
     }
 
-    std::vector<int> player_throwing_vals;
+    std::vector<int> player_throwing_values;
 
     if (player_throwing)
     {
-        player_throwing_vals.push_back(player_throwing->skill_mod);
-        player_throwing_vals.push_back(player_throwing->wpn_mod);
-        player_throwing_vals.push_back(player_throwing->dodging_mod);
-        player_throwing_vals.push_back(player_throwing->dist_mod);
-        player_throwing_vals.push_back(player_throwing->state_mod);
-        player_throwing_vals.push_back(player_throwing->hit_chance_tot);
+        player_throwing_values.push_back(player_throwing->skill_mod);
+        player_throwing_values.push_back(player_throwing->wpn_mod);
+        player_throwing_values.push_back(player_throwing->dodging_mod);
+        player_throwing_values.push_back(player_throwing->dist_mod);
+        player_throwing_values.push_back(player_throwing->state_mod);
+        player_throwing_values.push_back(player_throwing->hit_chance_tot);
     }
 
     auto print_val = [&](const int val,
@@ -265,7 +265,7 @@ void ViewActorDescr::on_start()
         // Player melee
         if (player_melee)
         {
-            print_val(player_melee_vals[i],
+            print_val(player_melee_values[i],
                       p,
                       is_sum);
         }
@@ -275,7 +275,7 @@ void ViewActorDescr::on_start()
         // Player ranged
         if (player_ranged)
         {
-            print_val(player_ranged_vals[i],
+            print_val(player_ranged_values[i],
                       p,
                       is_sum);
         }
@@ -285,7 +285,7 @@ void ViewActorDescr::on_start()
         // Player throwing
         if (player_throwing)
         {
-            print_val(player_throwing_vals[i],
+            print_val(player_throwing_values[i],
                       p,
                       is_sum);
         }
@@ -554,7 +554,7 @@ std::string ViewActorDescr::auto_description_str() const
 {
     std::string ret = "";
 
-    const ActorDataT& def = actor_.data();
+    const ActorData& def = actor_.data();
 
     if (def.is_unique)
     {

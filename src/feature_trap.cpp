@@ -54,7 +54,7 @@ Trap::Trap(const P& feature_pos,
 
     auto try_place_trap_or_discard = [&](const TrapId trap_id)
     {
-        auto* impl = mk_trap_impl_from_id(trap_id);
+        auto* impl = make_trap_impl_from_id(trap_id);
 
         auto valid = impl->on_place();
 
@@ -98,7 +98,7 @@ Trap::~Trap()
     delete mimic_feature_;
 }
 
-TrapImpl* Trap::mk_trap_impl_from_id(const TrapId trap_id)
+TrapImpl* Trap::make_trap_impl_from_id(const TrapId trap_id)
 {
     switch (trap_id)
     {
@@ -304,7 +304,7 @@ void Trap::bump(Actor& actor_bumping)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
-    const ActorDataT& d = actor_bumping.data();
+    const ActorData& d = actor_bumping.data();
 
     if (actor_bumping.has_prop(PropId::ethereal) ||
         actor_bumping.has_prop(PropId::flying))
@@ -688,8 +688,8 @@ TrapPlacementValid TrapDart::on_place()
 
             if (rnd::fraction(2, 3))
             {
-                map::mk_gore(pos_);
-                map::mk_blood(pos_);
+                map::make_gore(pos_);
+                map::make_blood(pos_);
             }
 
             break;
@@ -743,11 +743,11 @@ void TrapDart::trigger()
 
     if (is_poisoned_)
     {
-        wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_dart_poison));
+        wpn = static_cast<Wpn*>(item_factory::make(ItemId::trap_dart_poison));
     }
     else // Not poisoned
     {
-        wpn = static_cast<Wpn*>(item_factory::mk(ItemId::trap_dart));
+        wpn = static_cast<Wpn*>(item_factory::make(ItemId::trap_dart));
     }
 
     // Fire!
@@ -794,8 +794,8 @@ TrapPlacementValid TrapSpear::on_place()
 
             if (rnd::fraction(2, 3))
             {
-                map::mk_gore(pos_);
-                map::mk_blood(pos_);
+                map::make_gore(pos_);
+                map::make_blood(pos_);
             }
 
             break;
@@ -844,14 +844,14 @@ void TrapSpear::trigger()
         {
             wpn =
                 static_cast<Wpn*>(
-                    item_factory::mk(
+                    item_factory::make(
                         ItemId::trap_spear_poison));
         }
         else // Not poisoned
         {
             wpn =
                 static_cast<Wpn*>(
-                    item_factory::mk(
+                    item_factory::make(
                         ItemId::trap_spear));
         }
 
@@ -1115,7 +1115,7 @@ void TrapSummonMon::trigger()
 
     for (size_t i = 0; i < (size_t)ActorId::END; ++i)
     {
-        const ActorDataT& data = actor_data::data[i];
+        const ActorData& data = actor_data::data[i];
 
         if (data.can_be_summoned_by_mon &&
             data.spawn_min_dlvl <= map::dlvl + 3)

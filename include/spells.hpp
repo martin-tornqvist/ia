@@ -83,7 +83,7 @@ namespace spell_handling
 {
 
 Spell* random_spell_for_mon();
-Spell* mk_spell_from_id(const SpellId spell_id);
+Spell* make_spell_from_id(const SpellId spell_id);
 
 } // spell_handling
 

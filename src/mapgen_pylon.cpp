@@ -8,7 +8,7 @@
 namespace mapgen
 {
 
-void mk_pylons_and_levers()
+void make_pylons_and_levers()
 {
     //
     // Never make Pylons late game (theme)

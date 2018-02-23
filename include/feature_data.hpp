@@ -87,7 +87,7 @@ public:
         return can_move_common_;
     }
 
-    bool can_move(Actor& actor) const;
+    bool can_move(const Actor& actor) const;
 
 private:
     bool can_move_common_;
@@ -96,9 +96,9 @@ private:
 
 class Feature;
 
-struct FeatureDataT
+struct FeatureData
 {
-    std::function<Feature*(const P& p)> mk_obj;
+    std::function<Feature*(const P& p)> make_obj;
     FeatureId id;
     char character;
     TileId tile;
@@ -126,7 +126,7 @@ namespace feature_data
 
 void init();
 
-const FeatureDataT& data(const FeatureId id);
+const FeatureData& data(const FeatureId id);
 
 } // feature_data
 

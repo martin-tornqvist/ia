@@ -30,14 +30,14 @@ int nr_items()
     return nr;
 }
 
-std::vector<ItemId> mk_item_bucket()
+std::vector<ItemId> make_item_bucket()
 {
     std::vector<ItemId> item_bucket;
     item_bucket.clear();
 
     for (int i = 0; i < (int)ItemId::END; ++i)
     {
-        const ItemDataT& data = item_data::data[i];
+        const ItemData& data = item_data::data[i];
 
         // The following items are NOT allowed to spawn on the floor:
         // * Intrinsic items
@@ -56,7 +56,7 @@ std::vector<ItemId> mk_item_bucket()
     return item_bucket;
 }
 
-void mk_blocked_map(bool out[map_w][map_h])
+void make_blocked_map(bool out[map_w][map_h])
 {
     map_parsers::BlocksItems()
         .run(out);
@@ -82,9 +82,9 @@ void mk_blocked_map(bool out[map_w][map_h])
 
 } // namespace
 
-void mk_items_on_floor()
+void make_items_on_floor()
 {
-    auto item_bucket = mk_item_bucket();
+    auto item_bucket = make_item_bucket();
 
     // Spawn items with a weighted random choice
 
@@ -98,9 +98,9 @@ void mk_items_on_floor()
 
     bool blocked[map_w][map_h];
 
-    mk_blocked_map(blocked);
+    make_blocked_map(blocked);
 
-    mapgen::mk_explore_spawn_weights(
+    mapgen::make_explore_spawn_weights(
         blocked,
         positions,
         position_weights);
@@ -124,7 +124,7 @@ void mk_items_on_floor()
 
         if (item_data::data[(size_t)id].allow_spawn)
         {
-            item_factory::mk_item_on_floor(id, p);
+            item_factory::make_item_on_floor(id, p);
 
             positions.erase(begin(positions) + p_idx);
             position_weights.erase(begin(position_weights) + p_idx);

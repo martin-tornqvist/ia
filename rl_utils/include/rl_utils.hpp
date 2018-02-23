@@ -67,7 +67,7 @@
 #define TRACE_ERROR_RELEASE std::cerr << "ERROR: "
 
 // Critical error, terminate immediately
-#define PANIC exit(EXIT_FAILURE);
+#define PANIC exit(EXIT_FAILURE)
 
 //------------------------------------------------------------------------------
 // Custom assert

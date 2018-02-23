@@ -17,13 +17,13 @@ namespace populate_traps
 namespace
 {
 
-Trap* mk_trap(const TrapId id, const P& pos)
+Trap* make_trap(const TrapId id, const P& pos)
 {
     const auto* const f = map::cells[pos.x][pos.y].rigid;
 
     const auto& d = feature_data::data(f->id());
 
-    auto* const mimic = static_cast<Rigid*>(d.mk_obj(pos));
+    auto* const mimic = static_cast<Rigid*>(d.make_obj(pos));
 
     if (!f->can_have_rigid())
     {
@@ -155,7 +155,7 @@ void populate_std_lvl()
                     trap_pos_bucket.erase(trap_pos_bucket.begin() + idx);
 
                     TRACE_VERBOSE << "Placing base trap" << std::endl;
-                    Trap* const origin_trap = mk_trap(trap_type, pos);
+                    Trap* const origin_trap = make_trap(trap_type, pos);
 
                     if (origin_trap->valid())
                     {
@@ -192,7 +192,7 @@ void populate_std_lvl()
                             trap_pos_bucket.erase(trap_pos_bucket.begin());
 
                             Trap* extra_trap =
-                                mk_trap(origin_trap_type, adj_pos);
+                                make_trap(origin_trap_type, adj_pos);
 
                             if (extra_trap->valid())
                             {
@@ -260,7 +260,7 @@ void populate_std_lvl()
 
             blocked[pos.x][pos.y] = true;
 
-            Trap* const origin_trap = mk_trap(TrapId::any, pos);
+            Trap* const origin_trap = make_trap(TrapId::any, pos);
 
             if (origin_trap->valid())
             {
@@ -296,7 +296,7 @@ void populate_std_lvl()
 
                     trap_pos_bucket.erase(trap_pos_bucket.begin());
 
-                    Trap* extra_trap = mk_trap(origin_trap_type, adj_pos);
+                    Trap* extra_trap = make_trap(origin_trap_type, adj_pos);
 
                     if (extra_trap->valid())
                     {

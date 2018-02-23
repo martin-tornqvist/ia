@@ -56,10 +56,8 @@ public:
 
     size_t unequip_slot(const SlotId id);
 
-    //
     // NOTE: The "put_in_*" functions should NEVER be called on items already in
-    //       the inventory.
-    //
+    // the inventory.
     void put_in_slot(const SlotId id,
                      Item* item,
                      Verbosity verbosity);

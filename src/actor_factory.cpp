@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "actor.hpp"
+#include "actor_data.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"
@@ -39,7 +40,7 @@ namespace actor_factory
 namespace
 {
 
-Actor* mk_actor_from_id(const ActorId id)
+Actor* make_actor_from_id(const ActorId id)
 {
     switch (id)
     {
@@ -312,7 +313,7 @@ Mon* spawn_at(const P& pos,
 {
     ASSERT(map::is_pos_inside_map(pos, false));
 
-    Actor* const actor = mk(id, pos);
+    Actor* const actor = make(id, pos);
 
     Mon* const mon = static_cast<Mon*>(actor);
 
@@ -347,14 +348,11 @@ MonSpawnResult spawn_at_positions(const std::vector<P>& positions,
 
 } // namespace
 
-Actor* mk(const ActorId id, const P& pos)
+Actor* make(const ActorId id, const P& pos)
 {
-    ASSERT(!map::cells[pos.x][pos.y].rigid ||
-           (map::cells[pos.x][pos.y].rigid->id() != FeatureId::stairs));
+    Actor* const actor = make_actor_from_id(id);
 
-    Actor* const actor = mk_actor_from_id(id);
-
-    actor->place(pos, actor_data::data[(size_t)id]);
+    actor->init(pos, actor_data::data[(size_t)id]);
 
     auto& data = actor->data();
 
@@ -376,7 +374,7 @@ void delete_all_mon()
     {
         Actor* const actor = *it;
 
-        if (actor == map::player)
+        if (actor->is_player())
         {
             ++it;
         }

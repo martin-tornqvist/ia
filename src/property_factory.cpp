@@ -5,7 +5,7 @@
 namespace property_factory
 {
 
-Prop* mk(const PropId id)
+Prop* make(const PropId id)
 {
     ASSERT(id != PropId::END);
 

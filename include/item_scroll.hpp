@@ -9,7 +9,7 @@ class Spell;
 class Scroll: public Item
 {
 public:
-    Scroll(ItemDataT* const item_data) :
+    Scroll(ItemData* const item_data) :
         Item(item_data) {}
 
     ~Scroll() {}
@@ -27,7 +27,7 @@ public:
 
     void identify(const Verbosity verbosity) override;
 
-    Spell* mk_spell() const;
+    Spell* make_spell() const;
 
 protected:
     std::string name_inf() const override;

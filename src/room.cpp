@@ -165,7 +165,7 @@ void init_room_bucket()
     TRACE_FUNC_END;
 }
 
-Room* mk(const RoomType type, const R& r)
+Room* make(const RoomType type, const R& r)
 {
     switch (type)
     {
@@ -233,7 +233,7 @@ Room* mk(const RoomType type, const R& r)
     return nullptr;
 }
 
-Room* mk_random_room(const R& r, const IsSubRoom is_subroom)
+Room* make_random_room(const R& r, const IsSubRoom is_subroom)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -254,7 +254,7 @@ Room* mk_random_room(const R& r, const IsSubRoom is_subroom)
         {
             const RoomType room_type = *room_bucket_it;
 
-            room = mk(room_type, r);
+            room = make(room_type, r);
 
             // NOTE: This must be set before "is_allowed()" below is called
             //       (some room types should never exist as sub rooms)
@@ -295,7 +295,7 @@ Room::Room(R r, RoomType type) :
     type_(type),
     is_sub_room_(false) {}
 
-void Room::mk_drk() const
+void Room::make_drk() const
 {
     for (int x = 0; x < map_w; ++x)
     {
@@ -311,7 +311,7 @@ void Room::mk_drk() const
     // Also make sub rooms dark
     for (Room* const sub_room : sub_rooms_)
     {
-        sub_room->mk_drk();
+        sub_room->make_drk();
     }
 }
 
@@ -367,7 +367,7 @@ void StdRoom::on_post_connect(bool door_proposals[map_w][map_h])
 
         if (rnd::percent(pct_chance_dark))
         {
-            mk_drk();
+            make_drk();
         }
     }
 }
@@ -394,7 +394,7 @@ P StdRoom::find_auto_feature_placement(const std::vector<P>& adj_to_walls,
 
     for (int i = 0; i < nr_attempts_to_find_pos; ++i)
     {
-        const FeatureDataT& d = feature_data::data(id);
+        const FeatureData& d = feature_data::data(id);
 
         if (is_adj_to_walls_avail &&
             d.auto_spawn_placement == FeaturePlacement::adj_to_walls)
@@ -479,13 +479,13 @@ void StdRoom::place_auto_features()
         {
             // A good position was found
 
-            const FeatureDataT& d = feature_data::data(id);
+            const FeatureData& d = feature_data::data(id);
 
             TRACE_VERBOSE << "Placing feature" << std::endl;
 
             ASSERT(map::is_pos_inside_map(p, false));
 
-            map::put(static_cast<Rigid*>(d.mk_obj(p)));
+            map::put(static_cast<Rigid*>(d.make_obj(p)));
 
             // Erase all adjacent positions
             auto is_adj = [&](const P& other_p)
@@ -538,7 +538,7 @@ void PlainRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (rnd::fraction(1, 4))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -594,7 +594,7 @@ void HumanRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (rnd::fraction(1, 4))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -647,7 +647,7 @@ void JailRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (rnd::fraction(1, 4))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -688,7 +688,7 @@ void RitualRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (rnd::fraction(1, 4))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -751,8 +751,8 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 
                         if (!blocked[pos.x][pos.y])
                         {
-                            map::mk_gore(pos);
-                            map::mk_blood(pos);
+                            map::make_gore(pos);
+                            map::make_blood(pos);
                         }
                     }
                 }
@@ -807,7 +807,7 @@ void SpiderRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if ((is_early || is_mid) && rnd::fraction(1, 4))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -842,7 +842,7 @@ void SnakePitRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
     {
         if (rnd::fraction(3, 4))
         {
-            mapgen::mk_pillars_in_room(*this);
+            mapgen::make_pillars_in_room(*this);
         }
     }
     else // Is late game
@@ -855,9 +855,7 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    //
     // Put lots of rubble, to make the room more "pit like"
-    //
     for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
@@ -877,20 +875,16 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         }
     }
 
-    //
     // Put some monsters in the room
-    //
     std::vector<ActorId> actor_id_bucket;
 
     for (size_t i = 0; i < (size_t)ActorId::END; ++i)
     {
-        const ActorDataT& d = actor_data::data[i];
+        const ActorData& d = actor_data::data[i];
 
-        //
         // NOTE: We do not allow Spitting Cobras in snake pits, because it's
-        //       VERY tedious to fight swarms of them (attack, get blinded,
-        //       back away, repeat...)
-        //
+        // VERY tedious to fight swarms of them (attack, get blinded, back away,
+        // repeat...)
         if (d.is_snake &&
             (d.id != ActorId::spitting_cobra))
         {
@@ -961,14 +955,14 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         const P origin(rnd::element(origin_bucket));
 
         const auto sorted_free_cells =
-            populate_mon::mk_sorted_free_cells(origin, blocked);
+            populate_mon::make_sorted_free_cells(origin, blocked);
 
         if (sorted_free_cells.empty())
         {
             return;
         }
 
-        populate_mon::mk_group_at(
+        populate_mon::make_group_at(
             actor_id,
             sorted_free_cells,
             blocked, // New blocked cells (output)
@@ -1006,7 +1000,7 @@ void CryptRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if (rnd::fraction(1, 3))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -1053,7 +1047,7 @@ void MonsterRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
         if (rnd::fraction(1, 3))
         {
-            mapgen::mk_pillars_in_room(*this);
+            mapgen::make_pillars_in_room(*this);
         }
     }
     else // Is late game
@@ -1086,8 +1080,8 @@ void MonsterRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
                     map::room_map[x][y] == this &&
                     rnd::fraction(2, 5))
                 {
-                    map::mk_gore(P(x, y));
-                    map::mk_blood(P(x, y));
+                    map::make_gore(P(x, y));
+                    map::make_blood(P(x, y));
                     nr_blood_put++;
                 }
             }
@@ -1144,7 +1138,7 @@ void FloodedRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if ((is_early || is_mid) && rnd::fraction(1, 3))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 
@@ -1245,7 +1239,7 @@ void MuddyRoom::on_pre_connect_hook(bool door_proposals[map_w][map_h])
 
     if ((is_early || is_mid) && rnd::fraction(1, 3))
     {
-        mapgen::mk_pillars_in_room(*this);
+        mapgen::make_pillars_in_room(*this);
     }
 }
 

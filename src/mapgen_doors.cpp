@@ -14,7 +14,7 @@ namespace mapgen
 namespace
 {
 
-void try_mk_door(const P& p)
+void try_make_door(const P& p)
 {
     // Check that no other doors are within a certain distance
     const int r = 2;
@@ -94,7 +94,7 @@ void try_mk_door(const P& p)
 
 } // namespace
 
-void mk_doors()
+void make_doors()
 {
     TRACE << "Placing doors" << std:: endl;
 
@@ -105,13 +105,13 @@ void mk_doors()
             if (door_proposals[x][y] &&
                 rnd::fraction(4, 5))
             {
-                try_mk_door(P(x, y));
+                try_make_door(P(x, y));
             }
         }
     }
 }
 
-void mk_metal_doors_and_levers()
+void make_metal_doors_and_levers()
 {
     //
     // Only make metal on some maps, and never late game (theme)
@@ -335,12 +335,12 @@ void mk_metal_doors_and_levers()
             std::vector<int> spawn_weights_1;
             std::vector<int> spawn_weights_2;
 
-            mapgen::mk_explore_spawn_weights(
+            mapgen::make_explore_spawn_weights(
                 blocks_lever_1,
                 spawn_weight_positions_1,
                 spawn_weights_1);
 
-            mapgen::mk_explore_spawn_weights(
+            mapgen::make_explore_spawn_weights(
                 blocks_lever_2,
                 spawn_weight_positions_2,
                 spawn_weights_2);
@@ -421,6 +421,6 @@ void mk_metal_doors_and_levers()
 
     } // Number of doors loop
 
-} // mk_metal_doors_and_levers
+} // make_metal_doors_and_levers
 
 } // mapgen

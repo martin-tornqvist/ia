@@ -329,9 +329,9 @@ void draw()
     p.x = x_wielded;
 
     auto* const thr_item =
-        player.active_explosive ?
-        player.active_explosive :
-        player.thrown_item;
+        player.active_explosive_ ?
+        player.active_explosive_ :
+        player.thrown_item_;
 
     if (thr_item)
     {
@@ -353,7 +353,7 @@ void draw()
         Color text_color = colors::white();
 
         // Explosives are drawn without attack info, and with warning color
-        if (player.active_explosive)
+        if (player.active_explosive_)
         {
             att_inf = ItemRefAttInf::none;
 

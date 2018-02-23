@@ -11,7 +11,7 @@ namespace mapgen
 namespace
 {
 
-void mk_crumble_room(const R& room_area_incl_walls,
+void make_crumble_room(const R& room_area_incl_walls,
                      const P& event_pos)
 {
     std::vector<P> wall_cells;
@@ -47,13 +47,13 @@ void mk_crumble_room(const R& room_area_incl_walls,
         new EventWallCrumble(event_pos,
                              wall_cells,
                              inner_cells));
-} // mk_crumble_room
+} // make_crumble_room
 
 //
 // NOTE: The positions and size can be outside map (e.g. negative positions).
 //       This function just returns false in that case.
 //
-bool try_mk_aux_room(const P& p,
+bool try_make_aux_room(const P& p,
                      const P& d,
                      bool blocked[map_w][map_h],
                      const P& door_p)
@@ -96,16 +96,16 @@ bool try_mk_aux_room(const P& p,
         if (rnd::one_in(20))
         {
             Room* const room =
-                room_factory::mk(RoomType::crumble_room, aux_rect);
+                room_factory::make(RoomType::crumble_room, aux_rect);
 
             register_room(*room);
 
-            mk_crumble_room(aux_rect_with_border,
+            make_crumble_room(aux_rect_with_border,
                             door_p);
         }
         else // Not "crumble room"
         {
-            mk_room(aux_rect, IsSubRoom::no);
+            make_room(aux_rect, IsSubRoom::no);
         }
 
         return true;
@@ -113,11 +113,11 @@ bool try_mk_aux_room(const P& p,
 
     return false;
 
-} // try_mk_aux_room
+} // try_make_aux_room
 
 } // namespace
 
-void mk_aux_rooms(Region regions[3][3])
+void make_aux_rooms(Region regions[3][3])
 {
     TRACE_FUNC_BEGIN;
     const int nr_tries_per_side = 20;
@@ -178,7 +178,7 @@ void mk_aux_rooms(Region regions[3][3])
                         if (floor_cells[con_p.x - 1][con_p.y])
                         {
                             const bool did_place_room =
-                                try_mk_aux_room(aux_p,
+                                try_make_aux_room(aux_p,
                                                 aux_d,
                                                 floor_cells,
                                                 con_p);
@@ -211,7 +211,7 @@ void mk_aux_rooms(Region regions[3][3])
                         if (floor_cells[con_p.x][con_p.y + 1])
                         {
                             const bool did_place_room =
-                                try_mk_aux_room(aux_p,
+                                try_make_aux_room(aux_p,
                                                 aux_d,
                                                 floor_cells,
                                                 con_p);
@@ -244,7 +244,7 @@ void mk_aux_rooms(Region regions[3][3])
                         if (floor_cells[con_p.x + 1][con_p.y])
                         {
                             const bool did_place_room =
-                                try_mk_aux_room(aux_p,
+                                try_make_aux_room(aux_p,
                                                 aux_d,
                                                 floor_cells,
                                                 con_p);
@@ -277,7 +277,7 @@ void mk_aux_rooms(Region regions[3][3])
                         if (floor_cells[con_p.x][con_p.y - 1])
                         {
                             const bool did_place_room =
-                                try_mk_aux_room(aux_p,
+                                try_make_aux_room(aux_p,
                                                 aux_d,
                                                 floor_cells,
                                                 con_p);
@@ -297,6 +297,6 @@ void mk_aux_rooms(Region regions[3][3])
 
     TRACE_FUNC_END;
 
-} // mk_aux_rooms
+} // make_aux_rooms
 
 } // mapgen

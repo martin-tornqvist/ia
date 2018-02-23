@@ -26,8 +26,6 @@ std::vector< std::vector<P> > cells_reached(
 {
     std::vector< std::vector<P> > out;
 
-    std::vector<P> line;
-
     for (int y = area.p0.y; y <= area.p1.y; ++y)
     {
         for (int x = area.p0.x; x <= area.p1.x; ++x)
@@ -46,14 +44,15 @@ std::vector< std::vector<P> > cells_reached(
 
             if (dist > 1)
             {
-                line_calc::calc_new_line(origin,
-                                         pos,
-                                         true,
-                                         999,
-                                         false,
-                                         line);
+                    const auto path =
+                        line_calc::calc_new_line(
+                            origin,
+                            pos,
+                            true,
+                            999,
+                            false);
 
-                for (P& pos_check_block : line)
+                for (const P& pos_check_block : path)
                 {
                     if (blocked[pos_check_block.x][pos_check_block.y])
                     {
@@ -324,7 +323,7 @@ void run(const P& origin,
 
                 if (should_apply_on_living_actor)
                 {
-                    Prop* const prop_cpy = property_factory::mk(prop->id());
+                    Prop* const prop_cpy = property_factory::make(prop->id());
 
                     prop_cpy->set_duration(prop->nr_turns_left());
 
@@ -344,7 +343,7 @@ void run(const P& origin,
 
                     for (Actor* corpse : corpses_here)
                     {
-                        Prop* const prop_cpy = property_factory::mk(prop->id());
+                        Prop* const prop_cpy = property_factory::make(prop->id());
 
                         prop_cpy->set_duration(prop->nr_turns_left());
 

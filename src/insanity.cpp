@@ -565,7 +565,7 @@ namespace
 
 InsSympt* sympts_[(size_t)InsSymptId::END];
 
-InsSympt* mk_sympt(const InsSymptId id)
+InsSympt* make_sympt(const InsSymptId id)
 {
     switch (id)
     {
@@ -682,7 +682,7 @@ void load()
 
         if (has_symptom)
         {
-            InsSympt* const sympt = mk_sympt(InsSymptId(i));
+            InsSympt* const sympt = make_sympt(InsSymptId(i));
 
             sympts_[i] = sympt;
 
@@ -702,7 +702,7 @@ void run_sympt()
         // Symptoms are only allowed if not already active
         if (!active_sympt)
         {
-            InsSympt* const new_sympt = mk_sympt(InsSymptId(i));
+            InsSympt* const new_sympt = make_sympt(InsSymptId(i));
 
             const bool is_allowed = new_sympt->is_allowed();
 

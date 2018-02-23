@@ -19,7 +19,7 @@
 // -----------------------------------------------------------------------------
 // Staff of the pharaohs
 // -----------------------------------------------------------------------------
-PharaohStaff::PharaohStaff(ItemDataT* const item_data) :
+PharaohStaff::PharaohStaff(ItemData* const item_data) :
     Wpn(item_data)
 {
     add_carrier_spell(new SpellPharaohStaff);
@@ -29,7 +29,7 @@ PharaohStaff::PharaohStaff(ItemDataT* const item_data) :
 // -----------------------------------------------------------------------------
 // Talisman of Reflection
 // -----------------------------------------------------------------------------
-ReflTalisman::ReflTalisman(ItemDataT* const item_data) :
+ReflTalisman::ReflTalisman(ItemData* const item_data) :
     Item(item_data)
 {
 
@@ -52,7 +52,7 @@ void ReflTalisman::on_removed_from_inv_hook()
 // -----------------------------------------------------------------------------
 // Talisman of Resurrection
 // -----------------------------------------------------------------------------
-ResurrectTalisman::ResurrectTalisman(ItemDataT* const item_data) :
+ResurrectTalisman::ResurrectTalisman(ItemData* const item_data) :
     Item(item_data)
 {
 
@@ -61,7 +61,7 @@ ResurrectTalisman::ResurrectTalisman(ItemDataT* const item_data) :
 // -----------------------------------------------------------------------------
 // Talisman of Teleporation Control
 // -----------------------------------------------------------------------------
-TeleCtrlTalisman::TeleCtrlTalisman(ItemDataT* const item_data) :
+TeleCtrlTalisman::TeleCtrlTalisman(ItemData* const item_data) :
     Item(item_data)
 {
 
@@ -93,7 +93,7 @@ void HornOfMaliceHeard::run(Actor& actor) const
     }
 }
 
-HornOfMalice::HornOfMalice(ItemDataT* const item_data) :
+HornOfMalice::HornOfMalice(ItemData* const item_data) :
     Item(item_data),
     charges_(rnd::range(4, 6))
 {
@@ -168,7 +168,7 @@ void HornOfBanishmentHeard::run(Actor& actor) const
     }
 }
 
-HornOfBanishment::HornOfBanishment(ItemDataT* const item_data) :
+HornOfBanishment::HornOfBanishment(ItemData* const item_data) :
     Item(item_data),
     charges_(rnd::range(4, 6))
 {
@@ -226,7 +226,7 @@ ConsumeItem HornOfBanishment::activate(Actor* const actor)
 // -----------------------------------------------------------------------------
 // Arcane Clockwork
 // -----------------------------------------------------------------------------
-Clockwork::Clockwork(ItemDataT* const item_data) :
+Clockwork::Clockwork(ItemData* const item_data) :
     Item(item_data),
     charges_(rnd::range(4, 6))
 {
@@ -304,7 +304,7 @@ void Clockwork::on_removed_from_inv_hook()
 // -----------------------------------------------------------------------------
 // Spirit Dagger
 // -----------------------------------------------------------------------------
-SpiritDagger::SpiritDagger(ItemDataT* const item_data) :
+SpiritDagger::SpiritDagger(ItemData* const item_data) :
     Wpn(item_data)
 {
 
@@ -328,7 +328,7 @@ void SpiritDagger::on_melee_hit(Actor& actor_hit, const int dmg)
 // -----------------------------------------------------------------------------
 // Sorcery Orb
 // -----------------------------------------------------------------------------
-OrbOfLife::OrbOfLife(ItemDataT* const item_data) :
+OrbOfLife::OrbOfLife(ItemData* const item_data) :
     Item(item_data)
 {
 

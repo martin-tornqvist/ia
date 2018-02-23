@@ -63,8 +63,6 @@ public:
 
     void apply_natural_props_from_actor_data();
 
-    void apply_from_attack(const Wpn& wpn, const bool is_melee);
-
     // The following two methods are supposed to be called by items
     void add_prop_from_equipped_item(const Item* const item,
                                      Prop* const prop,
@@ -149,7 +147,6 @@ public:
     DidAction on_act();
 
     bool is_resisting_dmg(const DmgType dmg_type,
-                          const Actor* const attacker,
                           const Verbosity verbosity) const;
 
 private:

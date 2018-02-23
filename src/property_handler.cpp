@@ -24,7 +24,7 @@ PropHandler::PropHandler(Actor* owner) :
 
 void PropHandler::apply_natural_props_from_actor_data()
 {
-    const ActorDataT& d = owner_->data();
+    const ActorData& d = owner_->data();
 
     // Add natural properties
     for (size_t i = 0; i < (size_t)PropId::END; ++i)
@@ -33,7 +33,7 @@ void PropHandler::apply_natural_props_from_actor_data()
 
         if (d.natural_props[i])
         {
-            Prop* const prop = property_factory::mk(PropId(i));
+            Prop* const prop = property_factory::make(PropId(i));
 
             prop->set_indefinite();
 
@@ -111,7 +111,7 @@ void PropHandler::load()
 
         const int nr_turns = saving::get_int();
 
-        Prop* const prop = property_factory::mk(prop_id);
+        Prop* const prop = property_factory::make(prop_id);
 
         if (nr_turns == -1)
         {
@@ -343,52 +343,6 @@ void PropHandler::remove_props_for_item(const Item* const item)
         else // Property was not added by this item
         {
             ++it;
-        }
-    }
-}
-
-void PropHandler::apply_from_attack(const Wpn& wpn, const bool is_melee)
-{
-    const auto& d = wpn.data();
-
-    const auto& att_prop =
-        is_melee ?
-        d.melee.prop_applied :
-        d.ranged.prop_applied;
-
-    if (att_prop.prop &&
-        rnd::percent(att_prop.pct_chance))
-    {
-        // If weapon damage is resisted by the defender, the property is
-        // automatically resisted
-        const DmgType dmg_type =
-            is_melee ?
-            d.melee.dmg_type :
-            d.ranged.dmg_type;
-
-        const bool is_dmg_resisted =
-            is_resisting_dmg(dmg_type,
-                             nullptr,
-                             Verbosity::silent);
-
-        if (!is_dmg_resisted)
-        {
-            // Make a copy of the weapon effect
-            auto* const prop_cpy =
-                property_factory::mk(att_prop.prop->id_);
-
-            const auto duration_mode = att_prop.prop->duration_mode_;
-
-            if (duration_mode == PropDurationMode::specific)
-            {
-                prop_cpy->set_duration(att_prop.prop->nr_turns_left_);
-            }
-            else if (duration_mode == PropDurationMode::indefinite)
-            {
-                prop_cpy->set_indefinite();
-            }
-
-            apply(prop_cpy);
         }
     }
 }
@@ -819,7 +773,6 @@ bool PropHandler::is_resisting_prop(const PropId id) const
 }
 
 bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
-                                   const Actor* const attacker,
                                    const Verbosity verbosity) const
 {
     DmgResistData res_data;
@@ -843,15 +796,9 @@ bool PropHandler::is_resisting_dmg(const DmgType dmg_type,
         }
         else // Is monster
         {
-            // Print message if attacker is player, and player is aware of
-            // the monster
             const auto* const mon = static_cast<const Mon*>(owner_);
 
-            const bool is_player_aware_of_mon =
-                mon->player_aware_of_me_counter_ > 0;
-
-            if ((attacker == map::player) &&
-                is_player_aware_of_mon)
+            if (mon->player_aware_of_me_counter_ > 0)
             {
                 const bool can_player_see_mon =
                     map::player->can_see_actor(*owner_);

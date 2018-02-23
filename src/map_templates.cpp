@@ -197,7 +197,7 @@ void load_level_templates()
 //
 // Add all combinations of rotating and flipping the template
 //
-void mk_room_templ_variants(RoomTempl& templ)
+void make_room_templ_variants(RoomTempl& templ)
 {
     auto& symbols = templ.symbols;
 
@@ -243,7 +243,7 @@ void mk_room_templ_variants(RoomTempl& templ)
 
     room_templates_.push_back(templ);
 
-} // mk_room_templ_variants
+} // make_room_templ_variants
 
 
 void load_room_templates()
@@ -375,7 +375,7 @@ void load_room_templates()
 
             templ.base_templ_idx = current_base_templ_idx;
 
-            mk_room_templ_variants(templ);
+            make_room_templ_variants(templ);
 
             template_buffer.clear();
 

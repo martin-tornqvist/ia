@@ -34,13 +34,11 @@ P offset(const Dir dir);
 
 P rnd_adj_pos(const P& origin, const bool is_center_allowed);
 
-void compass_dir_name(const P& from_pos,
-                      const P& to_pos,
-                      std::string& dst);
+std::string compass_dir_name(const P& from_pos, const P& to_pos);
 
-void compass_dir_name(const Dir dir, std::string& dst);
+std::string compass_dir_name(const Dir dir);
 
-void compass_dir_name(const P& offs, std::string& dst);
+std::string compass_dir_name(const P& offs);
 
 } // dir_utils
 

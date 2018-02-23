@@ -40,12 +40,12 @@
 #include "reload.hpp"
 #include "drop.hpp"
 
-namespace
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static void print_aware_invis_mon_msg(const Mon& mon)
 {
-
-void print_aware_invis_mon_msg(const Mon& mon)
-{
-    const ActorDataT& d = mon.data();
+    const ActorData& d = mon.data();
 
     const std::string mon_ref =
         d.is_ghost ? "some foul entity" :
@@ -58,16 +58,17 @@ void print_aware_invis_mon_msg(const Mon& mon)
                  MorePromptOnMsg::yes);
 }
 
-} // namespace
-
+// -----------------------------------------------------------------------------
+// Player
+// -----------------------------------------------------------------------------
 Player::Player() :
     Actor(),
-    thrown_item(),
-    active_medical_bag(nullptr),
-    nr_turns_until_handle_armor_done(0),
-    armor_putting_on_backpack_idx(-1),
-    is_dropping_armor_from_body_slot(false),
-    active_explosive(nullptr),
+    thrown_item_(),
+    active_medical_bag_(nullptr),
+    nr_turns_until_handle_armor_done_(0),
+    armor_putting_on_backpack_idx_(-1),
+    is_dropping_armor_from_body_slot_(false),
+    active_explosive_(nullptr),
     tgt_(nullptr),
     wait_turns_left(-1),
     ins_(0),
@@ -82,220 +83,8 @@ Player::Player() :
 
 Player::~Player()
 {
-    delete active_explosive;
+    delete active_explosive_;
     delete unarmed_wpn_;
-}
-
-void Player::mk_start_items()
-{
-    data_->ability_vals.reset();
-
-    bool has_pistol = true;
-    bool has_medbag = true;
-    bool has_lantern = true;
-
-    int nr_cartridges = 2;
-    int nr_dynamite = 2;
-    int nr_molotov = 2;
-    int nr_throwing_knives = 6;
-
-    // -------------------------------------------------------------------------
-    // Background specific setup
-    // -------------------------------------------------------------------------
-    const Bg bg = player_bon::bg();
-
-    switch (bg)
-    {
-    case Bg::occultist:
-    {
-        --nr_cartridges;
-        --nr_dynamite;
-        --nr_molotov;
-        nr_throwing_knives = 0;
-
-        inv_->put_in_slot(SlotId::wpn,
-                          item_factory::mk(ItemId::hatchet),
-                          Verbosity::silent);
-
-        inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_leather_jacket),
-                          Verbosity::silent);
-
-        // Spirit potion
-        {
-            Item* spi_pot = item_factory::mk(ItemId::potion_spirit);
-
-            spi_pot->identify(Verbosity::silent);
-
-            game::incr_player_xp(spi_pot->data().xp_on_found,
-                                 Verbosity::silent);
-
-            spi_pot->data().is_found = true;
-
-            inv_->put_in_backpack(spi_pot);
-        }
-
-        // Learn the Darkbolt spell
-        player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
-
-        // Learn the Searching spell
-        player_spells::learn_spell(SpellId::searching, Verbosity::silent);
-
-        // Discover and identify the Darkbolt scroll
-        {
-            std::unique_ptr<Item> scroll(
-                item_factory::mk(ItemId::scroll_darkbolt));
-
-            scroll->identify(Verbosity::silent);
-
-            game::incr_player_xp(scroll->data().xp_on_found,
-                                 Verbosity::silent);
-
-            scroll->data().is_found = true;
-        }
-
-        // Discover and identify the Searching scroll
-        {
-            std::unique_ptr<Item> scroll(
-                item_factory::mk(ItemId::scroll_searching));
-
-            scroll->identify(Verbosity::silent);
-
-            game::incr_player_xp(scroll->data().xp_on_found,
-                                 Verbosity::silent);
-
-            scroll->data().is_found = true;
-        }
-    }
-    break;
-
-    case Bg::rogue:
-    {
-        nr_throwing_knives += 6;
-
-        auto* const dagger = item_factory::mk(ItemId::dagger);
-
-        static_cast<Wpn*>(dagger)->melee_dmg_plus_ = 1;
-
-        inv_->put_in_slot(SlotId::wpn,
-                          dagger,
-                          Verbosity::silent);
-
-        inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_leather_jacket),
-                          Verbosity::silent);
-
-        inv_->put_in_backpack(item_factory::mk(ItemId::iron_spike, 12));
-
-        Item* item = item_factory::mk(ItemId::rod_cloud_minds);
-
-        static_cast<RodCloudMinds*>(item)->identify(Verbosity::silent);
-
-        game::incr_player_xp(item->data().xp_on_found,
-                             Verbosity::silent);
-
-        item->data().is_found = true;
-
-        inv_->put_in_backpack(item);
-    }
-    break;
-
-    case Bg::war_vet:
-    {
-        ++nr_cartridges;
-
-        inv_->put_in_backpack(item_factory::mk(ItemId::smoke_grenade, 4));
-        inv_->put_in_backpack(item_factory::mk(ItemId::flare, 2));
-        inv_->put_in_backpack(item_factory::mk(ItemId::gas_mask));
-
-        inv_->put_in_slot(SlotId::wpn,
-                          item_factory::mk(ItemId::machete),
-                          Verbosity::silent);
-
-        inv_->put_in_slot(SlotId::body,
-                          item_factory::mk(ItemId::armor_flak_jacket),
-                          Verbosity::silent);
-    }
-    break;
-
-    case Bg::ghoul:
-    {
-        // Ghoul starts with no items
-        has_pistol = false;
-        has_medbag = false;
-        has_lantern = false;
-
-        nr_cartridges = 0;
-        nr_dynamite = 0;
-        nr_molotov = 0;
-        nr_throwing_knives = 0;
-    }
-    break;
-
-    case Bg::END:
-        break;
-    }
-
-    // -------------------------------------------------------------------------
-    // General setup
-    // -------------------------------------------------------------------------
-    // Unarmed attack
-    if (player_bon::bg() == Bg::ghoul)
-    {
-        unarmed_wpn_ = static_cast<Wpn*>(
-            item_factory::mk(ItemId::player_ghoul_claw));
-    }
-    else // Not ghoul
-    {
-        unarmed_wpn_ = static_cast<Wpn*>(
-            item_factory::mk(ItemId::player_punch));
-    }
-
-    if (has_pistol)
-    {
-        inv_->put_in_slot(SlotId::wpn_alt,
-                          item_factory::mk(ItemId::pistol),
-                          Verbosity::silent);
-    }
-
-    for (int i = 0; i < nr_cartridges; ++i)
-    {
-        inv_->put_in_backpack(item_factory::mk(ItemId::pistol_mag));
-    }
-
-    if (nr_dynamite > 0)
-    {
-        inv_->put_in_backpack(
-            item_factory::mk(ItemId::dynamite, nr_dynamite));
-    }
-
-    if (nr_molotov > 0)
-    {
-        inv_->put_in_backpack(
-            item_factory::mk(ItemId::molotov, nr_molotov));
-    }
-
-    if (nr_throwing_knives > 0)
-    {
-        Item* const throwing_knives =
-            item_factory::mk(ItemId::thr_knife, nr_throwing_knives);
-
-        inv_->put_in_backpack(throwing_knives);
-
-        thrown_item = throwing_knives;
-    }
-
-    if (has_medbag)
-    {
-        inv_->put_in_backpack(
-            item_factory::mk(ItemId::medical_bag));
-    }
-
-    if (has_lantern)
-    {
-        inv_->put_in_backpack(
-            item_factory::mk(ItemId::lantern));
-    }
 }
 
 void Player::save() const
@@ -318,7 +107,7 @@ void Player::save() const
 
     for (int i = 0; i < (int)AbilityId::END; ++i)
     {
-        const int v = data_->ability_vals.raw_val(AbilityId(i));
+        const int v = data_->ability_values.raw_val(AbilityId(i));
 
         saving::put_int(v);
     }
@@ -345,7 +134,7 @@ void Player::load()
     delete unarmed_wpn_;
     unarmed_wpn_ = nullptr;
 
-    Item* const unarmed_item = item_factory::mk(unarmed_wpn_id);
+    Item* const unarmed_item = item_factory::make(unarmed_wpn_id);
 
     ASSERT(unarmed_item);
 
@@ -355,7 +144,7 @@ void Player::load()
     {
         const int v = saving::get_int();
 
-        data_->ability_vals.set_val(AbilityId(i), v);
+        data_->ability_values.set_val(AbilityId(i), v);
     }
 }
 
@@ -719,9 +508,8 @@ bool Player::is_standing_in_open_place() const
     bool blocked[map_w][map_h];
 
     // NOTE: Checking if adjacent cells blocks projectiles is probably the best
-    //       way to determine if this is an open place. If we check for things
-    //       that blocks common movement, stuff like chasms would count as
-    //       blocking.
+    // way to determine if this is an open place. If we check for things that
+    // blocks common movement, stuff like chasms would count as blocking.
     map_parsers::BlocksProjectiles()
         .run(blocked,
              MapParseMode::overwrite,
@@ -951,39 +739,39 @@ void Player::act()
         tgt_ = nullptr;
     }
 
-    if (active_medical_bag)
+    if (active_medical_bag_)
     {
-        active_medical_bag->continue_action();
+        active_medical_bag_->continue_action();
 
         return;
     }
 
-    if (nr_turns_until_handle_armor_done > 0)
+    if (nr_turns_until_handle_armor_done_ > 0)
     {
-        --nr_turns_until_handle_armor_done;
+        --nr_turns_until_handle_armor_done_;
 
         // Done handling armor?
-        if (nr_turns_until_handle_armor_done == 0)
+        if (nr_turns_until_handle_armor_done_ == 0)
         {
             // Putting on armor?
-            if (armor_putting_on_backpack_idx >= 0)
+            if (armor_putting_on_backpack_idx_ >= 0)
             {
                 ASSERT(!inv_->slots_[(size_t)SlotId::body].item);
 
-                inv_->equip_backpack_item(armor_putting_on_backpack_idx,
+                inv_->equip_backpack_item(armor_putting_on_backpack_idx_,
                                           SlotId::body);
 
-                armor_putting_on_backpack_idx = -1;
+                armor_putting_on_backpack_idx_ = -1;
             }
             // Dropping armor?
-            else if (is_dropping_armor_from_body_slot)
+            else if (is_dropping_armor_from_body_slot_)
             {
                 item_drop::drop_item_from_inv(
                     *map::player,
                     InvType::slots,
                     (size_t)SlotId::body);
 
-                is_dropping_armor_from_body_slot = false;
+                is_dropping_armor_from_body_slot_ = false;
             }
             else // Taking off armor
             {
@@ -1203,8 +991,8 @@ void Player::on_actor_turn()
     // Set current temporary shock from darkness etc
     update_tmp_shock();
 
-    if (active_medical_bag ||
-        (nr_turns_until_handle_armor_done > 0) ||
+    if (active_medical_bag_ ||
+        (nr_turns_until_handle_armor_done_ > 0) ||
         (wait_turns_left > 0) ||
         (quick_move_dir_ != Dir::END))
     {
@@ -1266,8 +1054,8 @@ void Player::on_actor_turn()
                 continue;
             }
 
-            if (active_medical_bag ||
-                (nr_turns_until_handle_armor_done > 0) ||
+            if (active_medical_bag_ ||
+                (nr_turns_until_handle_armor_done_ > 0) ||
                 (wait_turns_left > 0) ||
                 (quick_move_dir_ != Dir::END))
             {
@@ -1370,9 +1158,7 @@ void Player::on_actor_turn()
 
     if (properties_->allow_act())
     {
-        //
         // Passive shock taken over time
-        //
         double passive_shock_taken = 0.1075;
 
         if (player_bon::bg() == Bg::rogue)
@@ -1382,9 +1168,7 @@ void Player::on_actor_turn()
 
         incr_shock(passive_shock_taken, ShockSrc::time);
 
-        //
         // Passive shock taken over time due to items
-        //
         bool is_item_shock_taken = false;
 
         double item_shock_taken = 0.0;
@@ -1393,7 +1177,7 @@ void Player::on_actor_turn()
         {
             if (slot.item)
             {
-                const ItemDataT& d = slot.item->data();
+                const ItemData& d = slot.item->data();
 
                 // NOTE: Having an item equiped also counts as carrying it
                 if (d.is_carry_shocking || d.is_equiped_shocking)
@@ -1725,9 +1509,9 @@ void Player::on_std_turn()
         }
     }
 
-    if (active_explosive)
+    if (active_explosive_)
     {
-        active_explosive->on_std_turn_player_hold_ignited();
+        active_explosive_->on_std_turn_player_hold_ignited();
     }
 
     // Regenerate Hit Points
@@ -1854,14 +1638,14 @@ void Player::on_log_msg_printed()
 void Player::interrupt_actions()
 {
     // Abort healing
-    if (active_medical_bag)
+    if (active_medical_bag_)
     {
-        active_medical_bag->interrupted();
-        active_medical_bag = nullptr;
+        active_medical_bag_->interrupted();
+        active_medical_bag_ = nullptr;
     }
 
     // Abort putting on / taking off armor?
-    if (nr_turns_until_handle_armor_done > 0)
+    if (nr_turns_until_handle_armor_done_ > 0)
     {
         bool should_continue = true;
 
@@ -1873,13 +1657,14 @@ void Player::interrupt_actions()
         if (should_continue)
         {
             const std::string turns_left_str =
-                std::to_string(nr_turns_until_handle_armor_done);
+                std::to_string(nr_turns_until_handle_armor_done_);
 
             std::string msg = "";
 
-            if (armor_putting_on_backpack_idx >= 0)
+            if (armor_putting_on_backpack_idx_ >= 0)
             {
-                auto* const item = inv_->backpack_[armor_putting_on_backpack_idx];
+                auto* const item =
+                        inv_->backpack_[armor_putting_on_backpack_idx_];
 
                 const std::string armor_name =
                     item->name(ItemRefType::plain, ItemRefInf::yes);
@@ -1917,11 +1702,11 @@ void Player::interrupt_actions()
 
         if (!should_continue)
         {
-            nr_turns_until_handle_armor_done = 0;
+            nr_turns_until_handle_armor_done_ = 0;
 
-            armor_putting_on_backpack_idx = -1;
+            armor_putting_on_backpack_idx_ = -1;
 
-            is_dropping_armor_from_body_slot = false;
+            is_dropping_armor_from_body_slot_ = false;
         }
     }
 
@@ -2271,7 +2056,7 @@ Color Player::color() const
         return colors::red();
     }
 
-    if (active_explosive)
+    if (active_explosive_)
     {
         return colors::yellow();
     }
@@ -2341,7 +2126,7 @@ void Player::kick_mon(Actor& defender)
 {
     Wpn* kick_wpn = nullptr;
 
-    const ActorDataT& d = defender.data();
+    const ActorData& d = defender.data();
 
     // TODO: This is REALLY hacky, it should be done another way. Why even have
     // a "stomp" attack?? Why not just kick them as well?
@@ -2352,11 +2137,11 @@ void Player::kick_mon(Actor& defender)
          d.id == ActorId::worm_mass ||
          d.id == ActorId::mind_worms))
     {
-        kick_wpn = static_cast<Wpn*>(item_factory::mk(ItemId::player_stomp));
+        kick_wpn = static_cast<Wpn*>(item_factory::make(ItemId::player_stomp));
     }
     else
     {
-        kick_wpn = static_cast<Wpn*>(item_factory::mk(ItemId::player_kick));
+        kick_wpn = static_cast<Wpn*>(item_factory::make(ItemId::player_kick));
     }
 
     attack::melee(this,
@@ -2385,9 +2170,9 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
 {
     LgtSize lgt_size = LgtSize::none;
 
-    if (active_explosive)
+    if (active_explosive_)
     {
-        if (active_explosive->data().id == ItemId::flare)
+        if (active_explosive_->data().id == ItemId::flare)
         {
             lgt_size = LgtSize::fov;
         }

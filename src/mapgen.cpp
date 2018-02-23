@@ -157,7 +157,7 @@ void connect_rooms()
         }
 
         // Alright, let's try to connect these rooms
-        mk_pathfind_corridor(*room0,
+        make_pathfind_corridor(*room0,
                              *room1,
                              door_proposals);
 
@@ -232,7 +232,7 @@ void allowed_stair_cells(bool out[map_w][map_h])
     TRACE_FUNC_END;
 }
 
-P mk_stairs()
+P make_stairs()
 {
     TRACE_FUNC_BEGIN;
 
@@ -406,7 +406,7 @@ void reveal_doors_on_path_to_stairs(const P& stairs_pos)
 
 } // namespace
 
-bool mk_std_lvl()
+bool make_std_lvl()
 {
     TRACE_FUNC_BEGIN;
 
@@ -501,7 +501,7 @@ bool mk_std_lvl()
 
             if (!region.main_room && region.is_free)
             {
-                mk_room(region);
+                make_room(region);
             }
         }
     }
@@ -529,7 +529,7 @@ bool mk_std_lvl()
     }
 #endif // NDEBUG
 
-    mk_aux_rooms(regions);
+    make_aux_rooms(regions);
 
     // -------------------------------------------------------------------------
     // Make sub-rooms
@@ -556,7 +556,7 @@ bool mk_std_lvl()
         }
 #endif // NDEBUG
 
-        mk_sub_rooms();
+        make_sub_rooms();
     }
 
     if (!is_map_valid)
@@ -683,7 +683,7 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     if (map::dlvl <= dlvl_last_mid_game)
     {
-        mk_doors();
+        make_doors();
     }
 
     if (!is_map_valid)
@@ -719,7 +719,7 @@ bool mk_std_lvl()
     //
     P stairs_pos;
 
-    stairs_pos = mk_stairs();
+    stairs_pos = make_stairs();
 
     if (!is_map_valid)
     {
@@ -822,7 +822,7 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Make metal doors and levers
     // -------------------------------------------------------------------------
-    mk_metal_doors_and_levers();
+    make_metal_doors_and_levers();
 
     if (!is_map_valid)
     {
@@ -869,7 +869,7 @@ bool mk_std_lvl()
     // NOTE: This depends on choke point data having been gathered (including
     //       player side and stairs side)
     //
-    mk_monoliths();
+    make_monoliths();
 
     if (!is_map_valid)
     {
@@ -879,7 +879,7 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Place pylons and levers
     // -------------------------------------------------------------------------
-    mk_pylons_and_levers();
+    make_pylons_and_levers();
 
     if (!is_map_valid)
     {
@@ -909,7 +909,7 @@ bool mk_std_lvl()
     // -------------------------------------------------------------------------
     // Populate the map with items on the floor
     // -------------------------------------------------------------------------
-    populate_items::mk_items_on_floor();
+    populate_items::make_items_on_floor();
 
     if (!is_map_valid)
     {

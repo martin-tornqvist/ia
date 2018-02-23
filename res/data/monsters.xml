@@ -132,6 +132,16 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <!--
+                TODO: Zombies should also have something like grip/strangle.
+                Perhaps they should use punch insted of claw?
+            -->
+            <attack id="claw">
+                <damage>6</damage>
+                <property_applied percent_chance="25">infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>corpse_rises</property>
             <property>darkvision</property>
@@ -221,6 +231,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="zombie_axe">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>corpse_rises</property>
             <property>darkvision</property>
@@ -310,6 +325,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <!--
+                TODO: Zombies should also have something like grip/strangle
+            -->
+            <attack id="punch">
+                <damage>8</damage>
+            </attack>
+            <attack id="acid_spit">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>corpse_rises</property>
             <property>darkvision</property>
@@ -397,6 +423,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>6</damage>
+                <property_applied percent_chance="25">infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>major_clapham_summon</property>
             <property>corpse_rises</property>
@@ -483,6 +515,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>6</damage>
+                <property_applied percent_chance="25">infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>corpse_rises</property>
             <property>darkvision</property>
@@ -568,6 +606,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="strangle">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -651,6 +694,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="strangle">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -735,6 +783,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="strangle">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -820,6 +873,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>speaks_curses</property>
             <property>darkvision</property>
@@ -1158,6 +1216,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>5</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1239,6 +1302,14 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+                <attacks>
+            <attack id="bite">
+                <damage>8</damage>
+            </attack>
+            <attack id="web_bola">
+                <damage>6</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1577,6 +1648,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>5</damage>
+                <property_applied duration="3">blind</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1662,6 +1739,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>5</damage>
+                <property_applied duration="2">paralyzed</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1747,6 +1830,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>5</damage>
+                <property_applied>weakened</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1832,6 +1921,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>light_sensitive</property>
             <property>darkvision</property>
@@ -1920,6 +2014,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>1</damage>
+                <property_applied percent_chance="25">infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -2003,6 +2103,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -2090,6 +2195,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>1</damage>
+                <property_applied duration="16">poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -2175,6 +2286,15 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>1</damage>
+                <property_applied duration="16">poisoned</property_applied>
+            </attack>
+            <attack id="snake_venom_spit">
+                <damage>1</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -2260,6 +2380,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>1</damage>
+                <property_applied duration="16">poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -2345,6 +2471,15 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="fire_breath">
+                <damage>4</damage>
+                <property_applied>burning</property_applied>
+            </attack>
+            <attack id="bite">
+                <damage>6</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fire</property>
             <property>r_poison</property>
@@ -2432,6 +2567,15 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="energy_breath">
+                <damage>8</damage>
+                <property_applied duration="2">paralyzed</property_applied>
+            </attack>
+            <attack id="bite">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_poison</property>
             <property>r_elec</property>
@@ -2519,6 +2663,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>darkvision</property>
@@ -2606,6 +2755,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="sting">
+                <damage>5</damage>
+                <property_applied duration="8">poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>flying</property>
         </properties>
@@ -2692,6 +2847,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="sting">
+                <damage>8</damage>
+                <property_applied duration="8">poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>flying</property>
         </properties>
@@ -2777,6 +2938,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="sting">
+                <damage>4</damage>
+                <property_applied duration="1" percent_chance="25">paralyzed</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_phys</property>
             <property>r_fire</property>
@@ -2871,6 +3038,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="sting">
+                <damage>9</damage>
+                <property_applied duration="1" percent_chance="25">paralyzed</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_phys</property>
             <property>r_fire</property>
@@ -2965,6 +3138,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="mind_leech_sting">
+                <damage>2</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
@@ -3052,6 +3230,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="spirit_leech_sting">
+                <damage>1</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
@@ -3139,6 +3322,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="life_leech_sting">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
@@ -3226,6 +3414,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>8</damage>
+                <property_applied>infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>corpse_eater</property>
             <property>r_disease</property>
@@ -3315,6 +3509,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3401,6 +3600,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3488,6 +3692,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -3572,6 +3781,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="ghost_claw">
+                <damage>1</damage>
+                <property_applied>terrified</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3659,6 +3874,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="ghost_sickle">
+                <damage>1</damage>
+                <property_applied>terrified</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>recloaks</property>
             <property>r_fear</property>
@@ -3747,6 +3968,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="ghost_claw">
+                <damage>1</damage>
+                <property_applied>terrified</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3834,6 +4061,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>9</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>teleports</property>
         </properties>
@@ -3920,6 +4152,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>teleports</property>
         </properties>
@@ -4006,6 +4243,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="raven_peck">
+                <damage>1</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>flying</property>
         </properties>
@@ -4091,6 +4333,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>2</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
             <property>flying</property>
@@ -4178,6 +4425,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="vampiric_bite">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
             <property>flying</property>
@@ -4264,6 +4516,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="vampiric_bite">
+                <damage>11</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_disease</property>
@@ -4351,6 +4608,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>9</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
             <property>flying</property>
@@ -4436,6 +4698,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>6</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -4519,6 +4786,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>1</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>breeds</property>
             <property>darkvision</property>
@@ -4604,6 +4876,15 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <!--
+                TODO: Mummies should also have something like grip/strangle
+            -->
+            <attack id="maul">
+                <damage>6</damage>
+                <property_applied>cursed</property_applied>
+            </attack>
+        </attacks>
         <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
@@ -4685,6 +4966,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="spear_thrust">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties/>
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
@@ -4769,6 +5055,15 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <!--
+                TODO: Mummies should also have something like grip/strangle
+            -->
+            <attack id="maul">
+                <damage>6</damage>
+                <property_applied>cursed</property_applied>
+            </attack>
+        </attacks>
         <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
@@ -4849,6 +5144,15 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <!--
+                TODO: Mummies should also have something like grip/strangle
+            -->
+            <attack id="maul">
+                <damage>6</damage>
+                <property_applied>cursed</property_applied>
+            </attack>
+        </attacks>
         <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
@@ -4930,6 +5234,14 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="javelin_thrust">
+                <damage>9</damage>
+            </attack>
+            <attack id="javelin_throw">
+                <damage>5</damage>
+            </attack>
+        </attacks>
         <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
@@ -5012,6 +5324,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="maul">
+                <damage>6</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -5178,6 +5495,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>2</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>splits_on_death</property>
             <property>darkvision</property>
@@ -5265,6 +5587,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>3</damage>
+                <property_applied duration="9">confused</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>splits_on_death</property>
             <property>darkvision</property>
@@ -5352,6 +5680,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="dust_engulf">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>vortex</property>
             <property>r_poison</property>
@@ -5442,6 +5775,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="fire_engulf">
+                <damage>6</damage>
+                <property_applied>burning</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>vortex</property>
             <property>r_fire</property>
@@ -5533,6 +5872,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="energy_engulf">
+                <damage>8</damage>
+                <property_applied duration="2" percent_chance="30">burning</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>vortex</property>
             <property>r_fire</property>
@@ -5625,6 +5970,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="pus_spew">
+                <damage>4</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5718,6 +6068,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="pus_spew">
+                <damage>3</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5811,6 +6166,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="pus_spew">
+                <damage>4</damage>
+                <property_applied>infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5904,6 +6265,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="pus_spew">
+                <damage>4</damage>
+                <property_applied>poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5997,6 +6364,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="acid_touch">
+                <damage>10</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>confuses_adjacent</property>
             <property>corrupts_environment_color</property>
@@ -6094,6 +6466,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>15</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>darkvision</property>
@@ -6180,6 +6557,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="bite">
+                <damage>12</damage>
+                <property_applied>poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>darkvision</property>
@@ -6449,6 +6832,12 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="spores">
+                <damage>1</damage>
+                <property_applied duration="12">poisoned</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>breeds</property>
             <property>r_poison</property>
@@ -6593,7 +6982,7 @@
             <name_the>the Death Fiend</name_the>
             <corpse_name_a></corpse_name_a>
             <corpse_name_the></corpse_name_the>
-            <description>A living incarnation of death. With its goat-like features, it is eerily similar to the imagery of Devils and Demons seen in medieval woodcuts. The attack of this entity can bypass any armor, and means almost certain death!</description>
+            <description>A living incarnation of death. With its goat-like features, it is eerily similar to the imagery of Devils and Demons seen in medieval woodcuts.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Death Fiend looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
@@ -6638,6 +7027,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>15</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fire</property>
             <property>r_sleep</property>
@@ -6726,6 +7120,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>8</damage>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fire</property>
             <property>r_fear</property>
@@ -6974,6 +7373,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <attacks>
+            <attack id="claw">
+                <damage>10</damage>
+                <property_applied>infected</property_applied>
+            </attack>
+        </attacks>
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>

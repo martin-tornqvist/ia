@@ -27,7 +27,7 @@ std::vector<MapData> map_list;
 namespace
 {
 
-void mk_lvl(const MapType& map_type)
+void make_lvl(const MapType& map_type)
 {
     TRACE_FUNC_BEGIN;
 
@@ -51,31 +51,31 @@ void mk_lvl(const MapType& map_type)
         switch (map_type)
         {
         case MapType::intro:
-            map_ok = mapgen::mk_intro_lvl();
+            map_ok = mapgen::make_intro_lvl();
             break;
 
         case MapType::std:
-            map_ok = mapgen::mk_std_lvl();
+            map_ok = mapgen::make_std_lvl();
             break;
 
         case MapType::egypt:
-            map_ok = mapgen::mk_egypt_lvl();
+            map_ok = mapgen::make_egypt_lvl();
             break;
 
         case MapType::leng:
-            map_ok = mapgen::mk_leng_lvl();
+            map_ok = mapgen::make_leng_lvl();
             break;
 
         case MapType::rat_cave:
-            map_ok = mapgen::mk_rat_cave_level();
+            map_ok = mapgen::make_rat_cave_level();
             break;
 
         case MapType::trapez:
-            map_ok = mapgen::mk_trapez_lvl();
+            map_ok = mapgen::make_trapez_lvl();
             break;
 
         case MapType::boss:
-            map_ok = mapgen::mk_boss_lvl();
+            map_ok = mapgen::make_boss_lvl();
             break;
         }
 
@@ -198,7 +198,7 @@ void go_to_nxt()
         ++map::dlvl;
     }
 
-    mk_lvl(map_data.type);
+    make_lvl(map_data.type);
 
     if (map::player->has_prop(PropId::descend))
     {

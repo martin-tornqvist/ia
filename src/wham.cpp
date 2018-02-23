@@ -151,7 +151,7 @@ void run()
     const auto kick_wpn =
         std::unique_ptr<Wpn>(
             static_cast<Wpn*>(
-                item_factory::mk(ItemId::player_kick)));
+                item_factory::make(ItemId::player_kick)));
 
     const auto* wpn = map::player->inv().item_in_slot(SlotId::wpn);
 
@@ -187,8 +187,7 @@ void run()
 
         msg_log::add(msg);
 
-        const Dice dmg_dice =
-            wpn_used_att_corpse->dmg(AttMode::melee, map::player);
+        const Dice dmg_dice = wpn_used_att_corpse->melee_dmg(map::player);
 
         const int dmg = dmg_dice.roll();
 
@@ -296,8 +295,7 @@ void run()
             wpn :
             kick_wpn.get();
 
-        const Dice dmg_dice =
-            wpn_used_att_feature->dmg(AttMode::melee, map::player);
+        const Dice dmg_dice = wpn_used_att_feature->melee_dmg(map::player);
 
         const int dmg = dmg_dice.roll();
 

@@ -591,7 +591,7 @@ void Wall::on_hit(const int dmg,
         }
     };
 
-    auto mk_low_rubble_and_rocks = [&]()
+    auto make_low_rubble_and_rocks = [&]()
     {
         const P p(pos_);
         map::put(new RubbleLow(p));
@@ -602,7 +602,7 @@ void Wall::on_hit(const int dmg,
 
         if (rnd::one_in(4))
         {
-            item_factory::mk_item_on_floor(ItemId::rock, p);
+            item_factory::make_item_on_floor(ItemId::rock, p);
         }
     };
 
@@ -611,7 +611,7 @@ void Wall::on_hit(const int dmg,
         if (dmg_method == DmgMethod::forced)
         {
             destr_adj_doors();
-            mk_low_rubble_and_rocks();
+            make_low_rubble_and_rocks();
         }
 
         if (dmg_method == DmgMethod::explosion)
@@ -620,7 +620,7 @@ void Wall::on_hit(const int dmg,
 
             if (rnd::coin_toss())
             {
-                mk_low_rubble_and_rocks();
+                make_low_rubble_and_rocks();
             }
             else
             {
@@ -816,7 +816,7 @@ void RubbleHigh::on_hit(const int dmg,
     (void)dmg;
     (void)actor;
 
-    auto mk_low_rubble_and_rocks = [&]()
+    auto make_low_rubble_and_rocks = [&]()
     {
         const P p(pos_);
 
@@ -824,7 +824,7 @@ void RubbleHigh::on_hit(const int dmg,
 
         if (rnd::one_in(4))
         {
-            item_factory::mk_item_on_floor(ItemId::rock, p);
+            item_factory::make_item_on_floor(ItemId::rock, p);
         }
 
         map::update_vision();
@@ -835,12 +835,12 @@ void RubbleHigh::on_hit(const int dmg,
 
         if (dmg_method == DmgMethod::forced)
         {
-            mk_low_rubble_and_rocks();
+            make_low_rubble_and_rocks();
         }
 
         if (dmg_method == DmgMethod::explosion)
         {
-            mk_low_rubble_and_rocks();
+            make_low_rubble_and_rocks();
         }
     }
 }
@@ -2248,7 +2248,7 @@ void ItemContainer::init(const FeatureId feature_id,
 
         for (size_t i = 0; i < (size_t)ItemId::END; ++i)
         {
-            ItemDataT& item_d = item_data::data[i];
+            ItemData& item_d = item_data::data[i];
 
             if (!item_d.allow_spawn)
             {
@@ -2293,7 +2293,7 @@ void ItemContainer::init(const FeatureId feature_id,
             // Is this item still allowed to spawn (perhaps unique)?
             if (item_data::data[(size_t)id].allow_spawn)
             {
-                Item* item = item_factory::mk(item_bucket[idx]);
+                Item* item = item_factory::make(item_bucket[idx]);
 
                 item_factory::set_item_randomized_properties(item);
 
@@ -2323,7 +2323,7 @@ void ItemContainer::open(const P& feature_pos,
 
             msg_log::add("Pick up " + name + "? [y/n]");
 
-            const ItemDataT&  data = item->data();
+            const ItemData&  data = item->data();
 
             Wpn* wpn =
                 data.ranged.is_ranged_wpn ?
@@ -2332,7 +2332,7 @@ void ItemContainer::open(const P& feature_pos,
 
             const bool is_unloadable_wpn =
                 wpn &&
-                wpn->nr_ammo_loaded_ > 0 &&
+                wpn->ammo_loaded_ > 0 &&
                 !data.ranged.has_infinite_ammo;
 
             if (is_unloadable_wpn)
@@ -2361,7 +2361,7 @@ void ItemContainer::open(const P& feature_pos,
             {
                 ASSERT(is_unloadable_wpn);
                 ASSERT(wpn);
-                ASSERT(wpn->nr_ammo_loaded_ > 0);
+                ASSERT(wpn->ammo_loaded_ > 0);
                 ASSERT(!data.ranged.has_infinite_ammo);
 
                 audio::play(SfxId::pickup);
@@ -2397,7 +2397,7 @@ void ItemContainer::destroy_single_fragile()
     {
         Item* const item = items_[i];
 
-        const ItemDataT& d = item->data();
+        const ItemData& d = item->data();
 
         if (d.type == ItemType::potion || d.id == ItemId::molotov)
         {
@@ -2837,7 +2837,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
             for (size_t i = 0; i < size_t(ActorId::END); ++i)
             {
-                const ActorDataT& d = actor_data::data[i];
+                const ActorData& d = actor_data::data[i];
 
                 if (d.natural_props[(size_t)PropId::ooze] &&
                     d.is_auto_spawn_allowed &&
@@ -3840,7 +3840,7 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
             for (int i = 0; i < (int)ActorId::END; ++i)
             {
-                const ActorDataT& d = actor_data::data[i];
+                const ActorData& d = actor_data::data[i];
 
                 if (d.is_spider &&
                     d.actor_size == ActorSize::floor &&

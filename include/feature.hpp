@@ -21,7 +21,7 @@ public:
     virtual Color color() const = 0;
     virtual Color color_bg() const = 0;
 
-    const FeatureDataT& data() const;
+    const FeatureData& data() const;
 
     virtual void hit(const int dmg,
                      const DmgType dmg_type,
@@ -33,7 +33,7 @@ public:
     virtual void bump(Actor& actor_bumping);
     virtual void on_new_turn() {}
     virtual bool can_move_common() const;
-    virtual bool can_move(Actor& actor) const;
+    virtual bool can_move(const Actor& actor) const;
     virtual bool is_sound_passable() const;
     virtual bool is_los_passable() const;
     virtual bool is_projectile_passable() const;

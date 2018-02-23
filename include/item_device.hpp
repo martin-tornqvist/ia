@@ -9,7 +9,7 @@
 class Device: public Item
 {
 public:
-    Device(ItemDataT* const item_data);
+    Device(ItemData* const item_data);
 
     virtual ~Device() {}
 
@@ -31,7 +31,7 @@ public:
 class StrangeDevice : public Device
 {
 public:
-    StrangeDevice(ItemDataT* const item_data);
+    StrangeDevice(ItemData* const item_data);
 
     virtual std::vector<std::string> descr() const override final;
 
@@ -53,7 +53,7 @@ private:
 class DeviceBlaster : public StrangeDevice
 {
 public:
-    DeviceBlaster(ItemDataT* const item_data) :
+    DeviceBlaster(ItemData* const item_data) :
         StrangeDevice(item_data) {}
 
     ~DeviceBlaster() override {}
@@ -72,7 +72,7 @@ private:
 class DeviceRejuvenator : public StrangeDevice
 {
 public:
-    DeviceRejuvenator(ItemDataT* const item_data) :
+    DeviceRejuvenator(ItemData* const item_data) :
         StrangeDevice(item_data) {}
 
     ~DeviceRejuvenator() override {}
@@ -92,7 +92,7 @@ private:
 class DeviceTranslocator : public StrangeDevice
 {
 public:
-    DeviceTranslocator(ItemDataT* const item_data) :
+    DeviceTranslocator(ItemData* const item_data) :
         StrangeDevice(item_data) {}
 
     ~DeviceTranslocator() override {}
@@ -111,7 +111,7 @@ private:
 class DeviceSentryDrone : public StrangeDevice
 {
 public:
-    DeviceSentryDrone(ItemDataT* const item_data) :
+    DeviceSentryDrone(ItemData* const item_data) :
         StrangeDevice(item_data) {}
 
     ~DeviceSentryDrone() override {}
@@ -130,7 +130,7 @@ private:
 class DeviceDeafening : public StrangeDevice
 {
 public:
-    DeviceDeafening(ItemDataT* const item_data) :
+    DeviceDeafening(ItemData* const item_data) :
         StrangeDevice(item_data) {}
 
     ~DeviceDeafening() override {}
@@ -150,7 +150,7 @@ private:
 class DeviceLantern : public Device
 {
 public:
-    DeviceLantern(ItemDataT* const item_data);
+    DeviceLantern(ItemData* const item_data);
 
     ~DeviceLantern() override {}
 

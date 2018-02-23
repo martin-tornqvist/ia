@@ -128,11 +128,8 @@ void run(Snd snd)
                 // Add a direction to the message (i.e. "(NW)", "(E)" , etc)
                 if (player_pos != origin)
                 {
-                    std::string dir_str = "";
-
-                    dir_utils::compass_dir_name(player_pos,
-                                                origin,
-                                                dir_str);
+                    const std::string dir_str =
+                            dir_utils::compass_dir_name(player_pos, origin);
 
                     snd.add_string("(" + dir_str + ")");
                 }

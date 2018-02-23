@@ -21,7 +21,7 @@ public:
     StateId id() override;
 
 private:
-    void mk_memorial_file(const std::string path) const;
+    void make_memorial_file(const std::string path) const;
 
     MenuBrowser browser_;
 

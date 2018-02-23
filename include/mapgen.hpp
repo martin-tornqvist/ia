@@ -43,36 +43,36 @@ extern bool door_proposals[map_w][map_h];
 // Generate maps
 //------------------------------------------------------------------------------
 // Standard dungeon level
-bool mk_std_lvl();
+bool make_std_lvl();
 
 // Hand crafted levels
-bool mk_intro_lvl();
-bool mk_egypt_lvl();
-bool mk_leng_lvl();
-bool mk_rat_cave_level();
-bool mk_trapez_lvl();
-bool mk_boss_lvl();
+bool make_intro_lvl();
+bool make_egypt_lvl();
+bool make_leng_lvl();
+bool make_rat_cave_level();
+bool make_trapez_lvl();
+bool make_boss_lvl();
 
 //------------------------------------------------------------------------------
 // Map generation steps (in no particular order)
 //------------------------------------------------------------------------------
 void merge_regions(Region regions[3][3]);
 
-void mk_aux_rooms(Region regions[3][3]);
+void make_aux_rooms(Region regions[3][3]);
 
 void reserve_river(Region regions[3][3]);
 
-void mk_sub_rooms();
+void make_sub_rooms();
 
 void decorate();
 
-void mk_doors();
+void make_doors();
 
-void mk_metal_doors_and_levers();
+void make_metal_doors_and_levers();
 
-void mk_monoliths();
+void make_monoliths();
 
-void mk_pylons_and_levers();
+void make_pylons_and_levers();
 
 //------------------------------------------------------------------------------
 // Room reshaping utils (called by the room objects)
@@ -84,25 +84,25 @@ void mk_pylons_and_levers();
 //       beyond its initial rectangle, so in those cases the functions need to
 //       modify the data of the room object.
 void cut_room_corners(const Room& room);
-void mk_pillars_in_room(const Room& room);
+void make_pillars_in_room(const Room& room);
 void cavify_room(Room& room);
 
 //------------------------------------------------------------------------------
 // Room creation
 //------------------------------------------------------------------------------
-// NOTE: All "mk_room..." functions are "complete", i.e. they handle all the
+// NOTE: All "make_room..." functions are "complete", i.e. they handle all the
 //       necessary steps such as creating floor on the map, creating room
 //       objects and registering them, et c. No such actions are needed by the
 //       clients.
-Room* mk_room(Region& region);
+Room* make_room(Region& region);
 
-Room* mk_room(const R& r, const IsSubRoom is_sub_room);
+Room* make_room(const R& r, const IsSubRoom is_sub_room);
 
 // Low level functions related to room creation - these are only necessary when
-// creating rooms by other methods than the "mk_room" functions above.
+// creating rooms by other methods than the "make_room" functions above.
 void register_room(Room& room);
 
-void mk_floor(const Room& room);
+void make_floor(const Room& room);
 
 //------------------------------------------------------------------------------
 // Misc utils
@@ -114,7 +114,7 @@ bool is_choke_point(const P& p,
                     const bool blocked[map_w][map_h],
                     ChokePointData* out);
 
-void mk_pathfind_corridor(Room& r0,
+void make_pathfind_corridor(Room& r0,
                           Room& r1,
                           bool door_proposals[map_w][map_h] = nullptr);
 
@@ -131,7 +131,7 @@ void pathfinder_walk(const P& p0,
 
 // Generates a map of spawn chance weights, with emphasis on hidden, optional,
 // or hard to reach areas - this can be used e.g. to place items or levers.
-void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
+void make_explore_spawn_weights(const bool blocked[map_w][map_h],
                               std::vector<P>& positions_out,
                               std::vector<int>& weights_out);
 

@@ -14,7 +14,7 @@
 #include "map.hpp"
 #include "feature_data.hpp"
 
-const FeatureDataT& Feature::data() const
+const FeatureData& Feature::data() const
 {
     return feature_data::data(id());
 }
@@ -52,7 +52,7 @@ bool Feature::can_move_common() const
     return data().move_rules.can_move_common();
 }
 
-bool Feature::can_move(Actor& actor) const
+bool Feature::can_move(const Actor& actor) const
 {
     return data().move_rules.can_move(actor);
 }

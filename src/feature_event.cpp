@@ -173,8 +173,8 @@ void EventWallCrumble::on_new_turn()
 
         if (rnd::one_in(8))
         {
-            map::mk_gore(p);
-            map::mk_blood(p);
+            map::make_gore(p);
+            map::make_blood(p);
         }
     }
 
@@ -208,7 +208,7 @@ void EventWallCrumble::on_new_turn()
         if ((mon_spawned.size() <  nr_mon_limit_except_adj_to_entry) ||
             is_pos_adj(p, pos_, false))
         {
-            Actor* const actor = actor_factory::mk(actor_id, p);
+            Actor* const actor = actor_factory::make(actor_id, p);
 
             Mon* const mon = static_cast<Mon*>(actor);
 
@@ -371,7 +371,7 @@ void EventSnakeEmerge::on_new_turn()
 
     std::vector<ActorId> id_bucket;
 
-    for (ActorDataT d : actor_data::data)
+    for (ActorData d : actor_data::data)
     {
         if (d.is_snake)
         {
@@ -424,7 +424,7 @@ void EventSnakeEmerge::on_new_turn()
     {
         const P& p(tgt_bucket[i]);
 
-        Actor* const actor = actor_factory::mk(id, p);
+        Actor* const actor = actor_factory::make(id, p);
 
         auto prop = new PropWaiting();
 

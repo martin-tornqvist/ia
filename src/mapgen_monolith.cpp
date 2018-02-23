@@ -9,7 +9,7 @@
 namespace mapgen
 {
 
-void mk_monoliths()
+void make_monoliths()
 {
     // Determine number of Monoliths to place, by a weighted choice
     std::vector<int> nr_weights =
@@ -59,7 +59,7 @@ void mk_monoliths()
 
     std::vector<int> spawn_weights;
 
-    mapgen::mk_explore_spawn_weights(
+    mapgen::make_explore_spawn_weights(
         blocked,
         spawn_weight_positions,
         spawn_weights);

@@ -25,7 +25,7 @@ enum class StateId
     highscore,
     browse_highscore_entry,
     config,
-    descript
+    descript,
 };
 
 class State

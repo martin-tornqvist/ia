@@ -403,7 +403,7 @@ void init()
 
             // True name
             const Rod* const rod =
-                static_cast<const Rod*>(item_factory::mk(d.id, 1));
+                static_cast<const Rod*>(item_factory::make(d.id, 1));
 
             const std::string real_type_name = rod->real_name();
 
@@ -426,7 +426,7 @@ void save()
 {
     for (int i = 0; i < int(ItemId::END); ++i)
     {
-        ItemDataT& d = item_data::data[i];
+        ItemData& d = item_data::data[i];
 
         if (d.type == ItemType::rod)
         {
@@ -448,7 +448,7 @@ void load()
 {
     for (int i = 0; i < int(ItemId::END); ++i)
     {
-        ItemDataT& d = item_data::data[i];
+        ItemData& d = item_data::data[i];
 
         if (d.type == ItemType::rod)
         {

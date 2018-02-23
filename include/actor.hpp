@@ -41,12 +41,12 @@ public:
     bool has_prop(const PropId id) const;
     void apply_prop(Prop* const prop);
 
-    ActorDataT& data()
+    ActorData& data()
     {
         return *data_;
     }
 
-    const ActorDataT& data() const
+    const ActorData& data() const
     {
         return *data_;
     }
@@ -68,15 +68,15 @@ public:
     // taking various conditions such as light/dark into concern.
     ActionResult roll_sneak(const Actor& actor_searching) const;
 
-    void place(const P& pos_, ActorDataT& data);
+    void init(const P& pos_, ActorData& data);
 
-    virtual void place_hook() {}
+    // TODO: This will be removed
+    virtual void init_hook() {}
 
     ActorDied hit(int dmg,
                   const DmgType dmg_type,
                   const DmgMethod method = DmgMethod::END,
-                  const AllowWound allow_wound = AllowWound::yes,
-                  const Actor* const attacker = nullptr);
+                  const AllowWound allow_wound = AllowWound::yes);
 
     ActorDied hit_spi(const int dmg,
                       const Verbosity verbosity = Verbosity::verbose);
@@ -250,8 +250,6 @@ protected:
         (void)allow_wound;
     }
 
-    virtual void mk_start_items() {}
-
     ActorState  state_;
 
     int hp_;
@@ -262,7 +260,7 @@ protected:
     P lair_pos_;
 
     PropHandler* properties_;
-    ActorDataT* data_;
+    ActorData* data_;
     Inventory* inv_;
 };
 

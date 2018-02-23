@@ -15,7 +15,7 @@ enum class PotionAlignment
 class Potion: public Item
 {
 public:
-    Potion(ItemDataT* const item_data);
+    Potion(ItemData* const item_data);
 
     virtual ~Potion() {}
 
@@ -63,7 +63,7 @@ private:
 class PotionVitality: public Potion
 {
 public:
-    PotionVitality(ItemDataT* const item_data) :
+    PotionVitality(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionVitality() {}
 
@@ -94,7 +94,7 @@ private:
 class PotionSpirit: public Potion
 {
 public:
-    PotionSpirit(ItemDataT* const item_data) :
+    PotionSpirit(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionSpirit() {}
 
@@ -122,7 +122,7 @@ private:
 class PotionBlindness: public Potion
 {
 public:
-    PotionBlindness(ItemDataT* const item_data) :
+    PotionBlindness(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionBlindness() {}
 
@@ -150,7 +150,7 @@ private:
 class PotionParal: public Potion
 {
 public:
-    PotionParal(ItemDataT* const item_data) :
+    PotionParal(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionParal() {}
 
@@ -178,7 +178,7 @@ private:
 class PotionDisease: public Potion
 {
 public:
-    PotionDisease(ItemDataT* const item_data) :
+    PotionDisease(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionDisease() {}
 
@@ -210,7 +210,7 @@ private:
 class PotionConf: public Potion
 {
 public:
-    PotionConf(ItemDataT* const item_data) :
+    PotionConf(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionConf() {}
     void quaff_impl(Actor& actor) override;
@@ -237,7 +237,7 @@ private:
 class PotionFortitude: public Potion
 {
 public:
-    PotionFortitude(ItemDataT* const item_data) :
+    PotionFortitude(ItemData* const item_data) :
         Potion(item_data) {}
 
     ~PotionFortitude() {}
@@ -268,7 +268,7 @@ private:
 class PotionPoison: public Potion
 {
 public:
-    PotionPoison(ItemDataT* const item_data) :
+    PotionPoison(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionPoison() {}
 
@@ -296,7 +296,7 @@ private:
 class PotionInsight: public Potion
 {
 public:
-    PotionInsight(ItemDataT* const item_data) :
+    PotionInsight(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionInsight() {}
 
@@ -329,7 +329,7 @@ private:
 class PotionRFire: public Potion
 {
 public:
-    PotionRFire(ItemDataT* const item_data) :
+    PotionRFire(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionRFire() {}
 
@@ -357,7 +357,7 @@ private:
 class PotionCuring: public Potion
 {
 public:
-    PotionCuring(ItemDataT* const item_data) :
+    PotionCuring(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionCuring() {}
 
@@ -388,7 +388,7 @@ private:
 class PotionRElec: public Potion
 {
 public:
-    PotionRElec(ItemDataT* const item_data) :
+    PotionRElec(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionRElec() {}
 
@@ -416,7 +416,7 @@ private:
 class PotionDescent: public Potion
 {
 public:
-    PotionDescent(ItemDataT* const item_data) :
+    PotionDescent(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionDescent() {}
 
@@ -450,7 +450,7 @@ private:
 class PotionInvis: public Potion
 {
 public:
-    PotionInvis(ItemDataT* const item_data) :
+    PotionInvis(ItemData* const item_data) :
         Potion(item_data) {}
     ~PotionInvis() {}
 

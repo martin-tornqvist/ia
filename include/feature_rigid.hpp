@@ -108,7 +108,7 @@ public:
 
     void add_light(bool light[map_w][map_h]) const override final;
 
-    void mk_bloody()
+    void make_bloody()
     {
         is_bloody_ = true;
     }

@@ -72,7 +72,7 @@ void register_room(Room& room)
     }
 }
 
-void mk_floor(const Room& room)
+void make_floor(const Room& room)
 {
     for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
     {
@@ -226,7 +226,7 @@ void cut_room_corners(const Room& room)
     }
 }
 
-void mk_pillars_in_room(const Room& room)
+void make_pillars_in_room(const Room& room)
 {
     const P& room_p0(room.r_.p0);
     const P& room_p1(room.r_.p1);
@@ -595,7 +595,7 @@ bool is_choke_point(const P& p,
     return true;
 }
 
-void mk_pathfind_corridor(Room& room_0,
+void make_pathfind_corridor(Room& room_0,
                           Room& room_1,
                           bool door_proposals[map_w][map_h])
 {
@@ -856,7 +856,7 @@ void mk_pathfind_corridor(Room& room_0,
                 ((int)i < (int)path.size() - 3) &&
                 (i % 4 == 0))
             {
-                Room* link = room_factory::mk(RoomType::corr_link, R(p, p));
+                Room* link = room_factory::make(RoomType::corr_link, R(p, p));
 
                 map::room_list.push_back(link);
 
@@ -960,7 +960,7 @@ void rnd_walk(const P& p0,
     }
 }
 
-void mk_explore_spawn_weights(const bool blocked[map_w][map_h],
+void make_explore_spawn_weights(const bool blocked[map_w][map_h],
                               std::vector<P>& positions_out,
                               std::vector<int>& weights_out)
 {

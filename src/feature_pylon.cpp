@@ -31,10 +31,10 @@ Pylon::Pylon(const P& p, PylonId id) :
         }
     }
 
-    pylon_impl_.reset(mk_pylon_impl_from_id(id));
+    pylon_impl_.reset(make_pylon_impl_from_id(id));
 }
 
-PylonImpl* Pylon::mk_pylon_impl_from_id(const PylonId id)
+PylonImpl* Pylon::make_pylon_impl_from_id(const PylonId id)
 {
     switch(id)
     {

@@ -13,10 +13,12 @@ set(SRC
   include/ability_values.hpp
   include/actor_data.hpp
   include/actor_factory.hpp
+  include/actor_items.hpp
   include/actor.hpp
   include/actor_mon.hpp
   include/actor_player.hpp
   include/ai.hpp
+  include/attack_data.hpp
   include/attack.hpp
   include/audio.hpp
   include/bot.hpp
@@ -51,6 +53,7 @@ set(SRC
   include/inventory.hpp
   include/io.hpp
   include/item_artifact.hpp
+  include/item_att_property.hpp
   include/item_data.hpp
   include/item_device.hpp
   include/item_factory.hpp
@@ -100,9 +103,11 @@ set(SRC
   src/actor.cpp
   src/actor_data.cpp
   src/actor_factory.cpp
+  src/actor_items.cpp
   src/actor_mon.cpp
   src/actor_player.cpp
   src/ai.cpp
+  src/attack_data.cpp
   src/attack.cpp
   src/audio.cpp
   src/bot.cpp

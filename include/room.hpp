@@ -109,11 +109,11 @@ namespace room_factory
 void init_room_bucket();
 
 // NOTE: These functions do not make rooms on the map, just create Room objects.
-//       Use the "mk_room..." functions in the map generator for a convenient
+//       Use the "make_room..." functions in the map generator for a convenient
 //       way to generate rooms on the map.
-Room* mk(const RoomType type, const R& r);
+Room* make(const RoomType type, const R& r);
 
-Room* mk_random_room(const R& r, const IsSubRoom is_subroom);
+Room* make_random_room(const R& r, const IsSubRoom is_subroom);
 
 } // room_factory
 
@@ -146,7 +146,7 @@ public:
     std::vector<Room*> sub_rooms_;
 
 protected:
-    void mk_drk() const;
+    void make_drk() const;
 };
 
 class StdRoom : public Room

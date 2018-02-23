@@ -26,7 +26,7 @@ bool make_room_for_friend(Mon& mon);
 
 bool move_to_random_adj_cell(Mon& mon);
 
-bool move_to_tgt_simple(Mon& mon);
+bool move_to_target_simple(Mon& mon);
 
 bool step_path(Mon& mon, std::vector<P>& path);
 
@@ -46,7 +46,7 @@ std::vector<P> find_path_to_lair_if_no_los(Mon& mon, const P& lair_p);
 
 std::vector<P> find_path_to_leader(Mon& mon);
 
-std::vector<P> find_path_to_tgt(Mon& mon);
+std::vector<P> find_path_to_target(Mon& mon);
 
 void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
 

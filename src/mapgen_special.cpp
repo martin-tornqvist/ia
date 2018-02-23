@@ -29,7 +29,7 @@ namespace mapgen
 // -----------------------------------------------------------------------------
 // Forest
 // -----------------------------------------------------------------------------
-bool mk_intro_lvl()
+bool make_intro_lvl()
 {
     map::reset_map();
 
@@ -294,7 +294,7 @@ bool mk_intro_lvl()
 // -----------------------------------------------------------------------------
 // Egypt
 // -----------------------------------------------------------------------------
-bool mk_egypt_lvl()
+bool make_egypt_lvl()
 {
     map::reset_map();
 
@@ -360,7 +360,7 @@ bool mk_egypt_lvl()
                 if (actor_id != ActorId::END)
                 {
                     Actor* const actor =
-                        actor_factory::mk(actor_id, p);
+                        actor_factory::make(actor_id, p);
 
                     static_cast<Mon*>(actor)->is_roaming_allowed_ =
                         MonRoamingAllowed::no;
@@ -415,7 +415,7 @@ bool mk_egypt_lvl()
         }
     }
 
-    populate_items::mk_items_on_floor();
+    populate_items::make_items_on_floor();
 
     return true;
 }
@@ -423,7 +423,7 @@ bool mk_egypt_lvl()
 // -----------------------------------------------------------------------------
 // Leng
 // -----------------------------------------------------------------------------
-bool mk_leng_lvl()
+bool make_leng_lvl()
 {
     map::reset_map();
 
@@ -455,7 +455,7 @@ bool mk_leng_lvl()
                 }
                 else if (c == 'S')
                 {
-                    actor_factory::mk(ActorId::leng_spider, p);
+                    actor_factory::make(ActorId::leng_spider, p);
                 }
                 else
                 {
@@ -498,7 +498,7 @@ bool mk_leng_lvl()
 
                 if (c == 'E')
                 {
-                    actor_factory::mk(ActorId::leng_elder, p);
+                    actor_factory::make(ActorId::leng_elder, p);
                 }
             }
             break;
@@ -530,7 +530,7 @@ bool mk_leng_lvl()
 // -----------------------------------------------------------------------------
 // Rat cave
 // -----------------------------------------------------------------------------
-bool mk_rat_cave_level()
+bool make_rat_cave_level()
 {
     map::reset_map();
 
@@ -586,11 +586,11 @@ bool mk_rat_cave_level()
 
                     if (rnd::one_in(rat_thing_one_in_n_rat))
                     {
-                        actor = actor_factory::mk(ActorId::rat_thing, p);
+                        actor = actor_factory::make(ActorId::rat_thing, p);
                     }
                     else
                     {
-                        actor = actor_factory::mk(ActorId::rat, p);
+                        actor = actor_factory::make(ActorId::rat, p);
                     }
 
                     auto prop = new PropFrenzied();
@@ -664,7 +664,7 @@ bool mk_rat_cave_level()
         }
     }
 
-    populate_items::mk_items_on_floor();
+    populate_items::make_items_on_floor();
 
     return true;
 }
@@ -672,7 +672,7 @@ bool mk_rat_cave_level()
 // -----------------------------------------------------------------------------
 // Boss level
 // -----------------------------------------------------------------------------
-bool mk_boss_lvl()
+bool make_boss_lvl()
 {
     map::reset_map();
 
@@ -710,19 +710,19 @@ bool mk_boss_lvl()
                 else if (c == 'P')
                 {
                     high_priest =
-                        actor_factory::mk(ActorId::the_high_priest, p);
+                        actor_factory::make(ActorId::the_high_priest, p);
                 }
                 else if (c == 'W')
                 {
-                    actor_factory::mk(ActorId::high_priest_guard_war_vet, p);
+                    actor_factory::make(ActorId::high_priest_guard_war_vet, p);
                 }
                 else if (c == 'R')
                 {
-                    actor_factory::mk(ActorId::high_priest_guard_rogue, p);
+                    actor_factory::make(ActorId::high_priest_guard_rogue, p);
                 }
                 else if (c == 'G')
                 {
-                    actor_factory::mk(ActorId::high_priest_guard_ghoul, p);
+                    actor_factory::make(ActorId::high_priest_guard_ghoul, p);
                 }
             }
             break;
@@ -770,7 +770,7 @@ bool mk_boss_lvl()
 // -----------------------------------------------------------------------------
 // Trapezohedron level
 // -----------------------------------------------------------------------------
-bool mk_trapez_lvl()
+bool make_trapez_lvl()
 {
     map::reset_map();
 
@@ -804,7 +804,7 @@ bool mk_trapez_lvl()
                 }
                 else if (c == 'o')
                 {
-                    item_factory::mk_item_on_floor(ItemId::trapez, p);
+                    item_factory::make_item_on_floor(ItemId::trapez, p);
                 }
             }
             break;

@@ -572,7 +572,7 @@ void EnterNameState::update()
 {
     if (config::is_bot_playing())
     {
-        ActorDataT& d = map::player->data();
+        ActorData& d = map::player->data();
 
         d.name_a = d.name_the = "Bot";
 
@@ -600,7 +600,7 @@ void EnterNameState::update()
             config::set_default_player_name(current_str_);
         }
 
-        ActorDataT& d = map::player->data();
+        ActorData& d = map::player->data();
 
         d.name_a = d.name_the = current_str_;
 

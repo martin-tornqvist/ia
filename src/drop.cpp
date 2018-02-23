@@ -50,7 +50,7 @@ void drop_item_from_inv(Actor& actor,
         return;
     }
 
-    const ItemDataT& data = item_to_drop->data();
+    const ItemData& data = item_to_drop->data();
 
     const bool is_stackable = data.is_stackable;
 

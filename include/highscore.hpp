@@ -100,7 +100,7 @@ void cleanup();
 // NOTE: All this does is construct a HighscoreEntry object, populated with
 //       highscore info based on the current game - it has no side effects
 //
-HighscoreEntry mk_entry_from_current_game_data(
+HighscoreEntry make_entry_from_current_game_data(
     const std::string game_summary_file_path,
     const IsWin is_win);
 

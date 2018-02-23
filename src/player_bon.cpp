@@ -28,9 +28,9 @@ bool is_trait_blocked_for_bg(const Trait trait, const Bg bg)
 {
     switch (trait)
     {
-    case Trait::adept_melee_fighter:
-    case Trait::expert_melee_fighter:
-    case Trait::master_melee_fighter:
+    case Trait::adept_melee:
+    case Trait::expert_melee:
+    case Trait::master_melee:
     case Trait::cool_headed:
     case Trait::perseverant:
     case Trait::ravenous:
@@ -174,13 +174,13 @@ std::string trait_title(const Trait id)
 {
     switch (id)
     {
-    case Trait::adept_melee_fighter:
+    case Trait::adept_melee:
         return "Adept Melee Fighter";
 
-    case Trait::expert_melee_fighter:
+    case Trait::expert_melee:
         return "Expert Melee Fighter";
 
-    case Trait::master_melee_fighter:
+    case Trait::master_melee:
         return "Master Melee Fighter";
 
     case Trait::cool_headed:
@@ -426,7 +426,7 @@ std::vector<ColoredString> bg_descr(const Bg id)
         put("");
         put_trait(Trait::adept_marksman);
         put("");
-        put_trait(Trait::adept_melee_fighter);
+        put_trait(Trait::adept_melee);
         put("");
         put_trait(Trait::tough);
         put("");
@@ -445,17 +445,17 @@ std::string trait_descr(const Trait id)
 {
     switch (id)
     {
-    case Trait::adept_melee_fighter:
+    case Trait::adept_melee:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
             "attacks";
 
-    case Trait::expert_melee_fighter:
+    case Trait::expert_melee:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
             "attacks";
 
-    case Trait::master_melee_fighter:
+    case Trait::master_melee:
         return
             "+10% hit chance, +10% attack speed, and +1 damage with melee "
             "attacks";
@@ -727,15 +727,15 @@ void trait_prereqs(const Trait trait,
 
     switch (trait)
     {
-    case Trait::adept_melee_fighter:
+    case Trait::adept_melee:
         break;
 
-    case Trait::expert_melee_fighter:
-        traits_out.push_back(Trait::adept_melee_fighter);
+    case Trait::expert_melee:
+        traits_out.push_back(Trait::adept_melee);
         break;
 
-    case Trait::master_melee_fighter:
-        traits_out.push_back(Trait::expert_melee_fighter);
+    case Trait::master_melee:
+        traits_out.push_back(Trait::expert_melee);
         break;
 
     case Trait::adept_marksman:
@@ -941,7 +941,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::ravenous:
-        traits_out.push_back(Trait::adept_melee_fighter);
+        traits_out.push_back(Trait::adept_melee);
         bg_out = Bg::ghoul;
         break;
 
@@ -955,7 +955,7 @@ void trait_prereqs(const Trait trait,
         break;
 
     case Trait::indomitable_fury:
-        traits_out.push_back(Trait::adept_melee_fighter);
+        traits_out.push_back(Trait::adept_melee);
         traits_out.push_back(Trait::tough);
         bg_out = Bg::ghoul;
         break;
@@ -1168,7 +1168,7 @@ void pick_bg(const Bg bg)
 
     case Bg::war_vet:
     {
-        pick_trait(Trait::adept_melee_fighter);
+        pick_trait(Trait::adept_melee);
         pick_trait(Trait::adept_marksman);
         pick_trait(Trait::tough);
         pick_trait(Trait::healer);
@@ -1384,7 +1384,7 @@ std::string all_picked_traits_titles_line()
     return out;
 }
 
-bool gets_undead_bane_bon(const ActorDataT& actor_data)
+bool gets_undead_bane_bon(const ActorData& actor_data)
 {
     return
         player_bon::traits[(size_t)Trait::undead_bane] &&

@@ -100,7 +100,7 @@ std::vector<ActorId> valid_auto_spawn_monsters(
     return ret;
 }
 
-bool mk_random_group_for_room(const RoomType room_type,
+bool make_random_group_for_room(const RoomType room_type,
                               const std::vector<P>& sorted_free_cells,
                               bool blocked_out[map_w][map_h])
 {
@@ -123,7 +123,7 @@ bool mk_random_group_for_room(const RoomType room_type,
 
             const auto id = id_bucket[i];
 
-            const ActorDataT& d = actor_data::data[(size_t)id];
+            const ActorData& d = actor_data::data[(size_t)id];
 
             for (const auto native_room_type : d.native_rooms)
             {
@@ -155,7 +155,7 @@ bool mk_random_group_for_room(const RoomType room_type,
     {
         const ActorId id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
-        mk_group_at(id,
+        make_group_at(id,
                     sorted_free_cells,
                     blocked_out,
                     MonRoamingAllowed::yes);
@@ -165,7 +165,7 @@ bool mk_random_group_for_room(const RoomType room_type,
     }
 }
 
-void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
+void make_group_of_random_at(const std::vector<P>& sorted_free_cells,
                            bool blocked_out[map_w][map_h],
                            const int nr_lvls_out_of_depth_allowed,
                            const MonRoamingAllowed is_roaming_allowed,
@@ -179,7 +179,7 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
     {
         const ActorId id = id_bucket[rnd::range(0, id_bucket.size() - 1)];
 
-        mk_group_at(id,
+        make_group_at(id,
                     sorted_free_cells,
                     blocked_out,
                     is_roaming_allowed);
@@ -188,7 +188,7 @@ void mk_group_of_random_at(const std::vector<P>& sorted_free_cells,
 
 } // namespace
 
-std::vector<P> mk_sorted_free_cells(const P& origin,
+std::vector<P> make_sorted_free_cells(const P& origin,
                                     const bool blocked[map_w][map_h])
 {
     std::vector<P> out;
@@ -218,12 +218,12 @@ std::vector<P> mk_sorted_free_cells(const P& origin,
     return out;
 }
 
-void mk_group_at(const ActorId id,
+void make_group_at(const ActorId id,
                  const std::vector<P>& sorted_free_cells,
                  bool blocked_out[map_w][map_h],
                  const MonRoamingAllowed is_roaming_allowed)
 {
-    const ActorDataT& d = actor_data::data[(size_t)id];
+    const ActorData& d = actor_data::data[(size_t)id];
 
     int max_nr_in_group = 1;
 
@@ -273,7 +273,7 @@ void mk_group_at(const ActorId id,
             ASSERT(!blocked_out[p.x][p.y]);
         }
 
-        Actor* const actor = actor_factory::mk(id, p);
+        Actor* const actor = actor_factory::make(id, p);
 
         Mon* const mon = static_cast<Mon*>(actor);
 
@@ -347,7 +347,7 @@ void try_spawn_due_to_time_passed()
     {
         const P origin = rnd::element(free_cells_vector);
 
-        free_cells_vector = mk_sorted_free_cells(origin, blocked);
+        free_cells_vector = make_sorted_free_cells(origin, blocked);
 
         if (!free_cells_vector.empty())
         {
@@ -355,7 +355,7 @@ void try_spawn_due_to_time_passed()
             {
                 const int nr_ood = random_out_of_depth();
 
-                mk_group_of_random_at(free_cells_vector,
+                make_group_of_random_at(free_cells_vector,
                                       blocked,
                                       nr_ood,
                                       MonRoamingAllowed::yes,
@@ -456,10 +456,10 @@ void populate_std_lvl()
                     const P origin = rnd::element(origin_bucket);
 
                     const auto sorted_free_cells =
-                        mk_sorted_free_cells(origin, blocked);
+                        make_sorted_free_cells(origin, blocked);
 
                     const bool did_make_group =
-                        mk_random_group_for_room(
+                        make_random_group_for_room(
                             room->type_,
                             sorted_free_cells,
                             blocked);
@@ -518,10 +518,10 @@ void populate_std_lvl()
             const P origin = rnd::element(origin_bucket);
 
             const auto sorted_free_cells =
-                mk_sorted_free_cells(origin, blocked);
+                make_sorted_free_cells(origin, blocked);
 
             const bool did_make_group =
-                mk_random_group_for_room(
+                make_random_group_for_room(
                     RoomType::plain,
                     sorted_free_cells,
                     blocked);

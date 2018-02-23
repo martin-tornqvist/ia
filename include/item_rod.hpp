@@ -7,7 +7,7 @@
 class Rod: public Item
 {
 public:
-    Rod(ItemDataT* const item_data) :
+    Rod(ItemData* const item_data) :
         Item                    (item_data),
         nr_charge_turns_left_   (0) {}
 
@@ -53,7 +53,7 @@ private:
 class RodCuring : public Rod
 {
 public:
-    RodCuring(ItemDataT* const item_data) :
+    RodCuring(ItemData* const item_data) :
         Rod(item_data) {}
 
     ~RodCuring() {}
@@ -78,7 +78,7 @@ protected:
 class RodOpening : public Rod
 {
 public:
-    RodOpening(ItemDataT* const item_data) :
+    RodOpening(ItemData* const item_data) :
         Rod(item_data) {}
 
     ~RodOpening() {}
@@ -103,7 +103,7 @@ protected:
 class RodBless : public Rod
 {
 public:
-    RodBless(ItemDataT* const item_data) :
+    RodBless(ItemData* const item_data) :
         Rod(item_data) {}
 
     ~RodBless() {}
@@ -127,7 +127,7 @@ protected:
 class RodCloudMinds : public Rod
 {
 public:
-    RodCloudMinds(ItemDataT* const item_data) :
+    RodCloudMinds(ItemData* const item_data) :
         Rod(item_data) {}
 
     ~RodCloudMinds() {}
@@ -157,7 +157,7 @@ protected:
 class RodShockwave : public Rod
 {
 public:
-    RodShockwave(ItemDataT* const item_data) :
+    RodShockwave(ItemData* const item_data) :
         Rod(item_data) {}
 
     ~RodShockwave() {}

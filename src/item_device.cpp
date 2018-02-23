@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 // Device
 // -----------------------------------------------------------------------------
-Device::Device(ItemDataT* const item_data) :
+Device::Device(ItemData* const item_data) :
     Item(item_data) {}
 
 void Device::identify(const Verbosity verbosity)
@@ -53,7 +53,7 @@ void Device::identify(const Verbosity verbosity)
 // -----------------------------------------------------------------------------
 // Strange device
 // -----------------------------------------------------------------------------
-StrangeDevice::StrangeDevice(ItemDataT* const item_data) :
+StrangeDevice::StrangeDevice(ItemData* const item_data) :
     Device(item_data),
     condition_(rnd::coin_toss() ? Condition::fine : Condition::shoddy) {}
 
@@ -283,7 +283,7 @@ ConsumeItem DeviceBlaster::run_effect()
     else // Targets are available
     {
         Spell* const spell =
-            spell_handling::mk_spell_from_id(SpellId::aza_wrath);
+            spell_handling::make_spell_from_id(SpellId::aza_wrath);
 
         spell->cast(map::player,
                     SpellSkill::basic,
@@ -394,7 +394,7 @@ ConsumeItem DeviceDeafening::run_effect()
 // -----------------------------------------------------------------------------
 // Electric lantern
 // -----------------------------------------------------------------------------
-DeviceLantern::DeviceLantern(ItemDataT* const item_data) :
+DeviceLantern::DeviceLantern(ItemData* const item_data) :
     Device                  (item_data),
     nr_turns_left_          (100),
     is_activated_           (false) {}

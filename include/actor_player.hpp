@@ -71,8 +71,6 @@ public:
 
     SpellSkill spell_skill(const SpellId id) const override;
 
-    void mk_start_items() override;
-
     void on_actor_turn() override;
     void on_std_turn() override;
 
@@ -103,6 +101,11 @@ public:
     void auto_melee();
 
     Wpn& unarmed_wpn();
+
+    void set_unarmed_wpn(Wpn* wpn)
+    {
+        unarmed_wpn_ = wpn;
+    }
 
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);
@@ -136,12 +139,12 @@ public:
     // are unique monsters on the map, and the player is observant
     void mon_feeling();
 
-    Item* thrown_item;
-    MedicalBag* active_medical_bag;
-    int nr_turns_until_handle_armor_done;
-    int armor_putting_on_backpack_idx;
-    bool is_dropping_armor_from_body_slot;
-    Explosive* active_explosive;
+    Item* thrown_item_;
+    MedicalBag* active_medical_bag_;
+    int nr_turns_until_handle_armor_done_;
+    int armor_putting_on_backpack_idx_;
+    bool is_dropping_armor_from_body_slot_;
+    Explosive* active_explosive_;
     Actor* tgt_;
     int wait_turns_left;
     int ins_;
@@ -181,4 +184,4 @@ private:
     Wpn* unarmed_wpn_;
 };
 
-#endif
+#endif // PLAYER_HPP

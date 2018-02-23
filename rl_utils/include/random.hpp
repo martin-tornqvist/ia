@@ -10,19 +10,19 @@
 struct Dice
 {
     Dice() :
-        rolls   (0),
-        sides   (0),
-        plus    (0) {}
+        rolls(0),
+        sides(0),
+        plus(0) {}
 
     Dice(const int rolls, const int sides, const int plus = 0) :
-        rolls   (rolls),
-        sides   (sides),
-        plus    (plus) {}
+        rolls(rolls),
+        sides(sides),
+        plus(plus) {}
 
     Dice(const Dice& other) :
-        rolls   (other.rolls),
-        sides   (other.sides),
-        plus    (other.plus) {}
+        rolls(other.rolls),
+        sides(other.sides),
+        plus(other.plus) {}
 
     Dice& operator=(const Dice& other)
     {

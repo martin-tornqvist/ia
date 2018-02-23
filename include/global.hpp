@@ -92,7 +92,8 @@ const int expl_std_radi = 2;
 
 const int enc_immobile_lvl = 125;
 
-const int nr_mg_projectiles = 5;
+const size_t nr_mg_projectiles = 5;
+
 const int nr_cell_jumps_mg_projectiles = 2;
 
 const int mi_go_gun_hp_drained = 3;
@@ -216,7 +217,7 @@ enum class ItemRefAttInf
     thrown
 };
 
-enum class ItemRefDmgValue
+enum class ItemRefDmg
 {
     average,
     average_and_melee_plus,
