@@ -40,27 +40,18 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -106,15 +97,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
@@ -152,7 +136,7 @@
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="20">alone</group_size>
             <group_size weight="70">few</group_size>
             <group_size weight="10">pack</group_size>
@@ -205,15 +189,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
@@ -246,7 +223,7 @@
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="20">alone</group_size>
             <group_size weight="70">few</group_size>
             <group_size weight="10">pack</group_size>
@@ -299,15 +276,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
@@ -346,7 +316,7 @@
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="3">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>plain</native_room>
@@ -397,15 +367,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
@@ -439,8 +402,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>monster</native_room>
@@ -489,15 +452,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
@@ -530,8 +486,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>monster</native_room>
@@ -580,15 +536,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -619,8 +567,7 @@
             <max_dungeon_level>4</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="2">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>monster</native_room>
@@ -668,15 +615,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -707,8 +646,7 @@
             <max_dungeon_level>4</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="2">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>monster</native_room>
@@ -757,15 +695,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -796,8 +726,8 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>monster</native_room>
             <native_room>plain</native_room>
@@ -847,15 +777,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -888,8 +810,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>monster</native_room>
             <native_room>plain</native_room>
@@ -940,20 +861,11 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -972,8 +884,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>human</native_room>
@@ -1023,20 +934,11 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -1055,8 +957,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="4">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>plain</native_room>
@@ -1107,20 +1008,11 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -1139,8 +1031,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>ritual</native_room>
@@ -1190,15 +1082,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>true</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <rat/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1229,8 +1113,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -1276,15 +1160,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>giant</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>true</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <spider/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1318,8 +1194,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="4">few</group_size>
             <group_size weight="1">pack</group_size>
             <native_room>plain</native_room>
@@ -1370,20 +1245,11 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -1402,8 +1268,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>human</native_room>
@@ -1454,20 +1319,11 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>14</turns_aware>
@@ -1486,8 +1342,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>human</native_room>
@@ -1538,20 +1393,11 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -1570,8 +1416,7 @@
             <max_dungeon_level>29</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>human</native_room>
@@ -1622,15 +1467,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>true</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <spider/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1662,8 +1499,7 @@
             <max_dungeon_level>18</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="3">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>spider</native_room>
@@ -1713,15 +1549,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>true</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <spider/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1753,8 +1581,7 @@
             <max_dungeon_level>18</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="3">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>spider</native_room>
@@ -1804,15 +1631,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>true</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <spider/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1844,8 +1663,7 @@
             <max_dungeon_level>18</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="3">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>spider</native_room>
@@ -1895,15 +1713,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>true</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <spider/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -1935,8 +1745,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="4">few</group_size>
             <group_size weight="8">pack</group_size>
             <group_size weight="1">swarm</group_size>
@@ -1988,15 +1797,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>true</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <rat/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2028,8 +1829,7 @@
             <max_dungeon_level>6</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="5">few</group_size>
             <group_size weight="10">pack</group_size>
             <group_size weight="1">swarm</group_size>
@@ -2077,15 +1877,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>true</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <rat/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2116,8 +1908,7 @@
             <max_dungeon_level>3</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="20">few</group_size>
             <group_size weight="5">pack</group_size>
             <group_size weight="1">swarm</group_size>
@@ -2169,15 +1960,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>true</is_snake>
-            <is_reptile>true</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <snake/>
+            <reptile/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2209,8 +1993,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -2260,15 +2043,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>true</is_snake>
-            <is_reptile>true</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <snake/>
+            <reptile/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2303,8 +2079,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -2354,15 +2129,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>true</is_snake>
-            <is_reptile>true</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <snake/>
+            <reptile/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2394,8 +2162,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -2445,15 +2212,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>true</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <canine/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2491,8 +2250,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="2">few</group_size>
             <native_room>plain</native_room>
@@ -2541,15 +2299,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>true</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <canine/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2587,8 +2337,7 @@
             <max_dungeon_level>28</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="2">few</group_size>
             <native_room>plain</native_room>
@@ -2637,15 +2386,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>true</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <canine/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2677,8 +2418,8 @@
             <max_dungeon_level>999</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>monster</native_room>
@@ -2729,15 +2470,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2769,8 +2501,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="5">alone</group_size>
             <group_size weight="10">few</group_size>
             <native_room>plain</native_room>
@@ -2821,15 +2552,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2861,8 +2583,7 @@
             <max_dungeon_level>28</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>forest</native_room>
@@ -2912,15 +2633,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -2962,8 +2674,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -3012,15 +2723,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3062,8 +2764,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -3112,15 +2813,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3154,8 +2846,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -3204,15 +2895,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3246,8 +2928,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -3296,15 +2977,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3338,8 +3010,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -3388,15 +3059,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3430,8 +3093,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="20">few</group_size>
             <group_size weight="10">pack</group_size>
             <group_size weight="1">swarm</group_size>
@@ -3483,15 +3145,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3525,8 +3179,7 @@
             <max_dungeon_level>8</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">few</group_size>
             <group_size weight="2">pack</group_size>
             <native_room>plain</native_room>
@@ -3574,15 +3227,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3616,8 +3261,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>forest</native_room>
@@ -3666,15 +3310,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>true</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <canine/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3705,8 +3341,7 @@
             <max_dungeon_level>2</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">few</group_size>
             <group_size weight="2">pack</group_size>
             <native_room>plain</native_room>
@@ -3755,15 +3390,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>true</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
+            <ghost/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3799,8 +3427,7 @@
             <max_dungeon_level>8</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>crypt</native_room>
@@ -3848,15 +3475,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>true</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
+            <ghost/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3893,8 +3513,7 @@
             <max_dungeon_level>15</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>crypt</native_room>
@@ -3942,15 +3561,8 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>true</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <undead/>
+            <ghost/>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -3986,8 +3598,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>crypt</native_room>
@@ -4035,15 +3646,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4074,8 +3676,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>cave</native_room>
             <native_room>chasm</native_room>
@@ -4126,15 +3727,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4165,8 +3757,7 @@
             <max_dungeon_level>28</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>cave</native_room>
             <native_room>chasm</native_room>
@@ -4217,15 +3808,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4256,8 +3838,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>plain</native_room>
@@ -4307,15 +3888,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4347,8 +3919,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="4">few</group_size>
             <group_size weight="2">pack</group_size>
@@ -4399,15 +3970,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4439,8 +4001,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="3">few</group_size>
             <native_room>plain</native_room>
@@ -4490,15 +4051,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>giant</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4532,8 +4084,8 @@
             <max_dungeon_level>999</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>forest</native_room>
@@ -4582,15 +4134,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4622,8 +4165,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="4">alone</group_size>
             <group_size weight="1">few</group_size>
             <native_room>plain</native_room>
@@ -4672,15 +4214,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4711,8 +4244,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>forest</native_room>
@@ -4760,15 +4292,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4801,8 +4324,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">pack</group_size>
             <group_size weight="4">swarm</group_size>
             <native_room>plain</native_room>
@@ -4850,15 +4372,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4872,7 +4387,6 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -4891,8 +4405,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -4940,15 +4453,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -4958,7 +4464,6 @@
                 <damage>10</damage>
             </attack>
         </attacks>
-        <properties/>
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -4977,8 +4482,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="20">alone</group_size>
             <group_size weight="60">few</group_size>
             <group_size weight="10">pack</group_size>
@@ -5029,15 +4533,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5051,7 +4548,6 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -5070,8 +4566,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
         </spawning>
@@ -5118,15 +4614,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5140,7 +4629,6 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -5159,8 +4647,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -5208,15 +4696,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>true</is_amphibian>
+            <humanoid/>
+            <amphibian/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5229,7 +4710,6 @@
                 <damage>5</damage>
             </attack>
         </attacks>
-        <properties/>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -5248,8 +4728,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="3">pack</group_size>
             <group_size weight="1">swarm</group_size>
             <native_room>flooded</native_room>
@@ -5298,15 +4777,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5337,8 +4808,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">few</group_size>
             <group_size weight="1">pack</group_size>
             <native_room>forest</native_room>
@@ -5388,15 +4858,7 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5422,8 +4884,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -5469,15 +4931,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5509,8 +4962,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="8">few</group_size>
             <group_size weight="1">pack</group_size>
             <native_room>plain</native_room>
@@ -5561,15 +5013,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5602,8 +5045,7 @@
             <max_dungeon_level>19</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="8">few</group_size>
             <group_size weight="1">pack</group_size>
             <native_room>plain</native_room>
@@ -5654,15 +5096,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5700,8 +5133,7 @@
             <max_dungeon_level>14</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -5749,15 +5181,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5797,8 +5220,7 @@
             <max_dungeon_level>27</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -5846,15 +5268,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5895,8 +5308,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -5944,15 +5356,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -5990,8 +5393,7 @@
             <max_dungeon_level>3</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="3">few</group_size>
             <native_room>plain</native_room>
@@ -6042,15 +5444,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6088,8 +5481,7 @@
             <max_dungeon_level>6</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="3">few</group_size>
             <native_room>plain</native_room>
@@ -6140,15 +5532,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6187,8 +5570,7 @@
             <max_dungeon_level>7</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="3">few</group_size>
             <native_room>plain</native_room>
@@ -6239,15 +5621,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6286,8 +5659,7 @@
             <max_dungeon_level>9</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">alone</group_size>
             <group_size weight="3">few</group_size>
             <native_room>plain</native_room>
@@ -6338,15 +5710,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6389,8 +5752,7 @@
             <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>flooded</native_room>
@@ -6440,15 +5802,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>giant</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6481,8 +5834,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -6531,15 +5883,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>giant</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6573,8 +5916,7 @@
             <max_dungeon_level>999</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>forest</native_room>
             <native_room>plain</native_room>
@@ -6624,15 +5966,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6664,8 +5997,7 @@
             <max_dungeon_level>14</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>flooded</native_room>
@@ -6716,15 +6048,6 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6759,8 +6082,7 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -6806,15 +6128,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>floor</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6853,8 +6166,7 @@
             <max_dungeon_level>8</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>few</group_size>
             <native_room>cave</native_room>
             <native_room>flooded</native_room>
@@ -6905,15 +6217,6 @@
             <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <is_humanoid>false</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
             <can_bleed>false</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6948,8 +6251,7 @@
             <max_dungeon_level>7</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size weight="1">few</group_size>
             <group_size weight="4">pack</group_size>
             <native_room>cave</native_room>
@@ -7001,15 +6303,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -7045,8 +6339,7 @@
             <max_dungeon_level>28</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>false</is_unique>
-            <nr_left_allowed_to_spawn>-1</nr_left_allowed_to_spawn>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>alone</group_size>
             <native_room>plain</native_room>
             <native_room>cave</native_room>
@@ -7094,15 +6387,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -7136,8 +6422,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -7183,15 +6469,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -7218,8 +6497,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -7265,15 +6544,8 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>true</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
+            <undead/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -7300,8 +6572,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>
@@ -7347,15 +6619,7 @@
             <can_bash_doors>true</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
-            <is_humanoid>true</is_humanoid>
-            <is_rat>false</is_rat>
-            <is_canine>false</is_canine>
-            <is_spider>false</is_spider>
-            <is_undead>false</is_undead>
-            <is_ghost>false</is_ghost>
-            <is_snake>false</is_snake>
-            <is_reptile>false</is_reptile>
-            <is_amphibian>false</is_amphibian>
+            <humanoid/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -7388,8 +6652,8 @@
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
-            <is_unique>true</is_unique>
-            <nr_left_allowed_to_spawn>0</nr_left_allowed_to_spawn>
+            <unique/>
+            <nr_allowed_to_spawn>0</nr_allowed_to_spawn>
             <group_size>alone</group_size>
         </spawning>
     </monster>

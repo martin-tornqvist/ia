@@ -16,6 +16,8 @@ Element* first_child(Doc& doc, const std::string name = "");
 
 Element* first_child(Element* e, const std::string name = "");
 
+bool has_child(Element* e, const std::string name);
+
 Element* next_sibling(Element* e, const std::string name = "");
 
 std::string get_text_str(const Element* const e);

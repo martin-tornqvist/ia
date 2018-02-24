@@ -244,7 +244,6 @@ struct ActorData
         int ranged_cooldown_turns;
         int spawn_min_dlvl, spawn_max_dlvl;
         ActorSize actor_size;
-        bool is_humanoid;
         bool allow_generated_descr;
         int nr_kills;
         bool has_player_seen;
@@ -264,6 +263,7 @@ struct ActorData
         std::string spell_cast_msg;
         int erratic_move_pct;
         ShockLvl mon_shock_lvl;
+        bool is_humanoid;
         bool is_rat;
         bool is_canine;
         bool is_spider;

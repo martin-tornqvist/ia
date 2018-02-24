@@ -313,29 +313,23 @@ static void dump_attributes(xml::Element* attrib_e, ActorData& data)
         data.prevent_knockback = xml::get_text_bool(
                 xml::first_child(attrib_e, "always_prevent_knockback"));
 
-        data.is_rat = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_rat"));
+        data.is_humanoid = xml::has_child(attrib_e, "humanoid");
 
-        data.is_canine = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_canine"));
+        data.is_rat = xml::has_child(attrib_e, "rat");
 
-        data.is_spider = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_spider"));
+        data.is_canine = xml::has_child(attrib_e, "canine");
 
-        data.is_undead = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_undead"));
+        data.is_spider = xml::has_child(attrib_e, "spider");
 
-        data.is_ghost = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_ghost"));
+        data.is_undead = xml::has_child(attrib_e, "undead");
 
-        data.is_snake = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_snake"));
+        data.is_ghost = xml::has_child(attrib_e, "ghost");
 
-        data.is_reptile = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_reptile"));
+        data.is_snake = xml::has_child(attrib_e, "snake");
 
-        data.is_amphibian = xml::get_text_bool(
-                xml::first_child(attrib_e, "is_amphibian"));
+        data.is_reptile = xml::has_child(attrib_e, "reptile");
+
+        data.is_amphibian = xml::has_child(attrib_e, "amphibian");
 
         data.can_bleed = xml::get_text_bool(
                 xml::first_child(attrib_e, "can_bleed"));
@@ -475,15 +469,12 @@ static void dump_spawning(xml::Element* spawn_e, ActorData& data)
                 xml::first_child(spawn_e, "auto_spawn"));
 
         data.can_be_summoned_by_mon = xml::get_text_bool(
-                xml::first_child(spawn_e,
-                                 "can_be_summoned_by_monster"));
+                xml::first_child(spawn_e, "can_be_summoned_by_monster"));
 
-        data.is_unique = xml::get_text_bool(
-                xml::first_child(spawn_e, "is_unique"));
+        data.is_unique = xml::has_child(spawn_e, "unique");
 
         data.nr_left_allowed_to_spawn = xml::get_text_int(
-                xml::first_child(spawn_e,
-                                 "nr_left_allowed_to_spawn"));
+                xml::first_child(spawn_e, "nr_left_allowed_to_spawn"));
 
         const std::string group_size_element_str = "group_size";
 
@@ -609,7 +600,6 @@ void ActorData::reset()
         spawn_min_dlvl = -1;
         spawn_max_dlvl = -1;
         actor_size = ActorSize::humanoid;
-        is_humanoid = false;
         allow_generated_descr = true;
         nr_kills = 0;
         has_player_seen = false;
@@ -626,6 +616,7 @@ void ActorData::reset()
         spell_cast_msg = "";
         erratic_move_pct = 0;
         mon_shock_lvl = ShockLvl::none;
+        is_humanoid = false;
         is_rat = false;
         is_canine = false;
         is_spider = false;

@@ -46,6 +46,11 @@ Element* first_child(Element* e, const std::string name)
         return e->FirstChildElement(to_c_str(name));
 }
 
+bool has_child(Element* e, const std::string name)
+{
+        return e->FirstChildElement(to_c_str(name)) != nullptr;
+}
+
 Element* next_sibling(Element* e, const std::string name)
 {
         return e->NextSiblingElement(to_c_str(name));
