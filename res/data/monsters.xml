@@ -54,19 +54,6 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <properties/>
-        <ai>
-            <erratic_move_percent>5</erratic_move_percent>
-            <turns_aware>0</turns_aware>
-            <ranged_cooldown_turns>0</ranged_cooldown_turns>
-            <looks>false</looks>
-            <avoids_blocking_friend>false</avoids_blocking_friend>
-            <attacks>false</attacks>
-            <paths_to_target_when_aware>false</paths_to_target_when_aware>
-            <moves_to_target_when_los>false</moves_to_target_when_los>
-            <moves_to_lair>false</moves_to_lair>
-            <moves_to_leader>false</moves_to_leader>
-            <moves_randomly_when_unaware>false</moves_randomly_when_unaware>
-        </ai>
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>

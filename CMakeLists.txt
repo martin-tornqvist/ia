@@ -98,6 +98,7 @@ set(SRC
   include/text_format.hpp
   include/throwing.hpp
   include/wham.hpp
+  include/xml.hpp
 
   src/ability_values.cpp
   src/actor.cpp
@@ -198,6 +199,7 @@ set(SRC
   src/text_format.cpp
   src/throwing.cpp
   src/wham.cpp
+  src/xml.cpp
 
   rl_utils/include/array2.hpp
   rl_utils/include/bresenham.hpp

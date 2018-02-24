@@ -11,40 +11,40 @@
 class Color
 {
 public:
-    Color();
+        Color();
 
-    Color(uint8_t r, uint8_t g, uint8_t b);
+        Color(uint8_t r, uint8_t g, uint8_t b);
 
-    Color(const SDL_Color& sdl_color);
+        Color(const SDL_Color& sdl_color);
 
-    ~Color();
+        ~Color();
 
-    Color& operator=(const Color& other);
+        Color& operator=(const Color& other);
 
-    bool operator==(const Color& other) const;
+        bool operator==(const Color& other) const;
 
-    bool operator!=(const Color& other) const;
+        bool operator!=(const Color& other) const;
 
-    Color fraction(const double div);
+        Color fraction(const double div);
 
-    bool is_defined() const;
+        bool is_defined() const;
 
-    void clear();
+        void clear();
 
-    SDL_Color sdl_color() const;
+        SDL_Color sdl_color() const;
 
-    uint8_t r() const;
-    uint8_t g() const;
-    uint8_t b() const;
+        uint8_t r() const;
+        uint8_t g() const;
+        uint8_t b() const;
 
-    void set_r(const uint8_t value);
-    void set_g(const uint8_t value);
-    void set_b(const uint8_t value);
+        void set_r(const uint8_t value);
+        void set_g(const uint8_t value);
+        void set_b(const uint8_t value);
 
 private:
-    SDL_Color sdl_color_;
+        SDL_Color sdl_color_;
 
-    bool is_defined_;
+        bool is_defined_;
 };
 
 namespace colors

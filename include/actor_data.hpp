@@ -14,6 +14,7 @@
 #include "audio.hpp"
 #include "item_att_property.hpp"
 
+// TODO: This enum will be removed
 enum class ActorId
 {
         player,
@@ -152,11 +153,11 @@ struct IntrAttData
 
 enum class ActorSpeed
 {
-        sluggish    = 30,
-        slow        = 80,
-        normal      = 100,
-        fast        = 150,
-        fastest     = 300,
+        sluggish        = 30,
+        slow            = 80,
+        normal          = 100,
+        fast            = 150,
+        fastest         = 300,
         END
 };
 

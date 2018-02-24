@@ -5,104 +5,19 @@
 #include <math.h>
 #include <unordered_map>
 
+#include "xml.hpp"
 #include "saving.hpp"
 #include "item_data.hpp"
 #include "property_factory.hpp"
 #include "item_att_property.hpp"
 #include "property.hpp"
 
-#include "tinyxml2.h"
-
-IntrAttData::IntrAttData() :
-        item_id(ItemId::END),
-        dmg(0),
-        prop_applied()
-{
-
-}
-
-void ActorData::reset()
-{
-        id = ActorId::END;
-        name_a = "";
-        name_the = "";
-        corpse_name_a = "";
-        corpse_name_the = "";
-        tile = TileId::empty;
-        character = 'X';
-        color = colors::yellow();
-
-        // Default spawn group size is "alone"
-        group_sizes.assign(
-        {
-                MonGroupSpawnRule(MonGroupSize::alone, 1)
-        });
-
-        hp = 0;
-        intr_attacks.clear();
-        spi = 0;
-        speed_pct = (int)ActorSpeed::normal;
-
-        for (size_t i = 0; i < (size_t)PropId::END; ++i)
-        {
-                natural_props[i] = false;
-        }
-
-        ability_values.reset();
-
-        for (size_t i = 0; i < (size_t)AiId::END; ++i)
-        {
-                ai[i] = false;
-        }
-
-        ai[(size_t)AiId::moves_randomly_when_unaware] = true;
-
-        nr_turns_aware = 0;
-        ranged_cooldown_turns = 0;
-        spawn_min_dlvl = -1;
-        spawn_max_dlvl = -1;
-        actor_size = ActorSize::humanoid;
-        is_humanoid = false;
-        allow_generated_descr = true;
-        nr_kills = 0;
-        has_player_seen = false;
-        can_open_doors = can_bash_doors = false;
-        prevent_knockback = false;
-        nr_left_allowed_to_spawn = -1;
-        is_unique = false;
-        is_auto_spawn_allowed = true;
-        wary_msg = "";
-        aware_msg_mon_seen = "";
-        aware_msg_mon_hidden = "";
-        aware_sfx_mon_seen = SfxId::END;
-        aware_sfx_mon_hidden = SfxId::END;
-        spell_cast_msg = "";
-        erratic_move_pct = 0;
-        mon_shock_lvl = ShockLvl::none;
-        is_rat = false;
-        is_canine = false;
-        is_spider = false;
-        is_undead = false;
-        is_ghost = false;
-        is_snake = false;
-        is_reptile = false;
-        is_amphibian = false;
-        can_be_summoned_by_mon = false;
-        can_bleed = true;
-        can_leave_corpse = true;
-        prio_corpse_bash = false;
-        native_rooms.clear();
-        descr = "";
-}
-
-namespace actor_data
-{
-
-ActorData data[(size_t)ActorId::END];
-
-// **********************************************************************
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+// *****************************************************************************
 // TODO: TEMPORARY CODE
-// **********************************************************************
+// *****************************************************************************
 static std::unordered_map<std::string, ActorId> str_to_actor_id_map = {
         {"player", ActorId::player},
         {"zombie", ActorId::zombie},
@@ -187,6 +102,9 @@ static std::unordered_map<std::string, ActorId> str_to_actor_id_map = {
         {"high_priest_guard_ghoul", ActorId::high_priest_guard_ghoul}
 };
 
+// *****************************************************************************
+// TODO: TEMPORARY CODE
+// *****************************************************************************
 static std::unordered_map<ActorId, std::string> actor_id_to_str_map = {
         {ActorId::player, "player"},
         {ActorId::zombie, "zombie"},
@@ -271,694 +189,466 @@ static std::unordered_map<ActorId, std::string> actor_id_to_str_map = {
         {ActorId::high_priest_guard_ghoul, "high_priest_guard_ghoul"}
 };
 
-// TODO: Some of the xml handling functionality here should be moved to a
-// common "xml" namespace
-static void read_actor_definitions_xml()
+static ActorId get_id(xml::Element* mon_e)
 {
-        tinyxml2::XMLDocument doc;
+        const auto id_search = str_to_actor_id_map.find(
+                xml::get_attribute_str(mon_e, "id"));
 
-        const std::string xml_path = "res/data/monsters.xml";
+        ASSERT(id_search != end(str_to_actor_id_map));
 
-        TRACE << "Loading actor definitions file: " << xml_path << std::endl;
+        return id_search->second;
+}
 
-        const auto load_result = doc.LoadFile(xml_path.c_str());
+static void dump_text(xml::Element* text_e, ActorData& data)
+{
+        data.name_a = xml::get_text_str(
+                xml::first_child(text_e, "name_a"));
 
-        if (load_result != tinyxml2::XML_SUCCESS)
+        data.name_the = xml::get_text_str(
+                xml::first_child(text_e, "name_the"));
+
+        data.corpse_name_a = xml::get_text_str(
+                xml::first_child(text_e, "corpse_name_a"));
+
+        data.corpse_name_the = xml::get_text_str(
+                xml::first_child(text_e, "corpse_name_the"));
+
+        data.descr = xml::get_text_str(
+                xml::first_child(text_e, "description"));
+
+        data.allow_generated_descr = xml::get_text_bool(
+                xml::first_child(text_e, "allow_generated_description"));
+
+        data.wary_msg = xml::get_text_str(
+                xml::first_child(text_e, "wary_message"));
+
+        data.aware_msg_mon_seen = xml::get_text_str(
+                xml::first_child(text_e, "aware_message_seen"));
+
+        data.aware_msg_mon_hidden = xml::get_text_str(
+                xml::first_child(text_e, "aware_message_hidden"));
+
+        data.spell_cast_msg = xml::get_text_str(
+                xml::first_child(text_e, "spell_message"));
+}
+
+static void dump_gfx(xml::Element* gfx_e, ActorData& data)
+{
+        data.tile = str_to_tile_id_map.at(
+                xml::get_text_str(
+                        xml::first_child(gfx_e, "tile")));
+
+        const std::string char_str = xml::get_text_str(
+                xml::first_child(gfx_e, "character"));
+
+        ASSERT(char_str.length() == 1);
+
+        data.character = char_str[0];
+
+        data.color = colors::name_to_color(
+                xml::get_text_str(
+                        xml::first_child(gfx_e, "color")));
+}
+
+static void dump_audio(xml::Element* audio_e, ActorData& data)
+{
+        data.aware_sfx_mon_seen = str_to_sfx_id_map.at(
+                xml::get_text_str(
+                        xml::first_child(audio_e, "aware_sfx_seen")));
+
+        data.aware_sfx_mon_hidden = str_to_sfx_id_map.at(
+                xml::get_text_str(
+                        xml::first_child(audio_e, "aware_sfx_hidden")));
+}
+
+static void dump_attributes(xml::Element* attrib_e, ActorData& data)
+{
+        data.hp = xml::get_text_int(
+                xml::first_child(attrib_e, "hit_points"));
+
+        data.spi = xml::get_text_int(
+                xml::first_child(attrib_e, "spirit"));
+
+        data.speed_pct = xml::get_text_int(
+                xml::first_child(attrib_e, "speed_percent"));
+
+        data.mon_shock_lvl = str_to_shock_lvl_map.at(
+                xml::get_text_str(
+                        xml::first_child(attrib_e, "shock_level")));
+
+        data.ability_values.set_val(
+                AbilityId::melee,
+                xml::get_text_int(
+                        xml::first_child(attrib_e, "melee")));
+
+        data.ability_values.set_val(
+                AbilityId::ranged,
+                xml::get_text_int(
+                        xml::first_child(attrib_e, "ranged")));
+
+        data.ability_values.set_val(
+                AbilityId::dodging,
+                xml::get_text_int(
+                        xml::first_child(attrib_e, "dodging")));
+
+        data.ability_values.set_val(
+                AbilityId::stealth,
+                xml::get_text_int(
+                        xml::first_child(attrib_e, "stealth")));
+
+        data.ability_values.set_val(
+                AbilityId::searching,
+                xml::get_text_int(
+                        xml::first_child(attrib_e, "searching")));
+
+        data.can_open_doors = xml::get_text_bool(
+                xml::first_child(attrib_e, "can_open_doors"));
+
+        data.can_bash_doors = xml::get_text_bool(
+                xml::first_child(attrib_e, "can_bash_doors"));
+
+        data.actor_size = str_to_actor_size_map.at(
+                xml::get_text_str(xml::first_child(attrib_e, "size")));
+
+        data.prevent_knockback = xml::get_text_bool(
+                xml::first_child(attrib_e, "always_prevent_knockback"));
+
+        data.is_rat = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_rat"));
+
+        data.is_canine = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_canine"));
+
+        data.is_spider = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_spider"));
+
+        data.is_undead = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_undead"));
+
+        data.is_ghost = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_ghost"));
+
+        data.is_snake = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_snake"));
+
+        data.is_reptile = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_reptile"));
+
+        data.is_amphibian = xml::get_text_bool(
+                xml::first_child(attrib_e, "is_amphibian"));
+
+        data.can_bleed = xml::get_text_bool(
+                xml::first_child(attrib_e, "can_bleed"));
+
+        data.can_leave_corpse = xml::get_text_bool(
+                xml::first_child(attrib_e, "can_leave_corpse"));
+
+        data.prio_corpse_bash = xml::get_text_bool(
+                xml::first_child(attrib_e, "prioritize_destroying_corpse"));
+}
+
+static void dump_intr_attack_property(xml::Element* property_e,
+                                      IntrAttData& attack_data)
+{
+        const auto prop_id =
+                str_to_prop_id_map.at(
+                        xml::get_text_str(property_e));
+
+        ItemAttProp& attack_prop = attack_data.prop_applied;
+
+        attack_prop.prop = property_factory::make(prop_id);
+
+        xml::try_get_attribute_int(
+                property_e,
+                "percent_chance",
+                attack_prop.pct_chance_to_apply);
+
+        if ((attack_prop.pct_chance_to_apply <= 0) ||
+            (attack_prop.pct_chance_to_apply > 100))
         {
                 TRACE_ERROR_RELEASE
-                        << "Could not load actor definitions file at: "
-                        << xml_path
+                        << "Invalid attack property chance: "
+                        << attack_prop.pct_chance_to_apply
                         << std::endl;
 
                 PANIC;
         }
 
-        TRACE << "Reading actor definitions" << std::endl;
+        int duration;
 
-        auto get_text_str = [](tinyxml2::XMLElement* const e)
-                {
-                        std::string str = "";
-
-                        const char* c_str = e->GetText();
-
-                        if (c_str)
-                        {
-                                str = c_str;
-                        }
-
-                        return str;
-                };
-
-        auto get_text_bool = [](tinyxml2::XMLElement* const e)
+        if (xml::try_get_attribute_int(property_e, "duration", duration))
         {
-                bool value = false;
+                attack_prop.prop->set_duration(duration);
+        }
+}
 
-                const auto result = e->QueryBoolText(&value);
+static void dump_intr_attacks(xml::Element* attacks_e, ActorData& data)
+{
+        for (auto attack_e = xml::first_child(attacks_e);
+             attack_e;
+             attack_e = xml::next_sibling(attack_e))
+        {
+                IntrAttData attack_data;
 
-                if (result != tinyxml2::XML_SUCCESS)
+                const std::string id_str = attack_e->Attribute("id");
+
+                attack_data.item_id = str_to_intr_item_id_map.at(id_str);
+
+                auto e = xml::first_child(attack_e);
+
+                attack_data.dmg = xml::get_text_int(e);
+
+                // Propertyies applied
+                for (e = xml::next_sibling(e);
+                     e;
+                     e = xml::next_sibling(e))
                 {
-                        TRACE_ERROR_RELEASE
-                                << "While parsing boolean value from "
-                                << "xml element \""
-                                << e->Value()
-                                << "\", tinyxml2 reported error code: "
-                                << result << std::endl;
-
-                        PANIC;
+                        dump_intr_attack_property(e, attack_data);
                 }
 
-                return value;
-        };
+                data.intr_attacks.push_back(attack_data);
+        }
+}
 
-        auto get_text_int = [](tinyxml2::XMLElement* const e)
+static void dump_properties(xml::Element* properties_e, ActorData& data)
+{
+        for (auto e = xml::first_child(properties_e);
+             e;
+             e = xml::next_sibling(e))
         {
-                int value = false;
+                const auto prop_id = str_to_prop_id_map.at(
+                        xml::get_text_str(e));
 
-                const auto result = e->QueryIntText(&value);
+                data.natural_props[(size_t)prop_id] = true;
+        }
+}
 
-                if (result != tinyxml2::XML_SUCCESS)
-                {
-                        TRACE_ERROR_RELEASE
-                                << "While parsing integer value from "
-                                << "xml element \""
-                                << e->Value()
-                                << "\", tinyxml2 reported error code: "
-                                << result << std::endl;
+static void dump_ai(xml::Element* ai_e, ActorData& data)
+{
+        data.erratic_move_pct = xml::get_text_int(
+                xml::first_child(ai_e, "erratic_move_percent"));
 
-                        PANIC;
-                }
+        data.nr_turns_aware = xml::get_text_int(
+                xml::first_child(ai_e, "turns_aware"));
 
-                return value;
-        };
+        data.ranged_cooldown_turns = xml::get_text_int(
+                xml::first_child(ai_e, "ranged_cooldown_turns"));
 
-        auto mon_e = doc.FirstChildElement()->FirstChildElement("monster");
-
-        for ( ; mon_e ; mon_e = mon_e->NextSiblingElement("monster"))
+        for (size_t i = 0; i < (size_t)AiId::END; ++i)
         {
-                const std::string id_str = mon_e->Attribute("id");
+                const std::string ai_id_str = ai_id_to_str_map.at((AiId)i);
 
-                const auto id_search = str_to_actor_id_map.find(id_str);
+                data.ai[i] = xml::get_text_bool(
+                        xml::first_child(ai_e, ai_id_str));
+        }
+}
 
-                ASSERT(id_search != end(str_to_actor_id_map));
+static void dump_group_size(xml::Element* group_e, ActorData& data)
+{
+        const auto group_size = str_to_group_size_map.at(
+                xml::get_text_str(group_e));
 
-                const auto id = id_search->second;
+        int weight = 1;
 
-                ActorData& d = data[(size_t)id];
+        xml::try_get_attribute_int(group_e, "weight", weight);
 
-                d.reset();
+        data.group_sizes.push_back({group_size, weight});
+}
 
-                d.id = id;
+static void dump_native_room(xml::Element* native_room_e, ActorData& data)
+{
+        const auto room_type = str_to_room_type_map.at(
+                xml::get_text_str(native_room_e));
 
-                // -------------------------------------------------------------
-                // Text
-                // -------------------------------------------------------------
-                auto text_e = mon_e->FirstChildElement("text");
+        data.native_rooms.push_back(room_type);
+}
 
-                d.name_a = get_text_str(
-                        text_e->FirstChildElement("name_a"));
+static void dump_spawning(xml::Element* spawn_e, ActorData& data)
+{
+        data.spawn_min_dlvl = xml::get_text_int(
+                xml::first_child(spawn_e, "min_dungeon_level"));
 
-                d.name_the = get_text_str(
-                        text_e->FirstChildElement("name_the"));
+        data.spawn_max_dlvl = xml::get_text_int(
+                xml::first_child(spawn_e, "max_dungeon_level"));
 
-                d.corpse_name_a = get_text_str(
-                        text_e->FirstChildElement("corpse_name_a"));
+        data.is_auto_spawn_allowed = xml::get_text_bool(
+                xml::first_child(spawn_e, "auto_spawn"));
 
-                d.corpse_name_the = get_text_str(
-                        text_e->FirstChildElement("corpse_name_the"));
+        data.can_be_summoned_by_mon = xml::get_text_bool(
+                xml::first_child(spawn_e,
+                                 "can_be_summoned_by_monster"));
 
-                d.descr = get_text_str(
-                        text_e->FirstChildElement("description"));
+        data.is_unique = xml::get_text_bool(
+                xml::first_child(spawn_e, "is_unique"));
 
-                d.allow_generated_descr = get_text_bool(
-                        text_e->FirstChildElement(
-                                "allow_generated_description"));
+        data.nr_left_allowed_to_spawn = xml::get_text_int(
+                xml::first_child(spawn_e,
+                                 "nr_left_allowed_to_spawn"));
 
-                d.wary_msg = get_text_str(
-                        text_e->FirstChildElement("wary_message"));
+        const std::string group_size_element_str = "group_size";
 
-                d.aware_msg_mon_seen = get_text_str(
-                        text_e->FirstChildElement("aware_message_seen"));
+        for (auto e = xml::first_child(spawn_e, group_size_element_str);
+             e;
+             e = xml::next_sibling(e, group_size_element_str))
+        {
+                dump_group_size(e, data);
+        }
 
-                d.aware_msg_mon_hidden = get_text_str(
-                        text_e->FirstChildElement("aware_message_hidden"));
+        const std::string native_room_element_str = "native_room";
 
-                d.spell_cast_msg = get_text_str(
-                        text_e->FirstChildElement("spell_message"));
+        for (auto e = xml::first_child(spawn_e, native_room_element_str);
+             e;
+             e = xml::next_sibling(e, native_room_element_str))
+        {
+                dump_native_room(e, data);
+        }
+}
 
-                // -------------------------------------------------------------
-                // Graphics
-                // -------------------------------------------------------------
-                auto gfx_e = mon_e->FirstChildElement("graphics");
+static void read_actor_definitions_xml()
+{
+        xml::Doc doc;
 
-                d.tile = str_to_tile_id_map.at(
-                        get_text_str(
-                                gfx_e->FirstChildElement("tile")));
+        xml::load_file("res/data/monsters.xml", doc);
 
-                const std::string char_str = get_text_str(
-                        gfx_e->FirstChildElement("character"));
+        auto top_e = xml::first_child(doc);
 
-                ASSERT(char_str.length() == 1);
+        auto mon_e = xml::first_child(top_e);
 
-                d.character = char_str[0];
+        for ( ; mon_e ; mon_e = xml::next_sibling(mon_e, "monster"))
+        {
+                const ActorId id = get_id(mon_e);
 
-                d.color = colors::name_to_color(
-                        get_text_str(gfx_e->FirstChildElement("color")));
+                ActorData& data = actor_data::data[(size_t)id];
 
-                // -------------------------------------------------------------
-                // Audio
-                // -------------------------------------------------------------
-                auto audio_e = mon_e->FirstChildElement("audio");
+                data.reset();
 
-                d.aware_sfx_mon_seen = str_to_sfx_id_map.at(
-                        get_text_str(
-                                audio_e->FirstChildElement(
-                                        "aware_sfx_seen")));
+                data.id = id;
 
-                d.aware_sfx_mon_hidden = str_to_sfx_id_map.at(
-                        get_text_str(
-                                audio_e->FirstChildElement(
-                                        "aware_sfx_hidden")));
+                dump_text(xml::first_child(mon_e, "text"), data);
 
-                // -------------------------------------------------------------
-                // Attributes
-                // -------------------------------------------------------------
-                auto attrib_e = mon_e->FirstChildElement("attributes");
+                dump_gfx(xml::first_child(mon_e, "graphics"), data);
 
-                d.hp = get_text_int(
-                        attrib_e->FirstChildElement("hit_points"));
+                dump_audio(xml::first_child(mon_e, "audio"), data);
 
-                d.spi = get_text_int(
-                        attrib_e->FirstChildElement("spirit"));
+                dump_attributes(xml::first_child(mon_e, "attributes"), data);
 
-                d.speed_pct = get_text_int(
-                        attrib_e->FirstChildElement("speed_percent"));
-
-                d.mon_shock_lvl = str_to_shock_lvl_map.at(
-                        get_text_str(
-                                attrib_e->FirstChildElement(
-                                        "shock_level")));
-
-                d.ability_values.set_val(
-                        AbilityId::melee,
-                        get_text_int(attrib_e->FirstChildElement("melee")));
-
-                d.ability_values.set_val(
-                        AbilityId::ranged,
-                        get_text_int(attrib_e->FirstChildElement("ranged")));
-
-                d.ability_values.set_val(
-                        AbilityId::dodging,
-                        get_text_int(attrib_e->FirstChildElement("dodging")));
-
-                d.ability_values.set_val(
-                        AbilityId::stealth,
-                        get_text_int(attrib_e->FirstChildElement("stealth")));
-
-                d.ability_values.set_val(
-                        AbilityId::searching,
-                        get_text_int(attrib_e->FirstChildElement("searching")));
-
-                d.can_open_doors = get_text_bool(
-                        attrib_e->FirstChildElement("can_open_doors"));
-
-                d.can_bash_doors = get_text_bool(
-                        attrib_e->FirstChildElement("can_bash_doors"));
-
-                d.actor_size = str_to_actor_size_map.at(
-                        get_text_str(attrib_e->FirstChildElement("size")));
-
-                d.prevent_knockback = get_text_bool(
-                        attrib_e->FirstChildElement(
-                                "always_prevent_knockback"));
-
-                d.is_rat = get_text_bool(
-                        attrib_e->FirstChildElement("is_rat"));
-
-                d.is_canine = get_text_bool(
-                        attrib_e->FirstChildElement("is_canine"));
-
-                d.is_spider = get_text_bool(
-                        attrib_e->FirstChildElement("is_spider"));
-
-                d.is_undead = get_text_bool(
-                        attrib_e->FirstChildElement("is_undead"));
-
-                d.is_ghost = get_text_bool(
-                        attrib_e->FirstChildElement("is_ghost"));
-
-                d.is_snake = get_text_bool(
-                        attrib_e->FirstChildElement("is_snake"));
-
-                d.is_reptile = get_text_bool(
-                        attrib_e->FirstChildElement("is_reptile"));
-
-                d.is_amphibian = get_text_bool(
-                        attrib_e->FirstChildElement("is_amphibian"));
-
-                d.can_bleed = get_text_bool(
-                        attrib_e->FirstChildElement("can_bleed"));
-
-                d.can_leave_corpse = get_text_bool(
-                        attrib_e->FirstChildElement("can_leave_corpse"));
-
-                d.prio_corpse_bash = get_text_bool(
-                        attrib_e->FirstChildElement(
-                                "prioritize_destroying_corpse"));
-
-                // -------------------------------------------------------------
-                // Intrinsic attacks
-                // -------------------------------------------------------------
-                auto attacks_e = mon_e->FirstChildElement("attacks");
+                auto attacks_e = xml::first_child(mon_e, "attacks");
 
                 if (attacks_e)
                 {
-                        for (auto attack_e = attacks_e->FirstChildElement("attack");
-                             attack_e != nullptr;
-                             attack_e = attack_e->NextSiblingElement("attack"))
-                        {
-                                IntrAttData attack_data;
-
-                                const std::string id_str =
-                                        attack_e->Attribute("id");
-
-                                attack_data.item_id =
-                                        str_to_intr_item_id_map.at(id_str);
-
-                                auto e = attack_e->FirstChildElement("damage");
-
-                                attack_data.dmg = get_text_int(e);
-
-                                e = e->NextSiblingElement();
-
-                                const char* property_element_str =
-                                        "property_applied";
-
-                                // Properties applied by attack
-                                for (auto e = attack_e->FirstChildElement(
-                                             property_element_str);
-                                     e != nullptr;
-                                     e = e->NextSiblingElement())
-                                {
-                                        if (std::string(e->Name()) !=
-                                            property_element_str)
-                                        {
-                                                TRACE_ERROR_RELEASE
-                                                        << "Expected element "
-                                                        << property_element_str
-                                                        << ", found "
-                                                        << e->Name()
-                                                        << std::endl;
-
-                                                PANIC;
-                                        }
-
-                                        const auto prop_id =
-                                                str_to_prop_id_map.at(
-                                                        get_text_str(e));
-
-                                        ItemAttProp& attack_prop =
-                                                attack_data.prop_applied;
-
-                                        attack_prop.prop =
-                                                property_factory::make(prop_id);
-
-                                        const auto prop_chance_str =
-                                                e->Attribute("percent_chance");
-
-                                        if (prop_chance_str)
-                                        {
-                                                attack_prop.pct_chance_to_apply =
-                                                        to_int(prop_chance_str);
-                                        }
-
-                                        if ((attack_prop.pct_chance_to_apply <= 0) ||
-                                            (attack_prop.pct_chance_to_apply > 100))
-                                        {
-                                                TRACE_ERROR_RELEASE
-                                                        << "Invalid attack "
-                                                        << "property chance: "
-                                                        << attack_prop.pct_chance_to_apply
-                                                        << std::endl;
-
-                                                PANIC;
-                                        }
-
-                                        const auto prop_duration_str =
-                                                e->Attribute("duration");
-
-                                        if (prop_duration_str)
-                                        {
-                                                const int duration =
-                                                        to_int(prop_duration_str);
-
-                                                attack_prop.prop->set_duration(
-                                                        duration);
-                                        }
-                                }
-
-                                d.intr_attacks.push_back(attack_data);
-                        }
+                        dump_intr_attacks(attacks_e, data);
                 }
 
-                // -------------------------------------------------------------
-                // Properties
-                // -------------------------------------------------------------
-                auto props_e = mon_e->FirstChildElement("properties");
+                auto props_e = xml::first_child(mon_e, "properties");
 
                 if (props_e)
                 {
-                        for (auto e = props_e->FirstChildElement();
-                             e != nullptr;
-                             e = e->NextSiblingElement())
-                        {
-                                const auto prop_id =
-                                        str_to_prop_id_map.at(get_text_str(e));
-
-                                d.natural_props[(size_t)prop_id] = true;
-                        }
+                        dump_properties(props_e, data);
                 }
 
-                // -------------------------------------------------------------
-                // AI
-                // -------------------------------------------------------------
-                auto ai_e = mon_e->FirstChildElement("ai");
+                auto ai_e = xml::first_child(mon_e, "ai");
 
                 if (ai_e)
                 {
-                        d.erratic_move_pct = get_text_int(
-                                ai_e->FirstChildElement(
-                                        "erratic_move_percent"));
-
-                        d.nr_turns_aware = get_text_int(
-                                ai_e->FirstChildElement("turns_aware"));
-
-                        d.ranged_cooldown_turns = get_text_int(
-                                ai_e->FirstChildElement(
-                                        "ranged_cooldown_turns"));
-
-                        for (size_t i = 0; i < (size_t)AiId::END; ++i)
-                        {
-                                const std::string ai_id_str =
-                                        ai_id_to_str_map.at((AiId)i);
-
-                                d.ai[i] = get_text_bool(
-                                        ai_e->FirstChildElement(
-                                                ai_id_str.c_str()));
-                        }
+                        dump_ai(ai_e, data);
                 }
 
-                // -------------------------------------------------------------
-                // Spawning
-                // -------------------------------------------------------------
-                auto spawning_e = mon_e->FirstChildElement("spawning");
-
-                d.spawn_min_dlvl = get_text_int(
-                        spawning_e->FirstChildElement("min_dungeon_level"));
-
-                d.spawn_max_dlvl = get_text_int(
-                        spawning_e->FirstChildElement("max_dungeon_level"));
-
-                d.is_auto_spawn_allowed = get_text_bool(
-                        spawning_e->FirstChildElement("auto_spawn"));
-
-                d.can_be_summoned_by_mon = get_text_bool(
-                        spawning_e->FirstChildElement(
-                                "can_be_summoned_by_monster"));
-
-                d.is_unique = get_text_bool(
-                        spawning_e->FirstChildElement("is_unique"));
-
-                d.nr_left_allowed_to_spawn = get_text_int(
-                        spawning_e->FirstChildElement(
-                                "nr_left_allowed_to_spawn"));
-
-                const char* group_size_element_str = "group_size";
-
-                for (auto e = spawning_e->FirstChildElement(
-                             group_size_element_str);
-                     e;
-                     e = e->NextSiblingElement(group_size_element_str))
-                {
-                        const auto group_size =
-                                str_to_group_size_map.at(get_text_str(e));
-
-                        int weight = 0;
-
-                        const auto result =
-                                e->QueryAttribute("weight", &weight);
-
-                        if (result != tinyxml2::XML_SUCCESS)
-                        {
-                                weight = 1;
-                        }
-
-                        d.group_sizes.push_back({group_size, weight});
-                }
-
-                const char* native_room_element_str = "native_room";
-
-                for (auto e = spawning_e->FirstChildElement(
-                             native_room_element_str);
-                     e;
-                     e = e->NextSiblingElement(native_room_element_str))
-                {
-                        const auto room_type = str_to_room_type_map.at(
-                                get_text_str(e));
-
-                        d.native_rooms.push_back(room_type);
-                }
+                dump_spawning(xml::first_child(mon_e, "spawning"), data);
         }
 } // read_actor_definitions_xml
 
-// TODO: Some of the xml handling functionality here should be moved to a
-// common "xml" namespace
-/*
-  void dump_actor_definitions_to_xml()
+// -----------------------------------------------------------------------------
+// IntrAttData
+// -----------------------------------------------------------------------------
+IntrAttData::IntrAttData() :
+        item_id(ItemId::END),
+        dmg(0),
+        prop_applied()
+{
 
-  tinyxml2::XMLDocument xml_doc;
+}
 
-  auto xml_root = xml_doc.NewElement("monsters");
+void ActorData::reset()
+{
+        id = ActorId::END;
+        name_a = "";
+        name_the = "";
+        corpse_name_a = "";
+        corpse_name_the = "";
+        tile = TileId::empty;
+        character = 'X';
+        color = colors::yellow();
 
-  xml_doc.InsertFirstChild(xml_root);
+        // Default spawn group size is "alone"
+        group_sizes.assign(
+        {
+                MonGroupSpawnRule(MonGroupSize::alone, 1)
+        });
 
-  for (auto& d : data)
-  {
-  const auto id_search = actor_id_to_str_map.find(d.id);
+        hp = 0;
+        intr_attacks.clear();
+        spi = 0;
+        speed_pct = (int)ActorSpeed::normal;
 
-  const std::string id_str = id_search->second;
+        for (size_t i = 0; i < (size_t)PropId::END; ++i)
+        {
+                natural_props[i] = false;
+        }
 
-  const std::string comment_line =
-  "************************************************************";
+        ability_values.reset();
 
-  xml_root->InsertEndChild(
-  xml_doc.NewComment(comment_line.c_str()));
+        for (size_t i = 0; i < (size_t)AiId::END; ++i)
+        {
+                ai[i] = false;
+        }
 
-  xml_root->InsertEndChild(
-  xml_doc.NewComment((" " + id_str + " ").c_str()));
+        ai[(size_t)AiId::moves_randomly_when_unaware] = true;
 
-  xml_root->InsertEndChild(
-  xml_doc.NewComment(comment_line.c_str()));
+        nr_turns_aware = 0;
+        ranged_cooldown_turns = 0;
+        spawn_min_dlvl = -1;
+        spawn_max_dlvl = -1;
+        actor_size = ActorSize::humanoid;
+        is_humanoid = false;
+        allow_generated_descr = true;
+        nr_kills = 0;
+        has_player_seen = false;
+        can_open_doors = can_bash_doors = false;
+        prevent_knockback = false;
+        nr_left_allowed_to_spawn = -1;
+        is_unique = false;
+        is_auto_spawn_allowed = true;
+        wary_msg = "";
+        aware_msg_mon_seen = "";
+        aware_msg_mon_hidden = "";
+        aware_sfx_mon_seen = SfxId::END;
+        aware_sfx_mon_hidden = SfxId::END;
+        spell_cast_msg = "";
+        erratic_move_pct = 0;
+        mon_shock_lvl = ShockLvl::none;
+        is_rat = false;
+        is_canine = false;
+        is_spider = false;
+        is_undead = false;
+        is_ghost = false;
+        is_snake = false;
+        is_reptile = false;
+        is_amphibian = false;
+        can_be_summoned_by_mon = false;
+        can_bleed = true;
+        can_leave_corpse = true;
+        prio_corpse_bash = false;
+        native_rooms.clear();
+        descr = "";
+}
 
-  auto mon_e = xml_doc.NewElement("monster");
-  mon_e->SetAttribute("id", id_str.c_str());
-  xml_root->InsertEndChild(mon_e);
+// -----------------------------------------------------------------------------
+// actor_data
+// -----------------------------------------------------------------------------
+namespace actor_data
+{
 
-  auto add_e_str = [&](const std::string& name,
-  const std::string& text,
-  tinyxml2::XMLElement* parent)
-  {
-  auto e = xml_doc.NewElement(name.c_str());
-  e->SetText(text.c_str());
-  parent->InsertEndChild(e);
-  };
-
-  auto add_e_int = [&](const std::string& name,
-  const int value,
-  tinyxml2::XMLElement* parent)
-  {
-  auto e = xml_doc.NewElement(name.c_str());
-  e->SetText(value);
-  parent->InsertEndChild(e);
-  };
-
-  auto add_e_bool = [&](const std::string& name,
-  const bool value,
-  tinyxml2::XMLElement* parent)
-  {
-  auto e = xml_doc.NewElement(name.c_str());
-  e->SetText(value);
-  parent->InsertEndChild(e);
-  };
-
-  auto text_e = xml_doc.NewElement("text");
-  mon_e->InsertEndChild(text_e);
-
-  auto gfx_e = xml_doc.NewElement("graphics");
-  mon_e->InsertEndChild(gfx_e);
-
-  auto audio_e = xml_doc.NewElement("audio");
-  mon_e->InsertEndChild(audio_e);
-
-  auto attrib_e = xml_doc.NewElement("attributes");
-  mon_e->InsertEndChild(attrib_e);
-
-  auto props_e = xml_doc.NewElement("properties");
-  mon_e->InsertEndChild(props_e);
-
-  auto ai_e = xml_doc.NewElement("ai");
-  mon_e->InsertEndChild(ai_e);
-
-  auto spawn_e = xml_doc.NewElement("spawning");
-  mon_e->InsertEndChild(spawn_e);
-
-  // ---------------------------------------------------------------------
-  // Text
-  // ---------------------------------------------------------------------
-  add_e_str("name_a", d.name_a, text_e);
-  add_e_str("name_the", d.name_the, text_e);
-  add_e_str("corpse_name_a", d.corpse_name_a, text_e);
-  add_e_str("corpse_name_the", d.corpse_name_the, text_e);
-  add_e_str("description", d.descr, text_e);
-  add_e_bool("allow_generated_description",
-  d.allow_generated_descr,
-  text_e);
-  add_e_str("wary_message", d.wary_msg, text_e);
-  add_e_str("aware_message_seen", d.aware_msg_mon_seen, text_e);
-  add_e_str("aware_message_hidden", d.aware_msg_mon_hidden, text_e);
-  add_e_str("spell_message", d.spell_cast_msg, text_e);
-
-  // ---------------------------------------------------------------------
-  // Graphics
-  // ---------------------------------------------------------------------
-  add_e_str("tile", tile_id_to_str_map.at(d.tile), gfx_e);
-  add_e_str("character", std::string(1, d.character), gfx_e);
-  add_e_str("color", colors::color_to_name(d.color), gfx_e);
-
-  // ---------------------------------------------------------------------
-  // Audio
-  // ---------------------------------------------------------------------
-  if (d.aware_sfx_mon_seen != SfxId::END)
-  {
-  add_e_str("aware_sfx_seen",
-  sfx_id_to_str_map.at(d.aware_sfx_mon_seen),
-  audio_e);
-  }
-
-  if (d.aware_sfx_mon_hidden != SfxId::END)
-  {
-  add_e_str("aware_sfx_hidden",
-  sfx_id_to_str_map.at(d.aware_sfx_mon_hidden),
-  audio_e);
-  }
-
-  // ---------------------------------------------------------------------
-  // Attributes
-  // ---------------------------------------------------------------------
-  add_e_int("hit_points", d.hp, attrib_e);
-  add_e_int("spirit", d.spi, attrib_e);
-  add_e_int("melee_damage", d.dmg_melee, attrib_e);
-  add_e_int("ranged_damage", d.dmg_ranged, attrib_e);
-  add_e_int("speed_percent", d.speed_pct, attrib_e);
-  add_e_str("shock_level",
-  shock_lvl_to_str_map.at(d.mon_shock_lvl),
-  attrib_e);
-
-  for (size_t i = 0; i < (size_t)AbilityId::END; ++i)
-  {
-  const auto ability_id = (AbilityId)i;
-
-  add_e_int(ability_id_to_str_map.at(ability_id),
-  d.ability_values.raw_val(ability_id),
-  attrib_e);
-  }
-
-  add_e_bool("can_open_doors", d.can_open_doors, attrib_e);
-  add_e_bool("can_bash_doors", d.can_bash_doors, attrib_e);
-  add_e_str("size", actor_size_to_str_map.at(d.actor_size), attrib_e);
-  add_e_bool("always_prevent_knockback", d.prevent_knockback, attrib_e);
-  add_e_bool("is_humanoid", d.is_humanoid, attrib_e);
-  add_e_bool("is_rat", d.is_rat, attrib_e);
-  add_e_bool("is_canine", d.is_canine, attrib_e);
-  add_e_bool("is_spider", d.is_spider, attrib_e);
-  add_e_bool("is_undead", d.is_undead, attrib_e);
-  add_e_bool("is_ghost", d.is_ghost, attrib_e);
-  add_e_bool("is_snake", d.is_snake, attrib_e);
-  add_e_bool("is_reptile", d.is_reptile, attrib_e);
-  add_e_bool("is_amphibian", d.is_amphibian, attrib_e);
-  add_e_bool("can_bleed", d.can_bleed, attrib_e);
-  add_e_bool("can_leave_corpse", d.can_leave_corpse, attrib_e);
-  add_e_bool("prioritize_destroying_corpse",
-  d.prio_corpse_bash,
-  attrib_e);
-
-  // ---------------------------------------------------------------------
-  // Properties
-  // ---------------------------------------------------------------------
-  for (size_t i = 0; i < (size_t)PropId::END; ++i)
-  {
-  if (d.natural_props[i])
-  {
-  const auto prop_id = (PropId)i;
-
-  add_e_str("property", prop_id_to_str_map.at(prop_id), props_e);
-  }
-  }
-
-  // ---------------------------------------------------------------------
-  // AI
-  // ---------------------------------------------------------------------
-  add_e_int("erratic_move_percent", (int)d.erratic_move_pct, ai_e);
-  add_e_int("turns_aware", d.nr_turns_aware, ai_e);
-  add_e_int("ranged_cooldown_turns", d.ranged_cooldown_turns, ai_e);
-
-  for (size_t i = 0; i < (size_t)AiId::END; ++i)
-  {
-  const auto ai_id = (AiId)i;
-
-  add_e_bool(ai_id_to_str_map.at(ai_id), d.ai[i], ai_e);
-  }
-
-  // ---------------------------------------------------------------------
-  // Spawning
-  // ---------------------------------------------------------------------
-  add_e_int("min_dungeon_level", d.spawn_min_dlvl, spawn_e);
-  add_e_int("max_dungeon_level", d.spawn_max_dlvl, spawn_e);
-  add_e_bool("auto_spawn", d.is_auto_spawn_allowed, spawn_e);
-  add_e_bool("can_be_summoned_by_monster",
-  d.can_be_summoned_by_mon,
-  spawn_e);
-  add_e_bool("is_unique", d.is_unique, spawn_e);
-  add_e_int("nr_left_allowed_to_spawn",
-  d.nr_left_allowed_to_spawn,
-  spawn_e);
-  for (const auto& group : d.group_sizes)
-  {
-  auto e = xml_doc.NewElement("group_size");
-
-  e->SetText(
-  group_size_to_str_map.at(group.group_size).c_str());
-
-  if (d.group_sizes.size() > 1)
-  {
-  e->SetAttribute("weight", group.weight);
-  }
-
-  spawn_e->InsertEndChild(e);
-  }
-
-  for (size_t i = 0; i < d.native_rooms.size(); ++i)
-  {
-  const auto room_type = d.native_rooms[i];
-
-  add_e_str("native_room",
-  room_type_to_str_map.at(room_type),
-  spawn_e);
-  }
-  }
-
-  xml_doc.SaveFile("monsters.xml");
-  } // dump_actor_definitions_to_xml
-*/
+ActorData data[(size_t)ActorId::END];
 
 void init()
 {
