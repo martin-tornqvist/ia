@@ -103,6 +103,8 @@ public:
         bool is_leader_of(const Actor* const actor) const override;
         bool is_actor_my_leader(const Actor* const actor) const override;
 
+        void add_spell(SpellSkill skill, Spell* const spell);
+
         int wary_of_player_counter_;
         int aware_of_player_counter_;
         int player_aware_of_me_counter_;
@@ -152,10 +154,6 @@ protected:
         }
 
         virtual void on_std_turn_hook() {}
-
-        void add_spell(SpellSkill skill, Spell* const spell);
-        void add_spell(SpellSkill skill, SpellId id);
-        void add_random_spell(SpellSkill skill);
 
         int nr_mon_in_group();
 };

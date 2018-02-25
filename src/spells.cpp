@@ -28,31 +28,8 @@
 #include "property_data.hpp"
 #include "property_handler.hpp"
 
-namespace spell_handling
+namespace spell_factory
 {
-
-Spell* random_spell_for_mon()
-{
-    std::vector<SpellId> bucket;
-
-    for (int i = 0; i < (int)SpellId::END; ++i)
-    {
-        Spell* const spell = make_spell_from_id((SpellId)i);
-
-        if (spell->mon_can_learn())
-        {
-            bucket.push_back(SpellId(i));
-        }
-
-        delete spell;
-    }
-
-    ASSERT(!bucket.empty());
-
-    const int element = rnd::range(0, bucket.size() - 1);
-
-    return make_spell_from_id(bucket[element]);
-}
 
 Spell* make_spell_from_id(const SpellId spell_id)
 {
@@ -85,8 +62,8 @@ Spell* make_spell_from_id(const SpellId spell_id)
     case SpellId::mayhem:
         return new SpellMayhem;
 
-    case SpellId::pest:
-        return new SpellPest;
+    case SpellId::pestilence:
+        return new SpellPestilence;
 
     case SpellId::anim_wpns:
         return new SpellAnimWpns;
@@ -141,7 +118,7 @@ Spell* make_spell_from_id(const SpellId spell_id)
     return nullptr;
 }
 
-} // spell_handling
+} // spell_factory
 
 StateId BrowseSpell::id()
 {
@@ -1078,8 +1055,8 @@ bool SpellMayhem::allow_mon_cast_now(Mon& mon) const
 // -----------------------------------------------------------------------------
 // Pestilence
 // -----------------------------------------------------------------------------
-void SpellPest::run_effect(Actor* const caster,
-                           const SpellSkill skill) const
+void SpellPestilence::run_effect(Actor* const caster,
+                                 const SpellSkill skill) const
 {
     const size_t nr_mon = 6 + (int)skill * 6;
 
@@ -1161,7 +1138,7 @@ void SpellPest::run_effect(Actor* const caster,
     }
 }
 
-std::vector<std::string> SpellPest::descr_specific(
+std::vector<std::string> SpellPestilence::descr_specific(
     const SpellSkill skill) const
 {
     std::vector<std::string> descr;
@@ -1180,7 +1157,7 @@ std::vector<std::string> SpellPest::descr_specific(
     return descr;
 }
 
-bool SpellPest::allow_mon_cast_now(Mon& mon) const
+bool SpellPestilence::allow_mon_cast_now(Mon& mon) const
 {
     return
         mon.target_ &&

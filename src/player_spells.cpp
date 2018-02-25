@@ -189,7 +189,7 @@ void load()
     {
         const SpellId id = (SpellId)saving::get_int();
 
-        learned_spells_.push_back(spell_handling::make_spell_from_id(id));
+        learned_spells_.push_back(spell_factory::make_spell_from_id(id));
     }
 
     for (size_t i = 0; i < (size_t)SpellId::END; ++i)
@@ -219,7 +219,7 @@ void learn_spell(const SpellId id, const Verbosity verbosity)
         return;
     }
 
-    Spell* const spell = spell_handling::make_spell_from_id(id);
+    Spell* const spell = spell_factory::make_spell_from_id(id);
 
     const bool player_can_learn = spell->player_can_learn();
 

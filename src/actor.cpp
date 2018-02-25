@@ -191,16 +191,12 @@ int Actor::speed_pct() const
         speed += 2000;
     }
 
-    //
     // Speed bonus from background/traits?
-    //
     if (is_player())
     {
         if (player_bon::bg() == Bg::ghoul)
         {
-            //
             // NOTE: Keep this the same as the Ghoul monster bonus
-            //
             speed += 10;
         }
 

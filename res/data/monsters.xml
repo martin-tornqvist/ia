@@ -705,6 +705,9 @@
                 <damage>4</damage>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="basic">teleport</spell>
+        </spells>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -867,9 +870,14 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="firearm"/>
-            <item_set id="minor_treasure" percent_chance="10"/>
+            <item_set>firearm</item_set>
+            <item_set percent_chance="10">minor_treasure</item_set>
         </items>
+        <spells>
+            <spell skill="basic" percent_chance="5">darkbolt</spell>
+            <spell skill="basic" percent_chance="5">enfeeble</spell>
+            <spell skill="basic" percent_chance="5">knockback</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -944,8 +952,8 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="spike_gun"/>
-            <item_set id="rare_treasure" percent_chance="1"/>
+            <item_set>spike_gun</item_set>
+            <item_set percent_chance="1">rare_treasure</item_set>
         </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
@@ -1022,8 +1030,18 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" min="2" max="3"/>
+            <item_set min="2" max="3">minor_treasure</item_set>
         </items>
+        <spells>
+            <spell skill="expert">teleport</spell>
+            <spell skill="expert">heal</spell>
+            <spell skill="expert">summon</spell>
+            <spell skill="expert">pestilence</spell>
+            <spell skill="expert">darkbolt</spell>
+            <spell skill="expert">deafen</spell>
+            <spell skill="expert">spell_shield</spell>
+            <spell skill="basic">enfeeble</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -1103,6 +1121,9 @@
                 <damage>5</damage>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="basic">teleport</spell>
+        </spells>
         <properties>
             <property>darkvision</property>
         </properties>
@@ -1262,9 +1283,19 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="priest_dagger"/>
-            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+            <item_set>priest_dagger</item_set>
+            <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+        <spells>
+            <spell skill="basic">heal</spell>
+            <spell skill="basic">darkbolt</spell>
+            <spell skill="basic">enfeeble</spell>
+            <spell skill="basic">knockback</spell>
+            <spell skill="basic">spell_shield</spell>
+            <spell skill="basic" percent_chance="50">teleport</spell>
+            <spell skill="basic" percent_chance="50">summon</spell>
+            <spell skill="basic" percent_chance="50">pestilence</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -1340,8 +1371,18 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+            <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+        <spells>
+            <spell skill="expert">heal</spell>
+            <spell skill="expert">darkbolt</spell>
+            <spell skill="basic">enfeeble</spell>
+            <spell skill="expert">knockback</spell>
+            <spell skill="expert">spell_shield</spell>
+            <spell skill="expert" percent_chance="50">teleport</spell>
+            <spell skill="expert" percent_chance="50">summon</spell>
+            <spell skill="expert" percent_chance="50">pestilence</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>14</turns_aware>
@@ -1417,8 +1458,18 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+            <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+        <spells>
+            <spell skill="master">heal</spell>
+            <spell skill="master">darkbolt</spell>
+            <spell skill="expert">enfeeble</spell>
+            <spell skill="master">knockback</spell>
+            <spell skill="master">spell_shield</spell>
+            <spell skill="master" percent_chance="50">teleport</spell>
+            <spell skill="master" percent_chance="50">summon</spell>
+            <spell skill="master" percent_chance="50">pestilence</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -2496,8 +2547,8 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="mi_go_gun"/>
-            <item_set id="rare_treasure" percent_chance="5"/>
+            <item_set>mi_go_gun</item_set>
+            <item_set percent_chance="5">rare_treasure</item_set>
         </items>
         <attacks>
             <attack id="sting">
@@ -2505,6 +2556,9 @@
                 <property_applied duration="8">poisoned</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="basic">mi_go_hypno</spell>
+        </spells>
         <properties>
             <property>flying</property>
         </properties>
@@ -2582,9 +2636,9 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="mi_go_gun"/>
-            <item_set id="mi_go_armor" percent_chance="25"/>
-            <item_set id="rare_treasure" percent_chance="5"/>
+            <item_set>mi_go_gun</item_set>
+            <item_set percent_chance="25">mi_go_armor</item_set>
+            <item_set percent_chance="5">rare_treasure</item_set>
         </items>
         <attacks>
             <attack id="sting">
@@ -2592,6 +2646,9 @@
                 <property_applied duration="8">poisoned</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="basic">mi_go_hypno</spell>
+        </spells>
         <properties>
             <property>flying</property>
         </properties>
@@ -3603,6 +3660,9 @@
                 <property_applied>terrified</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="basic">burn</spell>
+        </spells>
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3766,6 +3826,12 @@
                 <damage>10</damage>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="expert">heal</spell>
+            <spell skill="expert">burn</spell>
+            <spell skill="expert">deafen</spell>
+            <spell skill="expert">spell_shield</spell>
+        </spells>
         <properties>
             <property>teleports</property>
         </properties>
@@ -4409,7 +4475,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" percent_chance="50"/>
+            <item_set percent_chance="50">minor_treasure</item_set>
         </items>
         <attacks>
             <!--
@@ -4420,6 +4486,9 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="expert">disease</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -4573,7 +4642,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" min="1" max="2"/>
+            <item_set min="1" max="2">minor_treasure</item_set>
         </items>
         <attacks>
             <!--
@@ -4584,6 +4653,13 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="expert">darkbolt</spell>
+            <spell skill="expert">disease</spell>
+            <spell skill="expert">spell_shield</spell>
+            <spell skill="expert">burn</spell>
+            <spell skill="basic">enfeeble</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -4657,7 +4733,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="minor_treasure" min="1" max="2"/>
+            <item_set min="1" max="2">minor_treasure</item_set>
         </items>
         <attacks>
             <!--
@@ -4668,6 +4744,13 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="expert">darkbolt</spell>
+            <spell skill="expert">disease</spell>
+            <spell skill="expert">spell_shield</spell>
+            <spell skill="expert">burn</spell>
+            <spell skill="basic">enfeeble</spell>
+        </spells>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -6009,6 +6092,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <spells>
+            <spell skill="expert">darkbolt</spell>
+            <spell skill="expert">burn</spell>
+            <spell skill="expert">heal</spell>
+        </spells>
         <properties>
             <property>r_poison</property>
             <property>r_sleep</property>
@@ -6352,6 +6440,11 @@
                 <damage>15</damage>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="expert">enfeeble</spell>
+            <spell skill="expert">disease</spell>
+            <spell skill="expert">spell_shield</spell>
+        </spells>
         <properties>
             <property>r_fire</property>
             <property>r_sleep</property>
@@ -6437,6 +6530,15 @@
                 <damage>8</damage>
             </attack>
         </attacks>
+        <spells>
+            <spell skill="master">darkbolt</spell>
+            <spell skill="master">summon</spell>
+            <spell skill="master">burn</spell>
+            <spell skill="master">pestilence</spell>
+            <spell skill="master">spell_shield</spell>
+            <spell skill="master">disease</spell>
+            <spell skill="expert">enfeeble</spell>
+        </spells>
         <properties>
             <property>r_fire</property>
             <property>r_fear</property>
@@ -6515,7 +6617,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="high_priest_guard_war_vet"/>
+            <item_set>high_priest_guard_war_vet</item_set>
         </items>
         <properties>
             <property>r_fear</property>
@@ -6593,7 +6695,7 @@
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
         <items>
-            <item_set id="high_priest_guard_rogue"/>
+            <item_set>high_priest_guard_rogue</item_set>
         </items>
         <properties>
             <property>r_fear</property>

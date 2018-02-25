@@ -283,7 +283,7 @@ ConsumeItem DeviceBlaster::run_effect()
     else // Targets are available
     {
         Spell* const spell =
-            spell_handling::make_spell_from_id(SpellId::aza_wrath);
+            spell_factory::make_spell_from_id(SpellId::aza_wrath);
 
         spell->cast(map::player,
                     SpellSkill::basic,

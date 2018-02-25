@@ -376,6 +376,37 @@ static void dump_intr_attack_property(xml::Element* property_e,
         }
 }
 
+static void dump_items(xml::Element* items_e, ActorData& data)
+{
+        for (auto item_set_e = xml::first_child(items_e);
+             item_set_e;
+             item_set_e = xml::next_sibling(item_set_e))
+        {
+                ActorItemSetData item_set;
+
+                const std::string id_str = xml::get_text_str(item_set_e);
+
+                item_set.item_set_id = str_to_item_set_id_map.at(id_str);
+
+                xml::try_get_attribute_int(
+                        item_set_e,
+                        "percent_chance",
+                        item_set.pct_chance_to_spawn);
+
+                xml::try_get_attribute_int(
+                        item_set_e,
+                        "min",
+                        item_set.nr_spawned_range.min);
+
+                xml::try_get_attribute_int(
+                        item_set_e,
+                        "max",
+                        item_set.nr_spawned_range.max);
+
+                data.item_sets.push_back(item_set);
+        }
+}
+
 static void dump_intr_attacks(xml::Element* attacks_e, ActorData& data)
 {
         for (auto attack_e = xml::first_child(attacks_e);
@@ -405,32 +436,29 @@ static void dump_intr_attacks(xml::Element* attacks_e, ActorData& data)
         }
 }
 
-static void dump_items(xml::Element* items_e, ActorData& data)
+static void dump_spells(xml::Element* spells_e, ActorData& data)
 {
-        for (auto item_set_e = xml::first_child(items_e);
-             item_set_e;
-             item_set_e = xml::next_sibling(item_set_e))
+        for (auto spell_e = xml::first_child(spells_e);
+             spell_e;
+             spell_e = xml::next_sibling(spell_e))
         {
-                ActorItemSetData item_set;
+                ActorSpellData spell_data;
 
-                const std::string id_str =
-                        xml::get_attribute_str(item_set_e, "id");
+                const std::string id_str = xml::get_text_str(spell_e);
 
-                item_set.item_set_id = str_to_item_set_id_map.at(id_str);
+                spell_data.spell_id = str_to_spell_id_map.at(id_str);
 
-                xml::try_get_attribute_int(item_set_e,
-                                           "percent_chance",
-                                           item_set.pct_chance_to_spawn);
+                const std::string skill_str =
+                        xml::get_attribute_str(spell_e, "skill");
 
-                xml::try_get_attribute_int(item_set_e,
-                                           "min",
-                                           item_set.nr_spawned_range.min);
+                spell_data.spell_skill = str_to_spell_skill_map.at(skill_str);
 
-                xml::try_get_attribute_int(item_set_e,
-                                           "max",
-                                           item_set.nr_spawned_range.max);
+                xml::try_get_attribute_int(
+                        spell_e,
+                        "percent_chance",
+                        spell_data.pct_chance_to_know);
 
-                data.item_sets.push_back(item_set);
+                data.spells.push_back(spell_data);
         }
 }
 
@@ -567,6 +595,13 @@ static void read_actor_definitions_xml()
                         dump_intr_attacks(attacks_e, data);
                 }
 
+                auto spells_e = xml::first_child(mon_e, "spells");
+
+                if (spells_e)
+                {
+                        dump_spells(spells_e, data);
+                }
+
                 auto props_e = xml::first_child(mon_e, "properties");
 
                 if (props_e)
@@ -608,6 +643,7 @@ void ActorData::reset()
         hp = 0;
         item_sets.clear();
         intr_attacks.clear();
+        spells.clear();
         spi = 0;
         speed_pct = (int)ActorSpeed::normal;
 

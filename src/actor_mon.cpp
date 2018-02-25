@@ -1314,20 +1314,6 @@ void Mon::add_spell(SpellSkill skill, Spell* const spell)
         spells_.push_back(spell_entry);
 }
 
-void Mon::add_spell(SpellSkill skill, SpellId id)
-{
-        auto* const spell = spell_handling::make_spell_from_id(id);
-
-        add_spell(skill, spell);
-}
-
-void  Mon::add_random_spell(SpellSkill skill)
-{
-        auto* spell = spell_handling::random_spell_for_mon();
-
-        add_spell(skill, spell);
-}
-
 // -----------------------------------------------------------------------------
 // Specific monsters
 // -----------------------------------------------------------------------------
@@ -1395,112 +1381,26 @@ std::string Cultist::cultist_phrase()
         return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
 }
 
-// void Cultist::make_start_items()
-// {
-//         if (rnd::one_in(12))
-//         {
-//                 add_random_spell(SpellSkill::basic);
-
-//                 if (rnd::coin_toss())
-//                 {
-//                         add_random_spell(SpellSkill::basic);
-//                 }
-//         }
-// }
-
-// void CultistPriest::make_start_items()
-// {
-//         add_spell(SpellSkill::basic, SpellId::heal);
-//         add_spell(SpellSkill::basic, SpellId::darkbolt);
-//         add_spell(SpellSkill::basic, SpellId::enfeeble);
-//         add_spell(SpellSkill::basic, SpellId::knockback);
-//         add_spell(SpellSkill::basic, SpellId::spell_shield);
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::basic, SpellId::teleport);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::basic, SpellId::summon);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::basic, SpellId::pest);
-//         }
-// }
-
-// void CultistWizard::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::heal);
-//         add_spell(SpellSkill::expert, SpellId::darkbolt);
-//         add_spell(SpellSkill::expert, SpellId::knockback);
-//         add_spell(SpellSkill::expert, SpellId::spell_shield);
-
-//         add_spell(SpellSkill::basic, SpellId::enfeeble);
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::expert, SpellId::teleport);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::expert, SpellId::summon);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::expert, SpellId::pest);
-//         }
-// }
-
-// void CultistArchWizard::make_start_items()
-// {
-//         add_spell(SpellSkill::master, SpellId::heal);
-//         add_spell(SpellSkill::master, SpellId::darkbolt);
-//         add_spell(SpellSkill::master, SpellId::knockback);
-//         add_spell(SpellSkill::master, SpellId::burn);
-//         add_spell(SpellSkill::master, SpellId::spell_shield);
-
-//         add_spell(SpellSkill::expert, SpellId::enfeeble);
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::master, SpellId::teleport);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::master, SpellId::summon);
-//         }
-
-//         if (rnd::coin_toss())
-//         {
-//                 add_spell(SpellSkill::master, SpellId::pest);
-//         }
-// }
-
 void Zuul::init_hook()
 {
-        if (actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn > 0)
+        if (actor_data::data[(size_t)id()].nr_left_allowed_to_spawn > 0)
         {
-                // NOTE: Do not call 'die()' here (this would have side effects). Just
-                // set the state to destroyed.
+                // NOTE: Do not call 'die()' here (would have side effects),
+                // just set the state to destroyed.
                 state_ = ActorState::destroyed;
 
-                Actor* actor = actor_factory::make(ActorId::cultist_priest, pos);
+                Actor* actor =
+                        actor_factory::make(ActorId::cultist_priest, pos);
 
                 auto* prop = new PropPossByZuul();
 
                 prop->set_indefinite();
 
-                actor->properties().apply(prop,
-                                          PropSrc::intr,
-                                          true,
-                                          Verbosity::silent);
+                actor->properties().apply(
+                        prop,
+                        PropSrc::intr,
+                        true,
+                        Verbosity::silent);
 
                 actor->restore_hp(999, false, Verbosity::silent);
         }
@@ -1536,29 +1436,6 @@ DidAction Ghost::on_act()
         return DidAction::no;
 }
 
-// void Wraith::make_start_items()
-// {
-//         add_random_spell(SpellSkill::basic);
-//         add_random_spell(SpellSkill::basic);
-// }
-
-// void MiGo::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::mi_go_hypno);
-// }
-
-// void SentryDrone::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::heal);
-//         add_spell(SpellSkill::expert, SpellId::darkbolt);
-//         add_spell(SpellSkill::expert, SpellId::burn);
-// }
-
-// void BrownJenkin::make_start_items()
-// {
-//         add_spell(SpellSkill::basic, SpellId::teleport);
-// }
-
 void Ghoul::init_hook()
 {
         // If player is Ghoul, then Ghouls are allied to player
@@ -1567,29 +1444,6 @@ void Ghoul::init_hook()
                 leader_ = map::player;
         }
 }
-
-// void ElderVoidTraveler::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::heal);
-//         add_spell(SpellSkill::expert, SpellId::burn);
-//         add_spell(SpellSkill::expert, SpellId::deafen);
-//         add_spell(SpellSkill::expert, SpellId::spell_shield);
-// }
-
-// void Mummy::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::disease);
-// }
-
-// void MummyUnique::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::darkbolt);
-//         add_spell(SpellSkill::expert, SpellId::disease);
-//         add_spell(SpellSkill::expert, SpellId::spell_shield);
-//         add_spell(SpellSkill::expert, SpellId::burn);
-
-//         add_spell(SpellSkill::basic, SpellId::enfeeble);
-// }
 
 // TODO: This should be controlled by the map
 DidAction Khephren::on_act()
@@ -1669,12 +1523,6 @@ DidAction Ape::on_act()
         return DidAction::no;
 }
 
-// void DeathFiend::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::enfeeble);
-//         add_spell(SpellSkill::expert, SpellId::spell_shield);
-// }
-
 // TODO: Specify "buddy" monsters to spawn as allies in monsters.xml
 DidAction KeziahMason::on_act()
 {
@@ -1697,19 +1545,6 @@ DidAction KeziahMason::on_act()
 
         return DidAction::no;
 }
-
-// void KeziahMason::make_start_items()
-// {
-//         add_spell(SpellSkill::expert, SpellId::teleport);
-//         add_spell(SpellSkill::expert, SpellId::heal);
-//         add_spell(SpellSkill::expert, SpellId::summon);
-//         add_spell(SpellSkill::expert, SpellId::pest);
-//         add_spell(SpellSkill::expert, SpellId::darkbolt);
-//         add_spell(SpellSkill::expert, SpellId::deafen);
-//         add_spell(SpellSkill::expert, SpellId::spell_shield);
-
-//         add_spell(SpellSkill::basic, SpellId::enfeeble);
-// }
 
 // TODO: This should be controlled by the map
 void LengElder::on_std_turn_hook()
@@ -1877,26 +1712,9 @@ void Zombie::on_destroyed()
         }
 }
 
-// void Thing::make_start_items()
-// {
-//         add_spell(SpellSkill::basic, SpellId::teleport);
-// }
-
 TheHighPriest::TheHighPriest() :
         Mon                 (),
         has_become_aware_   (false) {}
-
-// void TheHighPriest::make_start_items()
-// {
-//         add_spell(SpellSkill::master, SpellId::darkbolt);
-//         add_spell(SpellSkill::master, SpellId::summon);
-//         add_spell(SpellSkill::master, SpellId::burn);
-//         add_spell(SpellSkill::master, SpellId::pest);
-//         add_spell(SpellSkill::master, SpellId::spell_shield);
-//         add_spell(SpellSkill::master, SpellId::disease);
-
-//         add_spell(SpellSkill::expert, SpellId::enfeeble);
-// }
 
 void TheHighPriest::on_death()
 {

@@ -143,6 +143,13 @@ struct MonGroupSpawnRule
         int weight;
 };
 
+struct ActorItemSetData
+{
+        ItemSetId item_set_id = (ItemSetId)0;
+        int pct_chance_to_spawn = 100;
+        Range nr_spawned_range = {1, 1};
+};
+
 struct IntrAttData
 {
         ItemId item_id = ItemId::END;
@@ -150,11 +157,11 @@ struct IntrAttData
         ItemAttProp prop_applied = {};
 };
 
-struct ActorItemSetData
+struct ActorSpellData
 {
-        ItemSetId item_set_id = (ItemSetId)0;
-        int pct_chance_to_spawn = 100;
-        Range nr_spawned_range = {1, 1};
+        SpellId spell_id = SpellId::END;
+        SpellSkill spell_skill = SpellSkill::basic;
+        int pct_chance_to_know = 100;
 };
 
 enum class ActorSpeed
@@ -243,6 +250,7 @@ struct ActorData
         int spi;
         std::vector<ActorItemSetData> item_sets;
         std::vector<IntrAttData> intr_attacks;
+        std::vector<ActorSpellData> spells;
         int speed_pct;
         AbilityValues ability_values;
         bool natural_props[(size_t)PropId::END];

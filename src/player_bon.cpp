@@ -1209,7 +1209,7 @@ void pick_trait(const Trait id)
     case Trait::greater_summoning:
     {
         player_spells::incr_spell_skill(SpellId::summon);
-        player_spells::incr_spell_skill(SpellId::pest);
+        player_spells::incr_spell_skill(SpellId::pestilence);
     }
     break;
 

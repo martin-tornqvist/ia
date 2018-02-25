@@ -3,11 +3,13 @@
 #include <vector>
 
 #include "actor.hpp"
+#include "actor_mon.hpp"
 #include "actor_player.hpp"
 #include "item_data.hpp"
 #include "item_factory.hpp"
 #include "item_rod.hpp"
 #include "map.hpp"
+#include "spells.hpp"
 #include "player_spells.hpp"
 
 // -----------------------------------------------------------------------------
@@ -460,7 +462,7 @@ static void make_item_set_high_priest_guard_rogue(Actor& actor)
                 Verbosity::silent);
 }
 
-static void make_item_sets(Actor& actor)
+static void make_monster_item_sets(Actor& actor)
 {
         for (const ActorItemSetData& item_set : actor.data().item_sets)
         {
@@ -519,7 +521,7 @@ static void make_item_sets(Actor& actor)
         }
 }
 
-static void make_intr_attacks(Actor& actor)
+static void make_monster_intr_attacks(Actor& actor)
 {
         for (auto& intr_attack : actor.data().intr_attacks)
         {
@@ -538,11 +540,39 @@ static void make_intr_attacks(Actor& actor)
         }
 }
 
+static void make_monster_spells(Actor& actor)
+{
+        ASSERT(!actor.is_player());
+
+        if (actor.is_player())
+        {
+                return;
+        }
+
+        Mon* const mon = static_cast<Mon*>(&actor);
+
+        for (auto& spell_data : actor.data().spells)
+        {
+                if (!rnd::percent(spell_data.pct_chance_to_know))
+                {
+                        continue;
+                }
+
+                Spell* const spell =
+                        spell_factory::make_spell_from_id(
+                                spell_data.spell_id);
+
+                mon->add_spell(spell_data.spell_skill, spell);
+        }
+}
+
 static void make_for_monster(Actor& actor)
 {
-        make_item_sets(actor);
+        make_monster_item_sets(actor);
 
-        make_intr_attacks(actor);
+        make_monster_intr_attacks(actor);
+
+        make_monster_spells(actor);
 }
 
 // -----------------------------------------------------------------------------

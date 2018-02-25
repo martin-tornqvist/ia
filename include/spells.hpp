@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include "item.hpp"
 #include "player_bon.hpp"
@@ -17,7 +18,7 @@ enum class SpellId
     enfeeble,
     teleport,
     summon,
-    pest,
+    pestilence,
     heal,
     spell_shield,
 
@@ -50,11 +51,47 @@ enum class SpellId
     END
 };
 
+const std::unordered_map<std::string, SpellId> str_to_spell_id_map =
+{
+    {"darkbolt", SpellId::darkbolt},
+    {"enfeeble", SpellId::enfeeble},
+    {"teleport", SpellId::teleport},
+    {"summon", SpellId::summon},
+    {"pestilence", SpellId::pestilence},
+    {"heal", SpellId::heal},
+    {"spell_shield", SpellId::spell_shield},
+    {"see_invis", SpellId::see_invis},
+    {"aza_wrath", SpellId::aza_wrath},
+    {"mayhem", SpellId::mayhem},
+    {"searching", SpellId::searching},
+    {"opening", SpellId::opening},
+    {"res", SpellId::res},
+    {"light", SpellId::light},
+    {"bless", SpellId::bless},
+    {"anim_wpns", SpellId::anim_wpns},
+    {"transmut", SpellId::transmut},
+    {"frenzy", SpellId::frenzy},
+    {"disease", SpellId::disease},
+    {"knockback", SpellId::knockback},
+    {"mi_go_hypno", SpellId::mi_go_hypno},
+    {"burn", SpellId::burn},
+    {"deafen", SpellId::deafen},
+    {"pharaoh_staff", SpellId::pharaoh_staff},
+    {"subdue_wpns", SpellId::subdue_wpns}
+};
+
 enum class SpellSkill
 {
     basic,
     expert,
     master
+};
+
+const std::unordered_map<std::string, SpellSkill> str_to_spell_skill_map =
+{
+        {"basic", SpellSkill::basic},
+        {"expert", SpellSkill::expert},
+        {"master", SpellSkill::master}
 };
 
 enum class SpellSrc
@@ -79,13 +116,12 @@ enum class IsIntrinsic
 
 class Spell;
 
-namespace spell_handling
+namespace spell_factory
 {
 
-Spell* random_spell_for_mon();
 Spell* make_spell_from_id(const SpellId spell_id);
 
-} // spell_handling
+} // spell_factory
 
 class Spell
 {
@@ -317,10 +353,10 @@ private:
     }
 };
 
-class SpellPest: public Spell
+class SpellPestilence: public Spell
 {
 public:
-    SpellPest() : Spell() {}
+    SpellPestilence() : Spell() {}
 
     bool allow_mon_cast_now(Mon& mon) const override;
 
@@ -346,7 +382,7 @@ public:
 
     SpellId id() const override
     {
-        return SpellId::pest;
+        return SpellId::pestilence;
     }
 
     SpellShock shock_type() const override

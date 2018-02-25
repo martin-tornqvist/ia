@@ -18,7 +18,7 @@
 const std::string Scroll::real_name() const
 {
     Spell* spell =
-        spell_handling::make_spell_from_id(
+        spell_factory::make_spell_from_id(
             data_->spell_cast_from_scroll);
 
     const std::string scroll_name = spell->name();
@@ -135,7 +135,7 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
 Spell* Scroll::make_spell() const
 {
-    return spell_handling::make_spell_from_id(
+    return spell_factory::make_spell_from_id(
         data_->spell_cast_from_scroll);
 }
 

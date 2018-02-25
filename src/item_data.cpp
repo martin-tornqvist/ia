@@ -1545,7 +1545,7 @@ void init()
 
     reset_data(d, ItemType::scroll);
     d.id = ItemId::scroll_pest;
-    d.spell_cast_from_scroll = SpellId::pest;
+    d.spell_cast_from_scroll = SpellId::pestilence;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::scroll);
