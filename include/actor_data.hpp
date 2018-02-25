@@ -13,6 +13,7 @@
 #include "spells.hpp"
 #include "audio.hpp"
 #include "item_att_property.hpp"
+#include "item_data.hpp"
 
 // TODO: This enum will be removed
 enum class ActorId
@@ -144,11 +145,16 @@ struct MonGroupSpawnRule
 
 struct IntrAttData
 {
-        IntrAttData();
+        ItemId item_id = ItemId::END;
+        int dmg = 0;
+        ItemAttProp prop_applied = {};
+};
 
-        ItemId item_id;
-        int dmg;
-        ItemAttProp prop_applied;
+struct ActorItemSetData
+{
+        ItemSetId item_set_id = (ItemSetId)0;
+        int pct_chance_to_spawn = 100;
+        Range nr_spawned_range = {1, 1};
 };
 
 enum class ActorSpeed
@@ -235,6 +241,7 @@ struct ActorData
         std::vector<MonGroupSpawnRule> group_sizes;
         int hp;
         int spi;
+        std::vector<ActorItemSetData> item_sets;
         std::vector<IntrAttData> intr_attacks;
         int speed_pct;
         AbilityValues ability_values;

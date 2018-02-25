@@ -13,22 +13,6 @@
 
 enum class SndVol;
 
-enum ItemWeight
-{
-        none        = 0,
-        extra_light = 1,    // E.g. ammo
-        light       = 10,   // E.g. dynamite, daggers
-        medium      = 50,   // E.g. most firearms
-        heavy       = 100,  // E.g. heavy armor, heavy weapons
-};
-
-enum class ItemValue
-{
-        normal,
-        minor_treasure,
-        major_treasure
-};
-
 enum class ItemId
 {
         trapez,
@@ -221,18 +205,59 @@ const std::unordered_map<std::string, ItemId> str_to_intr_item_id_map =
         {"web_bola", ItemId::intr_web_bola},
 };
 
+enum class ItemValue
+{
+        normal,
+        minor_treasure,
+        rare_treasure,
+        supreme_treasure
+};
+
+enum class ItemSetId
+{
+        minor_treasure,
+        rare_treasure,
+        supreme_treasure,
+        firearm,
+        spike_gun,
+        priest_dagger,
+        mi_go_gun,
+        mi_go_armor,
+        high_priest_guard_war_vet,
+        high_priest_guard_rogue
+};
+
+const std::unordered_map<std::string, ItemSetId> str_to_item_set_id_map =
+{
+        {"minor_treasure", ItemSetId::minor_treasure},
+        {"rare_treasure", ItemSetId::rare_treasure},
+        {"supreme_treasure", ItemSetId::supreme_treasure},
+        {"firearm", ItemSetId::firearm},
+        {"spike_gun", ItemSetId::spike_gun},
+        {"priest_dagger", ItemSetId::priest_dagger},
+        {"mi_go_gun", ItemSetId::mi_go_gun},
+        {"mi_go_armor", ItemSetId::mi_go_armor},
+        {"high_priest_guard_war_vet", ItemSetId::high_priest_guard_war_vet},
+        {"high_priest_guard_rogue", ItemSetId::high_priest_guard_rogue}
+};
+
+enum ItemWeight
+{
+        none            = 0,
+        extra_light     = 1,    // E.g. ammo
+        light           = 10,   // E.g. dynamite, daggers
+        medium          = 50,   // E.g. most firearms
+        heavy           = 100,  // E.g. heavy armor, heavy weapons
+};
+
 struct ItemContainerSpawnRule
 {
-        ItemContainerSpawnRule() :
-                feature_id(FeatureId::END),
-                pct_chance_to_incl(0) {}
-
         ItemContainerSpawnRule(FeatureId feature_id_, int pct_chance_to_incl_) :
                 feature_id(feature_id_),
                 pct_chance_to_incl(pct_chance_to_incl_) {}
 
-        FeatureId feature_id;
-        int pct_chance_to_incl;
+        FeatureId feature_id = FeatureId::END;
+        int pct_chance_to_incl = 0;
 };
 
 class ItemData

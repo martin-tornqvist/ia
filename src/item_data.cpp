@@ -189,7 +189,7 @@ static void reset_data(ItemData& d, ItemType const item_type)
     case ItemType::device:
         reset_data(d, ItemType::general);
         d.type = ItemType::device;
-        d.value = ItemValue::minor_treasure;
+        d.value = ItemValue::rare_treasure;
         d.has_std_activate = true;
         d.base_name_un_id =
         {
@@ -219,7 +219,7 @@ static void reset_data(ItemData& d, ItemType const item_type)
     case ItemType::rod:
         reset_data(d, ItemType::general);
         d.type = ItemType::rod;
-        d.value = ItemValue::minor_treasure;
+        d.value = ItemValue::rare_treasure;
         d.has_std_activate = true;
         d.base_descr =
         {
@@ -1678,7 +1678,6 @@ void init()
     reset_data(d, ItemType::device);
     d.id = ItemId::device_blaster;
     d.base_name = {"Blaster Device", "Blaster Devices", "a Blaster Device"};
-    d.value = ItemValue::minor_treasure;
     d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
@@ -1691,7 +1690,6 @@ void init()
     {
         "Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device"
     };
-    d.value = ItemValue::minor_treasure;
     d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
@@ -1704,7 +1702,6 @@ void init()
     {
         "Translocator Device", "Translocator Devices", "a Translocator Device"
     };
-    d.value = ItemValue::minor_treasure;
     d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
@@ -1717,7 +1714,6 @@ void init()
     {
         "Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"
     };
-    d.value = ItemValue::minor_treasure;
     d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
@@ -1730,7 +1726,6 @@ void init()
     {
         "Deafening Device", "Deafening Devices", "a Deafening Device"
     };
-    d.value = ItemValue::minor_treasure;
     d.color = colors::gray();
     d.native_containers.push_back(FeatureId::chest);
     d.native_containers.push_back(FeatureId::tomb);
@@ -1824,7 +1819,7 @@ void init()
     d.ranged.max_range = d.ranged.effective_range + 3;
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
@@ -1850,7 +1845,7 @@ void init()
     d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
@@ -1876,7 +1871,7 @@ void init()
     d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
@@ -1901,7 +1896,7 @@ void init()
     d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
@@ -1928,7 +1923,7 @@ void init()
     d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -1956,7 +1951,7 @@ void init()
     d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -1982,7 +1977,7 @@ void init()
     d.character = '%';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.has_std_activate = true;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
@@ -2022,7 +2017,7 @@ void init()
     d.ranged.max_range = d.ranged.effective_range + 3;
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);
@@ -2046,7 +2041,7 @@ void init()
     d.character = '"';
     d.is_unique = true;
     d.xp_on_found = 20;
-    d.value = ItemValue::major_treasure;
+    d.value = ItemValue::supreme_treasure;
     d.is_carry_shocking = true;
     d.chance_to_incl_in_spawn_list = 1;
     d.native_containers.push_back(FeatureId::tomb);

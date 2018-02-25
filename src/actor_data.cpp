@@ -384,7 +384,8 @@ static void dump_intr_attacks(xml::Element* attacks_e, ActorData& data)
         {
                 IntrAttData attack_data;
 
-                const std::string id_str = attack_e->Attribute("id");
+                const std::string id_str =
+                        xml::get_attribute_str(attack_e, "id");
 
                 attack_data.item_id = str_to_intr_item_id_map.at(id_str);
 
@@ -401,6 +402,35 @@ static void dump_intr_attacks(xml::Element* attacks_e, ActorData& data)
                 }
 
                 data.intr_attacks.push_back(attack_data);
+        }
+}
+
+static void dump_items(xml::Element* items_e, ActorData& data)
+{
+        for (auto item_set_e = xml::first_child(items_e);
+             item_set_e;
+             item_set_e = xml::next_sibling(item_set_e))
+        {
+                ActorItemSetData item_set;
+
+                const std::string id_str =
+                        xml::get_attribute_str(item_set_e, "id");
+
+                item_set.item_set_id = str_to_item_set_id_map.at(id_str);
+
+                xml::try_get_attribute_int(item_set_e,
+                                           "percent_chance",
+                                           item_set.pct_chance_to_spawn);
+
+                xml::try_get_attribute_int(item_set_e,
+                                           "min",
+                                           item_set.nr_spawned_range.min);
+
+                xml::try_get_attribute_int(item_set_e,
+                                           "max",
+                                           item_set.nr_spawned_range.max);
+
+                data.item_sets.push_back(item_set);
         }
 }
 
@@ -474,7 +504,7 @@ static void dump_spawning(xml::Element* spawn_e, ActorData& data)
         data.is_unique = xml::has_child(spawn_e, "unique");
 
         data.nr_left_allowed_to_spawn = xml::get_text_int(
-                xml::first_child(spawn_e, "nr_left_allowed_to_spawn"));
+                xml::first_child(spawn_e, "nr_allowed_to_spawn"));
 
         const std::string group_size_element_str = "group_size";
 
@@ -523,6 +553,13 @@ static void read_actor_definitions_xml()
 
                 dump_attributes(xml::first_child(mon_e, "attributes"), data);
 
+                auto items_e = xml::first_child(mon_e, "items");
+
+                if (items_e)
+                {
+                        dump_items(items_e, data);
+                }
+
                 auto attacks_e = xml::first_child(mon_e, "attacks");
 
                 if (attacks_e)
@@ -549,16 +586,8 @@ static void read_actor_definitions_xml()
 } // read_actor_definitions_xml
 
 // -----------------------------------------------------------------------------
-// IntrAttData
+// ActorData
 // -----------------------------------------------------------------------------
-IntrAttData::IntrAttData() :
-        item_id(ItemId::END),
-        dmg(0),
-        prop_applied()
-{
-
-}
-
 void ActorData::reset()
 {
         id = ActorId::END;
@@ -577,6 +606,7 @@ void ActorData::reset()
         });
 
         hp = 0;
+        item_sets.clear();
         intr_attacks.clear();
         spi = 0;
         speed_pct = (int)ActorSpeed::normal;

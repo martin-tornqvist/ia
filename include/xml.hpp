@@ -12,7 +12,7 @@ typedef tinyxml2::XMLElement Element;
 
 void load_file(const std::string& path, Doc& to_doc);
 
-Element* first_child(Doc& doc, const std::string name = "");
+Element* first_child(Doc& doc);
 
 Element* first_child(Element* e, const std::string name = "");
 

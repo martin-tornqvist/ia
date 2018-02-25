@@ -36,9 +36,9 @@ void load_file(const std::string& path, Doc& to_doc)
         }
 }
 
-Element* first_child(Doc& doc, const std::string name)
+Element* first_child(Doc& doc)
 {
-        return doc.FirstChildElement(to_c_str(name));
+        return doc.FirstChildElement();
 }
 
 Element* first_child(Element* e, const std::string name)

@@ -160,7 +160,7 @@ void init_room_bucket()
         add_to_room_bucket(RoomType::cave, nr_cave_rooms);
     }
 
-    std::random_shuffle(begin(room_bucket_), end(room_bucket_));
+    rnd::shuffle(room_bucket_);
 
     TRACE_FUNC_END;
 }
@@ -1377,7 +1377,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         }
     }
 
-    random_shuffle(begin(tree_pos_bucket), end(tree_pos_bucket));
+    rnd::shuffle(tree_pos_bucket);
 
     int nr_trees_placed = 0;
 
@@ -1796,7 +1796,7 @@ void RiverRoom::on_pre_connect(bool door_proposals[map_w][map_h])
 
     std::iota(begin(positions), end(positions), 0);
 
-    random_shuffle(positions.begin(), positions.end());
+    rnd::shuffle(positions);
 
     std::vector<int> c_built;
 

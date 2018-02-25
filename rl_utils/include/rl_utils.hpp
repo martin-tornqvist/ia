@@ -28,6 +28,8 @@
 #define TRACE_FUNC_BEGIN_VERBOSE  if (1) ; else std::cerr
 #define TRACE_FUNC_END_VERBOSE    if (1) ; else std::cerr
 
+#define PANIC exit(EXIT_FAILURE)
+
 #else // Debug mode
 
 #define ASSERT(check)                                                   \
@@ -61,13 +63,12 @@
 #define TRACE_FUNC_BEGIN_VERBOSE  if (TRACE_LVL < 2) ; else TRACE_FUNC_BEGIN
 #define TRACE_FUNC_END_VERBOSE    if (TRACE_LVL < 2) ; else TRACE_FUNC_END
 
+#define PANIC ASSERT(false)
+
 #endif // NDEBUG
 
 // Print an error, for both debug and release builds
 #define TRACE_ERROR_RELEASE std::cerr << "ERROR: "
-
-// Critical error, terminate immediately
-#define PANIC exit(EXIT_FAILURE)
 
 //------------------------------------------------------------------------------
 // Custom assert

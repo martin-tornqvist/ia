@@ -866,6 +866,10 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="firearm"/>
+            <item_set id="minor_treasure" percent_chance="10"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -939,6 +943,10 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="spike_gun"/>
+            <item_set id="rare_treasure" percent_chance="1"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -954,7 +962,7 @@
         </ai>
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
-            <max_dungeon_level>9</max_dungeon_level>
+            <max_dungeon_level>7</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
@@ -1013,6 +1021,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" min="2" max="3"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -1250,6 +1261,10 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="priest_dagger"/>
+            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -1324,6 +1339,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>14</turns_aware>
@@ -1398,6 +1416,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" min="1" max="2" percent_chance="75"/>
+        </items>
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -2474,6 +2495,10 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="mi_go_gun"/>
+            <item_set id="rare_treasure" percent_chance="5"/>
+        </items>
         <attacks>
             <attack id="sting">
                 <damage>5</damage>
@@ -2556,6 +2581,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="mi_go_gun"/>
+            <item_set id="mi_go_armor" percent_chance="25"/>
+            <item_set id="rare_treasure" percent_chance="5"/>
+        </items>
         <attacks>
             <attack id="sting">
                 <damage>8</damage>
@@ -4378,6 +4408,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" percent_chance="50"/>
+        </items>
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -4539,6 +4572,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" min="1" max="2"/>
+        </items>
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -4620,6 +4656,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="minor_treasure" min="1" max="2"/>
+        </items>
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -6475,6 +6514,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="high_priest_guard_war_vet"/>
+        </items>
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>
@@ -6550,6 +6592,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+        <items>
+            <item_set id="high_priest_guard_rogue"/>
+        </items>
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>

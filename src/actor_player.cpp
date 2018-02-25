@@ -579,7 +579,7 @@ void Player::item_feeling()
 
     auto is_nice = [](const Item& item)
     {
-        return item.data().value == ItemValue::major_treasure;
+        return item.data().value == ItemValue::supreme_treasure;
     };
 
     for (int x = 0; x < map_w; ++x)

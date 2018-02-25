@@ -1341,46 +1341,55 @@ std::string Cultist::cultist_phrase()
         {
                 const std::string name = god->name();
                 const std::string descr = god->descr();
-                phrase_bucket.push_back(name + " save us!");
-                phrase_bucket.push_back(descr + " will save us!");
-                phrase_bucket.push_back(name + ", guide us!");
-                phrase_bucket.push_back(descr + " guides us!");
-                phrase_bucket.push_back("For " + name + "!");
-                phrase_bucket.push_back("For " + descr + "!");
-                phrase_bucket.push_back("Blood for " + name + "!");
-                phrase_bucket.push_back("Blood for " + descr + "!");
-                phrase_bucket.push_back("Perish for " + name + "!");
-                phrase_bucket.push_back("Perish for " + descr + "!");
-                phrase_bucket.push_back("In the name of " + name + "!");
+
+                phrase_bucket =
+                {
+                        name + " save us!",
+                        descr + " will save us!",
+                        name + " watches over us!",
+                        descr + " watches over us!",
+                        name + ", guide us!",
+                        descr + " guides us!",
+                        "For " + name + "!",
+                        "For " + descr + "!",
+                        "Blood for " + name + "!",
+                        "Blood for " + descr + "!",
+                        "Perish for " + name + "!",
+                        "Perish for " + descr + "!",
+                        "In the name of " + name + "!"
+                };
         }
         else
         {
-                phrase_bucket.push_back("Apigami!");
-                phrase_bucket.push_back("Bhuudesco invisuu!");
-                phrase_bucket.push_back("Bhuuesco marana!");
-                phrase_bucket.push_back("Crudux cruo!");
-                phrase_bucket.push_back("Cruento paashaeximus!");
-                phrase_bucket.push_back("Cruento pestis shatruex!");
-                phrase_bucket.push_back("Cruo crunatus durbe!");
-                phrase_bucket.push_back("Cruo lokemundux!");
-                phrase_bucket.push_back("Cruo stragara-na!");
-                phrase_bucket.push_back("Gero shay cruo!");
-                phrase_bucket.push_back("In marana domus-bhaava crunatus!");
-                phrase_bucket.push_back("Caecux infirmux!");
-                phrase_bucket.push_back("Malax sayti!");
-                phrase_bucket.push_back("Marana pallex!");
-                phrase_bucket.push_back("Marana malax!");
-                phrase_bucket.push_back("Pallex ti!");
-                phrase_bucket.push_back("Peroshay bibox malax!");
-                phrase_bucket.push_back("Pestis Cruento!");
-                phrase_bucket.push_back("Pestis cruento vilomaxus pretiacruento!");
-                phrase_bucket.push_back("Pretaanluxis cruonit!");
-                phrase_bucket.push_back("Pretiacruento!");
-                phrase_bucket.push_back("Stragar-Naya!");
-                phrase_bucket.push_back("Vorox esco marana!");
-                phrase_bucket.push_back("Vilomaxus!");
-                phrase_bucket.push_back("Prostragaranar malachtose!");
-                phrase_bucket.push_back("Apigami!");
+                phrase_bucket =
+                {
+                        "Apigami!",
+                        "Bhuudesco invisuu!",
+                        "Bhuuesco marana!",
+                        "Crudux cruo!",
+                        "Cruento paashaeximus!",
+                        "Cruento pestis shatruex!",
+                        "Cruo crunatus durbe!",
+                        "Cruo lokemundux!",
+                        "Cruo stragara-na!",
+                        "Gero shay cruo!",
+                        "In marana domus-bhaava crunatus!",
+                        "Caecux infirmux!",
+                        "Malax sayti!",
+                        "Marana pallex!",
+                        "Marana malax!",
+                        "Pallex ti!",
+                        "Peroshay bibox malax!",
+                        "Pestis Cruento!",
+                        "Pestis cruento vilomaxus pretiacruento!",
+                        "Pretaanluxis cruonit!",
+                        "Pretiacruento!",
+                        "Stragar-Naya!",
+                        "Vorox esco marana!",
+                        "Vilomaxus!",
+                        "Prostragaranar malachtose!",
+                        "Apigami!"
+                };
         }
 
         return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
@@ -1388,103 +1397,6 @@ std::string Cultist::cultist_phrase()
 
 // void Cultist::make_start_items()
 // {
-//         // If we are on a low dlvl, let the vast majority of cultists carry pistols
-//         const bool is_low_dlvl = map::dlvl < 4;
-
-//         const int pistol = is_low_dlvl ? 20 : 6;
-//         const int pump_shotgun = pistol + 3;
-//         const int sawn_shotgun = pump_shotgun + 3;
-//         const int mg = sawn_shotgun + 1;
-//         const int tot = mg;
-
-//         const int rnd =
-//                 (map::dlvl == 0) ?
-//                 pistol :
-//                 rnd::range(1, tot);
-
-//         if (rnd <= pistol)
-//         {
-//                 Item* item = item_factory::make(ItemId::pistol);
-
-//                 Wpn* wpn = static_cast<Wpn*>(item);
-
-//                 const int ammo_cap = wpn->data().ranged.max_ammo;
-
-//                 wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
-
-//                 inv_->put_in_slot(SlotId::wpn,
-//                                   item,
-//                                   Verbosity::silent);
-
-//                 if (rnd::coin_toss())
-//                 {
-//                         inv_->put_in_backpack(item_factory::make(ItemId::pistol_mag));
-//                 }
-//         }
-//         else if (rnd <= pump_shotgun)
-//         {
-//                 Item* item = item_factory::make(ItemId::pump_shotgun);
-
-//                 Wpn* wpn = static_cast<Wpn*>(item);
-
-//                 const int ammo_cap = wpn->data().ranged.max_ammo;
-
-//                 wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
-
-//                 inv_->put_in_slot(SlotId::wpn,
-//                                   item,
-//                                   Verbosity::silent);
-
-//                 if (rnd::one_in(3))
-//                 {
-//                         item = item_factory::make(ItemId::shotgun_shell);
-
-//                         item->nr_items_ = rnd::range(1, 8);
-
-//                         inv_->put_in_backpack(item);
-//                 }
-//         }
-//         else if (rnd <= sawn_shotgun)
-//         {
-//                 inv_->put_in_slot(SlotId::wpn,
-//                                   item_factory::make(ItemId::sawed_off),
-//                                   Verbosity::silent);
-
-//                 if (rnd::one_in(4))
-//                 {
-//                         Item* item = item_factory::make(ItemId::shotgun_shell);
-
-//                         item->nr_items_ = rnd::range(1, 8);
-
-//                         inv_->put_in_backpack(item);
-//                 }
-//         }
-//         else // Machine gun
-//         {
-//                 // Number of machine gun bullets loaded needs to be a multiple of the
-//                 // number of projectiles fired in each burst
-//                 Item* item = item_factory::make(ItemId::machine_gun);
-
-//                 Wpn* const wpn = static_cast<Wpn*>(item);
-
-//                 const int cap_scaled = wpn->data().ranged.max_ammo / nr_mg_projectiles;
-
-//                 const int min_scaled = cap_scaled / 2;
-
-//                 wpn->ammo_loaded_ =
-//                         rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
-
-//                 inv_->put_in_slot(SlotId::wpn,
-//                                   item,
-//                                   Verbosity::silent);
-//         }
-
-//         if (rnd::one_in(8))
-//         {
-//                 inv_->put_in_backpack(
-//                         item_factory::make_random_scroll_or_potion(true, true));
-//         }
-
 //         if (rnd::one_in(12))
 //         {
 //                 add_random_spell(SpellSkill::basic);
@@ -1493,28 +1405,6 @@ std::string Cultist::cultist_phrase()
 //                 {
 //                         add_random_spell(SpellSkill::basic);
 //                 }
-//         }
-// }
-
-// void BogTcher::make_start_items()
-// {
-//         Item* item = item_factory::make(ItemId::spike_gun);
-
-//         Wpn* wpn = static_cast<Wpn*>(item);
-
-//         const int ammo_cap = wpn->data().ranged.max_ammo;
-
-//         wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
-
-//         inv_->put_in_slot(SlotId::wpn,
-//                           item,
-//                           Verbosity::silent);
-
-//         if (rnd::one_in(4))
-//         {
-//                 item = item_factory::make(ItemId::iron_spike);
-//                 item->nr_items_ = rnd::range(4, 12);
-//                 inv_->put_in_backpack(item);
 //         }
 // }
 
@@ -1539,21 +1429,6 @@ std::string Cultist::cultist_phrase()
 //         if (rnd::coin_toss())
 //         {
 //                 add_spell(SpellSkill::basic, SpellId::pest);
-//         }
-
-//         Item* item = item_factory::make(ItemId::dagger);
-
-//         item->melee_dmg_plus_ = 2;
-
-//         inv_->put_in_slot(SlotId::wpn,
-//                           item,
-//                           Verbosity::silent);
-
-//         // Make some treasures to drop
-//         for (int i = rnd::range(1, 2); i > 0; --i)
-//         {
-//                 inv_->put_in_backpack(
-//                         item_factory::make_random_scroll_or_potion(true, true));
 //         }
 // }
 
@@ -1580,13 +1455,6 @@ std::string Cultist::cultist_phrase()
 //         {
 //                 add_spell(SpellSkill::expert, SpellId::pest);
 //         }
-
-//         // Make some treasures to drop
-//         for (int i = rnd::range(1, 2); i > 0; --i)
-//         {
-//                 inv_->put_in_backpack(
-//                         item_factory::make_random_scroll_or_potion(true, true));
-//         }
 // }
 
 // void CultistArchWizard::make_start_items()
@@ -1612,13 +1480,6 @@ std::string Cultist::cultist_phrase()
 //         if (rnd::coin_toss())
 //         {
 //                 add_spell(SpellSkill::master, SpellId::pest);
-//         }
-
-//         // Make some treasures to drop
-//         for (int i = rnd::range(1, 2); i > 0; --i)
-//         {
-//                 inv_->put_in_backpack(
-//                         item_factory::make_random_scroll_or_potion(true, true));
 //         }
 // }
 
@@ -1683,26 +1544,6 @@ DidAction Ghost::on_act()
 
 // void MiGo::make_start_items()
 // {
-//         Item* item = item_factory::make(ItemId::mi_go_gun);
-//         Wpn* wpn = static_cast<Wpn*>(item);
-//         const int ammo_cap = wpn->data().ranged.max_ammo;
-
-//         wpn->ammo_loaded_ = rnd::range(ammo_cap / 4, ammo_cap);
-
-//         inv_->put_in_slot(SlotId::wpn,
-//                           item,
-//                           Verbosity::silent);
-
-//         if (id() == ActorId::mi_go_commander)
-//         {
-//                 if (rnd::one_in(3))
-//                 {
-//                         inv_->put_in_slot(SlotId::body,
-//                                           item_factory::make(ItemId::armor_mi_go),
-//                                           Verbosity::silent);
-//                 }
-//         }
-
 //         add_spell(SpellSkill::expert, SpellId::mi_go_hypno);
 // }
 
@@ -1868,13 +1709,6 @@ DidAction KeziahMason::on_act()
 //         add_spell(SpellSkill::expert, SpellId::spell_shield);
 
 //         add_spell(SpellSkill::basic, SpellId::enfeeble);
-
-//         // Make some treasures to drop
-//         for (int i = rnd::range(2, 3); i > 0; --i)
-//         {
-//                 inv_->put_in_backpack(
-//                         item_factory::make_random_scroll_or_potion(true, true));
-//         }
 // }
 
 // TODO: This should be controlled by the map
@@ -2114,26 +1948,6 @@ DidAction TheHighPriest::on_act()
 
         return DidAction::no;
 }
-
-// void HighPriestGuardWarVet::make_start_items()
-// {
-//         inv_->put_in_slot(
-//                 SlotId::wpn,
-//                 item_factory::make(ItemId::machine_gun),
-//                 Verbosity::silent);
-// }
-
-// void HighPriestGuardRogue::make_start_items()
-// {
-//         Item* const machete = item_factory::make(ItemId::machete);
-
-//         static_cast<Wpn*>(machete)->melee_dmg_plus_ = 1;
-
-//         inv_->put_in_slot(
-//                 SlotId::wpn,
-//                 machete,
-//                 Verbosity::silent);
-// }
 
 AnimatedWpn::AnimatedWpn() :
         Mon                     (),

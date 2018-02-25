@@ -8,8 +8,6 @@
 #include "item_factory.hpp"
 #include "item_rod.hpp"
 #include "map.hpp"
-
-// TODO: Learning spells should not be done here
 #include "player_spells.hpp"
 
 // -----------------------------------------------------------------------------
@@ -48,7 +46,6 @@ static void make_for_player_occultist()
 
         inv.put_in_backpack(spirit_pot);
 
-        // TODO: Learning spells should not be done here
         player_spells::learn_spell(SpellId::darkbolt, Verbosity::silent);
         player_spells::learn_spell(SpellId::searching, Verbosity::silent);
 
@@ -221,16 +218,317 @@ static void make_for_player()
         }
 }
 
-static void make_for_monster(Actor& actor)
+static void make_random_item_to_backpack(Actor& actor,
+                                         std::vector<ItemId>& item_id_bucket)
+{
+        if (!item_id_bucket.empty())
+        {
+                const ItemId item_id = rnd::element(item_id_bucket);
+
+                Item* item = item_factory::make(item_id);
+
+                actor.inv().put_in_backpack(item);
+        }
+}
+
+static void make_item_set_minor_treasure(Actor& actor)
+{
+        std::vector<ItemId> item_bucket;
+
+        for (int i = 0; i < (int)ItemId::END; ++i)
+        {
+                const ItemData& d = item_data::data[i];
+
+                if (d.value == ItemValue::minor_treasure)
+                {
+                        item_bucket.push_back((ItemId)i);
+                }
+        }
+
+        make_random_item_to_backpack(actor, item_bucket);
+}
+
+static void make_item_set_rare_treasure(Actor& actor)
+{
+        std::vector<ItemId> item_bucket;
+
+        for (int i = 0; i < (int)ItemId::END; ++i)
+        {
+                const ItemData& d = item_data::data[i];
+
+                if (d.value == ItemValue::rare_treasure)
+                {
+                        item_bucket.push_back((ItemId)i);
+                }
+        }
+
+        make_random_item_to_backpack(actor, item_bucket);
+}
+
+static void make_item_set_supreme_treasure(Actor& actor)
+{
+        std::vector<ItemId> item_bucket;
+
+        for (int i = 0; i < (int)ItemId::END; ++i)
+        {
+                const ItemData& d = item_data::data[i];
+
+                if (d.value == ItemValue::supreme_treasure)
+                {
+                        item_bucket.push_back((ItemId)i);
+                }
+        }
+
+        make_random_item_to_backpack(actor, item_bucket);
+}
+
+static void make_item_set_firearm(Actor& actor)
+{
+        Inventory& inv = actor.inv();
+
+        // If we are on an early dungeon level, lean heavily towards pistols
+        const bool is_low_dlvl = map::dlvl < 4;
+
+        std::vector<int> weights =
+        {
+                (is_low_dlvl ? 20 : 6), // Pistol
+                3,                      // Pump shotgun
+                3,                      // Sawed-off shotgun
+                1                       // Machine Gun
+        };
+
+        const int choice = rnd::weighted_choice(weights);
+
+        switch (choice)
+        {
+        case 0:
+        {
+                // Pistol
+                Item* item = item_factory::make(ItemId::pistol);
+
+                Wpn* wpn = static_cast<Wpn*>(item);
+
+                const int ammo_cap = wpn->data().ranged.max_ammo;
+
+                wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
+
+                inv.put_in_slot(SlotId::wpn, item, Verbosity::silent);
+
+                if (rnd::coin_toss())
+                {
+                        inv.put_in_backpack(
+                                item_factory::make(ItemId::pistol_mag));
+                }
+        }
+        break;
+
+        case 1:
+        {
+                // Pump shotgun
+                Item* item = item_factory::make(ItemId::pump_shotgun);
+
+                Wpn* wpn = static_cast<Wpn*>(item);
+
+                const int ammo_cap = wpn->data().ranged.max_ammo;
+
+                wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
+
+                inv.put_in_slot(SlotId::wpn, item, Verbosity::silent);
+
+                item = item_factory::make(ItemId::shotgun_shell);
+
+                item->nr_items_ = rnd::range(1, 6);
+
+                inv.put_in_backpack(item);
+        }
+        break;
+
+        case 2:
+        {
+                // Sawed-off shotgun
+                inv.put_in_slot(SlotId::wpn,
+                                item_factory::make(ItemId::sawed_off),
+                                Verbosity::silent);
+
+                Item* item = item_factory::make(ItemId::shotgun_shell);
+
+                item->nr_items_ = rnd::range(1, 6);
+
+                inv.put_in_backpack(item);
+        }
+        break;
+
+        case 3:
+        {
+                // Tommy Gun
+
+                // Number of bullets loaded needs to be a multiple of the number
+                // of projectiles fired in each burst
+                Item* item = item_factory::make(ItemId::machine_gun);
+
+                Wpn* const wpn = static_cast<Wpn*>(item);
+
+                const int cap_scaled =
+                        wpn->data().ranged.max_ammo /
+                        nr_mg_projectiles;
+
+                const int min_scaled = cap_scaled / 2;
+
+                wpn->ammo_loaded_ =
+                        rnd::range(min_scaled, cap_scaled) * nr_mg_projectiles;
+
+                inv.put_in_slot(SlotId::wpn, item, Verbosity::silent);
+        }
+        break;
+        }
+}
+
+static void make_item_set_spike_gun(Actor& actor)
+{
+        Inventory& inv = actor.inv();
+
+        {
+                Item* item = item_factory::make(ItemId::spike_gun);
+
+                Wpn* wpn = static_cast<Wpn*>(item);
+
+                const int ammo_cap = wpn->data().ranged.max_ammo;
+
+                wpn->ammo_loaded_ = rnd::range(ammo_cap / 2, ammo_cap);
+
+                inv.put_in_slot(SlotId::wpn, item, Verbosity::silent);
+        }
+
+        {
+                Item* item = item_factory::make(ItemId::iron_spike);
+
+                item->nr_items_ = rnd::range(1, 6);
+
+                inv.put_in_backpack(item);
+        }
+}
+
+static void make_item_set_priest_dagger(Actor& actor)
+{
+        Item* item = item_factory::make(ItemId::dagger);
+
+        const std::vector<int> weights =
+        {
+                6,
+                3,
+                1
+        };
+
+        item->melee_base_dmg_.plus = rnd::weighted_choice(weights) + 1;
+
+        actor.inv().put_in_slot(SlotId::wpn, item, Verbosity::silent);
+}
+
+static void make_item_set_mi_go_gun(Actor& actor)
+{
+        actor.inv().put_in_slot(
+                SlotId::wpn,
+                item_factory::make(ItemId::mi_go_gun),
+                Verbosity::silent);
+}
+
+static void make_item_set_mi_go_armor(Actor& actor)
+{
+        actor.inv().put_in_slot(
+                SlotId::body,
+                item_factory::make(ItemId::armor_mi_go),
+                Verbosity::silent);
+}
+
+static void make_item_set_high_priest_guard_war_vet(Actor& actor)
+{
+        actor.inv().put_in_slot(
+                SlotId::wpn,
+                item_factory::make(ItemId::machine_gun),
+                Verbosity::silent);
+}
+
+static void make_item_set_high_priest_guard_rogue(Actor& actor)
+{
+        Item* const item = item_factory::make(ItemId::machete);
+
+        item->melee_base_dmg_.plus = 1;
+
+        actor.inv().put_in_slot(
+                SlotId::wpn,
+                item,
+                Verbosity::silent);
+}
+
+static void make_item_sets(Actor& actor)
+{
+        for (const ActorItemSetData& item_set : actor.data().item_sets)
+        {
+                if (!rnd::percent(item_set.pct_chance_to_spawn))
+                {
+                        continue;
+                }
+
+                const int nr = item_set.nr_spawned_range.roll();
+
+                for (int i = 0; i < nr; ++i)
+                {
+                        switch (item_set.item_set_id)
+                        {
+                        case ItemSetId::minor_treasure:
+                                make_item_set_minor_treasure(actor);
+                                break;
+
+                        case ItemSetId::rare_treasure:
+                                make_item_set_rare_treasure(actor);
+                                break;
+
+                        case ItemSetId::supreme_treasure:
+                                make_item_set_supreme_treasure(actor);
+                                break;
+
+                        case ItemSetId::firearm:
+                                make_item_set_firearm(actor);
+                                break;
+
+                        case ItemSetId::spike_gun:
+                                make_item_set_spike_gun(actor);
+                                break;
+
+                        case ItemSetId::priest_dagger:
+                                make_item_set_priest_dagger(actor);
+                                break;
+
+                        case ItemSetId::mi_go_gun:
+                                make_item_set_mi_go_gun(actor);
+                                break;
+
+                        case ItemSetId::mi_go_armor:
+                                make_item_set_mi_go_armor(actor);
+                                break;
+
+                        case ItemSetId::high_priest_guard_war_vet:
+                                make_item_set_high_priest_guard_war_vet(actor);
+                                break;
+
+                        case ItemSetId::high_priest_guard_rogue:
+                                make_item_set_high_priest_guard_rogue(actor);
+                                break;
+                        }
+                }
+        }
+}
+
+static void make_intr_attacks(Actor& actor)
 {
         for (auto& intr_attack : actor.data().intr_attacks)
         {
                 auto* item = item_factory::make(intr_attack.item_id);
 
                 // Override damage with the damage in the intrinsic attack data
-                // (we always override both melee and ranged damage - it doesn't
-                // matter since only one damage type will be used, and the other
-                // will have no effect)
+                // (we always override both melee and ranged damage - this
+                // doesn't matter, since only one damage type will be used and
+                // the other will have no effect)
                 const auto dice = Dice(1, intr_attack.dmg);
 
                 item->melee_base_dmg_ = dice;
@@ -238,6 +536,13 @@ static void make_for_monster(Actor& actor)
 
                 actor.inv().put_in_intrinsics(item);
         }
+}
+
+static void make_for_monster(Actor& actor)
+{
+        make_item_sets(actor);
+
+        make_intr_attacks(actor);
 }
 
 // -----------------------------------------------------------------------------

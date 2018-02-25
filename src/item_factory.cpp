@@ -451,30 +451,4 @@ Item* copy_item(const Item& item_to_copy)
     return new_item;
 }
 
-Item* make_random_scroll_or_potion(const bool allow_scrolls,
-                                 const bool allow_potions)
-{
-    std::vector<ItemId> item_bucket;
-
-    for (int i = 0; i < (int)ItemId::END; ++i)
-    {
-        const ItemData& d = item_data::data[i];
-
-        if ((d.type == ItemType::scroll && allow_scrolls) ||
-            (d.type == ItemType::potion && allow_potions))
-        {
-            item_bucket.push_back(static_cast<ItemId>(i));
-        }
-    }
-
-    if (!item_bucket.empty())
-    {
-        const int element = rnd::range(0, item_bucket.size() - 1);
-
-        return make(item_bucket[element]);
-    }
-
-    return nullptr;
-}
-
 } // item_factory

@@ -199,7 +199,7 @@ void EventWallCrumble::on_new_turn()
 
     const auto nr_mon_limit_except_adj_to_entry = spawn_data.second;
 
-    random_shuffle(begin(inner_cells_), end(inner_cells_));
+    rnd::shuffle(inner_cells_);
 
     std::vector<Mon*> mon_spawned;
 
@@ -245,7 +245,7 @@ bool EventSnakeEmerge::try_find_p()
 
     auto p_bucket = to_vec(blocked, false);
 
-    random_shuffle(begin(p_bucket), end(p_bucket));
+    rnd::shuffle(p_bucket);
 
     std::vector<P> emerge_bucket;
 
@@ -361,13 +361,11 @@ void EventSnakeEmerge::on_new_turn()
 
     // Cap max number of snakes to the size of the target bucket
 
-    //
     // NOTE: The target bucket is at least as big as the minimum required number
-    //       of snakes
-    //
+    // of snakes
     max_nr_snakes = std::min(max_nr_snakes, int(tgt_bucket.size()));
 
-    random_shuffle(begin(tgt_bucket), end(tgt_bucket));
+    rnd::shuffle(tgt_bucket);
 
     std::vector<ActorId> id_bucket;
 

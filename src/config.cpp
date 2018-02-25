@@ -160,7 +160,7 @@ void set_default_variables()
     is_drink_malign_pot_prompt_ = false;
     is_ranged_wpn_meleee_prompt_ = true;
     is_ranged_wpn_auto_reload_ = false;
-    delay_projectile_draw_ = 30;
+    delay_projectile_draw_ = 20;
     delay_shotgun_ = 75;
     delay_explosion_ = 225;
     default_player_name_ = "";

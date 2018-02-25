@@ -2453,14 +2453,13 @@ Tomb::Tomb(const P& p) :
         {
             const ItemValue item_value = item->data().value;
 
-            if (item_value == ItemValue::major_treasure)
+            if (item_value == ItemValue::supreme_treasure)
             {
                 appearance_ = TombAppearance::marvelous;
 
                 break;
             }
-
-            if (item_value == ItemValue::minor_treasure)
+            else if (item_value >= ItemValue::minor_treasure)
             {
                 appearance_ = TombAppearance::ornate;
             }
