@@ -94,26 +94,12 @@ static int player_ranged_speed_pct_diff(const Wpn& wpn)
 
         if (wpn.data().type == ItemType::ranged_wpn)
         {
-                if (player_bon::traits[
-                            (size_t)Trait::adept_marksman])
+                if (player_bon::traits[(size_t)Trait::marksman])
                 {
-                        result += 25;
+                        result += 10;
                 }
 
-                if (player_bon::traits[
-                            (size_t)Trait::expert_marksman])
-                {
-                        result += 25;
-                }
-
-                if (player_bon::traits[
-                            (size_t)Trait::master_marksman])
-                {
-                        result += 25;
-                }
-
-                if (player_bon::traits[
-                            (size_t)Trait::fast_shooter])
+                if (player_bon::traits[(size_t)Trait::fast_shooter])
                 {
                         result += 100;
                 }
@@ -1495,17 +1481,7 @@ void melee(Actor* const attacker,
 
                 if (attacker == map::player)
                 {
-                        if (player_bon::traits[(size_t)Trait::adept_melee])
-                        {
-                                speed_pct_diff += 10;
-                        }
-
-                        if (player_bon::traits[(size_t)Trait::expert_melee])
-                        {
-                                speed_pct_diff += 10;
-                        }
-
-                        if (player_bon::traits[(size_t)Trait::master_melee])
+                        if (player_bon::traits[(size_t)Trait::melee_fighter])
                         {
                                 speed_pct_diff += 10;
                         }

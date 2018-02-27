@@ -42,22 +42,6 @@ static bool is_defender_aware_of_attack(const Actor* const attacker,
         return is_aware;
 }
 
-static bool player_has_aiming_prop_dmg_bon()
-{
-        const Prop* const prop =
-                map::player->properties()
-                .prop(PropId::aiming);
-
-        if (prop)
-        {
-                auto* aiming = static_cast<const PropAiming*>(prop);
-
-                return aiming->is_max_ranged_dmg();
-        }
-
-        return false;
-}
-
 // -----------------------------------------------------------------------------
 // Attack data
 // -----------------------------------------------------------------------------
@@ -460,7 +444,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
                         if (attacker == map::player)
                         {
                                 player_has_aim_bon =
-                                        player_has_aiming_prop_dmg_bon();
+                                        attacker->has_prop(PropId::aiming);
                         }
 
                         Dice dmg_dice = wpn.ranged_dmg(attacker);
@@ -629,7 +613,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                         if (attacker == map::player)
                         {
                                 player_has_aim_bon =
-                                        player_has_aiming_prop_dmg_bon();
+                                        attacker->has_prop(PropId::aiming);
                         }
 
                         Dice dmg_dice = item.thrown_dmg(attacker);

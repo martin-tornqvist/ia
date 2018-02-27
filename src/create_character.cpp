@@ -57,13 +57,10 @@ void NewGameState::on_pushed()
 
     std::unique_ptr<State> name_state(new EnterNameState);
 
-    std::unique_ptr<State> trait_state(new PickTraitState);
-
     std::unique_ptr<State> bg_state(new PickBgState);
 
     states::push(std::move(game_state));
     states::push(std::move(name_state));
-    states::push(std::move(trait_state));
     states::push(std::move(bg_state));
 }
 
@@ -156,9 +153,7 @@ void PickBgState::draw()
 
     const Bg bg_marked = bgs_[browser_.y()];
 
-    //
     // Backgrounds
-    //
     std::string key_str = "a) ";
 
     for (const Bg bg : bgs_)
@@ -180,9 +175,7 @@ void PickBgState::draw()
         ++key_str[0];
     }
 
-    //
     // Description
-    //
     y = descr_y0_;
 
     const auto descr = player_bon::bg_descr(bg_marked);
@@ -260,9 +253,7 @@ void PickTraitState::update()
 
     const auto input = io::get(false);
 
-    //
     // Switch trait screen mode?
-    //
     if (input.key == SDLK_TAB)
     {
         screen_mode_ =
@@ -284,13 +275,6 @@ void PickTraitState::update()
 
     switch (action)
     {
-    case MenuAction::esc:
-    {
-      if (states::contains_state(StateId::pick_name))
-          states::pop_until(StateId::menu);
-    }
-    break;
-
     case MenuAction::selected:
     case MenuAction::selected_shift:
     {
@@ -312,18 +296,11 @@ void PickTraitState::update()
 
 void PickTraitState::draw()
 {
-    const int clvl = game::clvl();
-
     std::string title;
 
     if (screen_mode_ == TraitScreenMode::pick_new)
     {
-        title =
-            (clvl == 1) ?
-            "Which extra trait do you start with?" :
-            "Which trait do you gain?";
-
-        title += " [TAB] to view unavailable traits";
+        title = "Which trait do you gain? [TAB] to view unavailable traits";
     }
     else // Viewing unavailable traits
     {
@@ -332,12 +309,13 @@ void PickTraitState::draw()
         title += " [TAB] to view available traits";
     }
 
-    io::draw_text_center(title,
-                         Panel::screen,
-                         P(map_w_half, 0),
-                         colors::title(),
-                         colors::black(),
-                         true);
+    io::draw_text_center(
+        title,
+        Panel::screen,
+        P(map_w_half, 0),
+        colors::title(),
+        colors::black(),
+        true);
 
     MenuBrowser* browser;
 
@@ -362,9 +340,7 @@ void PickTraitState::draw()
 
     const Bg player_bg = player_bon::bg();
 
-    //
     // Traits
-    //
     int y = opt_y0_;
 
     const Range idx_range_shown = browser->range_shown();
@@ -430,9 +406,7 @@ void PickTraitState::draw()
                       colors::light_white());
     }
 
-    //
     // Description
-    //
     y = descr_y0_;
 
     std::string descr = player_bon::trait_descr(trait_marked);
@@ -448,9 +422,7 @@ void PickTraitState::draw()
         ++y;
     }
 
-    //
     // Prerequisites
-    //
     std::vector<Trait> trait_marked_prereqs;
 
     Bg trait_marked_bg_prereq = Bg::END;

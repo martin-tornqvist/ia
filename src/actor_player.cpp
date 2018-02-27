@@ -335,22 +335,17 @@ int Player::enc_percent() const
 
 int Player::carry_weight_lmt() const
 {
-    const bool is_tough =
-        player_bon::traits[(size_t)Trait::tough];
+    int carry_weight_mod = 0;
 
-    const bool is_rugged =
-        player_bon::traits[(size_t)Trait::rugged];
+    if (player_bon::has_trait(Trait::strong_backed))
+    {
+        carry_weight_mod += 50;
+    }
 
-    const bool is_strong_backed =
-        player_bon::traits[(size_t)Trait::strong_backed];
-
-    const bool is_weakened = has_prop(PropId::weakened);
-
-    const int carry_weight_mod =
-        (is_tough * 10) +
-        (is_rugged * 10) +
-        (is_strong_backed * 30) -
-        (is_weakened * 15);
+    if (has_prop(PropId::weakened))
+    {
+        carry_weight_mod -= 15;
+    }
 
     return (player_carry_weight_base * (carry_weight_mod + 100)) / 100;
 }
@@ -359,19 +354,14 @@ int Player::shock_resistance(const ShockSrc shock_src) const
 {
     int res = 0;
 
-    if (player_bon::traits[(size_t)Trait::fearless])
-    {
-        res += 5;
-    }
-
     if (player_bon::traits[(size_t)Trait::cool_headed])
     {
-        res += 20;
+        res += 25;
     }
 
-    if (player_bon::traits[(size_t)Trait::courageous])
+    if (player_bon::traits[(size_t)Trait::fearless])
     {
-        res += 20;
+        res += 10;
     }
 
     switch (shock_src)
@@ -1453,33 +1443,22 @@ void Player::on_std_turn()
     }
 
     // Spell resistance
-    const int spi_trait_lvl =
-        player_bon::traits[(size_t)Trait::mighty_spirit]    ? 3 :
-        player_bon::traits[(size_t)Trait::strong_spirit]    ? 2 :
-        player_bon::traits[(size_t)Trait::stout_spirit]     ? 1 : 0;
-
-    const int nr_turns_base = 125 + rnd::range(0, 25);
-
-    const int nr_turns_bon = (spi_trait_lvl - 1) * 50;
-
-    int nr_turns_to_recharge_full =
-        std::max(10,
-                 nr_turns_base - nr_turns_bon);
+    int nr_turns_to_recharge_spell_shield = 125 + rnd::range(0, 25);
 
     // Halved number of turns due to the Talisman of Reflection?
     if (inv_->has_item_in_backpack(ItemId::refl_talisman))
     {
-        nr_turns_to_recharge_full /= 2;
+        nr_turns_to_recharge_spell_shield /= 2;
     }
 
     // If we already have spell resistance (e.g. due to the Spell Shield spell),
     // then always (re)set the cooldown to max number of turns
     if (properties_->has_prop(PropId::r_spell))
     {
-        nr_turns_until_rspell_ = nr_turns_to_recharge_full;
+        nr_turns_until_rspell_ = nr_turns_to_recharge_spell_shield;
     }
     // Spell resistance not currently active
-    else if (spi_trait_lvl > 0)
+    else if (player_bon::traits[(size_t)Trait::strong_spirit])
     {
         if (nr_turns_until_rspell_ <= 0)
         {
@@ -1497,7 +1476,7 @@ void Player::on_std_turn()
                 msg_log::more_prompt();
             }
 
-            nr_turns_until_rspell_ = nr_turns_to_recharge_full;
+            nr_turns_until_rspell_ = nr_turns_to_recharge_spell_shield;
         }
 
         if (!properties_->has_prop(PropId::r_spell) &&
@@ -2002,8 +1981,6 @@ void Player::move(Dir dir)
     // other "time advancing" action has occurred)
     if (pos == tgt)
     {
-        int speed_pct_diff = 0;
-
         // If the player intended to wait in the current position, perform
         // "standing still" actions
         if (intended_dir == Dir::center)
@@ -2039,13 +2016,8 @@ void Player::move(Dir dir)
                 }
             }
         }
-        // Player dids not wait in place
-        else if (player_bon::traits[(size_t)Trait::mobile])
-        {
-            speed_pct_diff = 20;
-        }
 
-        game_time::tick(speed_pct_diff);
+        game_time::tick();
     }
 }
 

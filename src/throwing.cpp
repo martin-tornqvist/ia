@@ -113,19 +113,9 @@ void throw_item(Actor& actor_throwing,
 
     if (&actor_throwing == map::player)
     {
-        if (player_bon::traits[(size_t)Trait::adept_marksman])
+        if (player_bon::traits[(size_t)Trait::marksman])
         {
-            speed_pct_diff += 25;
-        }
-
-        if (player_bon::traits[(size_t)Trait::expert_marksman])
-        {
-            speed_pct_diff += 25;
-        }
-
-        if (player_bon::traits[(size_t)Trait::master_marksman])
-        {
-            speed_pct_diff += 25;
+            speed_pct_diff += 10;
         }
     }
 
@@ -247,7 +237,8 @@ void throw_item(Actor& actor_throwing,
                         text_format::first_to_upper(actor_here->name_the()) :
                         "It";
 
-                    msg_log::add(defender_name + " is hit.", colors::msg_good());
+                    msg_log::add(defender_name + " is hit.",
+                                 colors::msg_good());
                 }
 
                 if (att_data.dmg > 0)

@@ -334,6 +334,11 @@ PropEnded PropPoisoned::on_tick()
     return PropEnded::no;
 }
 
+void PropAiming::on_hit()
+{
+        owner_->properties().end_prop(id());
+}
+
 bool PropTerrified::allow_attack_melee(const Verbosity verbosity) const
 {
     if (owner_->is_player() && verbosity == Verbosity::verbose)

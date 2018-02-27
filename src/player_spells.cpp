@@ -114,33 +114,11 @@ void try_cast(const SpellOpt& spell_opt)
         msg_log::clear();
     }
 
-    const bool is_blood_sorc =
-        player_bon::traits[size_t(Trait::blood_sorc)];
-
-    const int blood_sorc_hp_drained = 2;
-
-    if (is_blood_sorc)
-    {
-        if (map::player->hp() <= blood_sorc_hp_drained)
-        {
-            msg_log::add("I do not have enough life force.");
-
-            return;
-        }
-    }
-
     msg_log::add("I cast " + spell->name() + "!");
-
-    if (is_blood_sorc)
-    {
-        map::player->hit(blood_sorc_hp_drained, DmgType::pure);
-    }
 
     if (map::player->is_alive())
     {
-        spell->cast(map::player,
-                    skill,
-                    IsIntrinsic::yes);
+        spell->cast(map::player, skill, IsIntrinsic::yes);
     }
 }
 
@@ -238,9 +216,7 @@ void learn_spell(const SpellId id, const Verbosity verbosity)
 
     learned_spells_.push_back(spell);
 
-    //
     // HACK: If this is Animate Wepaons, also learn Subdue Weapons
-    //
     if (id == SpellId::anim_wpns)
     {
         learn_spell(SpellId::subdue_wpns, Verbosity::silent);

@@ -430,8 +430,8 @@ public:
 private:
     std::string descr_identified() const override
     {
-        return "A bizarre liquid that causes the consumer to dematerialize and sink "
-               "through the ground.";
+        return "A bizarre liquid that causes the consumer to dematerialize and "
+                "sink through the ground.";
     }
 
     // TODO: Not sure about the alignment for this one...
@@ -447,6 +447,7 @@ private:
     }
 };
 
+// TODO: Should be called "Potion of Cloaking"
 class PotionInvis: public Potion
 {
 public:

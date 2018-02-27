@@ -424,32 +424,19 @@ class PropAiming: public Prop
 {
 public:
         PropAiming() :
-                Prop(PropId::aiming),
-                nr_turns_aiming_(1) {}
-
-        std::string name_short() const override
-        {
-                return
-                        data_.name_short +
-                        ((nr_turns_aiming_ >= 3) ? "(3)" : "");
-        }
+                Prop(PropId::aiming) {}
 
         int ability_mod(const AbilityId ability) const override
         {
                 if (ability == AbilityId::ranged)
                 {
-                        return nr_turns_aiming_ >= 3 ? 999 : 20;
+                        return 10;
                 }
 
                 return 0;
         }
 
-        bool is_max_ranged_dmg() const
-        {
-                return nr_turns_aiming_ >= 3;
-        }
-
-        int nr_turns_aiming_;
+        void on_hit() override;
 };
 
 class PropBlind: public Prop

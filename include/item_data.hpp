@@ -137,6 +137,7 @@ enum class ItemId
         potion_r_fire,
         potion_curing,
         potion_descent,
+        // TODO: Should be called "Potion of Cloaking"
         potion_invis,
 
         // Strange Devices

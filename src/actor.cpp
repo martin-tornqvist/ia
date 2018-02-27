@@ -204,21 +204,6 @@ int Actor::speed_pct() const
         {
             speed += 10;
         }
-
-        if (player_bon::traits[(size_t)Trait::lithe])
-        {
-            speed += 10;
-        }
-
-        const int hp_pct = (hp() * 100) / hp_max(true);
-
-        const int perseverant_bon_hp_pct = 50;
-
-        if (player_bon::traits[(size_t)Trait::perseverant] &&
-            (hp_pct < perseverant_bon_hp_pct))
-        {
-            speed += 20;
-        }
     }
 
     const int min_speed = 10;
@@ -286,19 +271,9 @@ void Actor::on_std_turn_common()
 
         if (is_player())
         {
-            if (player_bon::traits[(size_t)Trait::stout_spirit])
-            {
-                regen_spi_n_turns -= 4;
-            }
-
             if (player_bon::traits[(size_t)Trait::strong_spirit])
             {
-                regen_spi_n_turns -= 4;
-            }
-
-            if (player_bon::traits[(size_t)Trait::mighty_spirit])
-            {
-                regen_spi_n_turns -= 4;
+                regen_spi_n_turns -= 8;
             }
         }
         else // Is monster

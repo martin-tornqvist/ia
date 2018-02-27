@@ -2607,8 +2607,8 @@ void Tomb::bump(Actor& actor_bumping)
                 else // Not weakened
                 {
                     const int bon =
-                        player_bon::traits[(size_t)Trait::rugged]   ? 8   :
-                        player_bon::traits[(size_t)Trait::tough]    ? 4   : 0;
+                        player_bon::traits[(size_t)Trait::tough] ?
+                        4 : 0;
 
                     TRACE << "Base chance to push lid is: 1 in "
                           << push_lid_one_in_n_ << std::endl;
@@ -2616,7 +2616,8 @@ void Tomb::bump(Actor& actor_bumping)
                     TRACE << "Bonus to roll: "
                           << bon << std::endl;
 
-                    const int roll_tot = rnd::range(1, push_lid_one_in_n_) + bon;
+                    const int roll_tot =
+                        rnd::range(1, push_lid_one_in_n_) + bon;
 
                     TRACE << "Roll + bonus = " << roll_tot << std::endl;
 
@@ -3063,8 +3064,8 @@ void Chest::hit(const int dmg,
                         }
 
                         const int open_one_in_n =
-                            player_bon::traits[(size_t)Trait::rugged]   ? 2 :
-                            player_bon::traits[(size_t)Trait::tough]    ? 3 : 4;
+                            player_bon::traits[(size_t)Trait::tough] ?
+                            3 : 4;
 
                         if (rnd::one_in(open_one_in_n))
                         {

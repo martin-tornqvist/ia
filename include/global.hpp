@@ -123,8 +123,8 @@ const size_t max_nr_actors_on_map = 125;
 
 const std::string info_scr_tip = "[space/esc] to exit";
 const std::string info_scr_tip_scrollable =
-    "[2/8, down/up, j/k] to scroll " +
-    info_scr_tip;
+        "[2/8, down/up, j/k] to scroll " +
+        info_scr_tip;
 
 const std::string cancel_info_str_no_space = "[space/esc] to cancel";
 const std::string cancel_info_str = " " + cancel_info_str_no_space;
@@ -160,319 +160,319 @@ const std::string mon_disappear_msg = " suddenly disappears!";
 // these things silently.
 enum class Verbosity
 {
-    silent,
-    verbose,
+        silent,
+        verbose,
 };
 
 enum class UpdateScreen
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class InvType
 {
-    slots,
-    backpack
+        slots,
+        backpack
 };
 
 enum class DidAction
 {
-    yes,
-    no
+        yes,
+        no
 };
 
 enum class PassTime
 {
-    yes,
-    no
+        yes,
+        no
 };
 
 enum class ConsumeItem
 {
-    yes,
-    no
+        yes,
+        no
 };
 
 enum class ItemRefType
 {
-    plain,
-    a,
-    plural,
-    END
+        plain,
+        a,
+        plural,
+        END
 };
 
 enum class ItemRefInf
 {
-    none,
-    yes
+        none,
+        yes
 };
 
 enum class ItemRefAttInf
 {
-    none,
-    wpn_main_att_mode,
-    melee,
-    ranged,
-    thrown
+        none,
+        wpn_main_att_mode,
+        melee,
+        ranged,
+        thrown
 };
 
 enum class ItemRefDmg
 {
-    average,
-    average_and_melee_plus,
-    dice,
+        average,
+        average_and_melee_plus,
+        dice,
 };
 
 enum class Article
 {
-    a,
-    the
+        a,
+        the
 };
 
 enum class Matl
 {
-    empty,
-    stone,
-    metal,
-    plant,  // Grass, bushes, reeds, vines, fungi...
-    wood,   // Trees, doors, benches...
-    cloth,  // Carpet, silk (cocoons)...
-    fluid
+        empty,
+        stone,
+        metal,
+        plant,  // Grass, bushes, reeds, vines, fungi...
+        wood,   // Trees, doors, benches...
+        cloth,  // Carpet, silk (cocoons)...
+        fluid
 };
 
 enum class LiquidType
 {
-    water,
-    mud,
+        water,
+        mud,
 };
 
 enum class Condition
 {
-    breaking,
-    shoddy,
-    fine
+        breaking,
+        shoddy,
+        fine
 };
 
 enum class DmgType
 {
-    physical,
-    fire,
-    acid,
-    electric,
-    spirit,
-    light,
-    pure,
-    END
+        physical,
+        fire,
+        acid,
+        electric,
+        spirit,
+        light,
+        pure,
+        END
 };
 
 enum class DmgMethod
 {
-    piercing,
-    slashing,
-    blunt,
-    kicking,
-    explosion,
-    shotgun,
-    elemental,
-    forced, // Guaranteed to detroy the feature (silently - no messages)
-    END
+        piercing,
+        slashing,
+        blunt,
+        kicking,
+        explosion,
+        shotgun,
+        elemental,
+        forced, // Guaranteed to detroy the feature (silently - no messages)
+        END
 };
 
 enum class AttMode
 {
-    none,
-    melee,
-    thrown,
-    ranged
+        none,
+        melee,
+        thrown,
+        ranged
 };
 
 enum class AllowWound
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class ShockLvl
 {
-    none,
-    unsettling,
-    frightening,
-    terrifying,
-    mind_shattering,
-    END
+        none,
+        unsettling,
+        frightening,
+        terrifying,
+        mind_shattering,
+        END
 };
 
 const std::unordered_map<std::string, ShockLvl> str_to_shock_lvl_map = {
-    {"none", ShockLvl::none},
-    {"unsettling", ShockLvl::unsettling},
-    {"frightening", ShockLvl::frightening},
-    {"terrifying", ShockLvl::terrifying},
-    {"mind_shattering", ShockLvl::mind_shattering}
+        {"none", ShockLvl::none},
+        {"unsettling", ShockLvl::unsettling},
+        {"frightening", ShockLvl::frightening},
+        {"terrifying", ShockLvl::terrifying},
+        {"mind_shattering", ShockLvl::mind_shattering}
 };
 
 const std::unordered_map<ShockLvl, std::string> shock_lvl_to_str_map = {
-    {ShockLvl::none, "none"},
-    {ShockLvl::unsettling, "unsettling"},
-    {ShockLvl::frightening, "frightening"},
-    {ShockLvl::terrifying, "terrifying"},
-    {ShockLvl::mind_shattering, "mind_shattering"}
+        {ShockLvl::none, "none"},
+        {ShockLvl::unsettling, "unsettling"},
+        {ShockLvl::frightening, "frightening"},
+        {ShockLvl::terrifying, "terrifying"},
+        {ShockLvl::mind_shattering, "mind_shattering"}
 };
 
 enum class MonRoamingAllowed
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class GameEntryMode
 {
-    new_game,
-    load_game
+        new_game,
+        load_game
 };
 
 enum class IsWin
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class SpawnRate
 {
-    never,
-    extremely_rare,
-    very_rare,
-    rare,
-    common,
-    very_common
+        never,
+        extremely_rare,
+        very_rare,
+        rare,
+        common,
+        very_common
 };
 
 enum class VerDir
 {
-    up,
-    down
+        up,
+        down
 };
 
 enum class ActorState
 {
-    alive,
-    corpse,
-    destroyed
+        alive,
+        corpse,
+        destroyed
 };
 
 enum class ShouldCtrlTele
 {
-    if_tele_ctrl_prop,
-    never,
-    always
+        if_tele_ctrl_prop,
+        never,
+        always
 };
 
 enum class Axis
 {
-    hor,
-    ver
+        hor,
+        ver
 };
 
 enum class IsSubRoom
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class LgtSize
 {
-    none,
-    small, // 3x3
-    fov
+        none,
+        small, // 3x3
+        fov
 };
 
 enum class MorePromptOnMsg
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class InfScreenType
 {
-    scrolling,
-    single_screen
+        scrolling,
+        single_screen
 };
 
 struct ColoredString
 {
-    ColoredString() :
-        str(""),
-        color(colors::white()) {}
+        ColoredString() :
+                str(""),
+                color(colors::white()) {}
 
-    ColoredString(const std::string& str, const Color& color) :
-        str(str),
-        color(color) {}
+        ColoredString(const std::string& str, const Color& color) :
+                str(str),
+                color(color) {}
 
-    ColoredString& operator=(const ColoredString& other)
-    {
-        str = other.str;
-        color = other.color;
-        return *this;
-    }
+        ColoredString& operator=(const ColoredString& other)
+        {
+                str = other.str;
+                color = other.color;
+                return *this;
+        }
 
-    std::string str;
-    Color color;
+        std::string str;
+        Color color;
 };
 
 enum class ItemType
 {
-    general,
-    melee_wpn,
-    ranged_wpn,
-    throwing_wpn,
-    ammo,
-    ammo_mag,
-    scroll,
-    potion,
-    device,
-    rod,
-    armor,
-    head_wear,
-    explosive,
+        general,
+        melee_wpn,
+        ranged_wpn,
+        throwing_wpn,
+        ammo,
+        ammo_mag,
+        scroll,
+        potion,
+        device,
+        rod,
+        armor,
+        head_wear,
+        explosive,
 
-    END_OF_EXTR_ITEMS,
-    melee_wpn_intr,
-    ranged_wpn_intr
+        END_OF_EXTR_ITEMS,
+        melee_wpn_intr,
+        ranged_wpn_intr
 };
 
 struct ItemName
 {
-    ItemName(const std::string& name,
-             const std::string& name_pl,
-             const std::string& name_a)
-    {
-        names[(size_t)ItemRefType::plain] = name;
-        names[(size_t)ItemRefType::plural] = name_pl;
-        names[(size_t)ItemRefType::a] = name_a;
-    }
-
-    ItemName()
-    {
-        for (size_t i = 0; i < (size_t)ItemRefType::END; ++i)
+        ItemName(const std::string& name,
+                 const std::string& name_pl,
+                 const std::string& name_a)
         {
-            names[i] = "";
+                names[(size_t)ItemRefType::plain] = name;
+                names[(size_t)ItemRefType::plural] = name_pl;
+                names[(size_t)ItemRefType::a] = name_a;
         }
-    }
 
-    std::string names[(size_t)ItemRefType::END];
+        ItemName()
+        {
+                for (size_t i = 0; i < (size_t)ItemRefType::END; ++i)
+                {
+                        names[i] = "";
+                }
+        }
+
+        std::string names[(size_t)ItemRefType::END];
 };
 
 struct ItemAttMsgs
 {
-    ItemAttMsgs() :
-        player  (""),
-        other   ("") {}
+        ItemAttMsgs() :
+                player(""),
+                other("") {}
 
-    ItemAttMsgs(const std::string& player_, const std::string& other_) :
-        player  (player_),
-        other   (other_) {}
+        ItemAttMsgs(const std::string& player_, const std::string& other_) :
+                player(player_),
+                other(other_) {}
 
-    std::string player, other;
+        std::string player, other;
 };
 
 #endif // GLOBAL_HPP

@@ -147,16 +147,7 @@ Range Spell::spi_cost(const SpellSkill skill, Actor* const caster) const
                 }
             }
         }
-
-        const bool is_blood_sorc =
-            player_bon::traits[(size_t)Trait::blood_sorc];
-
-        if (is_blood_sorc)
-        {
-            --cost_max;
-        }
-
-    } // Is player, and use modified cost
+    }
 
     cost_max = std::max(1, cost_max);
 

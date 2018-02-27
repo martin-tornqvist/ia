@@ -218,17 +218,7 @@ void try_reload(Actor& actor, Item* const item_to_reload)
     {
         if (actor.is_player())
         {
-            if (player_bon::traits[size_t(Trait::adept_marksman)])
-            {
-                speed_pct_diff = 50;
-            }
-
-            if (player_bon::traits[size_t(Trait::expert_marksman)])
-            {
-                speed_pct_diff = 50;
-            }
-
-            if (player_bon::traits[size_t(Trait::master_marksman)])
+            if (player_bon::traits[size_t(Trait::marksman)])
             {
                 speed_pct_diff = 50;
             }

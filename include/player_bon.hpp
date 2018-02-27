@@ -12,79 +12,64 @@ struct ActorData;
 
 enum class Trait
 {
-    // Common (except some traits can be blocked for certain backgrounds)
-    adept_melee,
-    expert_melee,
-    master_melee,
-    adept_marksman,
-    expert_marksman,
-    master_marksman,
-    cool_headed,
-    courageous,
-    dexterous,
-    fearless,
-    stealthy,
-    imperceptible,
-    silent,
-    mobile,
-    lithe,
-    vigilant,
-    treasure_hunter,
-    self_aware,
-    healer,
-    rapid_recoverer,
-    survivalist,
-    perseverant,
-    stout_spirit,
-    strong_spirit,
-    mighty_spirit,
-    // magically_gifted,
-    tough,
-    rugged,
-    thick_skinned,
-    resistant,
-    strong_backed,
-    undead_bane,
-    elec_incl,
+        // Common (except some traits can be blocked for certain backgrounds)
+        melee_fighter,
+        marksman,
+        cool_headed,
+        dexterous,
+        fearless,
+        stealthy,
+        silent,
+        vigilant,
+        treasure_hunter,
+        self_aware,
+        healer,
+        rapid_recoverer, // TODO: Should probably be a Rogue ability instead
+        survivalist,
+        strong_spirit,
+        tough,
+        thick_skinned,
+        resistant,
+        strong_backed,
+        undead_bane,
+        elec_incl,
 
-    // Unique for Ghoul
-    ravenous,
-    foul,
-    toxic,
-    indomitable_fury,
+        // Unique for Ghoul
+        ravenous,
+        foul,
+        toxic,
+        indomitable_fury,
 
-    // Unique for Occultist
-    lesser_invoc,
-    greater_invoc,
-    lesser_summoning,
-    greater_summoning,
-    lesser_clairv,
-    greater_clairv,
-    lesser_ench,
-    greater_ench,
-    lesser_alter,
-    greater_alter,
-    blood_sorc,
-    absorb,
+        // Unique for Occultist
+        lesser_invoc,
+        greater_invoc,
+        lesser_summoning,
+        greater_summoning,
+        lesser_clairv,
+        greater_clairv,
+        lesser_ench,
+        greater_ench,
+        lesser_alter,
+        greater_alter,
+        absorb,
 
-    // Unique for Rogue
-    vicious,
+        // Unique for Rogue
+        vicious,
 
-    // Unique for War veteran
-    fast_shooter,
-    steady_aimer,
-    sharpshooter,
+        // Unique for War veteran
+        fast_shooter,
+        steady_aimer,
 
-    END
+        END
 };
 
 enum class Bg
 {
-    ghoul,
-    occultist,
-    rogue,
-    war_vet,
-    END
+        ghoul,
+        occultist,
+        rogue,
+        war_vet,
+        END
 };
 
 namespace player_bon
@@ -119,11 +104,9 @@ std::string trait_descr(const Trait id);
 
 std::string bg_title(const Bg id);
 
-//
 // NOTE: The string vector returned is not formatted. Each line still needs to
-//       be formatted by the caller. The reason for using a vector instead of a
-//       string is to separate the text into paragraphs.
-//
+// be formatted by the caller. The reason for using a vector instead of a string
+// is to separate the text into paragraphs.
 std::vector<ColoredString> bg_descr(const Bg id);
 
 std::string all_picked_traits_titles_line();

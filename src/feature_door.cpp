@@ -160,9 +160,7 @@ void Door::on_hit(const int dmg,
 {
     if (dmg_method == DmgMethod::forced)
     {
-        //
         // Forced
-        //
         map::put(new RubbleLow(pos_));
 
         map::update_vision();
@@ -172,9 +170,7 @@ void Door::on_hit(const int dmg,
 
     if (dmg_type == DmgType::physical)
     {
-        //
         // Shotgun
-        //
         if (dmg_method == DmgMethod::shotgun)
         {
             if (!is_open_)
@@ -209,19 +205,13 @@ void Door::on_hit(const int dmg,
             }
         }
 
-        //
         // Explosion
-        //
         if (dmg_method == DmgMethod::explosion)
         {
-            //
             //TODO
-            //
         }
 
-        //
         // Kicking, blunt (sledgehammers), or slashing (axes)
-        //
         if ((dmg_method == DmgMethod::kicking) ||
             (dmg_method == DmgMethod::blunt) ||
             (dmg_method == DmgMethod::slashing))
@@ -247,12 +237,7 @@ void Door::on_hit(const int dmg,
 
                     if (player_bon::traits[(size_t)Trait::tough])
                     {
-                        destr_chance_pct += 15;
-                    }
-
-                    if (player_bon::traits[(size_t)Trait::rugged])
-                    {
-                        destr_chance_pct += 15;
+                        destr_chance_pct += 25;
                     }
 
                     if (actor->has_prop(PropId::frenzied))
@@ -354,12 +339,10 @@ void Door::on_hit(const int dmg,
 
                     if (rnd::percent(destr_chance_pct))
                     {
-                        //
                         // NOTE: When it's a monster bashing down the door, we
-                        //       make the sound alert other monsters - since
-                        //       causes a nicer AI behavior (everyone near the
-                        //       door understands that it's time to run inside)
-                        //
+                        // make the sound alert other monsters - since causes
+                        // nicer AI behavior (everyone near the door understands
+                        // that it's time to run inside)
                         Snd snd("I hear a door crashing open!",
                                 SfxId::door_break,
                                 IgnoreMsgIfOriginSeen::yes,
@@ -424,9 +407,7 @@ void Door::on_hit(const int dmg,
 
     } // Physical damage
 
-    //
     // Fire
-    //
     if (dmg_method == DmgMethod::elemental &&
         dmg_type == DmgType::fire &&
         matl() == Matl::wood)

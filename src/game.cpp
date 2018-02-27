@@ -302,31 +302,11 @@ void handle_player_input(const InputData& input)
     {
         if (player_bon::traits[(size_t)Trait::steady_aimer])
         {
-            PropHandler& properties = map::player->properties();
+            Prop* aiming = new PropAiming();
 
-            PropAiming* aiming = nullptr;
+            aiming->set_duration(1);
 
-            if (player_bon::traits[(size_t)Trait::sharpshooter])
-            {
-                aiming = static_cast<PropAiming*>(
-                    properties.prop(PropId::aiming));
-
-                if (aiming)
-                {
-                    ++aiming->nr_turns_aiming_;
-
-                    aiming->set_duration(aiming->nr_turns_left() + 1);
-                }
-            }
-
-            if (!aiming)
-            {
-                aiming = new PropAiming();
-
-                aiming->set_duration(1);
-
-                properties.apply(aiming);
-            }
+            map::player->properties().apply(aiming);
         }
 
         map::player->move(Dir::center);
@@ -994,9 +974,12 @@ void incr_player_xp(const int xp_gained,
                                          Verbosity::silent);
             }
 
-            std::unique_ptr<State> trait_state(new PickTraitState);
+            if ((clvl_ % 2) == 0)
+            {
+                std::unique_ptr<State> trait_state(new PickTraitState);
 
-            states::push(std::move(trait_state));
+                states::push(std::move(trait_state));
+            }
         }
 
         xp_pct_ -= 100;
@@ -1190,9 +1173,9 @@ void GameState::on_start()
 {
     if (entry_mode_ == GameEntryMode::new_game)
     {
-        // Some backgrounds and traits may have affected maximum hp and spi
-        // (either positively or negatively), so here we need to (re)set the
-        // current hp and spi to the maximum values
+        // Character creation may have affected maximum hp and spi (either
+        // positively or negatively), so here we need to (re)set the current hp
+        // and spi to the maximum values
         map::player->set_hp_and_spi_to_max();
 
         map::player->data().ability_values.reset();
