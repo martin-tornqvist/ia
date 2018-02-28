@@ -2469,6 +2469,7 @@
             </attack>
         </attacks>
         <properties>
+            <property>zuul_possess_priest</property>
             <property>r_fear</property>
             <property>darkvision</property>
         </properties>

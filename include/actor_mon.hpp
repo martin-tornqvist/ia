@@ -476,9 +476,6 @@ public:
         Zuul() : Mon() {}
         ~Zuul() {}
 
-        void init_hook() override;
-
-
         std::string death_msg() const override
         {
                 return "Zuul vanishes...";
@@ -642,7 +639,6 @@ class Ghoul: public Mon
 public:
         Ghoul() : Mon() {}
         ~Ghoul() {}
-
 
         virtual void init_hook() override;
 };

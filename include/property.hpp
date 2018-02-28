@@ -161,6 +161,8 @@ public:
 
         virtual void on_hit() {}
 
+        virtual void on_placed() {}
+
         virtual PropEnded on_tick()
         {
                 return PropEnded::no;
@@ -173,7 +175,7 @@ public:
                 return PropActResult();
         }
 
-        virtual void on_start() {}
+        virtual void on_applied() {}
 
         virtual void on_end() {}
 
@@ -325,7 +327,7 @@ public:
 
         bool allow_attack_ranged(const Verbosity verbosity) const override;
 
-        void on_start() override;
+        void on_applied() override;
 };
 
 class PropWeakened: public Prop
@@ -354,7 +356,7 @@ public:
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 
-        void on_start() override;
+        void on_applied() override;
         void on_end() override;
 };
 
@@ -397,11 +399,20 @@ public:
         PropEnded on_tick() override;
 };
 
-class PropPossByZuul: public Prop
+class PropZuulPossessPriest: public Prop
 {
 public:
-        PropPossByZuul() :
-                Prop(PropId::poss_by_zuul) {}
+        PropZuulPossessPriest() :
+                Prop(PropId::zuul_possess_priest) {}
+
+        void on_placed() override;
+};
+
+class PropPossessedByZuul: public Prop
+{
+public:
+        PropPossessedByZuul() :
+                Prop(PropId::possessed_by_zuul) {}
 
         void on_death() override;
 
@@ -521,7 +532,7 @@ public:
         PropSeeInvis() :
                 Prop(PropId::see_invis) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -539,7 +550,7 @@ public:
         PropBlessed() :
                 Prop(PropId::blessed) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         void on_more(const Prop& new_prop) override;
 
@@ -567,7 +578,7 @@ public:
                 return -5;
         }
 
-        void on_start() override;
+        void on_applied() override;
 
         void on_more(const Prop& new_prop) override;
 
@@ -858,7 +869,7 @@ public:
         PropParalyzed() :
                 Prop(PropId::paralyzed) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         int ability_mod(const AbilityId ability) const override
         {
@@ -940,7 +951,7 @@ public:
         PropSlowed() :
                 Prop(PropId::slowed) {}
 
-        void on_start() override;
+        void on_applied() override;
 };
 
 class PropHasted: public Prop
@@ -949,7 +960,7 @@ public:
         PropHasted() :
                 Prop(PropId::hasted) {}
 
-        void on_start() override;
+        void on_applied() override;
 };
 
 class PropClockworkHasted: public Prop
@@ -974,7 +985,7 @@ public:
         PropFrenzied() :
                 Prop(PropId::frenzied) {}
 
-        void on_start() override;
+        void on_applied() override;
         void on_end() override;
 
         void affect_move_dir(const P& actor_pos, Dir& dir) override;
@@ -1011,7 +1022,7 @@ public:
         PropRConf() :
                 Prop(PropId::r_conf) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1031,7 +1042,7 @@ public:
         PropRFear() :
                 Prop(PropId::r_fear) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1042,7 +1053,7 @@ public:
         PropRSlow() :
                 Prop(PropId::r_slow) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1053,7 +1064,7 @@ public:
         PropRPhys() :
                 Prop(PropId::r_phys) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 
@@ -1066,7 +1077,7 @@ public:
         PropRFire() :
                 Prop(PropId::r_fire) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 
@@ -1079,7 +1090,7 @@ public:
         PropRPoison() :
                 Prop(PropId::r_poison) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1090,7 +1101,7 @@ public:
         PropRSleep() :
                 Prop(PropId::r_sleep) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1101,7 +1112,7 @@ public:
         PropRDisease() :
                 Prop(PropId::r_disease) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1112,7 +1123,7 @@ public:
         PropRBlind() :
                 Prop(PropId::r_blind) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };
@@ -1123,7 +1134,7 @@ public:
         PropRPara() :
                 Prop(PropId::r_para) {}
 
-        void on_start() override;
+        void on_applied() override;
 
         bool is_resisting_other_prop(const PropId prop_id) const override;
 };

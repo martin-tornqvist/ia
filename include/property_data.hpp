@@ -78,7 +78,8 @@ enum class PropId
 
     // Special (for supporting very specific game mechanics)
     descend,
-    poss_by_zuul,
+    zuul_possess_priest,
+    possessed_by_zuul,
     major_clapham_summon,
     aiming,
     nailed,
@@ -150,7 +151,8 @@ const std::unordered_map<std::string, PropId> str_to_prop_id_map = {
     {"ethereal", PropId::ethereal},
     {"ooze", PropId::ooze},
     {"burrowing", PropId::burrowing},
-    {"major_clapham_summon", PropId::major_clapham_summon}
+    {"major_clapham_summon", PropId::major_clapham_summon},
+    {"zuul_possess_priest", PropId::zuul_possess_priest}
 };
 
 const std::unordered_map<PropId, std::string> prop_id_to_str_map = {

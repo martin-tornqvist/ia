@@ -311,11 +311,8 @@ void add_actor(Actor* actor)
 
         // Never insert an actor at the same position as another living actor
 
-        //
-        // NOTE: Actors could be placed dead, e.g. Zuul can do this (immediately
-        //       spawns a priest) so we check if BOTH actors are alive first
-        //       before we panic.
-        //
+        // NOTE: Actors could be placed dead (because of reasons), so we check
+        // if BOTH actors are alive first before we panic.
         if (actor->is_alive() && old_actor->is_alive())
         {
             const P& new_actor_p = actor->pos;

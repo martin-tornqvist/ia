@@ -131,8 +131,11 @@ Prop* make(const PropId id)
     case PropId::light_sensitive:
         return new PropLgtSens();
 
-    case PropId::poss_by_zuul:
-        return new PropPossByZuul();
+    case PropId::zuul_possess_priest:
+        return new PropZuulPossessPriest();
+
+    case PropId::possessed_by_zuul:
+        return new PropPossessedByZuul();
 
     case PropId::major_clapham_summon:
         return new PropMajorClaphamSummon();

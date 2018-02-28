@@ -733,7 +733,7 @@ static void init_data_list()
         d.id = PropId::speaks_curses;
         add(d);
 
-        d.id = PropId::poss_by_zuul;
+        d.id = PropId::possessed_by_zuul;
         add(d);
 
         d.id = PropId::major_clapham_summon;

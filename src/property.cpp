@@ -37,7 +37,7 @@ Prop::Prop(PropId id) :
 // -----------------------------------------------------------------------------
 // Specific properties
 // -----------------------------------------------------------------------------
-void PropBlessed::on_start()
+void PropBlessed::on_applied()
 {
     owner_->properties().end_prop_silent(PropId::cursed);
 
@@ -88,7 +88,7 @@ void PropBlessed::bless_adjacent() const
     }
 }
 
-void PropCursed::on_start()
+void PropCursed::on_applied()
 {
     owner_->properties().end_prop_silent(PropId::blessed);
 
@@ -159,12 +159,12 @@ void PropCursed::curse_adjacent() const
     }
 }
 
-void PropSlowed::on_start()
+void PropSlowed::on_applied()
 {
     owner_->properties().end_prop_silent(PropId::hasted);
 }
 
-void PropHasted::on_start()
+void PropHasted::on_applied()
 {
     owner_->properties().end_prop_silent(PropId::slowed);
 }
@@ -224,7 +224,7 @@ int PropDiseased::affect_max_hp(const int hp_max) const
     return hp_max / 2;
 }
 
-void PropDiseased::on_start()
+void PropDiseased::on_applied()
 {
     // End infection
     owner_->properties().end_prop_silent(PropId::infected);
@@ -275,8 +275,46 @@ PropEnded PropDescend::on_tick()
     return PropEnded::no;
 }
 
-void PropPossByZuul::on_death()
+void PropZuulPossessPriest::on_placed()
 {
+        // If the number left allowed to spawn is zero now, this means that Zuul
+        // has been spawned for the first time - hide Zuul inside a priest.
+        // Otherwise we do nothing, and just spawn Zuul. When the possessed
+        // actor is killed, Zuul will be allowed to spawn infinitely (this is
+        // handled elsewhere).
+
+        const int nr_left_allowed = owner_->data().nr_left_allowed_to_spawn;
+
+        ASSERT(nr_left_allowed <= 0);
+
+        const bool should_possess = (nr_left_allowed >= 0);
+
+        if (should_possess)
+        {
+            owner_->set_state(ActorState::destroyed);
+
+            Actor* actor =
+                actor_factory::make(ActorId::cultist_priest,
+                                    owner_->pos);
+
+            auto* prop = new PropPossessedByZuul();
+
+            prop->set_indefinite();
+
+            actor->properties().apply(
+                prop,
+                PropSrc::intr,
+                true,
+                Verbosity::silent);
+
+            actor->restore_hp(999, false, Verbosity::silent);
+        }
+}
+
+void PropPossessedByZuul::on_death()
+{
+    // An actor possessed by Zuul has died - release Zuul!
+
     if (map::player->can_see_actor(*owner_))
     {
         const std::string& name1 =
@@ -297,11 +335,11 @@ void PropPossByZuul::on_death()
 
     map::make_blood(pos);
 
+    // Zuul is now free, allow it to spawn infinitely
+    actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
+
     actor_factory::spawn(pos, {ActorId::zuul})
         .make_aware_of_player();
-
-    // Zuul is now free, allow it to spawn
-    actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
 }
 
 PropEnded PropPoisoned::on_tick()
@@ -355,7 +393,7 @@ bool PropTerrified::allow_attack_ranged(const Verbosity verbosity) const
     return true;
 }
 
-void PropTerrified::on_start()
+void PropTerrified::on_applied()
 {
     // If this is a monster, we reset its last direction moved. Otherwise it
     // would probably tend to move toward the player even while terrified (the
@@ -739,7 +777,7 @@ bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const
         prop_id == PropId::weakened;
 }
 
-void PropFrenzied::on_start()
+void PropFrenzied::on_applied()
 {
     owner_->properties().end_prop(PropId::confused);
     owner_->properties().end_prop(PropId::fainted);
@@ -871,7 +909,7 @@ bool PropBlind::should_update_vision_on_toggled() const
     return owner_->is_player();
 }
 
-void PropParalyzed::on_start()
+void PropParalyzed::on_applied()
 {
     auto* const player = map::player;
 
@@ -937,7 +975,7 @@ bool PropRConf::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::confused;
 }
 
-void PropRConf::on_start()
+void PropRConf::on_applied()
 {
     owner_->properties().end_prop(PropId::confused);
 }
@@ -947,7 +985,7 @@ bool PropRFear::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::terrified;
 }
 
-void PropRFear::on_start()
+void PropRFear::on_applied()
 {
     owner_->properties().end_prop(PropId::terrified);
 
@@ -963,7 +1001,7 @@ bool PropRSlow::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::slowed;
 }
 
-void PropRSlow::on_start()
+void PropRSlow::on_applied()
 {
     owner_->properties().end_prop(PropId::slowed);
 }
@@ -974,7 +1012,7 @@ bool PropRPhys::is_resisting_other_prop(const PropId prop_id) const
     return false;
 }
 
-void PropRPhys::on_start()
+void PropRPhys::on_applied()
 {
 
 }
@@ -997,7 +1035,7 @@ bool PropRFire::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::burning;
 }
 
-void PropRFire::on_start()
+void PropRFire::on_applied()
 {
     owner_->properties().end_prop(PropId::burning);
 }
@@ -1020,7 +1058,7 @@ bool PropRPoison::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::poisoned;
 }
 
-void PropRPoison::on_start()
+void PropRPoison::on_applied()
 {
     owner_->properties().end_prop(PropId::poisoned);
 }
@@ -1030,7 +1068,7 @@ bool PropRSleep::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::fainted;
 }
 
-void PropRSleep::on_start()
+void PropRSleep::on_applied()
 {
     owner_->properties().end_prop(PropId::fainted);
 }
@@ -1040,7 +1078,7 @@ bool PropRDisease::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::diseased || prop_id == PropId::infected;
 }
 
-void PropRDisease::on_start()
+void PropRDisease::on_applied()
 {
     owner_->properties().end_prop(PropId::diseased);
     owner_->properties().end_prop(PropId::infected);
@@ -1051,7 +1089,7 @@ bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::blind;
 }
 
-void PropRBlind::on_start()
+void PropRBlind::on_applied()
 {
     owner_->properties().end_prop(PropId::blind);
 }
@@ -1061,7 +1099,7 @@ bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::paralyzed;
 }
 
-void PropRPara::on_start()
+void PropRPara::on_applied()
 {
     owner_->properties().end_prop(PropId::paralyzed);
 }
@@ -1071,7 +1109,7 @@ bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
     return prop_id == PropId::blind;
 }
 
-void PropSeeInvis::on_start()
+void PropSeeInvis::on_applied()
 {
     owner_->properties().end_prop(PropId::blind);
 }

@@ -1381,31 +1381,6 @@ std::string Cultist::cultist_phrase()
         return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
 }
 
-void Zuul::init_hook()
-{
-        if (actor_data::data[(size_t)id()].nr_left_allowed_to_spawn > 0)
-        {
-                // NOTE: Do not call 'die()' here (would have side effects),
-                // just set the state to destroyed.
-                state_ = ActorState::destroyed;
-
-                Actor* actor =
-                        actor_factory::make(ActorId::cultist_priest, pos);
-
-                auto* prop = new PropPossByZuul();
-
-                prop->set_indefinite();
-
-                actor->properties().apply(
-                        prop,
-                        PropSrc::intr,
-                        true,
-                        Verbosity::silent);
-
-                actor->restore_hp(999, false, Verbosity::silent);
-        }
-}
-
 // TODO: Make this an intrinsic attack instead
 DidAction Ghost::on_act()
 {
