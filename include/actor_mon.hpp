@@ -489,41 +489,9 @@ public:
 
         ~Ghost() {}
 
-
         std::string death_msg() const override
         {
                 return "The Ghost is put to rest.";
-        }
-
-protected:
-        DidAction on_act() override;
-};
-
-class Phantasm: public Ghost
-{
-public:
-        Phantasm() : Ghost() {}
-
-        ~Phantasm() {}
-
-
-        std::string death_msg() const override
-        {
-                return "The Phantasm is put to rest.";
-        }
-};
-
-class Wraith: public Ghost
-{
-public:
-        Wraith() : Ghost() {}
-
-        ~Wraith() {}
-
-
-        std::string death_msg() const override
-        {
-                return "The Wraith is put to rest.";
         }
 };
 

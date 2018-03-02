@@ -2717,23 +2717,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     {
     case TombTrait::ghost:
     {
-        // Tomb contains major treasure?
-        if (appearance_ == TombAppearance::marvelous)
-        {
-            id_to_spawn = ActorId::wraith;
-        }
-        else // Not containing major treasure
-        {
-            std::vector<ActorId> mon_bucket =
-            {
-                ActorId::ghost,
-                ActorId::phantasm,
-            };
-
-            const size_t idx = rnd::range(0, mon_bucket.size() - 1);
-
-            id_to_spawn = mon_bucket[idx];
-        }
+        id_to_spawn = ActorId::ghost;
 
         const std::string msg = "The air suddenly feels colder.";
 
@@ -2757,9 +2741,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
             ActorId::floating_skull
         };
 
-        const size_t idx = rnd::range(0, mon_bucket.size() - 1);
-
-        id_to_spawn = mon_bucket[idx];
+        id_to_spawn = rnd::element(mon_bucket);
 
         const std::string msg = "Something rises from the tomb!";
 
@@ -2867,6 +2849,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     case TombTrait::cursed:
     {
         map::player->apply_prop(new PropCursed());
+
         did_trigger_trap = DidTriggerTrap::yes;
     }
     break;
@@ -2878,15 +2861,22 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     if (id_to_spawn != ActorId::END)
     {
         const auto summoned =
-            actor_factory::spawn(pos_, {1, id_to_spawn})
+            actor_factory::spawn(pos_, {id_to_spawn})
             .make_aware_of_player()
-            .for_each([](Mon* const mon)
+            .for_each([this](Mon* const mon)
             {
                 auto prop = new PropWaiting();
 
-                prop->set_duration(2);
+                prop->set_duration(1);
 
                 mon->apply_prop(prop);
+
+                if (appearance_ == TombAppearance::marvelous)
+                {
+                        mon->change_max_hp(mon->hp(), Verbosity::silent);
+
+                        mon->restore_hp(999, false, Verbosity::silent);
+                }
             });
     }
 
@@ -2903,10 +2893,10 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 // Chest
 // -----------------------------------------------------------------------------
 Chest::Chest(const P& p) :
-    Rigid                   (p),
-    is_open_                (false),
-    is_locked_              (false),
-    matl_                   (ChestMatl::wood)
+    Rigid(p),
+    is_open_(false),
+    is_locked_(false),
+    matl_(ChestMatl::wood)
 {
     if (map::dlvl >= 3 &&
         rnd::fraction(2, 3))

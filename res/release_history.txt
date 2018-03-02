@@ -5,6 +5,8 @@ Gameplay
 * Strange Colors only cause confusion while the player is adjacent to them
 * Death Fiends now do a more sensible amount of damage (and the part of their description which said their attack "means almost certain death" has been removed)
 * Removed many "superfluous" traits (especially chains of identical upgrades, such as level two and three of "Marksman"). The set of traits is now much more focused, where each trait gives a significant and distinct bonus. Traits are only picked every second character (starting from level 2), but each trait is generally more powerful than before.
+* Removed the Phantasm and Wraith monsters
+* When Ghosts attack, it says they are "reaching" for the player instead of "clawing" - the old "reach" effect which they did in addition to their normal attack has been removed
 
 --------------------------------------------------------------
 v19.2 (November 6, 2017)

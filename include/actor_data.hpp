@@ -50,8 +50,6 @@ enum class ActorId
         energy_hound,
         zuul,
         ghost,
-        phantasm,
-        wraith,
         mi_go,
         mi_go_commander,
         flying_polyp,

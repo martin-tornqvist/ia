@@ -1381,36 +1381,6 @@ std::string Cultist::cultist_phrase()
         return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
 }
 
-// TODO: Make this an intrinsic attack instead
-DidAction Ghost::on_act()
-{
-        if (is_alive() &&
-            (aware_of_player_counter_ > 0) &&
-            is_pos_adj(pos, map::player->pos, false) &&
-            rnd::one_in(4))
-        {
-                set_player_aware_of_me();
-
-                const bool player_sees_me =
-                        map::player->can_see_actor(*this);
-
-                const std::string name =
-                        player_sees_me ?
-                        text_format::first_to_upper(name_the()) :
-                        "It";
-
-                msg_log::add(name + " reaches for me...");
-
-                map::player->apply_prop(new PropWeakened());
-
-                game_time::tick();
-
-                return DidAction::yes;
-        }
-
-        return DidAction::no;
-}
-
 void Ghoul::init_hook()
 {
         // If player is Ghoul, then Ghouls are allied to player

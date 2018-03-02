@@ -119,12 +119,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::ghost:
         return new Ghost();
 
-    case ActorId::wraith:
-        return new Wraith();
-
-    case ActorId::phantasm:
-        return new Phantasm();
-
     case ActorId::raven:
         return new Raven();
 
@@ -317,8 +311,7 @@ Mon* spawn_at(const P& pos,
 
     Mon* const mon = static_cast<Mon*>(actor);
 
-    if (map::cells[mon->pos.x][mon->pos.y].is_seen_by_player &&
-        !mon->is_sneaking())
+    if (map::player->can_see_actor(*mon))
     {
         mon->set_player_aware_of_me();
     }

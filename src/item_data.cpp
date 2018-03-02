@@ -1281,17 +1281,10 @@ void init()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::intr_ghost_claw;
-    d.melee.att_msgs = {"", "claws me"};
+    d.id = ItemId::intr_ghost_touch;
+    d.melee.att_msgs = {"", "reaches for me"};
     d.melee.dmg_type = DmgType::spirit;
-    d.melee.dmg_method = DmgMethod::slashing;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::intr_ghost_sickle;
-    d.melee.att_msgs = {"", "strikes me with an ethereal sickle"};
-    d.melee.dmg_type = DmgType::spirit;
-    d.melee.dmg_method = DmgMethod::slashing;
+    d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
@@ -1349,12 +1342,6 @@ void init()
     reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::intr_pus_spew;
     d.melee.att_msgs = {"", "spews pus on me"};
-    d.melee.dmg_method = DmgMethod::blunt;
-    data[(size_t)d.id] = d;
-
-    reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::intr_touch;
-    d.melee.att_msgs = {"", "touches me"};
     d.melee.dmg_method = DmgMethod::blunt;
     data[(size_t)d.id] = d;
 
