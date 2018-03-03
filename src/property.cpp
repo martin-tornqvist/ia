@@ -18,6 +18,7 @@
 #include "game_time.hpp"
 #include "line_calc.hpp"
 #include "knockback.hpp"
+#include "item_factory.hpp"
 
 // -----------------------------------------------------------------------------
 // Property base class
@@ -1449,18 +1450,29 @@ void PropCorpseRises::on_death()
 
 void PropSpawnsZombiePartsOnDestroyed::on_destroyed()
 {
-        // Spawning is only allowed if the corpse is not destroyed "too hard"
-        // (e.g. by an explosion or a sledge hammer). This also serves to reward
-        // heavy weapons, since they will more often prevent spawning stuff
-        const bool is_very_destroyed = (owner_->hp() <= -8);
-
         const P& pos = owner_->pos;
+
+        if (map::cells[pos.x][pos.y].rigid->is_bottomless())
+        {
+                return;
+        }
+
+        // Occasionally make Zombie Dust
+        const int make_dust_one_in_n = 7;
+
+        if (rnd::one_in(make_dust_one_in_n))
+        {
+                item_factory::make_item_on_floor(ItemId::zombie_dust, pos);
+        }
+
+        // Spawning zombie part monsters is only allowed if the monster is not
+        // destroyed "too hard". This also reward heavy weapons, since they will
+        // more often prevent spawning
+        const bool is_very_destroyed = (owner_->hp() <= -8);
 
         const int summon_one_in_n = 4;
 
-        if (is_very_destroyed ||
-            map::cells[pos.x][pos.y].rigid->is_bottomless() ||
-            !rnd::one_in(summon_one_in_n))
+        if (is_very_destroyed || !rnd::one_in(summon_one_in_n))
         {
                 return;
         }

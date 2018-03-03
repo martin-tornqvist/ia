@@ -158,17 +158,6 @@ protected:
         int nr_mon_in_group();
 };
 
-class Zombie: public Mon
-{
-public:
-        Zombie() : Mon() {}
-
-        virtual ~Zombie() {}
-
-protected:
-        void on_destroyed() override;
-};
-
 class KeziahMason: public Mon
 {
 public:

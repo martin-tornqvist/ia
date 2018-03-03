@@ -1495,18 +1495,6 @@ Color StrangeColor::color() const
         return color;
 }
 
-void Zombie::on_destroyed()
-{
-        // Occasionally make Zombie Dust
-        const int make_dust_one_in_n = 7;
-
-        if (!map::cells[pos.x][pos.y].rigid->is_bottomless() &&
-            rnd::one_in(make_dust_one_in_n))
-        {
-                item_factory::make_item_on_floor(ItemId::zombie_dust, pos);
-        }
-}
-
 TheHighPriest::TheHighPriest() :
         Mon                 (),
         has_become_aware_   (false) {}

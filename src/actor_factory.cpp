@@ -47,13 +47,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::player:
         return new Player();
 
-    case ActorId::zombie:
-    case ActorId::zombie_axe:
-    case ActorId::bloated_zombie:
-    case ActorId::major_clapham_lee:
-    case ActorId::dean_halsey:
-        return new Zombie();
-
     case ActorId::zuul:
         return new Zuul();
 
@@ -99,6 +92,11 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
+    case ActorId::zombie:
+    case ActorId::zombie_axe:
+    case ActorId::bloated_zombie:
+    case ActorId::major_clapham_lee:
+    case ActorId::dean_halsey:
     case ActorId::crawling_intestines:
     case ActorId::crawling_hand:
     case ActorId::thing:
