@@ -1,6 +1,9 @@
 #ifndef MON_HPP
 #define MON_HPP
 
+#include <vector>
+#include <string>
+
 #include "global.hpp"
 #include "actor.hpp"
 #include "sound.hpp"
@@ -78,15 +81,9 @@ public:
 
         void on_std_turn() override final;
 
-        virtual std::string aware_msg_mon_seen() const
-        {
-                return data_->aware_msg_mon_seen;
-        }
+        std::string aware_msg_mon_seen() const;
 
-        virtual std::string aware_msg_mon_hidden() const
-        {
-                return data_->aware_msg_mon_hidden;
-        }
+        std::string aware_msg_mon_hidden() const;
 
         virtual SfxId aware_sfx_mon_seen() const
         {
@@ -164,60 +161,10 @@ public:
         KeziahMason() : Mon(), has_summoned_jenkin(false) {}
         ~KeziahMason() {}
 
-
 private:
         DidAction on_act() override;
 
         bool has_summoned_jenkin;
-};
-
-class Cultist: public Mon
-{
-public:
-        Cultist() : Mon() {}
-
-
-        static std::string cultist_phrase();
-
-        std::string aware_msg_mon_seen() const override
-        {
-                return name_the() + ": " + cultist_phrase();
-        }
-
-        std::string aware_msg_mon_hidden() const override
-        {
-                return "Voice: " + cultist_phrase();
-        }
-
-        virtual ~Cultist() {}
-};
-
-class BogTcher: public Cultist
-{
-public:
-        BogTcher() : Cultist() {}
-        ~BogTcher() {}
-};
-
-class CultistPriest: public Cultist
-{
-public:
-        CultistPriest() : Cultist() {}
-        ~CultistPriest() {}
-};
-
-class CultistWizard: public Cultist
-{
-public:
-        CultistWizard() : Cultist() {}
-        ~CultistWizard() {}
-};
-
-class CultistArchWizard: public Cultist
-{
-public:
-        CultistArchWizard() : Cultist() {}
-        ~CultistArchWizard() {}
 };
 
 class Zuul: public Mon
@@ -372,5 +319,11 @@ public:
 private:
         int nr_turns_until_drop_;
 };
+
+std::string get_cultist_phrase();
+
+std::string get_cultist_aware_msg_seen(const Actor& actor);
+
+std::string get_cultist_aware_msg_hidden();
 
 #endif // MON_HPP

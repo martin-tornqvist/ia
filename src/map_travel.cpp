@@ -18,6 +18,7 @@
 #include "actor_player.hpp"
 #include "property.hpp"
 #include "property_handler.hpp"
+#include "gods.hpp"
 
 namespace map_travel
 {
@@ -98,6 +99,8 @@ void make_lvl(const MapType& map_type)
     TRACE << "Map built after " << nr_attempts << " attempt(s). " << std::endl
           << "Total time taken: " <<  duration << " ms" << std::endl;
 #endif
+
+    gods::set_random_god();
 
     TRACE_FUNC_END;
 }

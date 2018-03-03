@@ -34,6 +34,10 @@ bool try_get_attribute_int(const Element* const e,
                            const std::string name,
                            int& result);
 
+bool try_get_attribute_bool(const Element* const e,
+                            const std::string name,
+                            bool& result);
+
 } // xml
 
 #endif // XML_HPP

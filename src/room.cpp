@@ -696,8 +696,6 @@ void RitualRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
 {
     (void)door_proposals;
 
-    gods::set_random_god();
-
     bool blocked[map_w][map_h];
 
     map_parsers::BlocksMoveCommon(ParseActors::no)

@@ -106,7 +106,7 @@ void InsBabbling::babble() const
 
     for (int i = rnd::range(1, 3); i > 0; --i)
     {
-        msg_log::add(player_name + ": " + Cultist::cultist_phrase());
+        msg_log::add(player_name + ": " + get_cultist_phrase());
     }
 
     Snd snd("",

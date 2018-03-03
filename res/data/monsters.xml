@@ -840,8 +840,8 @@
             <description>A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. They may occasionally have learned to cast a spell or two, although never with any great skill. Therefore they tend to rely on mundane firearms to handle threats.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Cultist looks wary.</wary_message>
-            <aware_message_seen></aware_message_seen>
-            <aware_message_hidden></aware_message_hidden>
+            <aware_message_seen use_cultist_messages="true"/>
+            <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
         <graphics>
@@ -1253,8 +1253,8 @@
             <description>A fanatic cultist of the Priest rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Cultist Priest looks wary.</wary_message>
-            <aware_message_seen></aware_message_seen>
-            <aware_message_hidden></aware_message_hidden>
+            <aware_message_seen use_cultist_messages="true"/>
+            <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
         <graphics>
@@ -1341,8 +1341,8 @@
             <description>A fanatic cultist of the Wizard rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Wizard looks wary.</wary_message>
-            <aware_message_seen></aware_message_seen>
-            <aware_message_hidden></aware_message_hidden>
+            <aware_message_seen use_cultist_messages="true"/>
+            <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
         <graphics>
@@ -1428,8 +1428,8 @@
             <description>A fanatic cultist of the Arch Wizard rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Arch Wizard looks wary.</wary_message>
-            <aware_message_seen></aware_message_seen>
-            <aware_message_hidden></aware_message_hidden>
+            <aware_message_seen use_cultist_messages="true"/>
+            <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
         <graphics>

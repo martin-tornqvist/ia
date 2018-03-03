@@ -128,16 +128,18 @@ bool try_get_attribute_int(const Element* const e,
                            const std::string name,
                            int& result)
 {
-        const auto str = e->Attribute(to_c_str(name));
+        auto conv_result = e->QueryAttribute(name.c_str(), &result);
 
-        if (str)
-        {
-                result = to_int(str);
+        return (conv_result == tinyxml2::XML_SUCCESS);
+}
 
-                return true;
-        }
+bool try_get_attribute_bool(const Element* const e,
+                            const std::string name,
+                            bool& result)
+{
+        auto conv_result = e->QueryAttribute(name.c_str(), &result);
 
-        return false;
+        return (conv_result == tinyxml2::XML_SUCCESS);
 }
 
 } // xml

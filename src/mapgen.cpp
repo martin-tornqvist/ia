@@ -20,7 +20,6 @@
 #include "populate_monsters.hpp"
 #include "populate_traps.hpp"
 #include "populate_items.hpp"
-#include "gods.hpp"
 #include "rl_utils.hpp"
 
 #ifndef NDEBUG
@@ -45,10 +44,8 @@ void connect_rooms()
 
     while (true)
     {
-        //
         // NOTE: Keep this counter at the top of the loop, since otherwise a
-        //       continue statement could bypass it so we get stuck in the loop.
-        //
+        // continue statement could bypass it so we get stuck in the loop.
         --nr_tries_left;
 
         if (nr_tries_left == 0)
@@ -611,8 +608,6 @@ bool make_std_lvl()
         io::cover_panel(Panel::log);
     }
 #endif // NDEBUG
-
-    gods::set_no_god();
 
     for (Room* room : map::room_list)
     {

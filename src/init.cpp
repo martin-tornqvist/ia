@@ -8,7 +8,6 @@
 #include "io.hpp"
 #include "audio.hpp"
 #include "line_calc.hpp"
-#include "gods.hpp"
 #include "item_scroll.hpp"
 #include "item_potion.hpp"
 #include "item_rod.hpp"
@@ -66,7 +65,6 @@ void init_game()
 
     saving::init();
     line_calc::init();
-    gods::init();
     map_templates::init();
 
     TRACE_FUNC_END;

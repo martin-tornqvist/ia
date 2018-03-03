@@ -898,7 +898,8 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
                 aware_sfx_mon_seen() :
                 aware_sfx_mon_hidden();
 
-        Snd snd(msg,
+        Snd snd(
+                msg,
                 sfx,
                 IgnoreMsgIfOriginSeen::no,
                 pos,
@@ -907,6 +908,26 @@ void Mon::speak_phrase(const AlertsMon alerts_others)
                 alerts_others);
 
         snd_emit::run(snd);
+}
+
+std::string Mon::aware_msg_mon_seen() const
+{
+        if (data_->use_cultist_aware_msg_mon_seen)
+        {
+                return get_cultist_aware_msg_seen(*this);
+        }
+
+        return data_->aware_msg_mon_seen;
+}
+
+std::string Mon::aware_msg_mon_hidden() const
+{
+        if (data_->use_cultist_aware_msg_mon_hidden)
+        {
+                return get_cultist_aware_msg_hidden();
+        }
+
+        return data_->aware_msg_mon_hidden;
 }
 
 void Mon::become_aware_player(const bool is_from_seeing,
@@ -1317,70 +1338,6 @@ void Mon::add_spell(SpellSkill skill, Spell* const spell)
 // -----------------------------------------------------------------------------
 // Specific monsters
 // -----------------------------------------------------------------------------
-std::string Cultist::cultist_phrase()
-{
-        std::vector<std::string> phrase_bucket;
-
-        const God* const god = gods::current_god();
-
-        if (god && rnd::coin_toss())
-        {
-                const std::string name = god->name();
-                const std::string descr = god->descr();
-
-                phrase_bucket =
-                {
-                        name + " save us!",
-                        descr + " will save us!",
-                        name + " watches over us!",
-                        descr + " watches over us!",
-                        name + ", guide us!",
-                        descr + " guides us!",
-                        "For " + name + "!",
-                        "For " + descr + "!",
-                        "Blood for " + name + "!",
-                        "Blood for " + descr + "!",
-                        "Perish for " + name + "!",
-                        "Perish for " + descr + "!",
-                        "In the name of " + name + "!"
-                };
-        }
-        else
-        {
-                phrase_bucket =
-                {
-                        "Apigami!",
-                        "Bhuudesco invisuu!",
-                        "Bhuuesco marana!",
-                        "Crudux cruo!",
-                        "Cruento paashaeximus!",
-                        "Cruento pestis shatruex!",
-                        "Cruo crunatus durbe!",
-                        "Cruo lokemundux!",
-                        "Cruo stragara-na!",
-                        "Gero shay cruo!",
-                        "In marana domus-bhaava crunatus!",
-                        "Caecux infirmux!",
-                        "Malax sayti!",
-                        "Marana pallex!",
-                        "Marana malax!",
-                        "Pallex ti!",
-                        "Peroshay bibox malax!",
-                        "Pestis Cruento!",
-                        "Pestis cruento vilomaxus pretiacruento!",
-                        "Pretaanluxis cruonit!",
-                        "Pretiacruento!",
-                        "Stragar-Naya!",
-                        "Vorox esco marana!",
-                        "Vilomaxus!",
-                        "Prostragaranar malachtose!",
-                        "Apigami!"
-                };
-        }
-
-        return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
-}
-
 // TODO: This should be controlled by the map
 DidAction Khephren::on_act()
 {
@@ -1703,4 +1660,77 @@ void AnimatedWpn::drop()
         {
                 item_drop::drop_item_on_map(pos, *item);
         }
+}
+
+std::string get_cultist_phrase()
+{
+        std::vector<std::string> phrase_bucket = {
+                "Apigami!",
+                "Bhuudesco invisuu!",
+                "Bhuuesco marana!",
+                "Crudux cruo!",
+                "Cruento paashaeximus!",
+                "Cruento pestis shatruex!",
+                "Cruo crunatus durbe!",
+                "Cruo lokemundux!",
+                "Cruo stragara-na!",
+                "Gero shay cruo!",
+                "In marana domus-bhaava crunatus!",
+                "Caecux infirmux!",
+                "Malax sayti!",
+                "Marana pallex!",
+                "Marana malax!",
+                "Pallex ti!",
+                "Peroshay bibox malax!",
+                "Pestis Cruento!",
+                "Pestis cruento vilomaxus pretiacruento!",
+                "Pretaanluxis cruonit!",
+                "Pretiacruento!",
+                "Stragar-Naya!",
+                "Vorox esco marana!",
+                "Vilomaxus!",
+                "Prostragaranar malachtose!",
+                "Apigami!"
+        };
+
+        if (rnd::coin_toss())
+        {
+                const God& god = gods::current_god();
+
+                const std::vector<std::string> god_phrases = {
+                        god.name_ + " save us!",
+                        god.descr_ + " will save us!",
+                        god.name_ + " watches over us!",
+                        god.descr_ + " watches over us!",
+                        god.name_ + ", guide us!",
+                        god.descr_ + " guides us!",
+                        "For " + god.name_ + "!",
+                        "For " + god.descr_ + "!",
+                        "Blood for " + god.name_ + "!",
+                        "Blood for " + god.descr_ + "!",
+                        "Perish for " + god.name_ + "!",
+                        "Perish for " + god.descr_ + "!",
+                        "In the name of " + god.name_ + "!",
+                };
+
+                phrase_bucket.insert(end(phrase_bucket),
+                                     begin(god_phrases),
+                                     end(god_phrases));
+        }
+
+        return rnd::element(phrase_bucket);
+}
+
+std::string get_cultist_aware_msg_seen(const Actor& actor)
+{
+        const std::string name_the =
+                text_format::first_to_upper(
+                        actor.name_the());
+
+        return name_the + ": " + get_cultist_phrase();
+}
+
+std::string get_cultist_aware_msg_hidden()
+{
+        return "Voice: " + get_cultist_phrase();
 }

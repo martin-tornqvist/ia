@@ -270,6 +270,8 @@ struct ActorData
         std::string wary_msg;
         std::string aware_msg_mon_seen;
         std::string aware_msg_mon_hidden;
+        bool use_cultist_aware_msg_mon_seen;
+        bool use_cultist_aware_msg_mon_hidden;
         SfxId aware_sfx_mon_seen;
         SfxId aware_sfx_mon_hidden;
         std::string spell_cast_msg;

@@ -163,12 +163,12 @@ public:
 
     std::string char_descr_msg() const override
     {
-        return "Tends to babble in a peculiar language";
+        return "Babbling";
     }
 
     std::string postmortem_msg() const override
     {
-        return "Had a tendency to babble in a peculiar language";
+        return "Had a tendency to babble";
     }
 
     void babble() const;

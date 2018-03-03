@@ -216,11 +216,25 @@ static void dump_text(xml::Element* text_e, ActorData& data)
         data.wary_msg = xml::get_text_str(
                 xml::first_child(text_e, "wary_message"));
 
-        data.aware_msg_mon_seen = xml::get_text_str(
-                xml::first_child(text_e, "aware_message_seen"));
+        auto aware_msg_seen_e =
+                xml::first_child(text_e, "aware_message_seen");
 
-        data.aware_msg_mon_hidden = xml::get_text_str(
-                xml::first_child(text_e, "aware_message_hidden"));
+        data.aware_msg_mon_seen = xml::get_text_str(aware_msg_seen_e);
+
+        xml::try_get_attribute_bool(
+                aware_msg_seen_e,
+                "use_cultist_messages",
+                data.use_cultist_aware_msg_mon_seen);
+
+        auto aware_msg_hidden_e =
+                xml::first_child(text_e, "aware_message_hidden");
+
+        data.aware_msg_mon_hidden = xml::get_text_str(aware_msg_hidden_e);
+
+        xml::try_get_attribute_bool(
+                aware_msg_hidden_e,
+                "use_cultist_messages",
+                data.use_cultist_aware_msg_mon_hidden);
 
         data.spell_cast_msg = xml::get_text_str(
                 xml::first_child(text_e, "spell_message"));
@@ -673,6 +687,8 @@ void ActorData::reset()
         wary_msg = "";
         aware_msg_mon_seen = "";
         aware_msg_mon_hidden = "";
+        use_cultist_aware_msg_mon_seen = false;
+        use_cultist_aware_msg_mon_hidden = false;
         aware_sfx_mon_seen = SfxId::END;
         aware_sfx_mon_hidden = SfxId::END;
         spell_cast_msg = "";

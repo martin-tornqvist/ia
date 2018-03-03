@@ -53,21 +53,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::ghost:
         return new Ghost();
 
-    case ActorId::cultist:
-        return new Cultist();
-
-    case ActorId::bog_tcher:
-        return new BogTcher();
-
-    case ActorId::cultist_priest:
-        return new CultistPriest();
-
-    case ActorId::cultist_wizard:
-        return new CultistWizard();
-
-    case ActorId::cultist_arch_wizard:
-        return new CultistArchWizard();
-
     case ActorId::keziah_mason:
         return new KeziahMason();
 
@@ -92,6 +77,11 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
+    case ActorId::cultist:
+    case ActorId::bog_tcher:
+    case ActorId::cultist_priest:
+    case ActorId::cultist_wizard:
+    case ActorId::cultist_arch_wizard:
     case ActorId::zombie:
     case ActorId::zombie_axe:
     case ActorId::bloated_zombie:
