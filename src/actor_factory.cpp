@@ -48,88 +48,17 @@ Actor* make_actor_from_id(const ActorId id)
         return new Player();
 
     case ActorId::zombie:
-        return new ZombieClaw();
-
     case ActorId::zombie_axe:
-        return new ZombieAxe();
-
     case ActorId::bloated_zombie:
-        return new BloatedZombie();
-
     case ActorId::major_clapham_lee:
-        return new MajorClaphamLee();
-
     case ActorId::dean_halsey:
-        return new DeanHalsey();
-
-    case ActorId::crawling_intestines:
-        return new CrawlingIntestines();
-
-    case ActorId::crawling_hand:
-        return new CrawlingHand();
-
-    case ActorId::thing:
-        return new Thing();
-
-    case ActorId::floating_skull:
-        return new FloatingSkull();
-
-    case ActorId::rat:
-        return new Rat();
-
-    case ActorId::rat_thing:
-        return new RatThing();
-
-    case ActorId::brown_jenkin:
-        return new BrownJenkin();
-
-    case ActorId::green_spider:
-        return new GreenSpider();
-
-    case ActorId::red_spider:
-        return new RedSpider();
-
-    case ActorId::white_spider:
-        return new WhiteSpider();
-
-    case ActorId::shadow_spider:
-        return new ShadowSpider();
-
-    case ActorId::leng_spider:
-        return new LengSpider();
-
-    case ActorId::pit_viper:
-        return new PitViper();
-
-    case ActorId::spitting_cobra:
-        return new SpittingCobra();
-
-    case ActorId::black_mamba:
-        return new BlackMamba();
-
-    case ActorId::fire_hound:
-        return new FireHound();
-
-    case ActorId::energy_hound:
-        return new EnergyHound();
+        return new Zombie();
 
     case ActorId::zuul:
         return new Zuul();
 
     case ActorId::ghost:
         return new Ghost();
-
-    case ActorId::raven:
-        return new Raven();
-
-    case ActorId::giant_bat:
-        return new GiantBat();
-
-    case ActorId::vampire_bat:
-        return new VampireBat();
-
-    case ActorId::abaxu:
-        return new Abaxu();
 
     case ActorId::cultist:
         return new Cultist();
@@ -149,116 +78,17 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::keziah_mason:
         return new KeziahMason();
 
-    case ActorId::leng_elder:
-        return new LengElder();
-
-    case ActorId::wolf:
-        return new Wolf();
-
-    case ActorId::flying_polyp:
-        return new FlyingPolyp();
-
-    case ActorId::greater_polyp:
-        return new GreaterPolyp();
-
-    case ActorId::mind_leech:
-        return new MindLeech();
-
-    case ActorId::spirit_leech:
-        return new SpiritLeech();
-
-    case ActorId::life_leech:
-        return new LifeLeech();
-
-    case ActorId::mi_go:
-        return new MiGo();
-
-    case ActorId::mi_go_commander:
-        return new MiGoCommander();
-
-    case ActorId::ghoul:
-        return new Ghoul();
-
-    case ActorId::void_traveler:
-        return new VoidTraveler();
-
-    case ActorId::elder_void_traveler:
-        return new ElderVoidTraveler();
-
     case ActorId::shadow:
         return new Shadow();
-
-    case ActorId::invis_stalker:
-        return new InvisStalker();
-
-    case ActorId::byakhee:
-        return new Byakhee();
-
-    case ActorId::giant_mantis:
-        return new GiantMantis();
-
-    case ActorId::locust:
-        return new GiantLocust();
-
-    case ActorId::mummy:
-        return new Mummy();
-
-    case ActorId::croc_head_mummy:
-        return new MummyCrocHead();
 
     case ActorId::khephren:
         return new Khephren();
 
-    case ActorId::nitokris:
-        return new MummyUnique();
-
-    case ActorId::deep_one:
-        return new DeepOne();
-
     case ActorId::ape:
         return new Ape();
 
-    case ActorId::worm_mass:
-        return new WormMass();
-
-    case ActorId::mind_worms:
-        return new MindWorms();
-
-    case ActorId::dust_vortex:
-        return new DustVortex();
-
-    case ActorId::fire_vortex:
-        return new FireVortex();
-
-    case ActorId::energy_vortex:
-        return new EnergyVortex();
-
-    case ActorId::ooze_black:
-        return new OozeBlack();
-
     case ActorId::strange_color:
         return new StrangeColor();
-
-    case ActorId::ooze_clear:
-        return new OozeClear();
-
-    case ActorId::ooze_putrid:
-        return new OozePutrid();
-
-    case ActorId::ooze_poison:
-        return new OozePoison();
-
-    case ActorId::chthonian:
-        return new Chthonian();
-
-    case ActorId::death_fiend:
-        return new DeathFiend();
-
-    case ActorId::hunting_horror:
-        return new HuntingHorror();
-
-    case ActorId::sentry_drone:
-        return new SentryDrone();
 
     case ActorId::animated_wpn:
         return new AnimatedWpn();
@@ -266,20 +96,67 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::mold:
         return new Mold();
 
-    case ActorId::gas_spore:
-        return new GasSpore();
-
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
+    case ActorId::crawling_intestines:
+    case ActorId::crawling_hand:
+    case ActorId::thing:
+    case ActorId::floating_skull:
+    case ActorId::rat:
+    case ActorId::rat_thing:
+    case ActorId::brown_jenkin:
+    case ActorId::green_spider:
+    case ActorId::red_spider:
+    case ActorId::white_spider:
+    case ActorId::shadow_spider:
+    case ActorId::leng_spider:
+    case ActorId::pit_viper:
+    case ActorId::spitting_cobra:
+    case ActorId::black_mamba:
+    case ActorId::fire_hound:
+    case ActorId::energy_hound:
+    case ActorId::raven:
+    case ActorId::giant_bat:
+    case ActorId::vampire_bat:
+    case ActorId::abaxu:
+    case ActorId::wolf:
+    case ActorId::flying_polyp:
+    case ActorId::greater_polyp:
+    case ActorId::mind_leech:
+    case ActorId::spirit_leech:
+    case ActorId::life_leech:
+    case ActorId::mi_go:
+    case ActorId::mi_go_commander:
+    case ActorId::ghoul:
+    case ActorId::void_traveler:
+    case ActorId::elder_void_traveler:
+    case ActorId::invis_stalker:
+    case ActorId::byakhee:
+    case ActorId::giant_mantis:
+    case ActorId::locust:
+    case ActorId::mummy:
+    case ActorId::croc_head_mummy:
+    case ActorId::nitokris:
+    case ActorId::deep_one:
+    case ActorId::worm_mass:
+    case ActorId::mind_worms:
+    case ActorId::dust_vortex:
+    case ActorId::fire_vortex:
+    case ActorId::energy_vortex:
+    case ActorId::ooze_black:
+    case ActorId::ooze_clear:
+    case ActorId::ooze_putrid:
+    case ActorId::ooze_poison:
+    case ActorId::chthonian:
+    case ActorId::death_fiend:
+    case ActorId::hunting_horror:
+    case ActorId::sentry_drone:
+    case ActorId::gas_spore:
     case ActorId::high_priest_guard_war_vet:
-        return new HighPriestGuardWarVet();
-
     case ActorId::high_priest_guard_rogue:
-        return new HighPriestGuardRogue();
-
     case ActorId::high_priest_guard_ghoul:
-        return new HighPriestGuardGhoul();
+        return new Mon();
 
     case ActorId::END:
         break;

@@ -496,10 +496,10 @@ bool make_leng_lvl()
 
                 map::dark[p.x][p.y] = true;
 
-                if (c == 'E')
-                {
-                    actor_factory::make(ActorId::leng_elder, p);
-                }
+                // if (c == 'E')
+                // {
+                //     actor_factory::make(ActorId::leng_elder, p);
+                // }
             }
             break;
 

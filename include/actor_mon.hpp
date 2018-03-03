@@ -158,90 +158,6 @@ protected:
         int nr_mon_in_group();
 };
 
-class Rat: public Mon
-{
-public:
-        Rat() : Mon() {}
-        ~Rat() {}
-};
-
-class RatThing: public Rat
-{
-public:
-        RatThing() : Rat() {}
-        ~RatThing() {}
-};
-
-class BrownJenkin: public RatThing
-{
-public:
-        BrownJenkin() : RatThing() {}
-        ~BrownJenkin() {}
-};
-
-class Spider: public Mon
-{
-public:
-        Spider() : Mon() {}
-        virtual ~Spider() {}
-};
-
-class GreenSpider: public Spider
-{
-public:
-        GreenSpider() : Spider() {}
-        ~GreenSpider() {}
-};
-
-class WhiteSpider: public Spider
-{
-public:
-        WhiteSpider() : Spider() {}
-        ~WhiteSpider() {}
-};
-
-class RedSpider: public Spider
-{
-public:
-        RedSpider() : Spider() {}
-        ~RedSpider() {}
-};
-
-class ShadowSpider: public Spider
-{
-public:
-        ShadowSpider() : Spider() {}
-        ~ShadowSpider() {}
-};
-
-class LengSpider: public Spider
-{
-public:
-        LengSpider() : Spider() {}
-        ~LengSpider() {}
-};
-
-class PitViper: public Mon
-{
-public:
-        PitViper() : Mon() {}
-        virtual ~PitViper() {}
-};
-
-class SpittingCobra: public Mon
-{
-public:
-        SpittingCobra() : Mon() {}
-        virtual ~SpittingCobra() {}
-};
-
-class BlackMamba: public Mon
-{
-public:
-        BlackMamba() : Mon() {}
-        virtual ~BlackMamba() {}
-};
-
 class Zombie: public Mon
 {
 public:
@@ -255,99 +171,6 @@ protected:
         void on_destroyed() override;
 };
 
-class ZombieClaw: public Zombie
-{
-public:
-        ZombieClaw() : Zombie() {}
-        ~ZombieClaw() {}
-};
-
-class ZombieAxe: public Zombie
-{
-public:
-        ZombieAxe() : Zombie() {}
-        ~ZombieAxe() {}
-};
-
-class BloatedZombie: public Zombie
-{
-public:
-        BloatedZombie() : Zombie() {}
-        ~BloatedZombie() {}
-
-};
-
-class MajorClaphamLee: public ZombieClaw
-{
-public:
-        MajorClaphamLee() :
-                ZombieClaw() {}
-        ~MajorClaphamLee() {}
-};
-
-class DeanHalsey: public ZombieClaw
-{
-public:
-        DeanHalsey() : ZombieClaw() {}
-        ~DeanHalsey() {}
-};
-
-class CrawlingIntestines: public Mon
-{
-public:
-        CrawlingIntestines() : Mon() {}
-        ~CrawlingIntestines() {}
-
-};
-
-class CrawlingHand: public Mon
-{
-public:
-        CrawlingHand() : Mon() {}
-        ~CrawlingHand() {}
-
-};
-
-class Thing: public Mon
-{
-public:
-        Thing() : Mon() {}
-        ~Thing() {}
-
-};
-
-class FloatingSkull: public Mon
-{
-public:
-        FloatingSkull() : Mon() {}
-        ~FloatingSkull() {}
-
-};
-
-class MindLeech: public Mon
-{
-public:
-        MindLeech() : Mon() {}
-        ~MindLeech() {}
-
-};
-
-class SpiritLeech: public Mon
-{
-public:
-        SpiritLeech() : Mon() {}
-        ~SpiritLeech() {}
-
-};
-
-class LifeLeech: public Mon
-{
-public:
-        LifeLeech() : Mon() {}
-        ~LifeLeech() {}
-
-};
-
 class KeziahMason: public Mon
 {
 public:
@@ -359,22 +182,6 @@ private:
         DidAction on_act() override;
 
         bool has_summoned_jenkin;
-};
-
-class LengElder: public Mon
-{
-public:
-        LengElder() :
-                Mon(),
-                has_given_item_to_player_(false),
-                nr_turns_to_hostile_(-1) {}
-        ~LengElder() {}
-
-
-private:
-        void on_std_turn_hook()    override;
-        bool  has_given_item_to_player_;
-        int   nr_turns_to_hostile_;
 };
 
 class Cultist: public Mon
@@ -426,50 +233,6 @@ public:
         ~CultistArchWizard() {}
 };
 
-class LordOfShadows: public Mon
-{
-public:
-        LordOfShadows() : Mon() {}
-        ~LordOfShadows() {}
-};
-
-class LordOfSpiders: public Mon
-{
-public:
-        LordOfSpiders() : Mon() {}
-        ~LordOfSpiders() {}
-
-};
-
-class LordOfSpirits: public Mon
-{
-public:
-        LordOfSpirits() : Mon() {}
-        ~LordOfSpirits() {}
-
-};
-
-class LordOfPestilence: public Mon
-{
-public:
-        LordOfPestilence() : Mon() {}
-        ~LordOfPestilence() {}
-};
-
-class FireHound: public Mon
-{
-public:
-        FireHound() : Mon() {}
-        ~FireHound() {}
-};
-
-class EnergyHound: public Mon
-{
-public:
-        EnergyHound() : Mon() {}
-        ~EnergyHound() {}
-};
-
 class Zuul: public Mon
 {
 public:
@@ -495,150 +258,14 @@ public:
         }
 };
 
-class Raven: public Mon
-{
-public:
-        Raven() : Mon() {}
-        ~Raven() {}
-};
-
-class GiantBat: public Mon
-{
-public:
-        GiantBat() : Mon() {}
-        ~GiantBat() {}
-};
-
-class VampireBat: public Mon
-{
-public:
-        VampireBat() : Mon() {}
-        ~VampireBat() {}
-};
-
-class Abaxu: public Mon
-{
-public:
-        Abaxu() : Mon() {}
-        ~Abaxu() {}
-};
-
-class Byakhee: public GiantBat
-{
-public:
-        Byakhee() : GiantBat() {}
-        ~Byakhee() {}
-};
-
-class GiantMantis: public Mon
-{
-public:
-        GiantMantis() : Mon() {}
-        ~GiantMantis() {}
-};
-
-class Chthonian: public Mon
-{
-public:
-        Chthonian() : Mon() {}
-        ~Chthonian() {}
-};
-
-class DeathFiend: public Mon
-{
-public:
-        DeathFiend() : Mon() {}
-        ~DeathFiend() {}
-};
-
-class HuntingHorror: public GiantBat
-{
-public:
-        HuntingHorror() : GiantBat() {}
-        ~HuntingHorror() {}
-};
-
-class Wolf: public Mon
-{
-public:
-        Wolf() : Mon() {}
-        ~Wolf() {}
-};
-
-class MiGo: public Mon
-{
-public:
-        MiGo() : Mon() {}
-        ~MiGo() {}
-};
-
-class MiGoCommander: public MiGo
-{
-public:
-        MiGoCommander() : MiGo() {}
-        ~MiGoCommander() {}
-};
-
-class SentryDrone: public Mon
-{
-public:
-        SentryDrone() : Mon() {}
-        ~SentryDrone() {}
-
-};
-
-class FlyingPolyp: public Mon
-{
-public:
-        FlyingPolyp() : Mon() {}
-        ~FlyingPolyp() {}
-
-};
-
-class GreaterPolyp: public FlyingPolyp
-{
-public:
-        GreaterPolyp() : FlyingPolyp() {}
-        ~GreaterPolyp() {}
-};
-
-class Ghoul: public Mon
-{
-public:
-        Ghoul() : Mon() {}
-        ~Ghoul() {}
-};
-
-class VoidTraveler: public Mon
-{
-public:
-        VoidTraveler() : Mon() {}
-        ~VoidTraveler() {}
-
-};
-
-class ElderVoidTraveler: public VoidTraveler
-{
-public:
-        ElderVoidTraveler() : VoidTraveler() {}
-        ~ElderVoidTraveler() {}
-
-};
-
-class DeepOne: public Mon
-{
-public:
-        DeepOne() : Mon() {}
-        ~DeepOne() {}
-
-};
-
 class Ape: public Mon
 {
 public:
-        Ape() : Mon(), frenzy_cooldown_(0) {}
-        ~Ape() {}
+        Ape() :
+                Mon(),
+                frenzy_cooldown_(0) {}
 
+        ~Ape() {}
 
 private:
         DidAction on_act() override;
@@ -646,34 +273,11 @@ private:
         int frenzy_cooldown_;
 };
 
-class Mummy: public Mon
-{
-public:
-        Mummy() : Mon() {}
-        ~Mummy() {}
-};
-
-class MummyCrocHead: public Mummy
-{
-public:
-        MummyCrocHead() : Mummy() {}
-        ~MummyCrocHead() {}
-
-};
-
-class MummyUnique: public Mummy
-{
-public:
-        MummyUnique() : Mummy() {}
-        ~MummyUnique() {}
-
-};
-
-class Khephren: public MummyUnique
+class Khephren: public Mon
 {
 public:
         Khephren() :
-                MummyUnique(),
+                Mon(),
                 has_summoned_locusts(false) {}
         ~Khephren() {}
 
@@ -689,85 +293,17 @@ public:
         Shadow() : Mon() {}
         ~Shadow() {}
 
-
         std::string death_msg() const override
         {
                 return "The shadow fades.";
         }
 };
 
-class InvisStalker: public Mon
-{
-public:
-        InvisStalker() : Mon() {}
-        ~InvisStalker() {}
-
-};
-
-class WormMass: public Mon
-{
-public:
-        WormMass() :
-                Mon() {}
-
-        ~WormMass() {}
-
-};
-
-class MindWorms: public WormMass
-{
-public:
-        MindWorms() :
-                WormMass() {}
-
-        ~MindWorms() {}
-
-};
-
-class GiantLocust: public Mon
-{
-public:
-        GiantLocust() :
-                Mon() {}
-
-        ~GiantLocust() {}
-
-};
-
-class Vortex: public Mon
-{
-public:
-        Vortex() :
-                Mon() {}
-
-        virtual ~Vortex() {}
-};
-
-class DustVortex: public Vortex
-{
-public:
-        DustVortex() : Vortex() {}
-        ~DustVortex() {}
-};
-
-class FireVortex: public Vortex
-{
-public:
-        FireVortex() : Vortex() {}
-        ~FireVortex() {}
-};
-
-class EnergyVortex: public Vortex
-{
-public:
-        EnergyVortex() : Vortex() {}
-        ~EnergyVortex() {}
-};
-
 class Ooze: public Mon
 {
 public:
         Ooze() : Mon() {}
+
         ~Ooze() {}
 
         std::string death_msg() const override
@@ -776,41 +312,12 @@ public:
         }
 };
 
-class OozeBlack: public Ooze
+class StrangeColor: public Mon
 {
 public:
-        OozeBlack() : Ooze() {}
-        ~OozeBlack() {}
-};
-
-class OozeClear: public Ooze
-{
-public:
-        OozeClear() : Ooze() {}
-        ~OozeClear() {}
-};
-
-class OozePutrid: public Ooze
-{
-public:
-        OozePutrid() : Ooze() {}
-        ~OozePutrid() {}
-};
-
-class OozePoison: public Ooze
-{
-public:
-        OozePoison() : Ooze() {}
-        ~OozePoison() {}
-};
-
-class StrangeColor: public Ooze
-{
-public:
-        StrangeColor() : Ooze() {}
+        StrangeColor() : Mon() {}
 
         ~StrangeColor() {}
-
 
         Color color() const override;
 
@@ -823,23 +330,14 @@ public:
 class Mold: public Mon
 {
 public:
-        Mold() :
-                Mon() {}
+        Mold() : Mon() {}
 
         ~Mold() {}
-
 
         std::string death_msg() const override
         {
                 return "The Mold is destroyed.";
         }
-};
-
-class GasSpore: public Mon
-{
-public:
-        GasSpore() : Mon() {}
-        ~GasSpore() {}
 };
 
 class TheHighPriest: public Mon
@@ -855,29 +353,6 @@ private:
         void on_death() override;
 
         bool has_become_aware_;
-};
-
-class HighPriestGuardWarVet: public Mon
-{
-public:
-        HighPriestGuardWarVet() {}
-        ~HighPriestGuardWarVet() {}
-
-};
-
-class HighPriestGuardRogue: public Mon
-{
-public:
-        HighPriestGuardRogue() {}
-        ~HighPriestGuardRogue() {}
-
-};
-
-class HighPriestGuardGhoul: public Ghoul
-{
-public:
-        HighPriestGuardGhoul() {}
-        ~HighPriestGuardGhoul() {}
 };
 
 class AnimatedWpn: public Mon

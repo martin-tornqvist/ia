@@ -32,7 +32,6 @@ enum class ActorId
         bog_tcher,
         keziah_mason,
         brown_jenkin,
-        leng_elder,
         cultist_priest,
         cultist_wizard,
         cultist_arch_wizard,
