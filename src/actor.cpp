@@ -363,9 +363,7 @@ void Actor::teleport(const ShouldCtrlTele ctrl_tele)
     // Make sure we do not teleport to the position we are standing in
     blocked[pos.x][pos.y] = false;
 
-    //
     // Teleport control?
-    //
     const bool can_actor_use_tele_ctrl =
         is_player() &&
         properties_->has_prop(PropId::tele_ctrl) &&
@@ -383,9 +381,7 @@ void Actor::teleport(const ShouldCtrlTele ctrl_tele)
         return;
     }
 
-    //
     // Teleport randomly
-    //
     const auto pos_bucket = to_vec(blocked, false);
 
     if (pos_bucket.empty())
@@ -1242,6 +1238,9 @@ void Actor::destroy()
 {
     state_ = ActorState::destroyed;
 
+    properties_->on_destroyed();
+
+    // TODO: This will be removed
     on_destroyed();
 }
 

@@ -125,6 +125,7 @@ public:
 
         void on_hit();
         void on_death();
+        void on_destroyed();
 
         int ability_mod(const AbilityId ability) const;
 

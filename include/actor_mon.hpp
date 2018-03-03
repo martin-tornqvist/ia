@@ -166,8 +166,6 @@ public:
         virtual ~Zombie() {}
 
 protected:
-        void on_death() override;
-
         void on_destroyed() override;
 };
 

@@ -1092,6 +1092,18 @@ void PropHandler::on_death()
         TRACE_FUNC_END_VERBOSE;
 }
 
+void PropHandler::on_destroyed()
+{
+        TRACE_FUNC_BEGIN_VERBOSE;
+
+        for (auto& prop : props_)
+        {
+                prop->on_destroyed();
+        }
+
+        TRACE_FUNC_END_VERBOSE;
+}
+
 int PropHandler::ability_mod(const AbilityId ability) const
 {
         int modifier = 0;

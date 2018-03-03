@@ -115,6 +115,7 @@
         </attacks>
         <properties>
             <property>corpse_rises</property>
+            <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -202,6 +203,7 @@
         </attacks>
         <properties>
             <property>corpse_rises</property>
+            <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -295,6 +297,7 @@
         </attacks>
         <properties>
             <property>corpse_rises</property>
+            <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -382,6 +385,7 @@
         <properties>
             <property>major_clapham_summon</property>
             <property>corpse_rises</property>
+            <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
         <ai>
@@ -466,6 +470,7 @@
         </attacks>
         <properties>
             <property>corpse_rises</property>
+            <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
         <ai>

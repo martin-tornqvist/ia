@@ -227,8 +227,10 @@ public:
     int delay_;
 
 protected:
+    // TODO: This will be removed
     virtual void on_death() {}
 
+    // TODO: This will be removed
     virtual void on_destroyed() {}
 
     virtual std::string death_msg() const;

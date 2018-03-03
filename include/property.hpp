@@ -185,6 +185,7 @@ public:
         }
 
         virtual void on_death() {}
+        virtual void on_destroyed() {}
 
         virtual int affect_max_hp(const int hp_max) const
         {
@@ -1258,12 +1259,23 @@ class PropCorpseRises: public Prop
 public:
         PropCorpseRises() :
                 Prop(PropId::corpse_rises),
-                rise_one_in_n_(8) {}
+                has_risen_(false) {}
 
         PropActResult on_act() override;
 
+        void on_death() override;
+
 private:
-        int rise_one_in_n_;
+        bool has_risen_;
+};
+
+class PropSpawnsZombiePartsOnDestroyed: public Prop
+{
+public:
+        PropSpawnsZombiePartsOnDestroyed():
+                Prop(PropId::spawns_zombie_parts_on_destroyed) {}
+
+        void on_destroyed() override;
 };
 
 class PropBreeds: public Prop

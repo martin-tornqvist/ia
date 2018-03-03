@@ -209,6 +209,9 @@ Prop* make(const PropId id)
     case PropId::speaks_curses:
         return new PropSpeaksCurses();
 
+    case PropId::spawns_zombie_parts_on_destroyed:
+        return new PropSpawnsZombiePartsOnDestroyed();
+
     case PropId::invis:
         return new PropInvisible();
 
