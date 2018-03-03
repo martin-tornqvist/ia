@@ -607,8 +607,6 @@ class Ghoul: public Mon
 public:
         Ghoul() : Mon() {}
         ~Ghoul() {}
-
-        virtual void init_hook() override;
 };
 
 class VoidTraveler: public Mon
@@ -880,10 +878,6 @@ class HighPriestGuardGhoul: public Ghoul
 public:
         HighPriestGuardGhoul() {}
         ~HighPriestGuardGhoul() {}
-
-        // Don't become allied to player Ghouls
-        void init_hook() override {}
-
 };
 
 class AnimatedWpn: public Mon

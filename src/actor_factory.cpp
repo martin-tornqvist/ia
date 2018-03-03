@@ -349,23 +349,9 @@ Actor* make(const ActorId id, const P& pos)
 
     auto& data = actor->data();
 
-    if (data.id == ActorId::zuul)
-    {
-            TRACE << "data.nr_left_allowed_to_spawn: "
-                  << data.nr_left_allowed_to_spawn
-                  << std::endl;
-    }
-
     if (data.nr_left_allowed_to_spawn > 0)
     {
         --data.nr_left_allowed_to_spawn;
-    }
-
-    if (data.id == ActorId::zuul)
-    {
-            TRACE << "data.nr_left_allowed_to_spawn: "
-                  << data.nr_left_allowed_to_spawn
-                  << std::endl;
     }
 
     game_time::add_actor(actor);

@@ -282,6 +282,7 @@ struct ActorData
         bool is_spider;
         bool is_undead;
         bool is_ghost;
+        bool is_ghoul;
         bool is_snake;
         bool is_reptile;
         bool is_amphibian;

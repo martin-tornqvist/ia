@@ -70,9 +70,6 @@ public:
 
     void init(const P& pos_, ActorData& data);
 
-    // TODO: This will be removed
-    virtual void init_hook() {}
-
     ActorDied hit(int dmg,
                   const DmgType dmg_type,
                   const DmgMethod method = DmgMethod::END,

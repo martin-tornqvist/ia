@@ -3148,6 +3148,7 @@
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
             <humanoid/>
+            <ghoul/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
@@ -6594,6 +6595,7 @@
             <size>humanoid</size>
             <always_prevent_knockback>true</always_prevent_knockback>
             <humanoid/>
+            <ghoul/>
             <can_bleed>true</can_bleed>
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>

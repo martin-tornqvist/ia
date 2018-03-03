@@ -231,13 +231,24 @@ void Actor::init(const P& pos_, ActorData& actor_data)
 
     properties_->apply_natural_props_from_actor_data();
 
-    if (data_->id != ActorId::player)
+    if (!is_player())
     {
         actor_items::make_for_actor(*this);
-    }
 
-    // TODO: This will be removed
-    init_hook();
+        // Monster ghouls start allied to player ghouls
+        const bool set_allied =
+            data_->is_ghoul &&
+            (player_bon::bg() == Bg::ghoul) &&
+            // HACK: Do not allow the boss Ghoul to become allied
+            (data_->id != ActorId::high_priest_guard_ghoul);
+
+        if (set_allied)
+        {
+            Mon* const mon = static_cast<Mon*>(this);
+
+            mon->leader_ = map::player;
+        }
+    }
 }
 
 void Actor::on_std_turn_common()

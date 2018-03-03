@@ -1381,15 +1381,6 @@ std::string Cultist::cultist_phrase()
         return phrase_bucket[rnd::range(0, phrase_bucket.size() - 1)];
 }
 
-void Ghoul::init_hook()
-{
-        // If player is Ghoul, then Ghouls are allied to player
-        if (player_bon::bg() == Bg::ghoul)
-        {
-                leader_ = map::player;
-        }
-}
-
 // TODO: This should be controlled by the map
 DidAction Khephren::on_act()
 {
