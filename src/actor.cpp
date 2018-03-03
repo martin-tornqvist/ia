@@ -1239,9 +1239,6 @@ void Actor::destroy()
     state_ = ActorState::destroyed;
 
     properties_->on_destroyed();
-
-    // TODO: This will be removed
-    on_destroyed();
 }
 
 std::string Actor::death_msg() const

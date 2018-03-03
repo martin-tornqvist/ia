@@ -230,9 +230,6 @@ protected:
     // TODO: This will be removed
     virtual void on_death() {}
 
-    // TODO: This will be removed
-    virtual void on_destroyed() {}
-
     virtual std::string death_msg() const;
 
     // Damages worn armor, and returns damage after armor absorbs damage
