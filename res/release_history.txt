@@ -12,6 +12,7 @@ Gameplay
 * Spiders can use pathfinding to move to their target
 
 Interface
+* Many monster descriptions have been completely rewritten (thanks Renan Nunes)
 * Reworked the tile for Deep Ones
 
 --------------------------------------------------------------
