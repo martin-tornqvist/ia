@@ -82,9 +82,8 @@ enum class ItemId
         intr_mind_leech_sting,
         intr_life_leech_sting,
         intr_spirit_leech_sting,
-        intr_spear_thrust, // TODO: Should be a real item
-        intr_javelin_thrust, // TODO: Should be a real item
-        intr_javelin_throw, // TODO: Should be a real item
+        intr_spear_thrust,
+        intr_net_throw,
         intr_maul,
         intr_pus_spew,
         intr_acid_touch,
@@ -190,8 +189,7 @@ const std::unordered_map<std::string, ItemId> str_to_intr_item_id_map =
         {"life_leech_sting", ItemId::intr_life_leech_sting},
         {"spirit_leech_sting", ItemId::intr_spirit_leech_sting},
         {"spear_thrust", ItemId::intr_spear_thrust},
-        {"javelin_thrust", ItemId::intr_javelin_thrust},
-        {"javelin_throw", ItemId::intr_javelin_throw},
+        {"net_throw", ItemId::intr_net_throw},
         {"maul", ItemId::intr_maul},
         {"pus_spew", ItemId::intr_pus_spew},
         {"acid_touch", ItemId::intr_acid_touch},

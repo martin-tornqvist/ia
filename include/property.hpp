@@ -589,6 +589,20 @@ private:
         void curse_adjacent() const;
 };
 
+class PropEntangled: public Prop
+{
+public:
+        PropEntangled() :
+                Prop(PropId::entangled) {}
+
+        void on_applied() override;
+
+        void affect_move_dir(const P& actor_pos, Dir& dir) override;
+
+private:
+        bool try_player_end_with_machete();
+};
+
 class PropBurning: public Prop
 {
 public:

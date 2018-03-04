@@ -67,8 +67,6 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         is_backstab(false),
         is_weak_attack(false)
 {
-        const P& def_pos = defender.pos;
-
         const bool is_defender_aware =
                 is_defender_aware_of_attack(attacker, defender);
 
@@ -125,6 +123,8 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         }
 
         // Check for extra attack bonuses, such as defender being immobilized.
+
+        // TODO: This is weird - just handle dodging penalties with properties!
         bool is_big_att_bon = false;
         bool is_small_att_bon = false;
 
@@ -136,27 +136,12 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
         if (!is_big_att_bon)
         {
-                // Give big attack bonus if defender is stuck in trap.
-                const auto* const f = map::cells[def_pos.x][def_pos.y].rigid;
-
-                if (f->id() == FeatureId::trap)
-                {
-                        const auto* const t = static_cast<const Trap*>(f);
-
-                        if (t->is_holding_actor())
-                        {
-                                is_big_att_bon = true;
-                        }
-                }
-        }
-
-        if (!is_big_att_bon)
-        {
                 // Check if attacker gets a bonus due to a defender property.
 
                 if (defender.has_prop(PropId::paralyzed) ||
                     defender.has_prop(PropId::nailed) ||
-                    defender.has_prop(PropId::fainted))
+                    defender.has_prop(PropId::fainted) ||
+                    defender.has_prop(PropId::entangled))
                 {
                         // Give big attack bonus if defender is completely
                         // unable to fight.
@@ -174,12 +159,10 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
 
         // Give small attack bonus if defender cannot see.
         if (!is_big_att_bon &&
-            !is_small_att_bon)
+            !is_small_att_bon &&
+            !defender.properties().allow_see())
         {
-                if (!defender.properties().allow_see())
-                {
-                        is_small_att_bon = true;
-                }
+                is_small_att_bon = true;
         }
 
         state_mod =

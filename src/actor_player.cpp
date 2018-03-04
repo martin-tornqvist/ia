@@ -1750,19 +1750,6 @@ void Player::move(Dir dir)
 
     properties_->affect_move_dir(pos, dir);
 
-    // Trap affects leaving?
-    if (dir != Dir::center)
-    {
-        Feature* f = map::cells[pos.x][pos.y].rigid;
-
-        if (f->id() == FeatureId::trap)
-        {
-            TRACE << "Standing on trap, check if affects move" << std::endl;
-
-            dir = static_cast<Trap*>(f)->actor_try_leave(*this, dir);
-        }
-    }
-
     const P tgt(pos + dir_utils::offset(dir));
 
     // Attacking, bumping stuff, staggering from encumbrance, etc?
@@ -1865,11 +1852,9 @@ void Player::move(Dir dir)
                     return;
                 }
 
-                //
                 // NOTE: The target is blocked by map features. Do NOT reveal
-                //       the monster - just act like the monster isn't there,
-                //       and let the code below handle the situation.
-                //
+                // the monster - just act like the monster isn't there, and let
+                // the code below handle the situation.
             }
         }
 
@@ -1962,9 +1947,7 @@ void Player::move(Dir dir)
             }
         }
 
-        //
         // NOTE: bump() prints block messages.
-        //
         for (auto* mob : mobs)
         {
             mob->bump(*this);
@@ -1985,35 +1968,23 @@ void Player::move(Dir dir)
         // "standing still" actions
         if (intended_dir == Dir::center)
         {
-            bool is_stuck = false;
+            auto did_action = DidAction::no;
 
-            const Rigid* const rigid = map::cells[pos.x][pos.y].rigid;
-
-            if (rigid->id() == FeatureId::trap)
+            // Ghoul feed on corpses?
+            if (player_bon::bg() == Bg::ghoul)
             {
-                is_stuck = static_cast<const Trap*>(rigid)->is_holding_actor();
+                    did_action = try_eat_corpse();
             }
 
-            if (!is_stuck)
+            if (did_action == DidAction::no)
             {
-                auto did_action = DidAction::no;
-
-                // Ghoul feed on corpses?
-                if (player_bon::bg() == Bg::ghoul)
-                {
-                    did_action = try_eat_corpse();
-                }
-
-                if (did_action == DidAction::no)
-                {
                     // Reorganize pistol magazines?
                     const auto my_seen_foes = seen_foes();
 
                     if (my_seen_foes.empty())
                     {
-                        reload::player_arrange_pistol_mags();
+                            reload::player_arrange_pistol_mags();
                     }
-                }
             }
         }
 

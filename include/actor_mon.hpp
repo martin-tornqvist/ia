@@ -280,7 +280,6 @@ public:
         TheHighPriest();
         ~TheHighPriest() {}
 
-
 private:
         DidAction on_act() override;
 

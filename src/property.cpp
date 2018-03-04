@@ -186,6 +186,73 @@ void PropCursed::curse_adjacent() const
         }
 }
 
+void PropEntangled::on_applied()
+{
+        try_player_end_with_machete();
+}
+
+void PropEntangled::affect_move_dir(const P& actor_pos, Dir& dir)
+{
+        (void)actor_pos;
+
+        if (dir == Dir::center)
+        {
+                return;
+        }
+
+        if (try_player_end_with_machete())
+        {
+                return;
+        }
+
+        dir = Dir::center;
+
+        if (owner_->is_player())
+        {
+                msg_log::add("I struggle to tear free!",
+                             colors::msg_bad());
+        }
+        else // Is monster
+        {
+                if (map::player->can_see_actor(*owner_))
+                {
+                        const std::string actor_name_the =
+                                text_format::first_to_upper(
+                                        owner_->name_the());
+
+                        msg_log::add(actor_name_the +
+                                     " struggles to tear free.",
+                                     colors::msg_good());
+                }
+        }
+
+        if (rnd::one_in(8))
+        {
+                owner_->properties().end_prop(id());
+        }
+}
+
+bool PropEntangled::try_player_end_with_machete()
+{
+        if (owner_ != map::player)
+        {
+                return false;
+        }
+
+        Item* item = owner_->inv().item_in_slot(SlotId::wpn);
+
+        if (item && (item->id() == ItemId::machete))
+        {
+                msg_log::add("I cut myself free with my Machete.");
+
+                owner_->properties().end_prop_silent(id());
+
+                return true;
+        }
+
+        return false;
+}
+
 void PropSlowed::on_applied()
 {
         owner_->properties().end_prop_silent(PropId::hasted);
@@ -802,10 +869,10 @@ bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const
 
 void PropFrenzied::on_applied()
 {
-        owner_->properties().end_prop(PropId::confused);
-        owner_->properties().end_prop(PropId::fainted);
-        owner_->properties().end_prop(PropId::terrified);
-        owner_->properties().end_prop(PropId::weakened);
+        owner_->properties().end_prop_silent(PropId::confused);
+        owner_->properties().end_prop_silent(PropId::fainted);
+        owner_->properties().end_prop_silent(PropId::terrified);
+        owner_->properties().end_prop_silent(PropId::weakened);
 }
 
 void PropFrenzied::on_end()
@@ -1000,7 +1067,7 @@ bool PropRConf::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRConf::on_applied()
 {
-        owner_->properties().end_prop(PropId::confused);
+        owner_->properties().end_prop_silent(PropId::confused);
 }
 
 bool PropRFear::is_resisting_other_prop(const PropId prop_id) const
@@ -1010,7 +1077,7 @@ bool PropRFear::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRFear::on_applied()
 {
-        owner_->properties().end_prop(PropId::terrified);
+        owner_->properties().end_prop_silent(PropId::terrified);
 
         if (owner_->is_player() &&
             duration_mode_ == PropDurationMode::indefinite)
@@ -1026,7 +1093,7 @@ bool PropRSlow::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRSlow::on_applied()
 {
-        owner_->properties().end_prop(PropId::slowed);
+        owner_->properties().end_prop_silent(PropId::slowed);
 }
 
 bool PropRPhys::is_resisting_other_prop(const PropId prop_id) const
@@ -1060,7 +1127,7 @@ bool PropRFire::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRFire::on_applied()
 {
-        owner_->properties().end_prop(PropId::burning);
+        owner_->properties().end_prop_silent(PropId::burning);
 }
 
 DmgResistData PropRFire::is_resisting_dmg(const DmgType dmg_type) const
@@ -1083,7 +1150,7 @@ bool PropRPoison::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRPoison::on_applied()
 {
-        owner_->properties().end_prop(PropId::poisoned);
+        owner_->properties().end_prop_silent(PropId::poisoned);
 }
 
 bool PropRSleep::is_resisting_other_prop(const PropId prop_id) const
@@ -1093,7 +1160,7 @@ bool PropRSleep::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRSleep::on_applied()
 {
-        owner_->properties().end_prop(PropId::fainted);
+        owner_->properties().end_prop_silent(PropId::fainted);
 }
 
 bool PropRDisease::is_resisting_other_prop(const PropId prop_id) const
@@ -1103,8 +1170,8 @@ bool PropRDisease::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRDisease::on_applied()
 {
-        owner_->properties().end_prop(PropId::diseased);
-        owner_->properties().end_prop(PropId::infected);
+        owner_->properties().end_prop_silent(PropId::diseased);
+        owner_->properties().end_prop_silent(PropId::infected);
 }
 
 bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
@@ -1114,7 +1181,7 @@ bool PropRBlind::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRBlind::on_applied()
 {
-        owner_->properties().end_prop(PropId::blind);
+        owner_->properties().end_prop_silent(PropId::blind);
 }
 
 bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
@@ -1124,7 +1191,7 @@ bool PropRPara::is_resisting_other_prop(const PropId prop_id) const
 
 void PropRPara::on_applied()
 {
-        owner_->properties().end_prop(PropId::paralyzed);
+        owner_->properties().end_prop_silent(PropId::paralyzed);
 }
 
 bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
@@ -1134,7 +1201,7 @@ bool PropSeeInvis::is_resisting_other_prop(const PropId prop_id) const
 
 void PropSeeInvis::on_applied()
 {
-        owner_->properties().end_prop(PropId::blind);
+        owner_->properties().end_prop_silent(PropId::blind);
 }
 
 PropEnded PropBurrowing::on_tick()

@@ -7,6 +7,10 @@ Gameplay
 * Removed many "superfluous" traits (especially chains of identical upgrades, such as level two and three of "Marksman"). The set of traits is now much more focused, where each trait gives a significant and distinct bonus. Traits are only picked every second character (starting from level 2), but each trait is generally more powerful than before.
 * Removed the Phantasm and Wraith monsters
 * When Ghosts attack, it says they are "reaching" for the player instead of "clawing" - the old "reach" effect which they did in addition to their normal attack has been removed
+* Deep Ones can throw a net which entangles the victim (instead of throwing a spear), and they usually spawn in much smaller numbers than before
+
+Interface
+* Reworked the tile for Deep Ones
 
 --------------------------------------------------------------
 v19.2 (November 6, 2017)

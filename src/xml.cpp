@@ -119,9 +119,43 @@ std::string get_attribute_str(const Element* const e, const std::string name)
 
 int get_attribute_int(const Element* const e, const std::string name)
 {
-        const std::string str = e->Attribute(to_c_str(name));
+        int result = 0;
 
-        return to_int(str);
+        const auto conv_result =
+                e->QueryAttribute(to_c_str(name),
+                                  &result);
+
+        if (conv_result != tinyxml2::XML_SUCCESS)
+        {
+                TRACE_ERROR_RELEASE
+                        << "While parsing integer value from "
+                        << "xml element \""
+                        << e->Value()
+                        << "\", attribute \""
+                        << name
+                        << "\", tinyxml2 reported error code: "
+                        << result << std::endl;
+
+                PANIC;
+        }
+
+        return result;
+}
+
+bool try_get_attribute_str(const Element* const e,
+                           const std::string name,
+                           std::string& result)
+{
+        auto str = e->Attribute(name.c_str());
+
+        if (str)
+        {
+                result = str;
+
+                return true;
+        }
+
+        return false;
 }
 
 bool try_get_attribute_int(const Element* const e,

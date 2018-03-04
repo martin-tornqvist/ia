@@ -60,8 +60,7 @@ Item* make(const ItemId item_id, const int nr_items)
     case ItemId::intr_ghost_touch:
     case ItemId::intr_sting:
     case ItemId::intr_spear_thrust:
-    case ItemId::intr_javelin_thrust:
-    case ItemId::intr_javelin_throw:
+    case ItemId::intr_net_throw:
     case ItemId::intr_maul:
     case ItemId::intr_pus_spew:
     case ItemId::intr_acid_touch:

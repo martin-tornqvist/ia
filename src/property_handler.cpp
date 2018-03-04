@@ -179,8 +179,6 @@ void PropHandler::apply(Prop* const prop,
 
         incr_prop_count(prop->id_);
 
-        prop->on_applied();
-
         if (verbosity == Verbosity::verbose &&
             owner_->is_alive())
         {
@@ -191,6 +189,8 @@ void PropHandler::apply(Prop* const prop,
 
                 print_start_msg(*prop);
         }
+
+        prop->on_applied();
 
         return;
 }

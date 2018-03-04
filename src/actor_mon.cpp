@@ -766,27 +766,6 @@ void Mon::move(Dir dir)
 
         properties().affect_move_dir(pos, dir);
 
-        // Trap affects leaving?
-        if (dir != Dir::center)
-        {
-                auto* f = map::cells[pos.x][pos.y].rigid;
-
-                if (f->id() == FeatureId::trap)
-                {
-                        dir = static_cast<Trap*>(f)
-                                ->actor_try_leave(*this, dir);
-                }
-
-                if (dir == Dir::center)
-                {
-                        TRACE_VERBOSE << "Monster move prevented by trap"
-                                      << std::endl;
-
-                        game_time::tick();
-                        return;
-                }
-        }
-
         // Movement direction is stored for AI purposes
         last_dir_moved_ = dir;
 
@@ -1075,10 +1054,9 @@ DidAction Mon::try_attack(Actor& defender)
                         return DidAction::yes;
                 }
 
-                const bool is_ignoring_blocking_friend =
-                        rnd::fraction(1, 5);
+                const bool ignore_blocking_friend = rnd::one_in(20);
 
-                if (!is_ignoring_blocking_friend &&
+                if (!ignore_blocking_friend &&
                     is_friend_blocking_ranged_attack(defender.pos))
                 {
                         return DidAction::no;

@@ -1318,19 +1318,13 @@ void init()
     d.melee.dmg_method = DmgMethod::piercing;
     data[(size_t)d.id] = d;
 
-    reset_data(d, ItemType::melee_wpn_intr);
-    d.id = ItemId::intr_javelin_thrust;
-    d.melee.att_msgs = {"", "strikes me with a javelin"};
-    d.melee.dmg_method = DmgMethod::piercing;
-    data[(size_t)d.id] = d;
-
     reset_data(d, ItemType::ranged_wpn_intr);
-    d.id = ItemId::intr_javelin_throw;
-    d.ranged.att_msgs = {"", "throws a javelin at me"};
-    d.ranged.snd_msg = "";
+    d.id = ItemId::intr_net_throw;
+    d.ranged.att_msgs = {"", "throws a net at me"};
+    d.ranged.snd_msg = "I hear a whooshing sound.";
     d.ranged.projectile_color = colors::brown();
-    d.ranged.projectile_character = '/';
-    d.ranged.snd_vol = SndVol::low;
+    d.ranged.projectile_character = '*';
+    d.ranged.projectile_tile = TileId::web;
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);

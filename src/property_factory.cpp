@@ -95,6 +95,9 @@ Prop* make(const PropId id)
     case PropId::cursed:
         return new PropCursed();
 
+    case PropId::entangled:
+        return new PropEntangled();
+
     case PropId::r_acid:
         return new PropRAcid();
 

@@ -89,10 +89,10 @@ static void init_data_list()
         d.name = "Sleep resistance";
         d.name_short = "rSleep";
         d.descr = "Cannot faint or become hypnotized";
-        d.msg_start_player = "I feel resistant to sleep.";
-        d.msg_start_mon = "is resistant to sleep.";
-        d.msg_end_player = "I feel vulnerable to sleep.";
-        d.msg_end_mon = "is vulnerable to sleep.";
+        d.msg_start_player = "I feel wide awake.";
+        d.msg_start_mon = "is wide awake.";
+        d.msg_end_player = "I feel less awake.";
+        d.msg_end_mon = "is less awake.";
         d.allow_display_turns = true;
         d.allow_test_on_bot = true;
         d.alignment = PropAlignment::good;
@@ -586,6 +586,19 @@ static void init_data_list()
         d.msg_res_player = "I resist misfortune.";
         d.allow_display_turns = true;
         d.allow_test_on_bot = true;
+        d.alignment = PropAlignment::bad;
+        add(d);
+
+        d.id = PropId::entangled;
+        d.name = "Entangled";
+        d.name_short = "Entgld";
+        d.descr = "Entangled in something";
+        d.msg_start_player = "I am entangled!";
+        d.msg_start_mon = "is entangled.";
+        d.msg_end_player = "I tear free!";
+        d.msg_end_mon = "tears free!";
+        d.is_making_mon_aware = true;
+        d.allow_display_turns = false;
         d.alignment = PropAlignment::bad;
         add(d);
 

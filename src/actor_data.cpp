@@ -384,6 +384,22 @@ static void dump_intr_attack_property(xml::Element* property_e,
         {
                 attack_prop.prop->set_duration(duration);
         }
+        else // Duration not specified as integer
+        {
+                // Check if duration is specified as string ("indefinite")
+
+                std::string duration_str;
+
+                if (xml::try_get_attribute_str(property_e,
+                                               "duration",
+                                               duration_str))
+                {
+                        if (duration_str == "indefinite")
+                        {
+                                attack_prop.prop->set_indefinite();
+                        }
+                }
+        }
 }
 
 static void dump_items(xml::Element* items_e, ActorData& data)
