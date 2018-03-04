@@ -1154,7 +1154,7 @@
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
         <attributes>
-            <hit_points>32</hit_points>
+            <hit_points>40</hit_points>
             <spirit>0</spirit>
             <speed_percent>150</speed_percent>
             <shock_level>frightening</shock_level>
@@ -1172,9 +1172,9 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-                <attacks>
+        <attacks>
             <attack id="bite">
-                <damage>8</damage>
+                <damage>10</damage>
             </attack>
             <attack id="web_bola">
                 <damage>6</damage>
@@ -1197,11 +1197,12 @@
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
         <spawning>
-            <min_dungeon_level>10</min_dungeon_level>
+            <min_dungeon_level>16</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
             <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
+            <group_size weight="4">alone</group_size>
             <group_size weight="4">few</group_size>
             <group_size weight="1">pack</group_size>
             <native_room>plain</native_room>
