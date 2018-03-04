@@ -124,10 +124,6 @@ public:
     bool is_leader_of(const Actor* const actor) const override;
     bool is_actor_my_leader(const Actor* const actor) const override;
 
-    bool is_standing_in_open_place() const;
-
-    bool is_standing_in_cramped_place() const;
-
     void on_new_dlvl_reached();
 
     // Randomly prints a message such as "I sense an object of great power here"

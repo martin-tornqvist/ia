@@ -10,6 +10,7 @@ Gameplay
 * Deep Ones can throw a net which entangles the victim (instead of throwing a spear), and they usually spawn in much smaller numbers than before
 * Spiders become aware of the player when the player gets stuck in a spider web
 * Spiders can use pathfinding to move to their target
+* Improved check for if Phobia of open places should trigger (for example it no longer triggers while standing in smoke)
 
 Interface
 * Many monster descriptions have been completely rewritten (thanks Renan Nunes)
