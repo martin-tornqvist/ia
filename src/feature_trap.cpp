@@ -1376,6 +1376,22 @@ void TrapWeb::trigger()
                 false,
                 Verbosity::silent);
 
+        // Players getting stuck in spider webs alerts all spiders
+        if (actor_here->is_player())
+        {
+                for (Actor* const actor : game_time::actors)
+                {
+                        if (actor->is_player() || !actor->data().is_spider)
+                        {
+                                continue;
+                        }
+
+                        auto* const mon = static_cast<Mon*>(actor);
+
+                        mon->become_aware_player(false);
+                }
+        }
+
         base_trap_->destroy();
 
         TRACE_FUNC_END_VERBOSE;

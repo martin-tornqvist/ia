@@ -1190,7 +1190,7 @@
             <looks>true</looks>
             <avoids_blocking_friend>true</avoids_blocking_friend>
             <attacks>true</attacks>
-            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <paths_to_target_when_aware>true</paths_to_target_when_aware>
             <moves_to_target_when_los>true</moves_to_target_when_los>
             <moves_to_lair>true</moves_to_lair>
             <moves_to_leader>true</moves_to_leader>
@@ -1527,7 +1527,7 @@
             <looks>true</looks>
             <avoids_blocking_friend>true</avoids_blocking_friend>
             <attacks>true</attacks>
-            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <paths_to_target_when_aware>true</paths_to_target_when_aware>
             <moves_to_target_when_los>true</moves_to_target_when_los>
             <moves_to_lair>true</moves_to_lair>
             <moves_to_leader>true</moves_to_leader>
@@ -1607,7 +1607,7 @@
             <looks>true</looks>
             <avoids_blocking_friend>true</avoids_blocking_friend>
             <attacks>true</attacks>
-            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <paths_to_target_when_aware>true</paths_to_target_when_aware>
             <moves_to_target_when_los>true</moves_to_target_when_los>
             <moves_to_lair>true</moves_to_lair>
             <moves_to_leader>true</moves_to_leader>
@@ -1687,7 +1687,7 @@
             <looks>true</looks>
             <avoids_blocking_friend>true</avoids_blocking_friend>
             <attacks>true</attacks>
-            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <paths_to_target_when_aware>true</paths_to_target_when_aware>
             <moves_to_target_when_los>true</moves_to_target_when_los>
             <moves_to_lair>true</moves_to_lair>
             <moves_to_leader>true</moves_to_leader>
