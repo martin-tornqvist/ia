@@ -53,9 +53,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::ghost:
         return new Ghost();
 
-    case ActorId::keziah_mason:
-        return new KeziahMason();
-
     case ActorId::shadow:
         return new Shadow();
 
@@ -77,6 +74,7 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
+    case ActorId::keziah_mason:
     case ActorId::cultist:
     case ActorId::bog_tcher:
     case ActorId::cultist_priest:
@@ -167,8 +165,7 @@ std::vector<P> free_spawn_positions(const R& area)
     return free_positions;
 }
 
-Mon* spawn_at(const P& pos,
-              const ActorId id)
+Mon* spawn_at(const P& pos, const ActorId id)
 {
     ASSERT(map::is_pos_inside_map(pos, false));
 

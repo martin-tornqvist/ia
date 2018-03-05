@@ -292,6 +292,7 @@ struct ActorData
         bool can_leave_corpse;
         bool prio_corpse_bash;
         std::vector<RoomType> native_rooms;
+        std::vector<ActorId> starting_allies;
 };
 
 namespace actor_data

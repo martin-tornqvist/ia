@@ -7,25 +7,23 @@
 
 enum class AllowSpawnUniqueMon
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 namespace populate_mon
 {
 
 void make_group_at(const ActorId id,
-                 const std::vector<P>& sorted_free_cells,
-                 bool blocked_out[map_w][map_h],
-                 const MonRoamingAllowed roaming_allowed);
+                   const std::vector<P>& sorted_free_cells,
+                   bool blocked_out[map_w][map_h],
+                   const MonRoamingAllowed roaming_allowed);
 
-//
 // TODO: This is a very general function, it should not be here
-//
 std::vector<P> make_sorted_free_cells(const P& origin,
-                                    const bool blocked[map_w][map_h]);
+                                      const bool blocked[map_w][map_h]);
 
-void try_spawn_due_to_time_passed();
+void make_random_group();
 
 void populate_std_lvl();
 

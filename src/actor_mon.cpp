@@ -1394,29 +1394,6 @@ DidAction Ape::on_act()
         return DidAction::no;
 }
 
-// TODO: Specify "buddy" monsters to spawn as allies in monsters.xml
-DidAction KeziahMason::on_act()
-{
-        // Summon Brown Jenkin ASAP
-        if (!is_alive() ||
-            has_summoned_jenkin)
-        {
-                return DidAction::no;
-        }
-
-        auto summoned =
-                actor_factory::spawn(pos, {ActorId::brown_jenkin})
-                .set_leader(this)
-                .for_each([](Mon* mon)
-                {
-                        mon->is_player_feeling_msg_allowed_ = false;
-                });
-
-        has_summoned_jenkin = true;
-
-        return DidAction::no;
-}
-
 // TODO: This should be a property (should probably be merged with
 // 'corrupts_env_color')
 Color StrangeColor::color() const

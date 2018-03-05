@@ -579,6 +579,20 @@ static void dump_spawning(xml::Element* spawn_e, ActorData& data)
         }
 }
 
+static void dump_starting_allies(xml::Element* allies_e, ActorData& data)
+{
+        for (auto e = xml::first_child(allies_e);
+             e;
+             e = xml::next_sibling(e))
+        {
+                const std::string id_str = xml::get_attribute_str(e, "id");
+
+                const auto id = str_to_actor_id_map.at(id_str);
+
+                data.starting_allies.push_back(id);
+        }
+}
+
 static void read_actor_definitions_xml()
 {
         xml::Doc doc;
@@ -643,6 +657,13 @@ static void read_actor_definitions_xml()
                 }
 
                 dump_spawning(xml::first_child(mon_e, "spawning"), data);
+
+                auto allies_e = xml::first_child(mon_e, "starting_allies");
+
+                if (allies_e)
+                {
+                        dump_starting_allies(allies_e, data);
+                }
         }
 } // read_actor_definitions_xml
 
@@ -725,6 +746,7 @@ void ActorData::reset()
         can_leave_corpse = true;
         prio_corpse_bash = false;
         native_rooms.clear();
+        starting_allies.clear();
         descr = "";
 }
 

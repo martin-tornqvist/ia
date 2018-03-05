@@ -1047,6 +1047,9 @@
             <native_room>forest</native_room>
             <native_room>cave</native_room>
         </spawning>
+        <starting_allies>
+            <monster id="brown_jenkin"/>
+        </starting_allies>
     </monster>
 
     <!--************************************************************-->

@@ -145,7 +145,7 @@ static void run_std_turn_events()
 
                 if (turn_nr_ % spawn_n_turns == 0)
                 {
-                        populate_mon::try_spawn_due_to_time_passed();
+                        populate_mon::make_random_group();
                 }
         }
 

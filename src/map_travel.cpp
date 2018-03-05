@@ -16,7 +16,9 @@
 #include "msg_log.hpp"
 #include "feature_rigid.hpp"
 #include "saving.hpp"
+#include "actor_factory.hpp"
 #include "actor_player.hpp"
+#include "actor_mon.hpp"
 #include "property.hpp"
 #include "property_handler.hpp"
 #include "gods.hpp"
@@ -94,6 +96,26 @@ void make_lvl(const MapType& map_type)
         }
 
         gods::set_random_god();
+
+        // Spawn starting allies
+        for (size_t i = 0; i < game_time::actors.size(); ++i)
+        {
+                Actor* const actor = game_time::actors[i];
+
+                const auto& allies = actor->data().starting_allies;
+
+                if (allies.empty())
+                {
+                        continue;
+                }
+
+                actor_factory::spawn(actor->pos, allies)
+                        .set_leader(actor)
+                        .for_each([](Mon* mon)
+                        {
+                                mon->is_player_feeling_msg_allowed_ = false;
+                        });
+        }
 
 #ifndef NDEBUG
         auto diff_time = std::chrono::steady_clock::now() - start_time;

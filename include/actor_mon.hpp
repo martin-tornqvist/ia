@@ -155,18 +155,6 @@ protected:
         int nr_mon_in_group();
 };
 
-class KeziahMason: public Mon
-{
-public:
-        KeziahMason() : Mon(), has_summoned_jenkin(false) {}
-        ~KeziahMason() {}
-
-private:
-        DidAction on_act() override;
-
-        bool has_summoned_jenkin;
-};
-
 class Zuul: public Mon
 {
 public:
