@@ -632,7 +632,7 @@ void Wall::on_hit(const int dmg,
     }
 }
 
-bool Wall::is_tile_any_wall_front(const TileId tile)
+bool Wall::is_wall_front_tile(const TileId tile)
 {
     return
         tile == TileId::wall_front ||
@@ -642,7 +642,7 @@ bool Wall::is_tile_any_wall_front(const TileId tile)
         tile == TileId::egypt_wall_front;
 }
 
-bool Wall::is_tile_any_wall_top(const TileId tile)
+bool Wall::is_wall_top_tile(const TileId tile)
 {
     return
         tile == TileId::wall_top ||
@@ -1196,9 +1196,8 @@ void Stairs::bump(Actor& actor_bumping)
 
         const std::string title = "A staircase leading downwards";
 
-        const int choice = popup::show_menu_msg("",
-                                                choices,
-                                                title);
+        const int choice =
+            popup::show_menu_msg("", choices, title);
 
         switch (choice)
         {

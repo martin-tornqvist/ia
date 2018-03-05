@@ -50,7 +50,9 @@ static SDL_Color title_;
 static SDL_Color msg_good_;
 static SDL_Color msg_bad_;
 static SDL_Color msg_note_;
-static SDL_Color allied_mon_;
+static SDL_Color mon_unaware_bg_;
+static SDL_Color mon_allied_bg_;
+static SDL_Color mon_temp_property_bg_;
 
 static std::vector< std::pair<std::string, Color> > str_color_pairs_;
 
@@ -210,6 +212,9 @@ static void load_gui_colors()
         load_gui_color(gui_e, "message_good", msg_good_);
         load_gui_color(gui_e, "message_bad", msg_bad_);
         load_gui_color(gui_e, "message_note", msg_note_);
+        load_gui_color(gui_e, "monster_unaware", mon_unaware_bg_);
+        load_gui_color(gui_e, "monster_allied", mon_allied_bg_);
+        load_gui_color(gui_e, "monster_temp_property", mon_temp_property_bg_);
 }
 
 //-----------------------------------------------------------------------------
@@ -596,9 +601,19 @@ Color msg_note()
         return Color(msg_note_);
 }
 
-Color allied_mon()
+Color mon_unaware_bg()
 {
-        return Color(allied_mon_);
+        return Color(mon_unaware_bg_);
+}
+
+Color mon_allied_bg()
+{
+        return Color(mon_allied_bg_);
+}
+
+Color mon_temp_property_bg()
+{
+        return Color(mon_temp_property_bg_);
 }
 
 } // colors

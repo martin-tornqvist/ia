@@ -6,7 +6,6 @@
 
 #include "global.hpp"
 #include "state.hpp"
-#include "colors.hpp"
 #include "time.hpp"
 
 struct InputData;
@@ -22,39 +21,8 @@ struct HistoryEvent
     const int turn;
 };
 
-struct CellRenderData
-{
-    CellRenderData() :
-        color(colors::black()),
-        color_bg(colors::black()),
-        tile(TileId::empty),
-        character(0),
-        is_light_fade_allowed(true),
-        mark_lit(false),
-        is_living_actor_seen_here(false),
-        is_aware_of_hostile_mon_here(false),
-        is_aware_of_allied_mon_here(false),
-        lifebar_length(-1) {}
-
-    CellRenderData& operator=(const CellRenderData&) = default;
-
-    Color color;
-    Color color_bg;
-    TileId tile;
-    char character;
-    bool is_light_fade_allowed;
-    bool mark_lit;
-    bool is_living_actor_seen_here;
-    bool is_aware_of_hostile_mon_here;
-    bool is_aware_of_allied_mon_here;
-    int lifebar_length;
-};
-
 namespace game
 {
-
-extern CellRenderData render_array[map_w][map_h];
-extern CellRenderData render_array_no_actors[map_w][map_h];
 
 void init();
 
@@ -94,8 +62,8 @@ class GameState: public State
 {
 public:
     GameState(GameEntryMode entry_mode) :
-        State       (),
-        entry_mode_ (entry_mode) {}
+        State(),
+        entry_mode_(entry_mode) {}
 
     void on_start() override;
 
@@ -107,8 +75,6 @@ public:
 
 private:
     void query_quit();
-
-    void draw_map();
 
     const GameEntryMode entry_mode_;
 };

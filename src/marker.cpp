@@ -18,6 +18,7 @@
 #include "feature_rigid.hpp"
 #include "explosion.hpp"
 #include "map_parsing.hpp"
+#include "draw_map.hpp"
 
 // -----------------------------------------------------------------------------
 // Marker state
@@ -658,7 +659,7 @@ void ThrowingExplosive::on_draw()
         {
             for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
             {
-                const auto& render_d = game::render_array[x][y];
+                const auto& render_d = draw_map::get_drawn_cell(x, y);
 
                 const auto& marker_render_d = marker_render_data_[x][y];
 
@@ -678,20 +679,22 @@ void ThrowingExplosive::on_draw()
 
                     if (config::is_tiles_mode())
                     {
-                        io::draw_tile(d.tile,
-                                      Panel::map,
-                                      p,
-                                      d.color,
-                                      color_bg);
+                        io::draw_tile(
+                                d.tile,
+                                Panel::map,
+                                p,
+                                d.color,
+                                color_bg);
                     }
                     else // Text mode
                     {
-                        io::draw_character(d.character,
-                                           Panel::map,
-                                           p,
-                                           d.color,
-                                           true,
-                                           color_bg);
+                        io::draw_character(
+                            d.character,
+                            Panel::map,
+                            p,
+                            d.color,
+                            true,
+                            color_bg);
                     }
                 }
             }

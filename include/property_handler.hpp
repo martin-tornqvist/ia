@@ -91,7 +91,7 @@ public:
         // Used for monster description property list
         std::vector<PropTextListEntry> text_list_temporary_negative_props();
 
-        bool has_temporary_negative_prop_mon();
+        bool has_temporary_negative_prop_mon() const;
 
         //----------------------------------------------------------------------
         // Hooks called from various places
@@ -156,7 +156,7 @@ private:
 
         bool try_apply_more_on_existing_intr_prop(const Prop& new_prop);
 
-        bool is_temporary_negative_prop(const Prop& prop);
+        bool is_temporary_negative_prop(const Prop& prop) const;
 
         bool is_resisting_prop(const PropId id) const;
 

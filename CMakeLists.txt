@@ -29,6 +29,7 @@ set(SRC
   include/config.hpp
   include/create_character.hpp
   include/disarm.hpp
+  include/draw_map.hpp
   include/drop.hpp
   include/explosion.hpp
   include/feature_data.hpp
@@ -119,6 +120,7 @@ set(SRC
   src/config.cpp
   src/create_character.cpp
   src/disarm.cpp
+  src/draw_map.cpp
   src/drop.cpp
   src/explosion.cpp
   src/feature.cpp

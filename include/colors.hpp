@@ -102,7 +102,9 @@ Color title();
 Color msg_good();
 Color msg_bad();
 Color msg_note();
-Color allied_mon();
+Color mon_unaware_bg();
+Color mon_allied_bg();
+Color mon_temp_property_bg();
 
 } // colors
 

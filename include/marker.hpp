@@ -7,6 +7,7 @@
 #include "global.hpp"
 #include "state.hpp"
 #include "game.hpp"
+#include "io.hpp"
 
 struct InputData;
 class Wpn;

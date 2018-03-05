@@ -26,7 +26,6 @@ struct Cell
     LosResult player_los; // Updated when player updates FOV
     Item* item;
     Rigid* rigid;
-    CellRenderData player_visual_memory;
     P pos;
 };
 

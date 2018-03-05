@@ -426,8 +426,8 @@ public:
     WallType type_;
     bool is_mossy_;
 
-    static bool is_tile_any_wall_front(const TileId tile);
-    static bool is_tile_any_wall_top(const TileId tile);
+    static bool is_wall_front_tile(const TileId tile);
+    static bool is_wall_top_tile(const TileId tile);
 
 private:
     Color color_default() const override;

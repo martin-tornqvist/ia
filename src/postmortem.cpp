@@ -20,6 +20,7 @@
 #include "saving.hpp"
 #include "query.hpp"
 #include "create_character.hpp"
+#include "draw_map.hpp"
 
 namespace
 {
@@ -437,7 +438,7 @@ void PostmortemMenu::make_memorial_file(const std::string path) const
 
         for (int x = 0; x < map_w; ++x)
         {
-            char c = game::render_array[x][y].character;
+            char c = draw_map::get_drawn_cell(x, y).character;
 
             // Printable ASCII character?
             if (c < 32 || c > 126)
@@ -589,25 +590,20 @@ void PostmortemInfo::draw()
             ASSERT(map_y >= 0);
             ASSERT(map_y < map_h);
 
-            if (is_tiles_mode)
+            for (int x = 0; x < map_w; ++x)
             {
-                for (int x = 0; x < map_w; ++x)
-                {
-                    const CellRenderData& d = game::render_array[x][map_y];
+                const CellRenderData& d = draw_map::get_drawn_cell(x, map_y);
 
+                if (is_tiles_mode)
+                {
                     io::draw_tile(d.tile,
                                   Panel::screen,
                                   P(x, screen_y),
                                   d.color,
                                   d.color_bg);
                 }
-            }
-            else // Text mode
-            {
-                for (int x = 0; x < map_w; ++x)
+                else // Text mode
                 {
-                    const CellRenderData& d = game::render_array[x][map_y];
-
                     io::draw_character(d.character,
                                        Panel::screen,
                                        P(x, screen_y),
@@ -615,7 +611,7 @@ void PostmortemInfo::draw()
                                        true,
                                        d.color_bg);
                 }
-            }
+            } // map x loop
         }
 
         ++screen_y;

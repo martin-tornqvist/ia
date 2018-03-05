@@ -14,6 +14,7 @@
 #include "map.hpp"
 #include "msg_log.hpp"
 #include "game.hpp"
+#include "draw_map.hpp"
 #include "bot.hpp"
 #include "manual.hpp"
 #include "player_spells.hpp"
@@ -94,6 +95,7 @@ void init_session()
     player_bon::init();
     insanity::init();
     msg_log::init();
+    draw_map::clear();
     game::init();
     bot::init();
     player_spells::init();

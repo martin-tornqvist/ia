@@ -577,7 +577,7 @@ DidAction PropHandler::on_act()
         return DidAction::no;
 }
 
-bool PropHandler::is_temporary_negative_prop(const Prop& prop)
+bool PropHandler::is_temporary_negative_prop(const Prop& prop) const
 {
         const auto id = prop.id_;
 
@@ -615,7 +615,7 @@ std::vector<PropTextListEntry> PropHandler::text_list_temporary_negative_props()
         return prop_list;
 }
 
-bool PropHandler::has_temporary_negative_prop_mon()
+bool PropHandler::has_temporary_negative_prop_mon() const
 {
         ASSERT(owner_ != map::player);
 

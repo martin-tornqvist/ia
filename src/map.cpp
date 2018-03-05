@@ -26,7 +26,6 @@ Cell::Cell() :
     player_los(),
     item(nullptr),
     rigid(nullptr),
-    player_visual_memory(CellRenderData()),
     pos(P(-1, -1)) {}
 
 Cell::~Cell()
@@ -45,8 +44,6 @@ void Cell::reset()
     player_los.is_blocked_hard = true;
 
     player_los.is_blocked_by_drk = false;
-
-    player_visual_memory = CellRenderData();
 
     pos.set(-1, -1);
 

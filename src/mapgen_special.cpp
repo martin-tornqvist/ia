@@ -31,8 +31,6 @@ namespace mapgen
 // -----------------------------------------------------------------------------
 bool make_intro_lvl()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::intro_forest);
@@ -296,8 +294,6 @@ bool make_intro_lvl()
 // -----------------------------------------------------------------------------
 bool make_egypt_lvl()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::egypt);
@@ -425,8 +421,6 @@ bool make_egypt_lvl()
 // -----------------------------------------------------------------------------
 bool make_leng_lvl()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::leng);
@@ -532,8 +526,6 @@ bool make_leng_lvl()
 // -----------------------------------------------------------------------------
 bool make_rat_cave_level()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::rat_cave);
@@ -674,8 +666,6 @@ bool make_rat_cave_level()
 // -----------------------------------------------------------------------------
 bool make_boss_lvl()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::boss_level);
@@ -772,8 +762,6 @@ bool make_boss_lvl()
 // -----------------------------------------------------------------------------
 bool make_trapez_lvl()
 {
-    map::reset_map();
-
     const auto& templ =
         map_templates::level_templ(
             LevelTemplId::trapez_level);

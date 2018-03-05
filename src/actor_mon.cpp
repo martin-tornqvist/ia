@@ -1671,7 +1671,7 @@ std::string get_cultist_phrase()
                 "Apigami!"
         };
 
-        if (rnd::coin_toss())
+        if (rnd::one_in(4))
         {
                 const God& god = gods::current_god();
 

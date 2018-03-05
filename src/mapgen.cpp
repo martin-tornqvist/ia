@@ -409,18 +409,11 @@ bool make_std_lvl()
 
     is_map_valid = true;
 
-    io::clear_screen();
-    io::update_screen();
-
-    map::reset_map();
-
     TRACE << "Resetting helper arrays" << std:: endl;
 
     std::fill_n(*door_proposals, nr_map_cells, false);
 
-    //
     // NOTE: This must be called before any rooms are created
-    //
     room_factory::init_room_bucket();
 
     TRACE << "Init regions" << std:: endl;

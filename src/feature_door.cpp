@@ -15,7 +15,7 @@
 #include "property_handler.hpp"
 
 Door::Door(const P& feature_pos,
-           const Rigid* const mimic_feature,
+           const Wall* const mimic_feature,
            DoorType type,
            DoorSpawnState spawn_state) :
     Rigid(feature_pos),

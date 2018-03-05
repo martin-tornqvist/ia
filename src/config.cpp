@@ -39,7 +39,6 @@ const int opt_y0_ = 1;
 const int opt_values_x_pos_ = 40;
 
 std::string font_name_ = "";
-bool use_light_fade_effect_ = false;
 bool is_fullscr_ = false;
 bool is_tiles_wall_full_square_ = false;
 bool is_text_mode_wall_full_square_ = false;
@@ -150,7 +149,6 @@ void set_default_variables()
 
     update_render_dims();
 
-    use_light_fade_effect_ = false;
     is_fullscr_ = false;
     is_tiles_wall_full_square_ = false;
     is_text_mode_wall_full_square_ = true;
@@ -264,67 +262,61 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 4: // Light fade effect
-    {
-        use_light_fade_effect_ = !use_light_fade_effect_;
-    }
-    break;
-
-    case 5: // Fullscreen
+    case 4: // Fullscreen
     {
         toggle_fullscreen();
     }
     break;
 
-    case 6: // Tiles mode wall symbol
+    case 5: // Tiles mode wall symbol
     {
         is_tiles_wall_full_square_ = !is_tiles_wall_full_square_;
     }
     break;
 
-    case 7: // Text mode wall symbol
+    case 6: // Text mode wall symbol
     {
         is_text_mode_wall_full_square_ = !is_text_mode_wall_full_square_;
     }
     break;
 
-    case 8: // Skip intro level
+    case 7: // Skip intro level
     {
         is_intro_lvl_skipped_ = !is_intro_lvl_skipped_;
     }
     break;
 
-    case 9: // Confirm "more" with any key
+    case 8: // Confirm "more" with any key
     {
         is_any_key_confirm_more_ = !is_any_key_confirm_more_;
     }
     break;
 
-    case 10: // Print warning when lighting explovies
+    case 9: // Print warning when lighting explovies
     {
         is_light_explosive_prompt_ = !is_light_explosive_prompt_;
     }
     break;
 
-    case 11: // Print warning when drinking known malign potions
+    case 10: // Print warning when drinking known malign potions
     {
         is_drink_malign_pot_prompt_ = !is_drink_malign_pot_prompt_;
     }
     break;
 
-    case 12: // Print warning when melee attacking with ranged weapons
+    case 11: // Print warning when melee attacking with ranged weapons
     {
         is_ranged_wpn_meleee_prompt_ = !is_ranged_wpn_meleee_prompt_;
     }
     break;
 
-    case 13: // Ranged weapon auto reload
+    case 12: // Ranged weapon auto reload
     {
         is_ranged_wpn_auto_reload_ = !is_ranged_wpn_auto_reload_;
     }
     break;
 
-    case 14: // Projectile delay
+    case 13: // Projectile delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -343,7 +335,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 15: // Shotgun delay
+    case 14: // Shotgun delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -362,7 +354,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 16: // Explosion delay
+    case 15: // Explosion delay
     {
         const P p(opt_values_x_pos_, opt_y0_ + browser.y());
 
@@ -381,7 +373,7 @@ void player_sets_option(const MenuBrowser& browser)
     }
     break;
 
-    case 17: // Reset to defaults
+    case 16: // Reset to defaults
     {
         set_default_variables();
 
@@ -436,9 +428,6 @@ void set_variables_from_lines(std::vector<std::string>& lines)
     lines.erase(begin(lines));
 
     update_render_dims();
-
-    use_light_fade_effect_ = lines.front() == "1";
-    lines.erase(begin(lines));
 
     is_fullscr_ = lines.front() == "1";
     lines.erase(begin(lines));
@@ -521,7 +510,6 @@ std::vector<std::string> lines_from_variables()
     lines.push_back(is_amb_audio_enabled_ ? "1" : "0");
     lines.push_back(is_tiles_mode_ ? "1" : "0");
     lines.push_back(font_name_);
-    lines.push_back(use_light_fade_effect_ ? "1" : "0");
     lines.push_back(is_fullscr_ ? "1" : "0");
     lines.push_back(is_tiles_wall_full_square_ ? "1" : "0");
     lines.push_back(is_text_mode_wall_full_square_ ? "1" : "0");
@@ -582,11 +570,6 @@ bool is_tiles_mode()
 std::string font_name()
 {
     return font_name_;
-}
-
-bool use_light_fade_effect()
-{
-    return use_light_fade_effect_;
 }
 
 bool is_fullscreen()
@@ -837,11 +820,6 @@ void ConfigState::draw()
 
         {
             "Font", font_disp_name
-        },
-
-        {
-            "Use light fade effect",
-            config::use_light_fade_effect_ ? "Yes" : "No"
         },
 
         {

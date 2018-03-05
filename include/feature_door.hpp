@@ -26,7 +26,7 @@ public:
     Door(const P& feature_pos,
 
          // NOTE: This should always be nullptr if type is "gate"
-         const Rigid* const mimic_feature,
+         const Wall* const mimic_feature,
 
          DoorType type = DoorType::wood,
 
@@ -130,7 +130,7 @@ public:
             tile == TileId::door_open;
     }
 
-    const Rigid* mimic() const
+    const Wall* mimic() const
     {
         return mimic_feature_;
     }
@@ -148,7 +148,7 @@ private:
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
-    const Rigid* const mimic_feature_;
+    const Wall* const mimic_feature_;
 
     int nr_spikes_;
 
