@@ -414,7 +414,7 @@
             <name_the>Dean Halsey</name_the>
             <corpse_name_a>the corpse of Dean Halsey</corpse_name_a>
             <corpse_name_the>the corpse of Dean Halsey</corpse_name_the>
-            <description>Alan Halsey was the dean of the Miskatonic University in New England. He must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior.</description>
+            <description>Once an influential figure at the forefront of a prestigious institution, this fetid carcass now prowls along an army of the dead.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>Dean Halsey looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
