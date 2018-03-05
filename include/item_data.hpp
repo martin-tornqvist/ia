@@ -337,10 +337,9 @@ public:
                 bool is_shotgun;
                 // NOTE: This should be set on ranged weapons AND magazines
                 int max_ammo;
-                Dice dmg;
                 // NOTE: "Pure" melee weapons should not set this value - they
                 // do throw damage based on their melee damage instead
-                Dice throw_dmg;
+                Dice dmg;
                 int hit_chance_mod;
                 int throw_hit_chance_mod;
                 bool always_break_on_throw;

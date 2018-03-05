@@ -174,7 +174,7 @@ static void reset_data(ItemData& d, ItemType const item_type)
         d.character = '!';
         d.tile = TileId::potion;
         d.ranged.throw_hit_chance_mod = 15;
-        d.ranged.throw_dmg = Dice(1, 3, 0);
+        d.ranged.dmg = Dice(1, 3, 0);
         d.ranged.always_break_on_throw = true;
         d.max_stack_at_spawn = 1;
         d.land_on_hard_snd_msg = "";
@@ -346,7 +346,6 @@ ItemData::RangedData::RangedData() :
     is_shotgun(false),
     max_ammo(0),
     dmg(),
-    throw_dmg(),
     hit_chance_mod(0),
     throw_hit_chance_mod(0),
     always_break_on_throw(false),
@@ -836,7 +835,7 @@ void init()
     d.tile = TileId::dagger;
     d.character = '/';
     d.color = colors::white();
-    d.ranged.throw_dmg = Dice(2, 3);
+    d.ranged.dmg = Dice(2, 3);
     d.ranged.throw_hit_chance_mod = 10;
     d.ranged.effective_range = 5;
     d.ranged.max_range = d.ranged.effective_range + 3;
@@ -861,7 +860,7 @@ void init()
     d.tile = TileId::rock;
     d.character = '*';
     d.color = colors::gray();
-    d.ranged.throw_dmg = Dice(1, 3);
+    d.ranged.dmg = Dice(1, 3);
     d.ranged.effective_range = 4;
     d.ranged.max_range = d.ranged.effective_range + 3;
     d.max_stack_at_spawn = 3;
@@ -1138,7 +1137,7 @@ void init()
     d.color = colors::gray();
     d.character = '/';
     d.ranged.throw_hit_chance_mod = -5;
-    d.ranged.throw_dmg = Dice(1, 4);
+    d.ranged.dmg = Dice(1, 4);
     d.ranged.effective_range = 3;
     d.ranged.max_range = d.ranged.effective_range + 3;
     d.max_stack_at_spawn = 12;
@@ -2046,7 +2045,7 @@ void init()
     d.tile = TileId::zombie_dust;
     d.character = '*';
     d.color = colors::brown();
-    d.ranged.throw_dmg = Dice(0, 0);
+    d.ranged.dmg = Dice(0, 0);
     d.ranged.throw_hit_chance_mod = 15;
     d.ranged.always_break_on_throw = true;
     d.ranged.effective_range = -1;

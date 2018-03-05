@@ -116,6 +116,7 @@ Dice Item::melee_dmg(const Actor* const attacker) const
                         ++dice.plus;
                 }
 
+                // TODO: This should be handled via the 'specific_dmg_mod' hook
                 if (id() == ItemId::player_ghoul_claw)
                 {
                         if (player_bon::has_trait(Trait::foul))
@@ -550,7 +551,7 @@ std::string Item::dmg_str(const ItemRefAttInf att_inf,
                 // Print damage if non-zero throwing damage, or melee weapon
                 // with non zero melee damage (melee weapons use melee damage
                 // when thrown)
-                if ((data_->ranged.throw_dmg.max() > 0) ||
+                if ((data_->ranged.dmg.max() > 0) ||
                     ((data_->main_att_mode == AttMode::melee) &&
                      (melee_base_dmg_.max() > 0)))
                 {
