@@ -3702,7 +3702,7 @@ std::string AlchemistBench::name(const Article article) const
 {
     std::string a =
         (article == Article::a) ?
-        "a " :
+        "an " :
         "the ";
 
     std::string mod = "";
@@ -3711,7 +3711,7 @@ std::string AlchemistBench::name(const Article article) const
     {
         if (article == Article::a)
         {
-            a = "an ";
+            a = "a ";
         }
 
         mod = "burning ";

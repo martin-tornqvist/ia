@@ -1802,7 +1802,7 @@
             <name_the>the Rat</name_the>
             <corpse_name_a>a Rat corpse</corpse_name_a>
             <corpse_name_the>the Rat corpse</corpse_name_the>
-            <description>An large aggressive rodent.</description>
+            <description>A large aggressive rodent.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>the Rat seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
