@@ -28,8 +28,11 @@ void load_file(const std::string& path, Doc& to_doc)
 
         if (load_result != tinyxml2::XML_SUCCESS)
         {
-                TRACE_ERROR_RELEASE << "Failed to load xml file at: "
+                TRACE_ERROR_RELEASE << "Failed to find or read xml file at: "
                                     << path
+                                    << std::endl
+                                    << "tinyxml2 reported error: "
+                                    << to_doc.ErrorName()
                                     << std::endl;
 
                 PANIC;

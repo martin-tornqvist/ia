@@ -274,7 +274,8 @@ struct ActorData
         bool use_cultist_aware_msg_mon_hidden;
         SfxId aware_sfx_mon_seen;
         SfxId aware_sfx_mon_hidden;
-        std::string spell_cast_msg;
+        std::string spell_msg;
+        std::string death_msg_override;
         int erratic_move_pct;
         ShockLvl mon_shock_lvl;
         bool is_humanoid;

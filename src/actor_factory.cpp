@@ -47,15 +47,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::player:
         return new Player();
 
-    case ActorId::zuul:
-        return new Zuul();
-
-    case ActorId::ghost:
-        return new Ghost();
-
-    case ActorId::shadow:
-        return new Shadow();
-
     case ActorId::khephren:
         return new Khephren();
 
@@ -68,80 +59,10 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::animated_wpn:
         return new AnimatedWpn();
 
-    case ActorId::mold:
-        return new Mold();
-
     case ActorId::the_high_priest:
         return new TheHighPriest();
 
-    case ActorId::keziah_mason:
-    case ActorId::cultist:
-    case ActorId::bog_tcher:
-    case ActorId::cultist_priest:
-    case ActorId::cultist_wizard:
-    case ActorId::cultist_arch_wizard:
-    case ActorId::zombie:
-    case ActorId::zombie_axe:
-    case ActorId::bloated_zombie:
-    case ActorId::major_clapham_lee:
-    case ActorId::dean_halsey:
-    case ActorId::crawling_intestines:
-    case ActorId::crawling_hand:
-    case ActorId::thing:
-    case ActorId::floating_skull:
-    case ActorId::rat:
-    case ActorId::rat_thing:
-    case ActorId::brown_jenkin:
-    case ActorId::green_spider:
-    case ActorId::red_spider:
-    case ActorId::white_spider:
-    case ActorId::shadow_spider:
-    case ActorId::leng_spider:
-    case ActorId::pit_viper:
-    case ActorId::spitting_cobra:
-    case ActorId::black_mamba:
-    case ActorId::fire_hound:
-    case ActorId::energy_hound:
-    case ActorId::raven:
-    case ActorId::giant_bat:
-    case ActorId::vampire_bat:
-    case ActorId::abaxu:
-    case ActorId::wolf:
-    case ActorId::flying_polyp:
-    case ActorId::greater_polyp:
-    case ActorId::mind_leech:
-    case ActorId::spirit_leech:
-    case ActorId::life_leech:
-    case ActorId::mi_go:
-    case ActorId::mi_go_commander:
-    case ActorId::ghoul:
-    case ActorId::void_traveler:
-    case ActorId::elder_void_traveler:
-    case ActorId::invis_stalker:
-    case ActorId::byakhee:
-    case ActorId::giant_mantis:
-    case ActorId::locust:
-    case ActorId::mummy:
-    case ActorId::croc_head_mummy:
-    case ActorId::nitokris:
-    case ActorId::deep_one:
-    case ActorId::worm_mass:
-    case ActorId::mind_worms:
-    case ActorId::dust_vortex:
-    case ActorId::fire_vortex:
-    case ActorId::energy_vortex:
-    case ActorId::ooze_black:
-    case ActorId::ooze_clear:
-    case ActorId::ooze_putrid:
-    case ActorId::ooze_poison:
-    case ActorId::chthonian:
-    case ActorId::death_fiend:
-    case ActorId::hunting_horror:
-    case ActorId::sentry_drone:
-    case ActorId::gas_spore:
-    case ActorId::high_priest_guard_war_vet:
-    case ActorId::high_priest_guard_rogue:
-    case ActorId::high_priest_guard_ghoul:
+    default:
         return new Mon();
 
     case ActorId::END:

@@ -1232,7 +1232,18 @@ std::string Actor::death_msg() const
         text_format::first_to_upper(
             name_the());
 
-    return actor_name_the + " dies.";
+    std::string msg_end = "";
+
+    if (data_->death_msg_override.empty())
+    {
+            msg_end = "dies";
+    }
+    else
+    {
+            msg_end = data_->death_msg_override;
+    }
+
+    return actor_name_the + " " + msg_end;
 }
 
 DidAction Actor::try_eat_corpse()

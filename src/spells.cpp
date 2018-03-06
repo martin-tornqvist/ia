@@ -220,9 +220,9 @@ void Spell::cast(Actor* const caster,
 
             const bool is_mon_seen = map::player->can_see_actor(*mon);
 
-            std::string spell_str = mon->data().spell_cast_msg;
+            std::string spell_msg = mon->data().spell_msg;
 
-            if (!spell_str.empty())
+            if (!spell_msg.empty())
             {
                 std::string mon_name = "";
 
@@ -238,10 +238,10 @@ void Spell::cast(Actor* const caster,
                         "Something";
                 }
 
-                spell_str = mon_name + " " + spell_str;
+                spell_msg = mon_name + " " + spell_msg;
             }
 
-            Snd snd(spell_str,
+            Snd snd(spell_msg,
                     SfxId::END,
                     IgnoreMsgIfOriginSeen::no,
                     caster->pos,

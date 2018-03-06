@@ -896,7 +896,16 @@ std::string Mon::aware_msg_mon_seen() const
                 return get_cultist_aware_msg_seen(*this);
         }
 
-        return data_->aware_msg_mon_seen;
+        std::string msg_end = data_->aware_msg_mon_seen;
+
+        if (msg_end.empty())
+        {
+                return "";
+        }
+
+        const std::string name = text_format::first_to_upper(name_the());
+
+        return name + " " + msg_end;
 }
 
 std::string Mon::aware_msg_mon_hidden() const
@@ -985,17 +994,18 @@ void Mon::print_player_see_mon_become_aware_msg() const
 
 void Mon::print_player_see_mon_become_wary_msg() const
 {
-        std::string msg = text_format::first_to_upper(data_->wary_msg);
-
-        if (msg.empty())
+        if (data_->wary_msg.empty())
         {
                 return;
         }
 
-        const std::string dir_str =
-                dir_utils::compass_dir_name(map::player->pos, pos);
+        std::string msg = text_format::first_to_upper(name_the());
 
-        msg += "(" + dir_str + ")";
+        msg += " " + data_->wary_msg;
+
+        msg += "(";
+        msg += dir_utils::compass_dir_name(map::player->pos, pos);
+        msg += ")";
 
         msg_log::add(msg);
 }
@@ -1540,25 +1550,6 @@ std::string AnimatedWpn::descr() const
         str += ", floating through the air as if wielded by an invisible hand.";
 
         return str;
-}
-
-std::string AnimatedWpn::death_msg() const
-{
-        Item* item = inv_->item_in_slot(SlotId::wpn);
-
-        ASSERT(item);
-
-        if (!item)
-        {
-                return "";
-        }
-
-        const std::string name =
-                item->name(ItemRefType::plain,
-                           ItemRefInf::yes,
-                           ItemRefAttInf::none);
-
-        return "The " + name + " is destroyed.";
 }
 
 void AnimatedWpn::on_std_turn_hook()

@@ -65,8 +65,8 @@
             <corpse_name_the>the lifeless gruesome corpse</corpse_name_the>
             <description>This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Reanimated Corpse looks wary.</wary_message>
-            <aware_message_seen>the Reanimated Corpse growls.</aware_message_seen>
+            <wary_message>looks wary.</wary_message>
+            <aware_message_seen>growls.</aware_message_seen>
             <aware_message_hidden>I hear a growling voice.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -156,8 +156,8 @@
             <corpse_name_the>the lifeless gruesome corpse</corpse_name_the>
             <description>This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Reanimated Corpse looks wary.</wary_message>
-            <aware_message_seen>the Reanimated Corpse growls.</aware_message_seen>
+            <wary_message>looks wary.</wary_message>
+            <aware_message_seen>growls.</aware_message_seen>
             <aware_message_hidden>I hear a growling voice.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -242,7 +242,7 @@
             <corpse_name_the>the huge gruesome corpse</corpse_name_the>
             <description>A walking cadaver of towering proportions, it seems to have had the skin of countless other bodies poorly sewn over that of its own. Festering wounds on its hulk continually disgorge an acidic liquid which has bleached it beyond belief.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Bloated Corpse looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -332,7 +332,7 @@
             <corpse_name_the>the corpse of Major Clapham-Lee</corpse_name_the>
             <description>Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Major Clapham-Lee looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -416,7 +416,7 @@
             <corpse_name_the>the corpse of Dean Halsey</corpse_name_the>
             <description>Once an influential figure at the forefront of a prestigious institution, this fetid carcass now prowls along an army of the dead.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Dean Halsey looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -499,7 +499,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A writhing mass of crawling intestines.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>the Crawling Intestines starts groping and feeling around.</wary_message>
+            <wary_message>starts groping and feeling around.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -576,7 +576,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A disembodied hand, crawling around frantically on its fingertips like a spider.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>the Crawling Hand seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -654,7 +654,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A particularly nasty disembodied hand, crawling around frantically on its fingertips like a spider. Beware of the Thing.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>Thing seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -737,7 +737,7 @@
             <corpse_name_the>the Skull</corpse_name_the>
             <description>A severed head floating through the air.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>the Floating Skull looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -819,7 +819,7 @@
             <corpse_name_the>the Cultist corpse</corpse_name_the>
             <description>A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. They may occasionally have learned to cast a spell or two, although never with any great skill. Therefore they tend to rely on mundane firearms to handle threats.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Cultist looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen use_cultist_messages="true"/>
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
@@ -899,7 +899,7 @@
             <corpse_name_the>the Bog Tcher corpse</corpse_name_the>
             <description>A vile dwarfish creature, clad in coarse brown robes. It has a cruel grin on its pale face, and its eyes are gleaming with hatred. The Bog Tcher are mechanically inclined, which they put to use by crafting sadistic weapons and traps. Their favored weapon is their "spike gun", which can pin the target against solid objects for prolonged suffering.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Bog Tcher looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
@@ -975,8 +975,8 @@
             <corpse_name_the>the corpse of Keziah Mason</corpse_name_the>
             <description>During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a "bent back, long nose, and shrivelled chin" and has a "croaking voice". She has an animal familiar; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Keziah Mason looks wary.</wary_message>
-            <aware_message_seen>Keziah Mason chortles in a croaking voice.</aware_message_seen>
+            <wary_message>looks wary.</wary_message>
+            <aware_message_seen>chortles in a croaking voice.</aware_message_seen>
             <aware_message_hidden>I hear a repulsive croaking voice.</aware_message_hidden>
             <spell_message>croaks incantations.</spell_message>
         </text>
@@ -1063,8 +1063,8 @@
             <corpse_name_the>the corpse of Brown Jenkin</corpse_name_the>
             <description>"That object - no larger than a good sized rat and quaintly called by the townspeople, "Brown Jenkin" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages." H.P.Lovecraft -"Dreams in the witch house".</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Brown Jenkin seems aggravated.</wary_message>
-            <aware_message_seen>Brown Jenkin titters in a loathsome voice.</aware_message_seen>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>titters in a loathsome voice.</aware_message_seen>
             <aware_message_hidden>I hear a loathsome titter.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -1142,7 +1142,7 @@
             <corpse_name_the>the Leng Spider corpse</corpse_name_the>
             <description>Marred by a mass of purplish cysts, the hide of this beast has been distended to absurdity, rendering it the size of a cow. It weaves webs as quickly as it strides, and its jaws are thick with rank lather.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Leng Spider seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1226,7 +1226,7 @@
             <corpse_name_the>the Cultist Priest corpse</corpse_name_the>
             <description>A fanatic cultist of the Priest rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Cultist Priest looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen use_cultist_messages="true"/>
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
@@ -1312,7 +1312,7 @@
             <corpse_name_the>the Wizard corpse</corpse_name_the>
             <description>A fanatic cultist of the Wizard rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Wizard looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen use_cultist_messages="true"/>
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
@@ -1397,7 +1397,7 @@
             <corpse_name_the>the Arch Wizard corpse</corpse_name_the>
             <description>A fanatic cultist of the Arch Wizard rank, madly gibbering in some half-lost language.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Arch Wizard looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen use_cultist_messages="true"/>
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
@@ -1482,7 +1482,7 @@
             <corpse_name_the>the Green Spider corpse</corpse_name_the>
             <description>An enormous green spider.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Huge Green Spider seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1562,7 +1562,7 @@
             <corpse_name_the>the White Spider corpse</corpse_name_the>
             <description>An enormous white spider.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Huge White Spider seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1642,7 +1642,7 @@
             <corpse_name_the>the Red Spider corpse</corpse_name_the>
             <description>An enormous red spider.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Huge Red Spider seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1722,7 +1722,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A faint shadow of a huge spider, lurking in the periphery.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Shadow Spider seems aggravated.</wary_message>
+            <wary_message>seems aggravated.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1804,7 +1804,7 @@
             <corpse_name_the>the Rat corpse</corpse_name_the>
             <description>A large aggressive rodent.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Rat seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1882,7 +1882,7 @@
             <corpse_name_the>the Rat-thing corpse</corpse_name_the>
             <description>A malformed cross of rat and man, birthed from witchcraft. It has a warped human face and vestigial hands for forepaws.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Rat-thing seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -1963,9 +1963,9 @@
             <corpse_name_the>the Pit Viper corpse</corpse_name_the>
             <description>A fierce predator. It hisses menacingly, and venom drips from its fangs.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Pit Viper seems aggravated.</wary_message>
-            <aware_message_seen>the Pit Viper hisses.</aware_message_seen>
-            <aware_message_hidden>I hear hissing.</aware_message_hidden>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>hisses.</aware_message_seen>
+            <aware_message_hidden>hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
         <graphics>
@@ -2044,8 +2044,8 @@
             <corpse_name_the>the Spitting Cobra corpse</corpse_name_the>
             <description>A fierce predator. It hisses menacingly, and venom drips from its fangs.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Spitting Cobra seems aggravated.</wary_message>
-            <aware_message_seen>the Spitting Cobra hisses.</aware_message_seen>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>hisses.</aware_message_seen>
             <aware_message_hidden>I hear hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -2128,8 +2128,8 @@
             <corpse_name_the>the Black Mamba corpse</corpse_name_the>
             <description>A fierce predator. It hisses menacingly, and venom drips from its fangs.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Black Mamba seems aggravated.</wary_message>
-            <aware_message_seen>the Black Mamba hisses.</aware_message_seen>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>hisses.</aware_message_seen>
             <aware_message_hidden>I hear hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -2209,8 +2209,8 @@
             <corpse_name_the></corpse_name_the>
             <description>This extremely aggressive canine seems to be part corporeal and part fire. It breathes searing flames.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Fire Hound seems aggravated.</wary_message>
-            <aware_message_seen>the Fire Hound snarls.</aware_message_seen>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>snarls.</aware_message_seen>
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -2294,8 +2294,8 @@
             <corpse_name_the></corpse_name_the>
             <description>This extremely aggressive canine seems to be part corporeal and part energy. It breathes lightning.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Energy Hound seems aggravated.</wary_message>
-            <aware_message_seen>the Energy Hound snarls.</aware_message_seen>
+            <wary_message>seems aggravated.</wary_message>
+            <aware_message_seen>snarls.</aware_message_seen>
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
@@ -2377,9 +2377,10 @@
             <name_the>Zuul the Gatekeeper</name_the>
             <corpse_name_a>the corpse of Zuul the Gatekeeper</corpse_name_a>
             <corpse_name_the>the corpse of Zuul the Gatekeeper</corpse_name_the>
+            <death_message>vanishes...</death_message>
             <description>Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It was worshiped by the Sumerians and Hittites in 6000 BC, along with Gozer.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>Zuul the Gatekeeper looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>Zuul the Gatekeeper snarls.</aware_message_seen>
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
@@ -2462,7 +2463,7 @@
             <corpse_name_the>the Mi-go corpse</corpse_name_the>
             <description>An amalgam of crustacean, insect and fungi whose droning voice resembles a swarm of maddened hornets. It employs an irregular set of appendages as limbs and is capable of making use of advanced technology.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Mi-go looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Mi-go speaks in a droning voice.</aware_message_seen>
             <aware_message_hidden>I hear a droning voice.</aware_message_hidden>
             <spell_message>speaks incantations in a droning voice.</spell_message>
@@ -2549,7 +2550,7 @@
             <corpse_name_the>the Mi-go corpse</corpse_name_the>
             <description>Part of a higher echelon of the Mi-Go, the buzz of this creature's commanding tone dims that of its insectoid wings. A protective bio-mechanical suit is fused to its carapace.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Mi-go Commander looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Mi-go Commander speaks in a droning voice.</aware_message_seen>
             <aware_message_hidden>I hear a droning voice.</aware_message_hidden>
             <spell_message>speaks incantations in a droning voice.</spell_message>
@@ -2636,7 +2637,7 @@
             <corpse_name_the>the dead Polyp</corpse_name_the>
             <description>Flying polyps are a horrible elder race of half polypous, utterly alien entities. They are only partly material and have the power of aerial motion, despite the absence of wings. Their senses does not include sight, but what senses they have can penetrate all material obstructions. They are invulnerable to normal means of damage, though they can be destroyed by certain forms of electrical energy.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Flying Polyp looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Flying Polyp makes shrill whistling sounds.</aware_message_seen>
             <aware_message_hidden>I hear a shrill whistling.</aware_message_hidden>
             <spell_message></spell_message>
@@ -2724,7 +2725,7 @@
             <corpse_name_the>the dead Polyp</corpse_name_the>
             <description>Flying polyps are a horrible elder race of half polypous, utterly alien entities. They are only partly material and have the power of aerial motion, despite the absence of wings. Their senses does not include sight, but what senses they have can penetrate all material obstructions. They are invulnerable to normal means of damage, though they can be destroyed by certain forms of electrical energy.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Greater Polyp looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Greater Polyp makes shrill whistling sounds.</aware_message_seen>
             <aware_message_hidden>I hear a shrill whistling.</aware_message_hidden>
             <spell_message></spell_message>
@@ -2812,7 +2813,7 @@
             <corpse_name_the>the Mind Leech corpse</corpse_name_the>
             <description>A tentacled alien creature, mysteriously floating through the air in a ghostly manner. They somehow sustain themselves on the brain activity of other beings. This will usually not kill the victim, but the experience is horrific beyond words. They only feed on sound minds however - a strange or chaotic mind will cause them great distress.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Mind Leech seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -2892,7 +2893,7 @@
             <corpse_name_the>the Spirit Leech corpse</corpse_name_the>
             <description>A tentacled alien creature, mysteriously floating through the air in a ghostly manner. They sustain themselves by consuming the Spirit of other beings.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Spirit Leech seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -2972,7 +2973,7 @@
             <corpse_name_the>the Life Leech corpse</corpse_name_the>
             <description>A tentacled alien creature, mysteriously floating through the air in a ghostly manner. They sustain themselves by consuming the life force of other beings.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Life Leech seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -3052,7 +3053,7 @@
             <corpse_name_the>the Ghoul corpse</corpse_name_the>
             <description>"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness" -H.P.Lovecraft "Pickman's Model". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Ghoul looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Ghoul growls.</aware_message_seen>
             <aware_message_hidden>I hear a chilling howl.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3137,10 +3138,11 @@
             <corpse_name_the></corpse_name_the>
             <description>A living shadow.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>the Shadow looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>fades.</death_message>
         </text>
         <graphics>
             <tile>shadow</tile>
@@ -3217,7 +3219,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A mysterious humanoid figure stalking for prey. It is invisible to normal eyes.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Invisible Stalker looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -3298,7 +3300,7 @@
             <corpse_name_the>the Wolf carcass</corpse_name_the>
             <description>A large wolf with eyes full of cunning.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Wolf looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Wolf snarls.</aware_message_seen>
             <aware_message_hidden>I hear a chilling howl.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3376,10 +3378,11 @@
             <corpse_name_the></corpse_name_the>
             <description>A restless spirit.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Ghost looks disturbed.</wary_message>
+            <wary_message>looks disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>is put to rest.</death_message>
         </text>
         <graphics>
             <tile>ghost</tile>
@@ -3459,7 +3462,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A nightmarish creature of humanoid shape. It has a hideous gangly physique and sickly pale skin. Its arms are as long as its body is tall, and it attacks with ripping claws. It can appear anywhere it desires at any time, and can also snatch teleporting creatures from their voyage and draw them to it.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Void Traveler looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -3538,7 +3541,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A nightmarish creature of humanoid shape. It has a hideous gangly physique and sickly pale skin. Its arms are as long as its body is tall, and it attacks with ripping claws. It can appear anywhere it desires at any time, and can also snatch teleporting creatures from their voyage and draw them to it. This ancient individual has learned the art of spellcasting.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Elder Void Traveler looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -3623,7 +3626,7 @@
             <corpse_name_the>the Raven carcass</corpse_name_the>
             <description>A vicious black bird.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Raven seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3701,7 +3704,7 @@
             <corpse_name_the>the Giant Bat corpse</corpse_name_the>
             <description>An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Giant Bat seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3781,7 +3784,7 @@
             <corpse_name_the>the Vampire Bat corpse</corpse_name_the>
             <description>An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human. Its attack drains health from the victim.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Vampire Bat seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3860,7 +3863,7 @@
             <corpse_name_the>the corpse of Abaxu</corpse_name_the>
             <description>A colossal white bat, spoken of in ancient traditions as "Abaxu the Destroyer" (or a variation thereof). It has eternal life, which it sustains by feeding on other creatures - allegedly including human sacrifice. This has surely given rise to certain vampire myths over the years.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Abaxu the Destroyer seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -3941,7 +3944,7 @@
             <corpse_name_the>the Byakhee corpse</corpse_name_the>
             <description>"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed human beings, but something I cannot and must not recall."-H.P. Lovecraft, "The Festival". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Byakhee looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -4019,7 +4022,7 @@
             <corpse_name_the>the Giant Mantis corpse</corpse_name_the>
             <description>A huge predatory insect.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Giant Mantis seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -4095,7 +4098,7 @@
             <corpse_name_the>the Giant Locust corpse</corpse_name_the>
             <description>A huge swarming insect. They breed rapidly.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Giant Locust seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -4173,7 +4176,7 @@
             <corpse_name_the>the lifeless Mummy</corpse_name_the>
             <description>A mummified human being, possibly dating back millennia.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Mummy looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
@@ -4258,7 +4261,7 @@
             <corpse_name_the>the lifeless Mummy</corpse_name_the>
             <description>A grotesque mummified hybrid creature, with the body of a human and the head of a crocodile. It is wielding a spear.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Crocodile Head Mummy looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>casts a spell.</spell_message>
@@ -4336,7 +4339,7 @@
             <corpse_name_the>the lifeless Mummy of Khephren</corpse_name_the>
             <description>The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond anyone's guess.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Khephren looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
@@ -4425,7 +4428,7 @@
             <corpse_name_the>the lifeless Mummy of Nitokris</corpse_name_the>
             <description>The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond anyone's guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brother's murderers to a banquet. Then killed them by flooding the sealed room with the Nile.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>Nitokris looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
@@ -4515,7 +4518,7 @@
             <corpse_name_the>the corpse of a Deep One</corpse_name_the>
             <description>A shambling, bipedal thing which could be taken for a man were it not for its briny whiff and scaly skin. Slits on its neck emit a labored inflection, marking its struggle to gulp at breathable air. It hoists a rust-eaten spear and a net through which the thrashing remains of its last feast can be seen.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Deep One looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -4597,7 +4600,7 @@
             <corpse_name_the>the Ape corpse</corpse_name_the>
             <description>An extremely aggressive species of great ape. Their pale skin and excellent night vision indicates that they adapted to subterranean life a very long time ago.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Carnivorous Ape looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Carnivorous Ape howls.</aware_message_seen>
             <aware_message_hidden>I hear a beast howling.</aware_message_hidden>
             <spell_message></spell_message>
@@ -4676,7 +4679,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A slithering conglomeration of carnivorous worms.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Worm Mass seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -4756,7 +4759,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A slithering conglomeration of carnivorous worms. Their bite causes heavy disorientation.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Mind Worms seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -4837,7 +4840,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A spinning force of destruction.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Dust Vortex seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
@@ -4920,7 +4923,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A spinning force of fire and destruction.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Fire Vortex seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
@@ -5005,7 +5008,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A spinning force of pure energy.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Energy Vortex seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
@@ -5091,10 +5094,11 @@
             <corpse_name_the></corpse_name_the>
             <description>It's just a mass of gunk, but it seems sentient.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Black Ooze seems disturbed.</wary_message>
-            <aware_message_seen>the Black Ooze makes a gurgling noise.</aware_message_seen>
+            <wary_message>seems disturbed.</wary_message>
+            <aware_message_seen>makes a gurgling noise.</aware_message_seen>
             <aware_message_hidden>I hear a gurgling noise.</aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>disintegrates.</death_message>
         </text>
         <graphics>
             <tile>ooze</tile>
@@ -5177,10 +5181,11 @@
             <corpse_name_the></corpse_name_the>
             <description>It's a clear mass of gunk. They can be hard to spot.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Clear Ooze seems disturbed.</wary_message>
-            <aware_message_seen>the Clear Ooze makes a gurgling noise.</aware_message_seen>
+            <wary_message>seems disturbed.</wary_message>
+            <aware_message_seen>makes a gurgling noise.</aware_message_seen>
             <aware_message_hidden>I hear a gurgling noise.</aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>disintegrates.</death_message>
         </text>
         <graphics>
             <tile>ooze</tile>
@@ -5263,10 +5268,11 @@
             <corpse_name_the></corpse_name_the>
             <description>It's just a mass of gunk, but it seems sentient. It stinks like rotting cadavers.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Putrid Ooze seems disturbed.</wary_message>
-            <aware_message_seen>the Putrid Ooze makes a gurgling noise.</aware_message_seen>
+            <wary_message>seems disturbed.</wary_message>
+            <aware_message_seen>makes a gurgling noise.</aware_message_seen>
             <aware_message_hidden>I hear a gurgling noise.</aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>disintegrates.</death_message>
         </text>
         <graphics>
             <tile>ooze</tile>
@@ -5350,10 +5356,11 @@
             <corpse_name_the></corpse_name_the>
             <description>It's just a mass of gunk, but it seems sentient. It drips and sizzles with poison.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Poison Ooze seems disturbed.</wary_message>
-            <aware_message_seen>the Poison Ooze makes a gurgling noise.</aware_message_seen>
+            <wary_message>seems disturbed.</wary_message>
+            <aware_message_seen>makes a gurgling noise.</aware_message_seen>
             <aware_message_hidden>I hear a gurgling noise.</aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>disintegrates.</death_message>
         </text>
         <graphics>
             <tile>ooze</tile>
@@ -5437,10 +5444,11 @@
             <corpse_name_the></corpse_name_the>
             <description>A peculiar floating speck of strange shifting colors. It is very confusing to look at. Wherever they pass, they corrupt the environment around them. They are invulnerable to attacks from common materials like iron or steel, but can be destroyed by other forms of damage, such as fire or electricity.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Strange Color seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>disintegrates.</death_message>
         </text>
         <graphics>
             <tile>ooze</tile>
@@ -5527,7 +5535,7 @@
             <corpse_name_the>the Chthonian corpse</corpse_name_the>
             <description>It resembles an immense squid, with reaching, groping tentacles, and a pulpy, elongated sack of a body. Chthonians are powerful burrowers, and live for more than a thousand years.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Chthonian seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -5606,7 +5614,7 @@
             <corpse_name_the>the Hunting Horror corpse</corpse_name_the>
             <description>A ropy, winged worm of vast size and vaporous composition. Brought forth from another plane of existence it drifts in endless search of sustenance, its maw hanging so agape it could swallow an ox whole.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Hunting Horror looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
@@ -5687,8 +5695,8 @@
             <corpse_name_the>the broken Sentry Drone</corpse_name_the>
             <description>An infernal piece of technology, seemingly designed to serve as a sort of guard. It hovers around, searching the area for interlopers to blast on sight. It appears to have some organic parts, and may even be a conscious living being.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Sentry Drone seems disturbed.</wary_message>
-            <aware_message_seen>the Sentry Drone makes a deep buzzing sound.</aware_message_seen>
+            <wary_message>seems disturbed.</wary_message>
+            <aware_message_seen>makes a deep buzzing sound.</aware_message_seen>
             <aware_message_hidden>I hear a deep buzzing sound.</aware_message_hidden>
             <spell_message>makes buzzing sounds in peculiar frequencies.</spell_message>
         </text>
@@ -5776,6 +5784,7 @@
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>is destroyed.</death_message>
         </text>
         <graphics>
             <tile>empty</tile>
@@ -5850,10 +5859,11 @@
             <corpse_name_the></corpse_name_the>
             <description>A sickly growth thriving in damp areas. It produces toxic spores which it stores in its slimy heads.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>the Mold seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>is destroyed.</death_message>
         </text>
         <graphics>
             <tile>fungi</tile>
@@ -5937,7 +5947,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A vaguely intelligent floating fungus-based organism. It contains a highly explosive gas and will detonate very easily, which it seems to desire.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Gas Spore seems disturbed.</wary_message>
+            <wary_message>seems disturbed.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
@@ -6021,7 +6031,7 @@
             <corpse_name_the></corpse_name_the>
             <description>A living incarnation of death. With its goat-like features, it is eerily similar to the imagery of Devils and Demons seen in medieval woodcuts.</description>
             <allow_generated_description>true</allow_generated_description>
-            <wary_message>the Death Fiend looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
@@ -6108,7 +6118,7 @@
             <corpse_name_the></corpse_name_the>
             <description>The Supreme Wizard of the Cult of Starry Wisdom. He appears incredibly old, like a hideous ancient vampire or a grim reaper. Tattered crimson robes flow from his skeletal frame, his bony fingers extends into razor sharp claws, and he has a grim expression on his face.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>The High Priest looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
@@ -6197,7 +6207,7 @@
             <corpse_name_the>the corpse of Balastha</corpse_name_the>
             <description>Balastha is an undead master of arms and warfare, bound to guard the High Priest for all eternity. He is wielding a Tommy Gun.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>Balastha looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
@@ -6273,7 +6283,7 @@
             <corpse_name_the>the corpse of Uraga</corpse_name_the>
             <description>Uraga is an undead master of deception and assassination, bound to guard the High Priest for all eternity.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>Uraga looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
@@ -6349,7 +6359,7 @@
             <corpse_name_the>the corpse of Vrka</corpse_name_the>
             <description>Vrka is a monstrous wolf-like creature dwelling in the High Priest's chambers, serving as a guardian.</description>
             <allow_generated_description>false</allow_generated_description>
-            <wary_message>Vrka looks wary.</wary_message>
+            <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>

@@ -236,8 +236,15 @@ static void dump_text(xml::Element* text_e, ActorData& data)
                 "use_cultist_messages",
                 data.use_cultist_aware_msg_mon_hidden);
 
-        data.spell_cast_msg = xml::get_text_str(
+        data.spell_msg = xml::get_text_str(
                 xml::first_child(text_e, "spell_message"));
+
+        auto death_msg_e = xml::first_child(text_e, "death_message");
+
+        if (death_msg_e)
+        {
+                data.death_msg_override = xml::get_text_str(death_msg_e);
+        }
 }
 
 static void dump_gfx(xml::Element* gfx_e, ActorData& data)
@@ -728,7 +735,7 @@ void ActorData::reset()
         use_cultist_aware_msg_mon_hidden = false;
         aware_sfx_mon_seen = SfxId::END;
         aware_sfx_mon_hidden = SfxId::END;
-        spell_cast_msg = "";
+        spell_msg = "";
         erratic_move_pct = 0;
         mon_shock_lvl = ShockLvl::none;
         is_humanoid = false;

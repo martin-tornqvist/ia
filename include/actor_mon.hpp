@@ -155,31 +155,6 @@ protected:
         int nr_mon_in_group();
 };
 
-class Zuul: public Mon
-{
-public:
-        Zuul() : Mon() {}
-        ~Zuul() {}
-
-        std::string death_msg() const override
-        {
-                return "Zuul vanishes...";
-        }
-};
-
-class Ghost: public Mon
-{
-public:
-        Ghost() : Mon() {}
-
-        ~Ghost() {}
-
-        std::string death_msg() const override
-        {
-                return "The Ghost is put to rest.";
-        }
-};
-
 class Ape: public Mon
 {
 public:
@@ -209,31 +184,6 @@ private:
         bool has_summoned_locusts;
 };
 
-class Shadow: public Mon
-{
-public:
-        Shadow() : Mon() {}
-        ~Shadow() {}
-
-        std::string death_msg() const override
-        {
-                return "The shadow fades.";
-        }
-};
-
-class Ooze: public Mon
-{
-public:
-        Ooze() : Mon() {}
-
-        ~Ooze() {}
-
-        std::string death_msg() const override
-        {
-                return "The Ooze disintegrates.";
-        }
-};
-
 class StrangeColor: public Mon
 {
 public:
@@ -242,24 +192,6 @@ public:
         ~StrangeColor() {}
 
         Color color() const override;
-
-        std::string death_msg() const override
-        {
-                return "The Color disintegrates.";
-        }
-};
-
-class Mold: public Mon
-{
-public:
-        Mold() : Mon() {}
-
-        ~Mold() {}
-
-        std::string death_msg() const override
-        {
-                return "The Mold is destroyed.";
-        }
 };
 
 class TheHighPriest: public Mon
@@ -296,8 +228,6 @@ public:
         TileId tile() const override;
 
         std::string descr() const override;
-
-        std::string death_msg() const override;
 
         void on_std_turn_hook() override;
 
