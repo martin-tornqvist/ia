@@ -219,7 +219,17 @@ void Actor::init(const P& pos_, ActorData& actor_data)
 
     data_ = &actor_data;
 
-    hp_ = hp_max_ = data_->hp;
+    const int hp_max_variation_pct = 50;
+
+    const int hp_range_min = (data_->hp * hp_max_variation_pct) / 100;
+
+    Range hp_range(hp_range_min, data_->hp + hp_range_min);
+
+    hp_range.min = std::max(1, hp_range.min);
+
+    hp_max_ = hp_range.roll();
+
+    hp_ = hp_max_;
 
     spi_ = spi_max_ = data_->spi;
 
