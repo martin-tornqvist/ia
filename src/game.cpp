@@ -36,10 +36,12 @@
 #include "actor_factory.hpp"
 #include "player_spells.hpp"
 #include "map_travel.hpp"
+#include "map_builder.hpp"
+#include "map_controller.hpp"
+#include "mapgen.hpp"
 #include "manual.hpp"
 #include "postmortem.hpp"
 #include "character_descr.hpp"
-#include "mapgen.hpp"
 #include "actor_data.hpp"
 #include "colors.hpp"
 #include "property.hpp"
@@ -1143,16 +1145,21 @@ void GameState::on_start()
     if (config::is_intro_lvl_skipped() ||
         (entry_mode_ == GameEntryMode::load_game))
     {
-        // Build first/next dungeon level
         map_travel::go_to_nxt();
     }
     else
     {
-        // Build forest.
-        mapgen::make_intro_lvl();
-    }
+        const auto map_builder = map_builder::make(MapType::intro);
 
-    map::player->update_fov();
+        map_builder->build();
+
+        map::update_vision();
+
+        if (map_control::controller)
+        {
+                map_control::controller->on_start();
+        }
+    }
 
     game::start_time_ = current_time();
 }

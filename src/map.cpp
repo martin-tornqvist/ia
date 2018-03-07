@@ -119,7 +119,7 @@ void init()
 
 void cleanup()
 {
-    reset_map();
+    reset();
 
     for (int x = 0; x < map_w; ++x)
     {
@@ -134,7 +134,7 @@ void cleanup()
     }
 
     // NOTE: game_time deletes the player object (the actor list is the owner of
-    //       this memory)
+    // this memory)
     player = nullptr;
 }
 
@@ -148,7 +148,7 @@ void load()
     dlvl = saving::get_int();
 }
 
-void reset_map()
+void reset()
 {
     actor_factory::delete_all_mon();
 

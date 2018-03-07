@@ -29,17 +29,6 @@ struct Cell
     P pos;
 };
 
-enum class MapType
-{
-    intro,
-    std,
-    egypt,
-    leng,
-    rat_cave,
-    boss,
-    trapez
-};
-
 struct ChokePointData
 {
     ChokePointData() :
@@ -98,7 +87,7 @@ void cleanup();
 void save();
 void load();
 
-void reset_map();
+void reset();
 
 Rigid* put(Rigid* const rigid);
 

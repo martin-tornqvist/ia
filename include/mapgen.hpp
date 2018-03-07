@@ -11,21 +11,21 @@ class Room;
 struct Region
 {
 public:
-    Region(const R& r) :
-        main_room   (nullptr),
-        r           (r),
-        is_free     (true) {}
+        Region(const R& r) :
+                main_room(nullptr),
+                r(r),
+                is_free(true) {}
 
-    Region() :
-        main_room   (nullptr),
-        r           (),
-        is_free     (true) {}
+        Region() :
+                main_room(nullptr),
+                r(),
+                is_free(true) {}
 
-    R rnd_room_rect() const;
+        R rnd_room_rect() const;
 
-    Room* main_room;
-    R r;
-    bool is_free;
+        Room* main_room;
+        R r;
+        bool is_free;
 };
 
 namespace mapgen
@@ -39,19 +39,9 @@ extern bool is_map_valid;
 // All cells marked as true in this array will be considered for door placement
 extern bool door_proposals[map_w][map_h];
 
-//------------------------------------------------------------------------------
-// Generate maps
-//------------------------------------------------------------------------------
 // Standard dungeon level
+// TODO: Consider moving to MapBuilderStd
 bool make_std_lvl();
-
-// Hand crafted levels
-bool make_intro_lvl();
-bool make_egypt_lvl();
-bool make_leng_lvl();
-bool make_rat_cave_level();
-bool make_trapez_lvl();
-bool make_boss_lvl();
 
 //------------------------------------------------------------------------------
 // Map generation steps (in no particular order)
@@ -78,11 +68,11 @@ void make_pylons_and_levers();
 // Room reshaping utils (called by the room objects)
 //------------------------------------------------------------------------------
 // NOTE: Some reshape functions below will not change the boundaries of the
-//       room, but may affect which cells belong to the room. This only affects
-//       the room map (in the "map" namespace), so the room parameter should be
-//       a const reference. For other reshape functions, the room may expand
-//       beyond its initial rectangle, so in those cases the functions need to
-//       modify the data of the room object.
+// room, but may affect which cells belong to the room. This only affects the
+// room map (in the "map" namespace), so the room parameter should be a const
+// reference. For other reshape functions, the room may expand beyond its
+// initial rectangle, so in those cases the functions need to modify the data of
+// the room object.
 void cut_room_corners(const Room& room);
 void make_pillars_in_room(const Room& room);
 void cavify_room(Room& room);
@@ -90,10 +80,8 @@ void cavify_room(Room& room);
 //------------------------------------------------------------------------------
 // Room creation
 //------------------------------------------------------------------------------
-// NOTE: All "make_room..." functions are "complete", i.e. they handle all the
-//       necessary steps such as creating floor on the map, creating room
-//       objects and registering them, et c. No such actions are needed by the
-//       clients.
+// NOTE: All "make_room..." functions handle all the necessary steps such as
+// creating floor on the map, creating room objects and registering them, et c.
 Room* make_room(Region& region);
 
 Room* make_room(const R& r, const IsSubRoom is_sub_room);
@@ -107,6 +95,8 @@ void make_floor(const Room& room);
 //------------------------------------------------------------------------------
 // Misc utils
 //------------------------------------------------------------------------------
+void connect_rooms();
+
 void valid_corridor_entries(const Room& room,
                             std::vector<P>& out);
 
@@ -115,8 +105,8 @@ bool is_choke_point(const P& p,
                     ChokePointData* out);
 
 void make_pathfind_corridor(Room& r0,
-                          Room& r1,
-                          bool door_proposals[map_w][map_h] = nullptr);
+                            Room& r1,
+                            bool door_proposals[map_w][map_h] = nullptr);
 
 void rnd_walk(const P& p0,
               int len,
@@ -132,8 +122,16 @@ void pathfinder_walk(const P& p0,
 // Generates a map of spawn chance weights, with emphasis on hidden, optional,
 // or hard to reach areas - this can be used e.g. to place items or levers.
 void make_explore_spawn_weights(const bool blocked[map_w][map_h],
-                              std::vector<P>& positions_out,
-                              std::vector<int>& weights_out);
+                                std::vector<P>& positions_out,
+                                std::vector<int>& weights_out);
+
+void allowed_stair_cells(bool out[map_w][map_h]);
+
+void move_player_to_nearest_allowed_pos();
+
+P make_stairs_at_random_pos();
+
+void reveal_doors_on_path_to_stairs(const P& stairs_pos);
 
 } // mapgen
 

@@ -1166,6 +1166,9 @@ void SpellAnimWpns::run_effect(Actor* const caster,
         return;
     }
 
+    // TODO: Is this really necessary? Also there is a bug here, because the
+    // 'actor_array' includes dead actors, so weapons on top of corpses cannot
+    // be animated
     Actor* actor_array[map_w][map_h];
 
     map::make_actor_array(actor_array);

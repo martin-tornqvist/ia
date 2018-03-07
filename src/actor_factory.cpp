@@ -59,9 +59,6 @@ Actor* make_actor_from_id(const ActorId id)
     case ActorId::animated_wpn:
         return new AnimatedWpn();
 
-    case ActorId::the_high_priest:
-        return new TheHighPriest();
-
     default:
         return new Mon();
 
@@ -148,7 +145,7 @@ void delete_all_mon()
 {
     std::vector<Actor*>& actors = game_time::actors;
 
-    for (auto it = begin(actors); it != end(actors); /* No increment */)
+    for (auto it = begin(actors); it != end(actors);)
     {
         Actor* const actor = *it;
 

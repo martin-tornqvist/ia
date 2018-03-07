@@ -150,6 +150,7 @@ protected:
                 return DidAction::no;
         }
 
+        // TODO: This will be removed
         virtual void on_std_turn_hook() {}
 
         int nr_mon_in_group();
@@ -192,20 +193,6 @@ public:
         ~StrangeColor() {}
 
         Color color() const override;
-};
-
-class TheHighPriest: public Mon
-{
-public:
-        TheHighPriest();
-        ~TheHighPriest() {}
-
-private:
-        DidAction on_act() override;
-
-        void on_death() override;
-
-        bool has_become_aware_;
 };
 
 class AnimatedWpn: public Mon

@@ -77,12 +77,12 @@ const int min_dmg_to_wound = 5;
 
 const int fov_std_radi_int = 8;
 const int fov_std_w_int = (fov_std_radi_int * 2) + 1;
-const double fov_std_radi_db = double(fov_std_radi_int);
-const double fov_std_w_db = double(fov_std_w_int);
+const double fov_std_radi_db = (double)fov_std_radi_int;
+const double fov_std_w_db = (double)fov_std_w_int;
 const int fov_max_radi_int = fov_std_radi_int * 2;
 const int fov_max_w_int = (fov_max_radi_int * 2) + 1;
-const double fov_max_radi_db = double(fov_max_radi_int);
-const double fov_max_w_db = double(fov_max_w_int);
+const double fov_max_radi_db = (double)fov_max_radi_int;
+const double fov_max_w_db = (double)fov_max_w_int;
 
 const int snd_dist_normal = fov_std_radi_int;
 const int snd_dist_loud = snd_dist_normal * 2;

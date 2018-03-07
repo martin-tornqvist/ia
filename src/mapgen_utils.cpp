@@ -14,11 +14,19 @@
 #include "game_time.hpp"
 #include "feature_door.hpp"
 #include "init.hpp"
+#include "actor_player.hpp"
+
+#ifndef NDEBUG
+#include "io.hpp"
+#include "sdl_base.hpp"
+#endif // NDEBUG
 
 namespace mapgen
 {
 
 bool is_map_valid = true;
+
+bool door_proposals[map_w][map_h];
 
 bool is_all_rooms_connected()
 {
@@ -27,9 +35,7 @@ bool is_all_rooms_connected()
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
-    //
     // Do not consider doors blocking
-    //
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)
@@ -1075,6 +1081,220 @@ void make_explore_spawn_weights(const bool blocked[map_w][map_h],
             }
         }
     }
+}
+
+void allowed_stair_cells(bool out[map_w][map_h])
+{
+    TRACE_FUNC_BEGIN;
+
+    // Mark cells as free if all adjacent feature types are allowed
+    std::vector<FeatureId> feat_ids_ok
+    {
+        FeatureId::floor,
+        FeatureId::carpet,
+        FeatureId::grass,
+        FeatureId::bush,
+        FeatureId::rubble_low,
+        FeatureId::vines,
+        FeatureId::chains,
+        FeatureId::trap
+    };
+
+    map_parsers::AllAdjIsAnyOfFeatures(feat_ids_ok)
+        .run(out);
+
+    // Block cells with items
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].item)
+            {
+                out[x][y] = false;
+            }
+        }
+    }
+
+    // Block cells with actors
+    for (const auto* const actor : game_time::actors)
+    {
+        const P& p(actor->pos);
+        out[p.x][p.y] = false;
+    }
+
+    TRACE_FUNC_END;
+}
+
+void move_player_to_nearest_allowed_pos()
+{
+    TRACE_FUNC_BEGIN;
+
+    bool allowed_cells[map_w][map_h];
+
+    allowed_stair_cells(allowed_cells);
+
+    auto pos_bucket = to_vec(allowed_cells, true);
+
+    if (pos_bucket.empty())
+    {
+        is_map_valid = false;
+    }
+    else // Valid cells exists
+    {
+        TRACE << "Sorting the allowed cells vector "
+              << "(" << pos_bucket.size() << " cells)" << std:: endl;
+
+        IsCloserToPos is_closer_to_origin(map::player->pos);
+
+        sort(pos_bucket.begin(),
+             pos_bucket.end(),
+             is_closer_to_origin);
+
+        map::player->pos = pos_bucket.front();
+
+        // Ensure that the player always descends to a floor cell (and not into
+        // a bush or something)
+        map::put(new Floor(map::player->pos));
+    }
+
+    TRACE_FUNC_END;
+}
+
+P make_stairs_at_random_pos()
+{
+    TRACE_FUNC_BEGIN;
+
+    bool allowed_cells[map_w][map_h];
+
+    allowed_stair_cells(allowed_cells);
+
+    auto pos_bucket = to_vec(allowed_cells, true);
+
+    const int nr_ok_cells = pos_bucket.size();
+
+    const int min_nr_ok_cells_req = 3;
+
+    if (nr_ok_cells < min_nr_ok_cells_req)
+    {
+        TRACE << "Nr available cells to place stairs too low "
+              << "(" << nr_ok_cells << "), discarding map" << std:: endl;
+        is_map_valid = false;
+#ifndef NDEBUG
+        if (init::is_demo_mapgen)
+        {
+            io::cover_panel(Panel::log);
+            states::draw();
+            io::draw_text("To few cells to place stairs",
+                          Panel::screen,
+                          P(0, 0),
+                          colors::light_red());
+            io::update_screen();
+            sdl_base::sleep(8000);
+        }
+#endif // NDEBUG
+        return P(-1, -1);
+    }
+
+    TRACE << "Sorting the allowed cells vector "
+          << "(" << pos_bucket.size() << " cells)" << std:: endl;
+
+    bool blocks_move[map_w][map_h];
+
+    map_parsers::BlocksMoveCommon(ParseActors::no)
+        .run(blocks_move);
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
+            {
+                blocks_move[x][y] = false;
+            }
+        }
+    }
+
+    int flood[map_w][map_h];
+
+    floodfill(map::player->pos,
+              blocks_move,
+              flood);
+
+    std::sort(pos_bucket.begin(),
+              pos_bucket.end(),
+              [flood](const P& p1, const P& p2)
+    {
+        return flood[p1.x][p1.y] < flood[p2.x][p2.y];
+    });
+
+    TRACE << "Picking one of the furthest cells" << std:: endl;
+    const int cell_idx_range_size = std::max(1, nr_ok_cells / 5);
+
+    const int cell_idx = nr_ok_cells - rnd::range(1, cell_idx_range_size);
+
+    if ((cell_idx < 0) ||
+        (cell_idx > (int)pos_bucket.size()))
+    {
+        ASSERT(false);
+
+        is_map_valid = false;
+
+        return P(-1, -1);
+    }
+
+    const P stairs_pos(pos_bucket[cell_idx]);
+
+    TRACE << "Spawning stairs at chosen cell" << std:: endl;
+    map::put(new Stairs(stairs_pos));
+
+    TRACE_FUNC_END;
+    return stairs_pos;
+}
+
+void reveal_doors_on_path_to_stairs(const P& stairs_pos)
+{
+    TRACE_FUNC_BEGIN;
+
+    bool blocked[map_w][map_h];
+
+    map_parsers::BlocksMoveCommon(ParseActors::no)
+        .run(blocked);
+
+    blocked[stairs_pos.x][stairs_pos.y] = false;
+
+    for (int x = 0; x < map_w; ++x)
+    {
+        for (int y = 0; y < map_h; ++y)
+        {
+            if (map::cells[x][y].rigid->id() == FeatureId::door)
+            {
+                blocked[x][y] = false;
+            }
+        }
+    }
+
+    std::vector<P> path;
+
+    pathfind(map::player->pos,
+             stairs_pos,
+             blocked,
+             path);
+
+    ASSERT(!path.empty());
+
+    TRACE << "Travelling along path and revealing all doors" << std:: endl;
+
+    for (P& pos : path)
+    {
+        auto* const feature = map::cells[pos.x][pos.y].rigid;
+
+        if (feature->id() == FeatureId::door)
+        {
+            static_cast<Door*>(feature)->reveal(Verbosity::silent);
+        }
+    }
+
+    TRACE_FUNC_END;
 }
 
 } // mapgen

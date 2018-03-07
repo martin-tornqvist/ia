@@ -4,41 +4,30 @@
 #include <vector>
 #include <string>
 
-#include "map.hpp"
+#include "map_builder.hpp"
 
 // This includes forest intro level, rats in the walls level, etc (every level
 // that increments the dlvl number).
 enum class IsMainDungeon
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class AllowSpawnMonOverTime
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 struct MapData
 {
-    MapData(MapType type ,
-            IsMainDungeon is_main_dungeon,
-            AllowSpawnMonOverTime allow_spawn_mon_over_time) :
-        type                        (type),
-        is_main_dungeon             (is_main_dungeon),
-        allow_spawn_mon_over_time   (allow_spawn_mon_over_time) {}
+        MapType type = MapType::std;
 
-    MapData() :
-        type                        (MapType::std),
-        is_main_dungeon             (IsMainDungeon::yes),
-        allow_spawn_mon_over_time   (AllowSpawnMonOverTime::yes) {}
+        IsMainDungeon is_main_dungeon = IsMainDungeon::yes;
 
-    MapType type;
-
-    IsMainDungeon is_main_dungeon;
-
-    AllowSpawnMonOverTime allow_spawn_mon_over_time;
+        AllowSpawnMonOverTime allow_spawn_mon_over_time =
+                AllowSpawnMonOverTime::yes;
 };
 
 namespace map_travel

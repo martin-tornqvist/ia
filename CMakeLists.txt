@@ -68,6 +68,8 @@ set(SRC
   include/main_menu.hpp
   include/manual.hpp
   include/mapgen.hpp
+  include/map_builder.hpp
+  include/map_controller.hpp
   include/map.hpp
   include/map_parsing.hpp
   include/map_patterns.hpp
@@ -157,9 +159,13 @@ set(SRC
   src/main.cpp
   src/main_menu.cpp
   src/manual.cpp
+  src/map_builder.cpp
+  src/map_builder_special.cpp
+  src/map_builder_std.cpp
+  src/map_controller.cpp
   src/map.cpp
   src/mapgen_aux_rooms.cpp
-  src/mapgen.cpp
+  src/mapgen_connect_rooms.cpp
   src/mapgen_decorate.cpp
   src/mapgen_doors.cpp
   src/mapgen_merge_regions.cpp
@@ -168,7 +174,6 @@ set(SRC
   src/mapgen_region.cpp
   src/mapgen_river.cpp
   src/mapgen_room.cpp
-  src/mapgen_special.cpp
   src/mapgen_sub_rooms.cpp
   src/mapgen_utils.cpp
   src/map_parsing.cpp

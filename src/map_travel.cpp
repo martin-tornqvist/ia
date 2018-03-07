@@ -4,11 +4,9 @@
 
 #include <list>
 
-#ifndef NDEBUG
-#include <chrono>
-#endif // NDEBUG
-
 #include "map.hpp"
+#include "map_builder.hpp"
+#include "map_controller.hpp"
 #include "draw_map.hpp"
 #include "mapgen.hpp"
 #include "populate_items.hpp"
@@ -21,136 +19,52 @@
 #include "actor_mon.hpp"
 #include "property.hpp"
 #include "property_handler.hpp"
-#include "gods.hpp"
 
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static void trigger_insanity_sympts_for_descent()
+{
+        // Phobia of deep places
+        if (insanity::has_sympt(InsSymptId::phobia_deep))
+        {
+                msg_log::add("I am plagued by my phobia of deep places!");
+
+                map::player->apply_prop(new PropTerrified());
+        }
+
+        // Babbling
+        for (const auto* const sympt : insanity::active_sympts())
+        {
+                if (sympt->id() == InsSymptId::babbling)
+                {
+                        static_cast<const InsBabbling*>(sympt)->babble();
+                }
+        }
+}
+
+// -----------------------------------------------------------------------------
+// map_travel
+// -----------------------------------------------------------------------------
 namespace map_travel
 {
 
 std::vector<MapData> map_list;
-
-namespace
-{
-
-void make_lvl(const MapType& map_type)
-{
-        TRACE_FUNC_BEGIN;
-
-        bool map_ok = false;
-
-#ifndef NDEBUG
-        int nr_attempts = 0;
-        auto start_time = std::chrono::steady_clock::now();
-#endif
-
-        // TODO: When the map is invalid, any unique items spawned are lost
-        // forever. Currently, the only effect of this should be that slightly
-        // fewever unique items are found by the player.
-
-        while (!map_ok)
-        {
-#ifndef NDEBUG
-                ++nr_attempts;
-#endif
-
-                map::reset_map();
-
-                switch (map_type)
-                {
-                case MapType::intro:
-                        map_ok = mapgen::make_intro_lvl();
-                        break;
-
-                case MapType::std:
-                        map_ok = mapgen::make_std_lvl();
-                        break;
-
-                case MapType::egypt:
-                        map_ok = mapgen::make_egypt_lvl();
-                        break;
-
-                case MapType::leng:
-                        map_ok = mapgen::make_leng_lvl();
-                        break;
-
-                case MapType::rat_cave:
-                        map_ok = mapgen::make_rat_cave_level();
-                        break;
-
-                case MapType::trapez:
-                        map_ok = mapgen::make_trapez_lvl();
-                        break;
-
-                case MapType::boss:
-                        map_ok = mapgen::make_boss_lvl();
-                        break;
-                }
-
-                if (map_ok)
-                {
-                        map_templates::on_map_ok();
-                }
-                else // The map is invalid
-                {
-                        map_templates::on_map_discarded();
-                }
-        }
-
-        gods::set_random_god();
-
-        // Spawn starting allies
-        for (size_t i = 0; i < game_time::actors.size(); ++i)
-        {
-                Actor* const actor = game_time::actors[i];
-
-                const auto& allies = actor->data().starting_allies;
-
-                if (allies.empty())
-                {
-                        continue;
-                }
-
-                actor_factory::spawn(actor->pos, allies)
-                        .set_leader(actor)
-                        .for_each([](Mon* mon)
-                        {
-                                mon->is_player_feeling_msg_allowed_ = false;
-                        });
-        }
-
-#ifndef NDEBUG
-        auto diff_time = std::chrono::steady_clock::now() - start_time;
-
-        const double duration =
-                std::chrono::duration<double, std::milli>(diff_time)
-                .count();
-
-        TRACE << "Map built after "
-              << nr_attempts
-              << " attempt(s). "
-              << std::endl
-              << "Total time taken: "
-              <<  duration
-              << " ms"
-              << std::endl;
-#endif // NDEBUG
-
-        TRACE_FUNC_END;
-}
-
-} // namespace
 
 void init()
 {
         // Forest + dungeon + boss + trapezohedron
         const size_t nr_lvl_tot = dlvl_last + 3;
 
-        const MapData default_map_data = {
-                MapType::std,
-                IsMainDungeon::yes,
-                AllowSpawnMonOverTime::yes
-        };
+        {
+                MapData map_data = {
+                        MapType::std,
+                        IsMainDungeon::yes,
+                        AllowSpawnMonOverTime::yes
+                };
 
-        map_list = std::vector<MapData>(nr_lvl_tot, default_map_data);
+                map_list = std::vector<MapData>(nr_lvl_tot, map_data);
+        }
 
         // Forest intro level
         map_list[0] = {
@@ -195,8 +109,11 @@ void save()
 
         for (const auto& map_data : map_list)
         {
-                saving::put_int(int(map_data.type));
-                saving::put_int(int(map_data.is_main_dungeon));
+                saving::put_int((int)map_data.type);
+
+                saving::put_int((int)map_data.is_main_dungeon);
+
+                saving::put_int((int)map_data.allow_spawn_mon_over_time);
         }
 }
 
@@ -204,13 +121,16 @@ void load()
 {
         const int nr_maps = saving::get_int();
 
-        map_list.resize(size_t(nr_maps));
+        map_list.resize((size_t)nr_maps);
 
         for (auto& map_data : map_list)
         {
-                map_data.type = MapType(saving::get_int());
+                map_data.type = (MapType)saving::get_int();
 
-                map_data.is_main_dungeon = IsMainDungeon(saving::get_int());
+                map_data.is_main_dungeon = (IsMainDungeon)saving::get_int();
+
+                map_data.allow_spawn_mon_over_time =
+                        (AllowSpawnMonOverTime)saving::get_int();
         }
 }
 
@@ -232,7 +152,9 @@ void go_to_nxt()
                 ++map::dlvl;
         }
 
-        make_lvl(map_data.type);
+        const auto map_builder = map_builder::make(map_data.type);
+
+        map_builder->build();
 
         if (map::player->has_prop(PropId::descend))
         {
@@ -261,34 +183,11 @@ void go_to_nxt()
         game::add_history_event("Reached dungeon level " +
                                 std::to_string(map::dlvl));
 
-        if ((map_data.is_main_dungeon == IsMainDungeon::yes) &&
-            (map::dlvl == (dlvl_last + 1)))
-        {
-                audio::play(SfxId::boss_voice1);
-        }
-        else // Not the boss level
-        {
-                audio::try_play_amb(1);
-        }
+        trigger_insanity_sympts_for_descent();
 
-        // Trigger phobia of deep places when descending
-        if (insanity::has_sympt(InsSymptId::phobia_deep))
+        if (map_control::controller)
         {
-                msg_log::add("I am plagued by my phobia of deep places!");
-
-                map::player->apply_prop(
-                        new PropTerrified());
-
-                return;
-        }
-
-        // Trigger babbling when descending
-        for (const auto* const sympt : insanity::active_sympts())
-        {
-                if (sympt->id() == InsSymptId::babbling)
-                {
-                        static_cast<const InsBabbling*>(sympt)->babble();
-                }
+                map_control::controller->on_start();
         }
 
         TRACE_FUNC_END;

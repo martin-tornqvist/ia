@@ -6,6 +6,7 @@
 #include "msg_log.hpp"
 #include "io.hpp"
 #include "popup.hpp"
+#include "map.hpp"
 #include "map_travel.hpp"
 #include "saving.hpp"
 #include "item_factory.hpp"
@@ -559,9 +560,9 @@ Color Floor::color_default() const
 // Wall
 // -----------------------------------------------------------------------------
 Wall::Wall(const P& p) :
-    Rigid       (p),
-    type_       (WallType::common),
-    is_mossy_   (false) {}
+    Rigid(p),
+    type_(WallType::common),
+    is_mossy_(false) {}
 
 void Wall::on_hit(const int dmg,
                   const DmgType dmg_type,

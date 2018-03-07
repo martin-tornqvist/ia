@@ -8,6 +8,7 @@
 #include "actor_player.hpp"
 #include "actor_mon.hpp"
 #include "map.hpp"
+#include "map_controller.hpp"
 #include "populate_monsters.hpp"
 #include "inventory.hpp"
 #include "inventory_handling.hpp"
@@ -85,7 +86,7 @@ static void run_std_turn_events()
                                 current_actor_idx_ = 0;
                         }
                 }
-                else  // Actor is alive or a corpse
+                else  // Actor not destroyed
                 {
                         if (!actor->is_player())
                         {
@@ -98,12 +99,19 @@ static void run_std_turn_events()
                                 }
                         }
 
-                        // NOTE: This may spawn new monsters, see NOTE above.
                         actor->on_std_turn_common();
+
+                        // NOTE: This may spawn new monsters, see NOTE above.
+                        actor->properties().on_std_turn();
 
                         ++i;
                 }
         } // Actor loop
+
+        if (map_control::controller)
+        {
+                map_control::controller->on_std_turn();
+        }
 
         // Allow already burning features to damage stuff, spread fire, etc
         for (int x = 0; x < map_w; ++x)
@@ -406,14 +414,6 @@ void tick(const int speed_pct_diff)
 void update_light_map()
 {
         bool light_tmp[map_w][map_h] = {};
-
-        // Do not add light on Leng
-        // TODO: This is a hard coded hack, specify if the map should be lit in
-        // the data instead.
-        if (map_travel::current_map_data().type == MapType::leng)
-        {
-                return;
-        }
 
         for (const auto* const a : actors)
         {

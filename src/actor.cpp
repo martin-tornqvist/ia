@@ -313,10 +313,7 @@ void Actor::on_std_turn_common()
         }
     }
 
-    // TODO: This will be removed eventually
     on_std_turn();
-
-    properties_->on_std_turn();
 }
 
 void Actor::teleport(const ShouldCtrlTele ctrl_tele)

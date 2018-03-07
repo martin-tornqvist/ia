@@ -1072,11 +1072,14 @@ DidAction Mon::try_attack(Actor& defender)
                         return DidAction::no;
                 }
 
-                auto prop = new PropDisabledRanged();
+                if (data_->ranged_cooldown_turns > 0)
+                {
+                        auto prop = new PropDisabledRanged();
 
-                prop->set_duration(data_->ranged_cooldown_turns);
+                        prop->set_duration(data_->ranged_cooldown_turns);
 
-                properties_->apply(prop);
+                        properties_->apply(prop);
+                }
 
                 const auto did_attack =
                         attack::ranged(
@@ -1326,7 +1329,7 @@ void Mon::add_spell(SpellSkill skill, Spell* const spell)
 // -----------------------------------------------------------------------------
 // Specific monsters
 // -----------------------------------------------------------------------------
-// TODO: This should be controlled by the map
+// TODO: This should either be a property or be controlled by the map
 DidAction Khephren::on_act()
 {
         // Summon locusts
@@ -1417,64 +1420,9 @@ Color StrangeColor::color() const
         return color;
 }
 
-TheHighPriest::TheHighPriest() :
-        Mon                 (),
-        has_become_aware_   (false) {}
-
-void TheHighPriest::on_death()
-{
-        msg_log::add("The ground rumbles...",
-                     colors::white(),
-                     false,
-                     MorePromptOnMsg::yes);
-
-        const P stair_pos(map_w - 2, 11);
-
-        map::put(new Stairs(stair_pos));
-
-        map::put(new RubbleLow(stair_pos - P(1, 0)));
-
-        const size_t nr_snakes = rnd::range(4, 5);
-
-        actor_factory::spawn(
-                pos,
-                {nr_snakes, ActorId::pit_viper});
-}
-
-// TODO: This should be controlled by the map
-DidAction TheHighPriest::on_act()
-{
-        if (!is_alive())
-        {
-                return DidAction::no;
-        }
-
-        if (!has_become_aware_)
-        {
-                audio::play(SfxId::boss_voice1);
-
-                has_become_aware_ = true;
-
-                become_aware_player(false);
-
-                for (auto* const actor : game_time::actors)
-                {
-                        if (actor->is_player() ||
-                            (actor == this))
-                        {
-                                continue;
-                        }
-
-                        static_cast<Mon*>(actor)->become_aware_player(false);
-                }
-        }
-
-        return DidAction::no;
-}
-
 AnimatedWpn::AnimatedWpn() :
-        Mon                     (),
-        nr_turns_until_drop_    (rnd::range(225, 250)) {}
+        Mon(),
+        nr_turns_until_drop_(rnd::range(225, 250)) {}
 
 void AnimatedWpn::on_death()
 {
