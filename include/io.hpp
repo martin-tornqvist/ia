@@ -23,10 +23,10 @@ struct CellRenderData
 {
         CellRenderData& operator=(const CellRenderData&) = default;
 
-        Color color = colors::black();
-        Color color_bg = colors::black();
         TileId tile = TileId::empty;
         char character = 0;
+        Color color = colors::black();
+        Color color_bg = colors::black();
 };
 
 struct InputData
@@ -57,6 +57,14 @@ void update_screen();
 
 void clear_screen();
 
+void draw_symbol(
+        const TileId tile,
+        const char character,
+        const Panel panel,
+        const P& pos,
+        const Color& color,
+        const Color& color_bg = colors::black());
+
 void draw_tile(
         const TileId tile,
         const Panel panel,
@@ -69,7 +77,6 @@ void draw_character(
         const Panel panel,
         const P& pos,
         const Color& color,
-        const bool draw_bg_color = true,
         const Color& color_bg = colors::black());
 
 void draw_text(
@@ -79,8 +86,6 @@ void draw_text(
         const Color& color,
         const Color& color_bg = colors::black());
 
-// TODO: Perhaps centering by adjusting pixel position should not be allowed?
-// It ruins the "terminal feeling" a bit...
 int draw_text_center(
         const std::string& str,
         const Panel panel,

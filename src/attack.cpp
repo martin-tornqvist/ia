@@ -1154,42 +1154,21 @@ static void run_projectiles_messages_and_sounds(
         }
 }
 
-static void draw_projectile_tile(const Projectile& projectile)
-{
-        io::cover_cell_in_map(projectile.pos);
-
-        if (projectile.tile != TileId::empty)
-        {
-                io::draw_tile(projectile.tile,
-                              Panel::map,
-                              projectile.pos,
-                              projectile.color);
-        }
-}
-
-static void draw_projectile_character(const Projectile& projectile)
-{
-        io::cover_cell_in_map(projectile.pos);
-
-        if (projectile.character != -1)
-        {
-                io::draw_character(projectile.character,
-                                   Panel::map,
-                                   projectile.pos,
-                                   projectile.color);
-        }
-}
-
 static void draw_projectile(const Projectile& projectile)
 {
-        if (config::is_tiles_mode())
+        if (projectile.tile == TileId::empty)
         {
-                draw_projectile_tile(projectile);
+                return;
         }
-        else // Text mode
-        {
-                draw_projectile_character(projectile);
-        }
+
+        io::cover_cell_in_map(projectile.pos);
+
+        io::draw_symbol(
+                projectile.tile,
+                projectile.character,
+                Panel::map,
+                projectile.pos,
+                projectile.color);
 }
 
 static void draw_projectile_hit(Projectile& projectile,
@@ -1201,7 +1180,7 @@ static void draw_projectile_hit(Projectile& projectile,
         {
                 projectile.tile = TileId::blast1;
 
-                draw_projectile_tile(projectile);
+                draw_projectile(projectile);
 
                 io::update_screen();
 
@@ -1209,7 +1188,7 @@ static void draw_projectile_hit(Projectile& projectile,
 
                 projectile.tile = TileId::blast2;
 
-                draw_projectile_tile(projectile);
+                draw_projectile(projectile);
 
                 io::update_screen();
 
@@ -1219,7 +1198,7 @@ static void draw_projectile_hit(Projectile& projectile,
         {
                 projectile.character = '*';
 
-                draw_projectile_character(projectile);
+                draw_projectile(projectile);
 
                 io::update_screen();
 

@@ -74,17 +74,12 @@ void player_throw_lit_explosive(const P& aim_cell)
 
             if (map::cells[p.x][p.y].is_seen_by_player)
             {
-                if (config::is_tiles_mode())
-                {
-                    io::draw_tile(explosive->tile(), Panel::map, p, color);
-                }
-                else // Text mode
-                {
-                    io::draw_character(explosive->character(),
-                                       Panel::map,
-                                       p,
-                                       color);
-                }
+                io::draw_symbol(
+                    explosive->tile(),
+                    explosive->character(),
+                    Panel::map,
+                    p,
+                    color);
 
                 io::update_screen();
 
@@ -296,20 +291,12 @@ void throw_item(Actor& actor_throwing,
 
         if (map::cells[pos.x][pos.y].is_seen_by_player)
         {
-            if (config::is_tiles_mode())
-            {
-                io::draw_tile(item_thrown.tile(),
-                                  Panel::map,
-                                  pos,
-                                  item_color);
-            }
-            else // Text mode
-            {
-                io::draw_character(item_thrown.character(),
-                                   Panel::map,
-                                   pos,
-                                   item_color);
-            }
+            io::draw_symbol(
+                item_thrown.tile(),
+                item_thrown.character(),
+                Panel::map,
+                pos,
+                item_color);
 
             io::update_screen();
 

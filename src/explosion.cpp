@@ -122,23 +122,12 @@ void draw(const std::vector< std::vector<P> >& pos_lists,
                 {
                     is_any_cell_seen_by_player = true;
 
-                    if (is_tiles)
-                    {
-                        io::draw_tile(tile,
-                                      Panel::map,
-                                      pos,
-                                      color,
-                                      colors::black());
-                    }
-                    else // Text mode
-                    {
-                        io::draw_character('*',
-                                           Panel::map,
-                                           pos,
-                                           color,
-                                           true,
-                                           colors::black());
-                    }
+                    io::draw_symbol(
+                            tile,
+                            '*',
+                            Panel::map,
+                            pos,
+                            color);
                 }
             }
         }

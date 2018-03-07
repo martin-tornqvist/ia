@@ -21,399 +21,383 @@ namespace status_lines
 
 void draw()
 {
-    const int x_wielded_default = 43;
+        const int x_wielded_default = 43;
 
-    const size_t min_nr_steps_to_nxt_label = 3;
+        const size_t min_nr_steps_to_nxt_label = 3;
 
-    const Panel panel = Panel::status_lines;
+        const Panel panel = Panel::status_lines;
 
-    io::cover_panel(panel);
+        io::cover_panel(panel);
 
-    Player& player = *map::player;
+        Player& player = *map::player;
 
-    // Hit points
-    P p(0, 0);
+        // Hit points
+        P p(0, 0);
 
-    std::string str = "HP:";
-    io::draw_text(str, panel, p, colors::dark_gray());
+        std::string str = "HP:";
+        io::draw_text(str, panel, p, colors::dark_gray());
 
-    p.x += str.size();
+        p.x += str.size();
 
-    str =
-        std::to_string(player.hp()) +
-        "/" +
-        std::to_string(player.hp_max(true));
+        str =
+                std::to_string(player.hp()) +
+                "/" +
+                std::to_string(player.hp_max(true));
 
-    io::draw_text(str, panel, p, colors::light_red());
+        io::draw_text(str, panel, p, colors::light_red());
 
-    // Spirit
-    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
-
-    str = "SP:";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    str =
-        std::to_string(player.spi()) +
-        "/" +
-        std::to_string(player.spi_max());
-
-    io::draw_text(str, panel, p, colors::magenta());
-
-    // Insanity
-    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
-
-    str = "Ins:";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    const int shock = std::min(999, player.shock_tot());
-
-    const int ins = player.ins();
-
-    const Color shock_color =
-        shock < 50  ? colors::green() :
-        shock < 75  ? colors::yellow() :
-        shock < 100 ? colors::magenta() : colors::light_red();
-
-    str = std::to_string(shock) + "%";
-
-    io::draw_text(str, panel, p, shock_color);
-
-    p.x += str.size();
-
-    str = "/";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    str = std::to_string(ins) + "%";
-
-    io::draw_text(str, panel, p, colors::magenta());
-
-    // Experience
-    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
-
-    str = "Exp:";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    str = std::to_string(game::clvl());
-
-    if (game::clvl() < player_max_clvl)
-    {
-        // Not at maximum character level
-        str += "(" + std::to_string(game::xp_pct()) + "%)";
-    }
-
-    io::draw_text(str, panel, p, colors::white());
-
-    // Wielded weapon
-    p.x = std::max(x_wielded_default,
-                   (int)(p.x + str.size() + 1));
-
-    int x_wielded = p.x;
-
-    const Item* wpn = player.inv().item_in_slot(SlotId::wpn);
-
-    if (!wpn)
-    {
-        wpn = &player.unarmed_wpn();
-    }
-
-    const Color item_color = wpn->color();
-
-    if (config::is_tiles_mode())
-    {
-        io::draw_tile(wpn->tile(), panel, p, item_color);
-    }
-    else // Text mode
-    {
-        io::draw_character(wpn->character(), panel, p, item_color);
-    }
-
-    p.x += 2;
-
-    const auto& data = wpn->data();
-
-    // If mainly a throwing weapon, use melee info - otherwise use context
-    const ItemRefAttInf att_inf =
-        (data.main_att_mode == AttMode::thrown) ?
-        ItemRefAttInf::melee :
-        ItemRefAttInf::wpn_main_att_mode;
-
-    str = wpn->name(ItemRefType::plain,
-                    ItemRefInf::yes,
-                    att_inf);
-
-    str = text_format::first_to_upper(str);
-
-    io::draw_text(str, panel, p, colors::white());
-
-    // -------------------------------------------------------------------------
-    // Second row
-    // -------------------------------------------------------------------------
-    ++p.y;
-    p.x = 0;
-
-    // Dungeon level
-    str = "Dlvl:";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    str = map::dlvl > 0 ? std::to_string(map::dlvl) : "-";
-
-    io::draw_text(str, panel, p, colors::white());
-
-    // Encumbrance
-    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
-
-    str = "W:";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    const int enc = player.enc_percent();
-
-    str = std::to_string(enc) + "%";
-
-    const Color enc_color =
-        (enc < 100) ? colors::white() :
-        (enc < enc_immobile_lvl) ? colors::yellow() :
-        colors::light_red();
-
-    io::draw_text(str, panel, p, enc_color);
-
-    // Armor
-    p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
-
-    Color armor_color = colors::gray().fraction(1.5);
-
-    // Use flack jacket as default tile/character
-    const auto& flak_jacket_data =
-        item_data::data[(size_t)ItemId::armor_flak_jacket];
-
-    TileId armor_tile = flak_jacket_data.tile;
-
-    str = flak_jacket_data.character;
-
-    // If wearing body item, override the armor symbol with the item's
-    const Item* const body_item = player.inv().item_in_slot(SlotId::body);
-
-    if (body_item)
-    {
-        armor_color = body_item->color();
-
-        armor_tile = body_item->tile();
-
-        str = body_item->character();
-    }
-
-    if (config::is_tiles_mode())
-    {
-        io::draw_tile(armor_tile, panel, p, armor_color);
-    }
-    else // Text mode
-    {
-        io::draw_text(str, panel, p, armor_color);
-    }
-
-    ++p.x;
-
-    str = ":";
-
-    io::draw_text(str, panel, p, colors::dark_gray());
-
-    p.x += str.size();
-
-    str = std::to_string(player.armor_points());
-
-    io::draw_text(str, panel, p, colors::white());
-
-    // Lantern
-    const Item* const lantern_item =
-        player.inv().item_in_backpack(ItemId::lantern);
-
-    if (lantern_item)
-    {
+        // Spirit
         p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
-        const DeviceLantern* const lantern =
-            static_cast<const DeviceLantern*>(lantern_item);
-
-        if (config::is_tiles_mode())
-        {
-            const TileId tile = lantern_item->tile();
-
-            io::draw_tile(tile, panel, p, colors::yellow());
-        }
-        else // Text mode
-        {
-            str = lantern_item->character();
-
-            io::draw_text(str, panel, p, colors::yellow());
-        }
-
-        ++p.x;
-
-        str = ":";
+        str = "SP:";
 
         io::draw_text(str, panel, p, colors::dark_gray());
 
         p.x += str.size();
 
-        const Color color =
-            lantern->is_activated_ ?
-            colors::yellow() :
-            colors::white();
+        str =
+                std::to_string(player.spi()) +
+                "/" +
+                std::to_string(player.spi_max());
 
-        str = lantern->is_activated_ ? "On" : "Off";
+        io::draw_text(str, panel, p, colors::magenta());
 
-        str += "(" + std::to_string(lantern->nr_turns_left_) + ")";
-
-        io::draw_text(str, panel, p, color);
-    }
-
-    // Medical bag
-    const Item* const medical_item =
-        player.inv().item_in_backpack(ItemId::medical_bag);
-
-    if (medical_item)
-    {
+        // Insanity
         p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
-        const Color color = medical_item->color();
-
-        if (config::is_tiles_mode())
-        {
-            const TileId tile = medical_item->tile();
-
-            io::draw_tile(tile, panel, p, color);
-        }
-        else // Text mode
-        {
-            str = medical_item->character();
-
-            io::draw_text(str, panel, p, color);
-        }
-
-        ++p.x;
-
-        str = ":";
+        str = "Ins:";
 
         io::draw_text(str, panel, p, colors::dark_gray());
 
         p.x += str.size();
 
-        const MedicalBag* const medical_bag =
-            static_cast<const MedicalBag*>(medical_item);
+        const int shock = std::min(999, player.shock_tot());
 
-        const int nr_suppl = medical_bag->nr_supplies_;
+        const int ins = player.ins();
 
-        str = std::to_string(nr_suppl);
+        const Color shock_color =
+                shock < 50  ? colors::green() :
+                shock < 75  ? colors::yellow() :
+                shock < 100 ? colors::magenta() : colors::light_red();
+
+        str = std::to_string(shock) + "%";
+
+        io::draw_text(str, panel, p, shock_color);
+
+        p.x += str.size();
+
+        str = "/";
+
+        io::draw_text(str, panel, p, colors::dark_gray());
+
+        p.x += str.size();
+
+        str = std::to_string(ins) + "%";
+
+        io::draw_text(str, panel, p, colors::magenta());
+
+        // Experience
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+
+        str = "Exp:";
+
+        io::draw_text(str, panel, p, colors::dark_gray());
+
+        p.x += str.size();
+
+        str = std::to_string(game::clvl());
+
+        if (game::clvl() < player_max_clvl)
+        {
+                // Not at maximum character level
+                str += "(" + std::to_string(game::xp_pct()) + "%)";
+        }
 
         io::draw_text(str, panel, p, colors::white());
-    }
 
-    // Thrown item, or active explosive
-    p.x = x_wielded;
+        // Wielded weapon
+        p.x = std::max(x_wielded_default,
+                       (int)(p.x + str.size() + 1));
 
-    auto* const thr_item =
-        player.active_explosive_ ?
-        player.active_explosive_ :
-        player.thrown_item_;
+        int x_wielded = p.x;
 
-    if (thr_item)
-    {
-        const Color item_color = thr_item->color();
+        const Item* wpn = player.inv().item_in_slot(SlotId::wpn);
 
-        if (config::is_tiles_mode())
+        if (!wpn)
         {
-            io::draw_tile(thr_item->tile(), panel, p, item_color);
+                wpn = &player.unarmed_wpn();
         }
-        else // Text mode
-        {
-            io::draw_character(thr_item->character(), panel, p, item_color);
-        }
+
+        const Color item_color = wpn->color();
+
+        io::draw_symbol(
+                wpn->tile(),
+                wpn->character(),
+                panel,
+                p,
+                item_color);
 
         p.x += 2;
 
-        auto att_inf = ItemRefAttInf::thrown;
+        const auto& data = wpn->data();
 
-        Color text_color = colors::white();
+        // If mainly a throwing weapon, use melee info - otherwise use context
+        const ItemRefAttInf att_inf =
+                (data.main_att_mode == AttMode::thrown) ?
+                ItemRefAttInf::melee :
+                ItemRefAttInf::wpn_main_att_mode;
 
-        // Explosives are drawn without attack info, and with warning color
-        if (player.active_explosive_)
-        {
-            att_inf = ItemRefAttInf::none;
-
-            text_color = colors::yellow();
-        }
-
-        // Non-stackable thrown items should be printed the same way as wielded
-        // tems, i.e. "Hammer", and not "A Hammer"
-        const auto item_ref_type =
-            thr_item->data().is_stackable ?
-            ItemRefType::plural :
-            ItemRefType::plain;
-
-        str = thr_item->name(item_ref_type,
-                             ItemRefInf::yes,
-                             att_inf);
+        str = wpn->name(
+                ItemRefType::plain,
+                ItemRefInf::yes,
+                att_inf);
 
         str = text_format::first_to_upper(str);
 
-        io::draw_text(str,
-                      panel,
-                      p,
-                      text_color);
-    }
+        io::draw_text(str, panel, p, colors::white());
 
-    // -------------------------------------------------------------------------
-    // Third row
-    // -------------------------------------------------------------------------
-    ++p.y;
+        // ---------------------------------------------------------------------
+        // Second row
+        // ---------------------------------------------------------------------
+        ++p.y;
+        p.x = 0;
 
-    p.x = 0;
+        // Dungeon level
+        str = "Dlvl:";
 
-    const auto props_line = player.properties().text_line();
+        io::draw_text(str, panel, p, colors::dark_gray());
 
-    for (const ColoredString& current_prop_label : props_line)
-    {
-        io::draw_text(current_prop_label.str,
-                      panel,
-                      p,
-                      current_prop_label.color);
+        p.x += str.size();
 
-        p.x += current_prop_label.str.size() + 1;
-    }
+        str = map::dlvl > 0 ? std::to_string(map::dlvl) : "-";
 
-    // Turn number
-    const int turn = game_time::turn_nr();
+        io::draw_text(str, panel, p, colors::white());
 
-    const std::string turn_str = std::to_string(turn);
+        // Encumbrance
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
 
-    p.x = screen_w - turn_str.size() - 2; // "T" + ":"
+        str = "W:";
 
-    io::draw_text("T", panel, p, colors::dark_gray(), colors::black());
+        io::draw_text(str, panel, p, colors::dark_gray());
 
-    ++p.x;
+        p.x += str.size();
 
-    io::draw_text(":", panel, p, colors::dark_gray());
+        const int enc = player.enc_percent();
 
-    ++p.x;
+        str = std::to_string(enc) + "%";
 
-    io::draw_text(turn_str, panel, p, colors::white());
+        const Color enc_color =
+                (enc < 100) ? colors::white() :
+                (enc < enc_immobile_lvl) ? colors::yellow() :
+                colors::light_red();
+
+        io::draw_text(str, panel, p, enc_color);
+
+        // Armor
+        p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+
+        Color armor_color = colors::gray().fraction(1.5);
+
+        // Use flack jacket as default tile/character
+        const auto& flak_jacket_data =
+                item_data::data[(size_t)ItemId::armor_flak_jacket];
+
+        TileId armor_tile = flak_jacket_data.tile;
+
+        char armor_character = flak_jacket_data.character;
+
+        // If wearing body item, override the armor symbol with the item's
+        const Item* const body_item = player.inv().item_in_slot(SlotId::body);
+
+        if (body_item)
+        {
+                armor_color = body_item->color();
+
+                armor_tile = body_item->tile();
+
+                armor_character = body_item->character();
+        }
+
+        io::draw_symbol(
+                armor_tile,
+                armor_character,
+                panel,
+                p,
+                armor_color);
+
+        ++p.x;
+
+        str = ":";
+
+        io::draw_text(str, panel, p, colors::dark_gray());
+
+        p.x += str.size();
+
+        str = std::to_string(player.armor_points());
+
+        io::draw_text(str, panel, p, colors::white());
+
+        // Lantern
+        const Item* const lantern_item =
+                player.inv().item_in_backpack(ItemId::lantern);
+
+        if (lantern_item)
+        {
+                p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+
+                const DeviceLantern* const lantern =
+                        static_cast<const DeviceLantern*>(lantern_item);
+
+                io::draw_symbol(
+                        lantern_item->tile(),
+                        lantern_item->character(),
+                        panel,
+                        p,
+                        colors::yellow());
+
+                ++p.x;
+
+                str = ":";
+
+                io::draw_text(str, panel, p, colors::dark_gray());
+
+                p.x += str.size();
+
+                const Color color =
+                        lantern->is_activated_ ?
+                        colors::yellow() :
+                        colors::white();
+
+                str = lantern->is_activated_ ? "On" : "Off";
+
+                str += "(" + std::to_string(lantern->nr_turns_left_) + ")";
+
+                io::draw_text(str, panel, p, color);
+        }
+
+        // Medical bag
+        const Item* const medical_item =
+                player.inv().item_in_backpack(ItemId::medical_bag);
+
+        if (medical_item)
+        {
+                p.x += std::max(str.size() + 1, min_nr_steps_to_nxt_label);
+
+                const Color color = medical_item->color();
+
+                io::draw_symbol(
+                        medical_item->tile(),
+                        medical_item->character(),
+                        panel,
+                        p,
+                        color);
+
+                ++p.x;
+
+                str = ":";
+
+                io::draw_text(str, panel, p, colors::dark_gray());
+
+                p.x += str.size();
+
+                const MedicalBag* const medical_bag =
+                        static_cast<const MedicalBag*>(medical_item);
+
+                const int nr_suppl = medical_bag->nr_supplies_;
+
+                str = std::to_string(nr_suppl);
+
+                io::draw_text(str, panel, p, colors::white());
+        }
+
+        // Thrown item, or active explosive
+        p.x = x_wielded;
+
+        auto* const thr_item =
+                player.active_explosive_ ?
+                player.active_explosive_ :
+                player.thrown_item_;
+
+        if (thr_item)
+        {
+                const Color item_color = thr_item->color();
+
+                io::draw_symbol(
+                        thr_item->tile(),
+                        thr_item->character(),
+                        panel,
+                        p,
+                        item_color);
+
+                p.x += 2;
+
+                auto att_inf = ItemRefAttInf::thrown;
+
+                Color text_color = colors::white();
+
+                if (player.active_explosive_)
+                {
+                        att_inf = ItemRefAttInf::none;
+
+                        text_color = colors::yellow();
+                }
+
+                // Non-stackable thrown items should be printed the same way as
+                // wielded items, i.e. "Hammer", and not "A Hammer"
+                const auto item_ref_type =
+                        thr_item->data().is_stackable ?
+                        ItemRefType::plural :
+                        ItemRefType::plain;
+
+                str = thr_item->name(
+                        item_ref_type,
+                        ItemRefInf::yes,
+                        att_inf);
+
+                str = text_format::first_to_upper(str);
+
+                io::draw_text(
+                        str,
+                        panel,
+                        p,
+                        text_color);
+        }
+
+        // ---------------------------------------------------------------------
+        // Third row
+        // ---------------------------------------------------------------------
+        ++p.y;
+
+        p.x = 0;
+
+        const auto props_line = player.properties().text_line();
+
+        for (const ColoredString& current_prop_label : props_line)
+        {
+                io::draw_text(current_prop_label.str,
+                              panel,
+                              p,
+                              current_prop_label.color);
+
+                p.x += current_prop_label.str.size() + 1;
+        }
+
+        // Turn number
+        const int turn = game_time::turn_nr();
+
+        const std::string turn_str = std::to_string(turn);
+
+        p.x = screen_w - turn_str.size() - 2; // "T" + ":"
+
+        io::draw_text("T", panel, p, colors::dark_gray(), colors::black());
+
+        ++p.x;
+
+        io::draw_text(":", panel, p, colors::dark_gray());
+
+        ++p.x;
+
+        io::draw_text(turn_str, panel, p, colors::white());
 }
 
 } // status_lines

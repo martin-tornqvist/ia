@@ -508,20 +508,12 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
         states::draw();
 
-        if (config::is_tiles_mode())
-        {
-            io::draw_tile(TileId::blast1,
-                          Panel::map,
-                          p,
-                          colors::magenta());
-        }
-        else // Text mode
-        {
-            io::draw_character('*',
-                           Panel::map,
-                           p,
-                           colors::magenta());
-        }
+        io::draw_symbol(
+                TileId::blast1,
+                '*',
+                Panel::map,
+                p,
+                colors::magenta());
 
         io::update_screen();
 

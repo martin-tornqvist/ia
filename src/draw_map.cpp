@@ -12,16 +12,16 @@
 // -----------------------------------------------------------------------------
 // Private
 // -----------------------------------------------------------------------------
-static CellRenderData render_map[map_w][map_h];
-static CellRenderData render_map_player_memory[map_w][map_h];
+static CellRenderData render_array[map_w][map_h];
+static CellRenderData render_array_player_memory[map_w][map_h];
 
-static void clear_render_map()
+static void clear_render_array()
 {
         for (int x = 0; x < map_w; ++x)
         {
                 for (int y = 0; y < map_h; ++y)
                 {
-                        render_map[x][y] = CellRenderData();
+                        render_array[x][y] = CellRenderData();
                 }
         }
 }
@@ -39,7 +39,7 @@ static void set_rigids()
                                 continue;
                         }
 
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         const auto* const f = cell.rigid;
 
@@ -83,7 +83,7 @@ static void post_process_wall_tiles()
         {
                 for (int y = 0; y < (map_h - 1); ++y)
                 {
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         const auto tile = render_data.tile;
 
@@ -125,7 +125,7 @@ static void post_process_wall_tiles()
                         if (map::cells[x][y + 1].is_explored)
                         {
                                 const auto tile_below =
-                                        render_map[x][y + 1].tile;
+                                        render_array[x][y + 1].tile;
 
                                 if (Wall::is_wall_front_tile(tile_below) ||
                                     Wall::is_wall_top_tile(tile_below) ||
@@ -167,7 +167,7 @@ static void set_dead_actors()
                         continue;
                 }
 
-                auto& render_data = render_map[p.x][p.y];
+                auto& render_data = render_array[p.x][p.y];
 
                 render_data.color = actor->color();
                 render_data.tile = actor->tile();
@@ -188,7 +188,7 @@ static void set_items()
                                 continue;
                         }
 
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         render_data.color = item->color();
                         render_data.tile = item->tile();
@@ -208,7 +208,7 @@ static void copy_seen_cells_to_player_memory()
                                 continue;
                         }
 
-                        render_map_player_memory[x][y] = render_map[x][y];
+                        render_array_player_memory[x][y] = render_array[x][y];
                 }
         }
 }
@@ -219,7 +219,7 @@ static void set_light()
         {
                 for (int y = 0; y < map_h; ++y)
                 {
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         const auto* const f = map::cells[x][y].rigid;
 
@@ -257,7 +257,7 @@ static void set_mobiles()
                         continue;
                 }
 
-                auto& render_data = render_map[p.x][p.y];
+                auto& render_data = render_array[p.x][p.y];
 
                 render_data.color = mob->color();
                 render_data.tile = mob_tile;
@@ -335,7 +335,7 @@ static void set_living_monsters()
 
                 const P& pos = actor->pos;
 
-                auto& render_data = render_map[pos.x][pos.y];
+                auto& render_data = render_array[pos.x][pos.y];
 
                 const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -356,7 +356,7 @@ void set_unseen_cells_from_player_memory()
         {
                 for (int y = 0; y < map_h; ++y)
                 {
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         const Cell& cell = map::cells[x][y];
 
@@ -365,7 +365,7 @@ void set_unseen_cells_from_player_memory()
                                 continue;
                         }
 
-                        render_data = render_map_player_memory[x][y];
+                        render_data = render_array_player_memory[x][y];
 
                         const double div = 3.0;
 
@@ -378,13 +378,13 @@ void set_unseen_cells_from_player_memory()
         }
 }
 
-static void draw_render_map()
+static void draw_render_array()
 {
         for (int x = 0; x < map_w; ++x)
         {
                 for (int y = 0; y < map_h; ++y)
                 {
-                        auto& render_data = render_map[x][y];
+                        auto& render_data = render_array[x][y];
 
                         const P pos(x, y);
 
@@ -409,7 +409,6 @@ static void draw_render_map()
                                         Panel::map,
                                         pos,
                                         render_data.color,
-                                        true,
                                         render_data.color_bg);
                         }
                 }
@@ -519,30 +518,20 @@ static void draw_player_character()
 
         const char character = '@';
 
-        auto& player_render_data = render_map[pos.x][pos.y];
+        auto& player_render_data = render_array[pos.x][pos.y];
 
         player_render_data.tile = tile;
         player_render_data.character = character;
         player_render_data.color = color;
         player_render_data.color_bg = color_bg;
 
-        if (config::is_tiles_mode())
-        {
-                io::draw_tile(tile,
-                              Panel::map,
-                              pos,
-                              color,
-                              color_bg);
-        }
-        else // Text mode
-        {
-                io::draw_character(character,
-                                   Panel::map,
-                                   pos,
-                                   color,
-                                   true,
-                                   color_bg);
-        }
+        io::draw_symbol(
+                tile,
+                character,
+                Panel::map,
+                pos,
+                color,
+                color_bg);
 
         draw_life_bar(*map::player);
 }
@@ -559,23 +548,22 @@ void clear()
         {
                 for (int y = 0; y < map_h; ++y)
                 {
-                        render_map[x][y] = CellRenderData();
+                        render_array[x][y] = CellRenderData();
 
-                        render_map_player_memory[x][y] = CellRenderData();
+                        render_array_player_memory[x][y] = CellRenderData();
                 }
         }
 }
 
 void run()
 {
-        clear_render_map();
+        clear_render_array();
 
         set_unseen_cells_from_player_memory();
 
         set_rigids();
 
-        if (config::is_tiles_mode() &&
-            !config::is_tiles_wall_full_square())
+        if (config::is_tiles_mode() && !config::is_tiles_wall_full_square())
         {
                 post_process_wall_tiles();
         }
@@ -592,7 +580,7 @@ void run()
 
         set_living_monsters();
 
-        draw_render_map();
+        draw_render_array();
 
         draw_monster_life_bars();
 
@@ -601,12 +589,12 @@ void run()
 
 const CellRenderData& get_drawn_cell(int x, int y)
 {
-        return render_map[x][y];
+        return render_array[x][y];
 }
 
 const CellRenderData& get_drawn_cell_player_memory(int x, int y)
 {
-        return render_map_player_memory[x][y];
+        return render_array_player_memory[x][y];
 }
 
 } // draw_map
