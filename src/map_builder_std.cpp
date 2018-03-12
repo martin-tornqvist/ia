@@ -10,6 +10,7 @@
 #include "populate_traps.hpp"
 #include "populate_items.hpp"
 #include "feature_event.hpp"
+#include "game_time.hpp"
 
 // For map generation demo
 #ifndef NDEBUG

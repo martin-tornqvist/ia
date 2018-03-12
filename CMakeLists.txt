@@ -290,6 +290,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
   set(RELEASE_COMPILE_FLAGS
     -fno-exceptions
     -O2
+    -Wno-unused-value
     )
 
 endif()
