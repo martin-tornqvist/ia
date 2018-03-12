@@ -29,8 +29,8 @@ static SDL_Renderer* sdl_renderer_ = nullptr;
 // Bytes per pixel
 static int bpp_ = -1;
 
-static SDL_Surface* scr_srf_ = nullptr;
-static SDL_Texture* scr_texture_ = nullptr;
+static SDL_Surface* screen_srf_ = nullptr;
+static SDL_Texture* screen_texture_ = nullptr;
 
 static SDL_Surface* main_menu_logo_srf_ = nullptr;
 static SDL_Surface* skull_srf_ = nullptr;
@@ -44,9 +44,9 @@ static std::vector<P> font_px_data_[font_nr_x_][font_nr_y_];
 static std::vector<P> tile_contour_px_data_[(size_t)TileId::END];
 static std::vector<P> font_contour_px_data_[font_nr_x_][font_nr_y_];
 
-static SDL_Event sdl_event_;
-
 static const SDL_Color sdl_color_black = {0, 0, 0, 0};
+
+static SDL_Event sdl_event_;
 
 // Pointer to function used for writing pixels on the screen (there are
 // different variants depending on bpp)
@@ -171,23 +171,25 @@ static void put_px32(
         *(Uint32*)p = px;
 }
 
-static void blit_surface(SDL_Surface& srf, const P& px_pos)
+static void blit_surface(SDL_Surface& srf, const PxPos pos)
 {
-        SDL_Rect dst_rect
-        {
-                px_pos.x, px_pos.y, srf.w, srf.h
-                        };
+        SDL_Rect dst_rect;
 
-        SDL_BlitSurface(&srf, nullptr, scr_srf_, &dst_rect);
+        dst_rect.x = pos.value.x;
+        dst_rect.y = pos.value.y;
+        dst_rect.w = srf.w;
+        dst_rect.h = srf.h;
+
+        SDL_BlitSurface(&srf, nullptr, screen_srf_, &dst_rect);
 }
 
 static  void load_contour(const std::vector<P>& source_px_data,
                           std::vector<P>& dest_px_data)
 {
-        const int cell_w = config::cell_px_w();
-        const int cell_h = config::cell_px_h();
+        const int cell_w = config::map_cell_px_w();
+        const int cell_h = config::map_cell_px_h();
 
-        for (const P& source_px_pos : source_px_data)
+        for (const P source_px_pos : source_px_data)
         {
                 const int size = 1;
 
@@ -227,7 +229,8 @@ static void load_images()
 
         ASSERT(tmp_srf && "Failed to load main menu logo image");
 
-        main_menu_logo_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
+        main_menu_logo_srf_ =
+                SDL_ConvertSurface(tmp_srf, screen_srf_->format, 0);
 
         SDL_FreeSurface(tmp_srf);
 
@@ -236,7 +239,7 @@ static void load_images()
 
         ASSERT(tmp_srf && "Failed to load skull image");
 
-        skull_srf_ = SDL_ConvertSurface(tmp_srf, scr_srf_->format, 0);
+        skull_srf_ = SDL_ConvertSurface(tmp_srf, screen_srf_->format, 0);
 
         SDL_FreeSurface(tmp_srf);
 
@@ -262,8 +265,8 @@ static void load_font()
                 255,
                 255);
 
-        const int cell_w = config::cell_px_w();
-        const int cell_h = config::cell_px_h();
+        const int cell_w = config::map_cell_px_w();
+        const int cell_h = config::map_cell_px_h();
 
         for (int x = 0; x < (int)font_nr_x_; ++x)
         {
@@ -335,9 +338,10 @@ static void load_tiles()
 
                 if (!tile_srf_tmp)
                 {
-                        TRACE_ERROR_RELEASE << "Could not load tile image, at: "
-                                            << img_path
-                                            << std::endl;
+                        TRACE_ERROR_RELEASE
+                                << "Could not load tile image, at: "
+                                << img_path
+                                << std::endl;
 
                         PANIC;
                 }
@@ -346,17 +350,18 @@ static void load_tiles()
                 if ((tile_srf_tmp->w != tile_px_w) ||
                     (tile_srf_tmp->h != tile_px_h))
                 {
-                        TRACE_ERROR_RELEASE << "Tile image at \""
-                                            << img_path
-                                            << "\" has wrong size: "
-                                            << tile_srf_tmp->w
-                                            << "x"
-                                            << tile_srf_tmp->h
-                                            << ", expected: "
-                                            << tile_px_w
-                                            << "x"
-                                            << tile_px_h
-                                            << std::endl;
+                        TRACE_ERROR_RELEASE
+                                << "Tile image at \""
+                                << img_path
+                                << "\" has wrong size: "
+                                << tile_srf_tmp->w
+                                << "x"
+                                << tile_srf_tmp->h
+                                << ", expected: "
+                                << tile_px_w
+                                << "x"
+                                << tile_px_h
+                                << std::endl;
 
                         PANIC;
                 }
@@ -393,91 +398,64 @@ static void load_tiles()
         TRACE_FUNC_END;
 }
 
-static void draw_rectangle_solid(
-        const P& px_pos,
-        const P& px_dims,
-        const SDL_Color& sdl_color)
-{
-        if (is_inited())
-        {
-                SDL_Rect sdl_rect =
-                        {
-                                (Sint16)px_pos.x,
-                                (Sint16)px_pos.y,
-                                (Uint16)px_dims.x,
-                                (Uint16)px_dims.y
-                        };
-
-                SDL_FillRect(scr_srf_,
-                             &sdl_rect,
-                             SDL_MapRGB(scr_srf_->format,
-                                        sdl_color.r,
-                                        sdl_color.g,
-                                        sdl_color.b));
-        }
-}
-
-static void put_pixels_on_scr(
+static void put_pixels_on_screen(
         const std::vector<P> px_data,
-        const P& scr_px_pos,
+        const PxPos pos,
         const Color& color)
 {
         const auto sdl_color = color.sdl_color();
 
-        const int px_color = SDL_MapRGB(scr_srf_->format,
-                                        sdl_color.r,
-                                        sdl_color.g,
-                                        sdl_color.b);
+        const int px_color = SDL_MapRGB(
+                screen_srf_->format,
+                sdl_color.r,
+                sdl_color.g,
+                sdl_color.b);
 
-        for (const P& p_relative : px_data)
+        for (const auto p_relative : px_data)
         {
-                const int scr_px_x = scr_px_pos.x + p_relative.x;
-                const int scr_px_y = scr_px_pos.y + p_relative.y;
+                const int screen_px_x = pos.value.x + p_relative.x;
+                const int screen_px_y = pos.value.y + p_relative.y;
 
-                put_px_ptr_(*scr_srf_,
-                            scr_px_x,
-                            scr_px_y,
+                put_px_ptr_(*screen_srf_,
+                            screen_px_x,
+                            screen_px_y,
                             px_color);
         }
 }
 
-static void put_pixels_on_scr_for_tile(
+static void put_pixels_on_screen(
         const TileId tile,
-        const P& scr_px_pos,
+        const PxPos pos,
         const Color& color)
 {
         const auto& pixel_data = tile_px_data_[(size_t)tile];
 
-        put_pixels_on_scr(pixel_data,
-                          /*art::tile_pos(tile),*/
-                          scr_px_pos,
-                          color);
+        put_pixels_on_screen(pixel_data, pos, color);
 }
 
-static void put_pixels_on_scr_for_character(
+static void put_pixels_on_screen(
         const char character,
-        const P& scr_px_pos,
+        const PxPos pos,
         const Color& color)
 {
         const P sheet_pos(gfx::character_pos(character));
 
         const auto& pixel_data = font_px_data_[sheet_pos.x][sheet_pos.y];
 
-        put_pixels_on_scr(pixel_data, scr_px_pos, color);
+        put_pixels_on_screen(pixel_data, pos, color);
 }
 
-static void draw_character_at_px(
+static void draw_character(
         const char character,
-        const P& px_pos,
+        const PxPos pos,
         const Color& color,
         const Color& bg_color = Color(0, 0, 0))
 {
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
+        const PxPos cell_dims(
+                config::map_cell_px_w(),
+                config::map_cell_px_h());
 
-        draw_rectangle_solid(
-                px_pos,
-                cell_dims,
-                bg_color.sdl_color());
+        io::draw_rectangle_solid(pos, cell_dims, bg_color);
 
         // Draw contour if neither foreground/background is black
         if ((color != colors::black()) &&
@@ -488,12 +466,42 @@ static void draw_character_at_px(
                 const auto& contour_px_data =
                         font_contour_px_data_[char_pos.x][char_pos.y];
 
-                put_pixels_on_scr(contour_px_data,
-                                  px_pos,
-                                  sdl_color_black);
+                put_pixels_on_screen(contour_px_data, pos, sdl_color_black);
         }
 
-        put_pixels_on_scr_for_character(character, px_pos, color);
+        put_pixels_on_screen(character, pos, color);
+}
+
+static void cover_area(const PxRect area)
+{
+        const PxPos px_pos(area.value.p0.x,
+                           area.value.p0.y);
+
+        const PxPos px_dims(area.value.w(),
+                            area.value.h());
+
+        io::draw_rectangle_solid(px_pos, px_dims, sdl_color_black);
+}
+
+static PxRect to_px_rect(const R rect)
+{
+        PxRect px_rect;
+
+        px_rect.value = rect.scaled_up(
+                config::map_cell_px_w(),
+                config::map_cell_px_h());
+
+        return px_rect;
+}
+
+static int panel_px_w(const Panel panel)
+{
+        return io::to_px_x(panels::get_w(panel));
+}
+
+static int panel_px_h(const Panel panel)
+{
+        return io::to_px_y(panels::get_h(panel));
 }
 
 // -----------------------------------------------------------------------------
@@ -512,8 +520,8 @@ void init()
 
         const std::string title = "IA " + version_str;
 
-        const int scr_px_w = config::scr_px_w();
-        const int scr_px_h = config::scr_px_h();
+        const int screen_px_w = panel_px_w(Panel::screen);
+        const int screen_px_h = panel_px_h(Panel::screen);
 
         if (config::is_fullscreen())
         {
@@ -521,8 +529,8 @@ void init()
                         title.c_str(),
                         SDL_WINDOWPOS_UNDEFINED,
                         SDL_WINDOWPOS_UNDEFINED,
-                        scr_px_w,
-                        scr_px_h,
+                        screen_px_w,
+                        screen_px_h,
                         SDL_WINDOW_FULLSCREEN_DESKTOP);
         }
 
@@ -532,14 +540,15 @@ void init()
                         title.c_str(),
                         SDL_WINDOWPOS_CENTERED,
                         SDL_WINDOWPOS_CENTERED,
-                        scr_px_w,
-                        scr_px_h,
+                        screen_px_w,
+                        screen_px_h,
                         SDL_WINDOW_SHOWN);
         }
 
         if (!sdl_window_)
         {
-                TRACE_ERROR_RELEASE << "Failed to create window" << std::endl;
+                TRACE_ERROR_RELEASE << "Failed to create window"
+                                    << std::endl;
 
                 PANIC;
         }
@@ -564,16 +573,17 @@ void init()
 
         ASSERT(sdl_renderer_);
 
-        scr_srf_ = SDL_CreateRGBSurface(
+        screen_srf_ = SDL_CreateRGBSurface(
                 0,
-                scr_px_w, scr_px_h,
+                screen_px_w,
+                screen_px_h,
                 screen_bpp,
                 0x00FF0000,
                 0x0000FF00,
                 0x000000FF,
                 0xFF000000);
 
-        if (!scr_srf_)
+        if (!screen_srf_)
         {
                 TRACE_ERROR_RELEASE << "Failed to create screen surface"
                                     << std::endl;
@@ -581,7 +591,7 @@ void init()
                 PANIC;
         }
 
-        bpp_ = scr_srf_->format->BytesPerPixel;
+        bpp_ = screen_srf_->format->BytesPerPixel;
 
         switch (bpp_)
         {
@@ -602,23 +612,26 @@ void init()
                 break;
 
         default:
-                TRACE << "Bad bpp: " << bpp_ << std::endl;
+                TRACE_ERROR_RELEASE << "Bad bpp: "
+                                    << bpp_
+                                    << std::endl;
 
-                ASSERT(false);
-                break;
+                PANIC;
         }
 
-        scr_texture_ = SDL_CreateTexture(
+        screen_texture_ = SDL_CreateTexture(
                 sdl_renderer_,
                 SDL_PIXELFORMAT_ARGB8888,
                 SDL_TEXTUREACCESS_STREAMING,
-                scr_px_w,
-                scr_px_h);
+                screen_px_w,
+                screen_px_h);
 
-        if (!scr_texture_)
+        if (!screen_texture_)
         {
-                TRACE << "Failed to create screen texture" << std::endl;
-                ASSERT(false);
+                TRACE_ERROR_RELEASE << "Failed to create screen texture"
+                                    << std::endl;
+
+                PANIC;
         }
 
         load_font();
@@ -649,16 +662,16 @@ void cleanup()
                 sdl_window_ = nullptr;
         }
 
-        if (scr_texture_)
+        if (screen_texture_)
         {
-                SDL_DestroyTexture(scr_texture_);
-                scr_texture_ = nullptr;
+                SDL_DestroyTexture(screen_texture_);
+                screen_texture_ = nullptr;
         }
 
-        if (scr_srf_)
+        if (screen_srf_)
         {
-                SDL_FreeSurface(scr_srf_);
-                scr_srf_ = nullptr;
+                SDL_FreeSurface(screen_srf_);
+                screen_srf_ = nullptr;
         }
 
         if (main_menu_logo_srf_)
@@ -681,14 +694,14 @@ void update_screen()
         if (is_inited())
         {
                 SDL_UpdateTexture(
-                        scr_texture_,
+                        screen_texture_,
                         nullptr,
-                        scr_srf_->pixels,
-                        scr_srf_->pitch);
+                        screen_srf_->pixels,
+                        screen_srf_->pitch);
 
                 SDL_RenderCopy(
                         sdl_renderer_,
-                        scr_texture_,
+                        screen_texture_,
                         nullptr,
                         nullptr);
 
@@ -701,9 +714,443 @@ void clear_screen()
         if (is_inited())
         {
                 SDL_FillRect(
-                        scr_srf_,
+                        screen_srf_,
                         nullptr,
-                        SDL_MapRGB(scr_srf_->format, 0, 0, 0));
+                        SDL_MapRGB(screen_srf_->format, 0, 0, 0));
+        }
+}
+
+int to_px_x(const int value)
+{
+        return value * config::map_cell_px_w();
+}
+
+int to_px_y(const int value)
+{
+        return value * config::map_cell_px_h();
+}
+
+PxPos to_px(const P pos)
+{
+        PxPos px_pos;
+
+        px_pos.value.x = to_px_x(pos.x);
+        px_pos.value.y = to_px_y(pos.y);
+
+        return px_pos;
+}
+
+PxPos to_px(const int x, const int y)
+{
+        return to_px(P(x, y));
+}
+
+PxPos get_px_pos(const Panel panel, const P offset)
+{
+        const P pos = panels::get_area(panel).p0 + offset;
+
+        return to_px(pos);
+}
+
+void draw_tile(
+        const TileId tile,
+        const Panel panel,
+        const P pos,
+        const Color& color,
+        const Color& bg_color)
+{
+        if (!is_inited())
+        {
+                return;
+        }
+
+        const PxPos px_pos = get_px_pos(panel, pos);
+
+        const PxPos cell_dims(
+                config::map_cell_px_w(),
+                config::map_cell_px_h());
+
+        draw_rectangle_solid(
+                px_pos,
+                cell_dims,
+                bg_color);
+
+        // Draw contour if neither the foreground nor background is black
+        if ((color != colors::black()) &&
+            (bg_color != colors::black()))
+        {
+                const auto& contour_px_data =
+                        tile_contour_px_data_[(size_t)tile];
+
+                put_pixels_on_screen(
+                        contour_px_data,
+                        px_pos,
+                        sdl_color_black);
+        }
+
+        put_pixels_on_screen(tile, px_pos, color.sdl_color());
+}
+
+void draw_character(
+        const char character,
+        const Panel panel,
+        const P pos,
+        const Color& color,
+        const Color& bg_color)
+{
+        if (!is_inited())
+        {
+                return;
+        }
+
+        const PxPos px_pos = get_px_pos(panel, pos);
+
+        const auto sdl_color = color.sdl_color();
+
+        const auto sdl_color_bg = bg_color.sdl_color();
+
+        draw_character(
+                character,
+                px_pos,
+                sdl_color,
+                sdl_color_bg);
+}
+
+void draw_text(
+        const std::string& str,
+        const Panel panel,
+        const P pos,
+        const Color& color,
+        const Color& bg_color)
+{
+        if (!is_inited())
+        {
+                return;
+        }
+
+        PxPos px_pos = get_px_pos(panel, pos);
+
+        if ((px_pos.value.y < 0) ||
+            (px_pos.value.y >= panel_px_h(Panel::screen)))
+        {
+                return;
+        }
+
+        const int cell_px_w = config::map_cell_px_w();
+        const size_t msg_w = str.size();
+        const int msg_px_w = msg_w * cell_px_w;
+
+        const auto sdl_color = color.sdl_color();
+
+        const auto sdl_bg_color = bg_color.sdl_color();
+
+        const auto sdl_color_gray = colors::gray();
+
+        const int screen_px_w = panel_px_w(Panel::screen);
+        const int msg_px_x1 = px_pos.value.x + msg_px_w - 1;
+        const bool msg_w_fit_on_screen = msg_px_x1 < screen_px_w;
+
+        // X position to start drawing dots instead when the message does not
+        // fit on the screen horizontally.
+        const int px_x_dots = screen_px_w - (cell_px_w * 3);
+
+        for (size_t i = 0; i < msg_w; ++i)
+        {
+                if (px_pos.value.x < 0 || px_pos.value.x >= screen_px_w)
+                {
+                        return;
+                }
+
+                const bool draw_dots =
+                        !msg_w_fit_on_screen &&
+                        (px_pos.value.x >= px_x_dots);
+
+                if (draw_dots)
+                {
+                        draw_character(
+                                '.',
+                                px_pos,
+                                sdl_color_gray);
+                }
+                else // Whole message fits, or we are not yet near the edge
+                {
+                        draw_character(
+                                str[i],
+                                px_pos,
+                                sdl_color,
+                                sdl_bg_color);
+                }
+
+                px_pos.value.x += cell_px_w;
+        }
+}
+
+int draw_text_center(
+        const std::string& str,
+        const Panel panel,
+        const P pos,
+        const Color& color,
+        const Color& bg_color,
+        const bool is_pixel_pos_adj_allowed)
+{
+        if (!is_inited())
+        {
+                return 0;
+        }
+
+        const int len = str.size();
+        const int len_half = len / 2;
+        const int x_pos_left = pos.x - len_half;
+
+        const P cell_dims(
+                config::map_cell_px_w(),
+                config::map_cell_px_h());
+
+        PxPos px_pos = get_px_pos(
+                panel,
+                P(x_pos_left, pos.y));
+
+        if (is_pixel_pos_adj_allowed)
+        {
+                const int pixel_x_adj =
+                        ((len_half * 2) == len) ?
+                        (cell_dims.x / 2) :
+                        0;
+
+                px_pos.value += P(pixel_x_adj, 0);
+        }
+
+        const int w_tot_pixel = len * cell_dims.x;
+
+        const auto sdl_color = color.sdl_color();
+
+        const auto sdl_bg_color = bg_color.sdl_color();
+
+        SDL_Rect sdl_rect = {
+                (Sint16)px_pos.value.x,
+                (Sint16)px_pos.value.y,
+                (Uint16)w_tot_pixel,
+                (Uint16)cell_dims.y
+        };
+
+        SDL_FillRect(
+                screen_srf_,
+                &sdl_rect,
+                SDL_MapRGB(screen_srf_->format,
+                           sdl_bg_color.r,
+                           sdl_bg_color.g,
+                           sdl_bg_color.b));
+
+        for (int i = 0; i < len; ++i)
+        {
+                if ((px_pos.value.x) < 0 ||
+                    (px_pos.value.x >= panel_px_w(Panel::screen)))
+                {
+                        return x_pos_left;
+                }
+
+                draw_character(
+                        str[i],
+                        px_pos,
+                        sdl_color,
+                        sdl_bg_color);
+
+                px_pos.value.x += cell_dims.x;
+        }
+
+        return x_pos_left;
+}
+
+void draw_rectangle_solid(
+        const PxPos pos,
+        const PxPos dims,
+        const Color& color)
+{
+        if (is_inited())
+        {
+                SDL_Rect sdl_rect = {
+                        (Sint16)pos.value.x,
+                        (Sint16)pos.value.y,
+                        (Uint16)dims.value.x,
+                        (Uint16)dims.value.y
+                };
+
+                const SDL_Color& sdl_color = color.sdl_color();
+
+                SDL_FillRect(screen_srf_,
+                             &sdl_rect,
+                             SDL_MapRGB(screen_srf_->format,
+                                        sdl_color.r,
+                                        sdl_color.g,
+                                        sdl_color.b));
+        }
+}
+
+void cover_panel(const Panel panel)
+{
+        if (!is_inited())
+        {
+                return;
+        }
+
+        const PxRect px_area = to_px_rect(panels::get_area(panel));
+
+        cover_area(px_area);
+}
+
+void cover_area(const Panel panel, const R area)
+{
+        cover_area(panel, area.p0, area.p1 - area.p0 + 1);
+}
+
+void cover_area(const Panel panel, const P offset, const P dims)
+{
+        R area =
+                panels::get_area(panel)
+                .with_offset(offset);
+
+        area.p1.x += (dims.x - 1);
+        area.p1.y += (dims.y - 1);
+
+        const PxRect px_area = to_px_rect(area);
+
+        cover_area(px_area);
+}
+
+void cover_cell(const Panel panel, const P offset)
+{
+        cover_area(panel, offset, P(1, 1));
+}
+
+void draw_line_hor(const PxPos px_pos, const int px_w, const Color& color)
+{
+        const PxPos px_dims(px_w, 2);
+
+        draw_rectangle_solid(px_pos, px_dims, color);
+}
+
+void draw_line_ver(const PxPos px_pos, const int px_h, const Color& color)
+{
+        const PxPos px_dims(1, px_h);
+
+        draw_rectangle_solid(px_pos, px_dims, color);
+}
+
+void draw_box(const R& border,
+              const Panel panel,
+              const Color& color,
+              const bool do_cover_area)
+{
+        if (do_cover_area)
+        {
+                cover_area(panel, border);
+        }
+
+        // Vertical bars
+        const int y0_vert = border.p0.y + 1;
+        const int y1_vert = border.p1.y - 1;
+
+        for (int y = y0_vert; y <= y1_vert; ++y)
+        {
+                draw_symbol(
+                        TileId::popup_ver,
+                        '|',
+                        panel,
+                        P(border.p0.x, y),
+                        color);
+
+                draw_symbol(
+                        TileId::popup_ver,
+                        '|',
+                        panel,
+                        P(border.p1.x, y),
+                        color);
+        }
+
+        // Horizontal bars
+        const int x0_vert = border.p0.x + 1;
+        const int x1_vert = border.p1.x - 1;
+
+        for (int x = x0_vert; x <= x1_vert; ++x)
+        {
+                draw_symbol(
+                        TileId::popup_hor,
+                        '-',
+                        panel,
+                        P(x, border.p0.y),
+                        color);
+
+                draw_symbol(
+                        TileId::popup_hor,
+                        '-',
+                        panel,
+                        P(x, border.p1.y),
+                        color);
+        }
+
+        const std::vector<P> corners
+        {
+                {border.p0.x, border.p0.y}, //Top left
+                {border.p1.x, border.p0.y}, //Top right
+                {border.p0.x, border.p1.y}, //Btm left
+                {border.p1.x, border.p1.y}  //Brm right
+        };
+
+        // Corners
+        draw_symbol(
+                TileId::popup_top_l,
+                '+',
+                panel,
+                corners[0],
+                color);
+
+        draw_symbol(
+                TileId::popup_top_r,
+                '+',
+                panel,
+                corners[1],
+                color);
+
+        draw_symbol(
+                TileId::popup_btm_l,
+                '+',
+                panel,
+                corners[2],
+                color);
+
+        draw_symbol(
+                TileId::popup_btm_r,
+                '+',
+                panel,
+                corners[3],
+                color);
+}
+
+void draw_descr_box(const std::vector<ColoredString>& lines)
+{
+        cover_panel(Panel::item_descr);
+
+        P pos(0, 0);
+
+        for (const auto& line : lines)
+        {
+                const auto formatted =
+                        text_format::split(
+                                line.str,
+                                panels::get_w(Panel::item_descr));
+
+                for (const auto& formatted_line : formatted)
+                {
+                        draw_text(
+                                formatted_line,
+                                Panel::item_descr,
+                                pos,
+                                line.color);
+
+                        ++pos.y;
+                }
+
+                ++pos.y;
         }
 }
 
@@ -711,31 +1158,34 @@ void draw_main_menu_logo(const int y_pos)
 {
         if (is_inited())
         {
-                const int scr_px_w = config::scr_px_w();
+                const int screen_px_w = panel_px_w(Panel::screen);
+
                 const int logo_px_h = main_menu_logo_srf_->w;
-                const int cell_px_h = config::cell_px_h();
 
-                const P px_pos((scr_px_w - logo_px_h) / 2, cell_px_h * y_pos);
+                const int cell_px_h = config::map_cell_px_h();
 
-                blit_surface(*main_menu_logo_srf_, px_pos);
+                const PxPos pos(
+                        (screen_px_w - logo_px_h) / 2,
+                        cell_px_h * y_pos);
+
+                blit_surface(*main_menu_logo_srf_, pos);
         }
 }
 
-void draw_skull(const P& p)
+void draw_skull(const P pos)
 {
         if (is_inited())
         {
-                const int cell_px_w = config::cell_px_w();
-                const int cell_px_h = config::cell_px_h();
-
-                const P px_pos(p * P(cell_px_w, cell_px_h));
+                const PxPos px_pos(
+                        pos.x * config::map_cell_px_w(),
+                        pos.y * config::map_cell_px_h());
 
                 blit_surface(*skull_srf_, px_pos);
         }
 }
 
 void draw_blast_at_field(
-        const P& center_pos,
+        const P center_pos,
         const int radius,
         bool forbidden_cells[map_w][map_h],
         const Color& color_inner,
@@ -850,7 +1300,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 
         states::draw();
 
-        for (const P& pos : positions)
+        for (const P pos : positions)
         {
                 draw_symbol(
                         TileId::blast1,
@@ -864,7 +1314,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 
         sdl_base::sleep(config::delay_explosion() / 2);
 
-        for (const P& pos : positions)
+        for (const P pos : positions)
         {
                 draw_symbol(
                         TileId::blast2,
@@ -888,7 +1338,7 @@ void draw_blast_at_seen_cells(const std::vector<P>& positions,
         {
                 std::vector<P> positions_with_vision;
 
-                for (const P& p : positions)
+                for (const P p : positions)
                 {
                         if (map::cells[p.x][p.y].is_seen_by_player)
                         {
@@ -923,7 +1373,7 @@ void draw_symbol(
         const TileId tile,
         const char character,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg)
 {
@@ -945,512 +1395,6 @@ void draw_symbol(
                         color,
                         color_bg);
         }
-}
-
-void draw_tile(
-        const TileId tile,
-        const Panel panel,
-        const P& pos,
-        const Color& color,
-        const Color& bg_color)
-{
-        if (!is_inited())
-        {
-                return;
-        }
-
-        const P px_pos = px_pos_for_cell_in_panel(panel, pos);
-
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
-
-        draw_rectangle_solid(
-                px_pos,
-                cell_dims,
-                bg_color);
-
-        // Draw contour if neither the foreground nor background is black
-        if ((color != colors::black()) &&
-            (bg_color != colors::black()))
-        {
-                const auto& contour_px_data =
-                        tile_contour_px_data_[(size_t)tile];
-
-                put_pixels_on_scr(
-                        contour_px_data,
-                        px_pos,
-                        sdl_color_black);
-        }
-
-        put_pixels_on_scr_for_tile(
-                tile,
-                px_pos,
-                color.sdl_color());
-}
-
-void draw_character(
-        const char character,
-        const Panel panel,
-        const P& pos,
-        const Color& color,
-        const Color& bg_color)
-{
-        if (!is_inited())
-        {
-                return;
-        }
-
-        const P px_pos = px_pos_for_cell_in_panel(panel, pos);
-
-        const auto sdl_color = color.sdl_color();
-
-        const auto sdl_color_bg = bg_color.sdl_color();
-
-        draw_character_at_px(
-                character,
-                px_pos,
-                sdl_color,
-                sdl_color_bg);
-}
-
-void draw_text(
-        const std::string& str,
-        const Panel panel,
-        const P& pos,
-        const Color& color,
-        const Color& bg_color)
-{
-        if (!is_inited())
-        {
-                return;
-        }
-
-        P px_pos = px_pos_for_cell_in_panel(panel, pos);
-
-        if (px_pos.y < 0 || px_pos.y >= config::scr_px_h())
-        {
-                return;
-        }
-
-        const int cell_px_w = config::cell_px_w();
-        const int cell_px_h = config::cell_px_h();
-        const size_t msg_w = str.size();
-        const int msg_px_w = msg_w * cell_px_w;
-
-        const auto sdl_color = color.sdl_color();
-
-        const auto sdl_bg_color = bg_color.sdl_color();
-
-        const auto sdl_color_gray = colors::gray();
-
-        draw_rectangle_solid(
-                px_pos,
-                {msg_px_w, cell_px_h},
-                sdl_bg_color);
-
-        const int scr_px_w = config::scr_px_w();
-        const int msg_px_x1 = px_pos.x + msg_px_w - 1;
-        const bool is_msg_w_fit_on_scr = msg_px_x1 < scr_px_w;
-
-        // X position to start drawing dots instead when the message does not
-        // fit on the screen horizontally.
-        const int px_x_dots = scr_px_w - (cell_px_w * 3);
-
-        for (size_t i = 0; i < msg_w; ++i)
-        {
-                if (px_pos.x < 0 || px_pos.x >= scr_px_w)
-                {
-                        return;
-                }
-
-                const bool draw_dots =
-                        !is_msg_w_fit_on_scr &&
-                        (px_pos.x >= px_x_dots);
-
-                if (draw_dots)
-                {
-                        draw_character_at_px(
-                                '.',
-                                px_pos,
-                                sdl_color_gray);
-                }
-                else // Whole message fits, or we are not yet near the edge
-                {
-                        draw_character_at_px(
-                                str[i],
-                                px_pos,
-                                sdl_color);
-                }
-
-                px_pos.x += cell_px_w;
-        }
-}
-
-int draw_text_center(
-        const std::string& str,
-        const Panel panel,
-        const P& pos,
-        const Color& color,
-        const Color& bg_color,
-        const bool is_pixel_pos_adj_allowed)
-{
-        if (!is_inited())
-        {
-                return 0;
-        }
-
-        const int len = str.size();
-        const int len_half = len / 2;
-        const int x_pos_left = pos.x - len_half;
-
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
-
-        P px_pos = px_pos_for_cell_in_panel(panel, P(x_pos_left, pos.y));
-
-        if (is_pixel_pos_adj_allowed)
-        {
-                const int pixel_x_adj =
-                        ((len_half * 2) == len) ?
-                        (cell_dims.x / 2) :
-                        0;
-
-                px_pos += P(pixel_x_adj, 0);
-        }
-
-        const int w_tot_pixel = len * cell_dims.x;
-
-        const auto sdl_color = color.sdl_color();
-
-        const auto sdl_bg_color = bg_color.sdl_color();
-
-        SDL_Rect sdl_rect =
-                {
-                        (Sint16)px_pos.x,
-                        (Sint16)px_pos.y,
-                        (Uint16)w_tot_pixel,
-                        (Uint16)cell_dims.y
-                };
-
-        SDL_FillRect(
-                scr_srf_,
-                &sdl_rect,
-                SDL_MapRGB(scr_srf_->format,
-                           sdl_bg_color.r,
-                           sdl_bg_color.g,
-                           sdl_bg_color.b));
-
-        for (int i = 0; i < len; ++i)
-        {
-                if (px_pos.x < 0 || px_pos.x >= config::scr_px_w())
-                {
-                        return x_pos_left;
-                }
-
-                draw_character_at_px(str[i],
-                                     px_pos,
-                                     sdl_color,
-                                     sdl_bg_color);
-
-                px_pos.x += cell_dims.x;
-        }
-
-        return x_pos_left;
-}
-
-void draw_rectangle_solid(
-        const P& px_pos,
-        const P& px_dims,
-        const Color& color)
-{
-        draw_rectangle_solid(px_pos, px_dims, color.sdl_color());
-}
-
-void cover_panel(const Panel panel)
-{
-        if (!is_inited())
-        {
-                return;
-        }
-
-        const int screen_pixel_w = config::scr_px_w();
-
-        switch (panel)
-        {
-        case Panel::status_lines:
-        {
-                const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
-
-                cover_area_px(
-                        px_pos,
-                        P(screen_pixel_w, config::stat_lines_px_h()));
-        }
-        break;
-
-        case Panel::log:
-                cover_area_px(
-                        P(0, 0),
-                        P(screen_pixel_w, config::log_px_h()));
-                break;
-
-        case Panel::map:
-        {
-                const P px_pos = px_pos_for_cell_in_panel(panel, P(0, 0));
-
-                cover_area_px(
-                        px_pos,
-                        P(screen_pixel_w, config::map_px_h()));
-        }
-        break;
-
-        case Panel::screen:
-                clear_screen();
-                break;
-        }
-}
-
-void cover_area(const Panel panel, const R& area)
-{
-        cover_area(panel, area.p0, area.p1 - area.p0 + 1);
-}
-
-void cover_area(const Panel panel, const P& pos, const P& dims)
-{
-        const P px_pos = px_pos_for_cell_in_panel(panel, pos);
-
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
-
-        cover_area_px(px_pos, dims * cell_dims);
-}
-
-void cover_area_px(const P& px_pos, const P& px_dims)
-{
-        draw_rectangle_solid(px_pos, px_dims, sdl_color_black);
-}
-
-void cover_cell_in_map(const P& pos)
-{
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
-
-        P px_pos = px_pos_for_cell_in_panel(Panel::map, pos);
-
-        cover_area_px(px_pos, cell_dims);
-}
-
-void draw_line_hor(const P& px_pos, const int w, const Color& color)
-{
-        draw_rectangle_solid(px_pos, P(w, 2), color);
-}
-
-void draw_line_ver(const P& px_pos, const int h, const Color& color)
-{
-        draw_rectangle_solid(px_pos, P(1, h), color);
-}
-
-void draw_box(const R& border,
-              const Panel panel,
-              const Color& color,
-              const bool do_cover_area)
-{
-        if (do_cover_area)
-        {
-                cover_area(panel, border);
-        }
-
-        // Vertical bars
-        const int y0_vert = border.p0.y + 1;
-        const int y1_vert = border.p1.y - 1;
-
-        for (int y = y0_vert; y <= y1_vert; ++y)
-        {
-                draw_symbol(
-                        TileId::popup_ver,
-                        '|',
-                        panel,
-                        P(border.p0.x, y),
-                        color);
-
-                draw_symbol(
-                        TileId::popup_ver,
-                        '|',
-                        panel,
-                        P(border.p1.x, y),
-                        color);
-        }
-
-        // Horizontal bars
-        const int x0_vert = border.p0.x + 1;
-        const int x1_vert = border.p1.x - 1;
-
-        for (int x = x0_vert; x <= x1_vert; ++x)
-        {
-                draw_symbol(
-                        TileId::popup_hor,
-                        '-',
-                        panel,
-                        P(x, border.p0.y),
-                        color);
-
-                draw_symbol(
-                        TileId::popup_hor,
-                        '-',
-                        panel,
-                        P(x, border.p1.y),
-                        color);
-        }
-
-        const std::vector<P> corners
-        {
-                {border.p0.x, border.p0.y}, //Top left
-                {border.p1.x, border.p0.y}, //Top right
-                {border.p0.x, border.p1.y}, //Btm left
-                {border.p1.x, border.p1.y}  //Brm right
-        };
-
-        // Corners
-        draw_symbol(
-                TileId::popup_top_l,
-                '+',
-                panel,
-                corners[0],
-                color);
-
-        draw_symbol(
-                TileId::popup_top_r,
-                '+',
-                panel,
-                corners[1],
-                color);
-
-        draw_symbol(
-                TileId::popup_btm_l,
-                '+',
-                panel,
-                corners[2],
-                color);
-
-        draw_symbol(
-                TileId::popup_btm_r,
-                '+',
-                panel,
-                corners[3],
-                color);
-}
-
-void draw_descr_box(const std::vector<ColoredString>& lines)
-{
-        const int descr_y0 = 1;
-        const int descr_x1 = map_w - 1;
-
-        cover_area(
-                Panel::screen,
-                R(descr_x0 - 1, descr_y0, descr_x1, screen_h - 1));
-
-        const int max_w = descr_x1 - descr_x0 + 1;
-
-        P p(descr_x0, descr_y0);
-
-        for (const auto& line : lines)
-        {
-                const auto formatted = text_format::split(line.str, max_w);
-
-                for (const auto& line_in_formatted : formatted)
-                {
-                        draw_text(
-                                line_in_formatted,
-                                Panel::screen,
-                                p,
-                                line.color);
-
-                        ++p.y;
-                }
-
-                ++p.y;
-        }
-}
-
-void draw_info_scr_interface(const std::string& title,
-                             const InfScreenType screen_type)
-{
-        if (config::is_tiles_mode())
-        {
-                for (int x = 0; x < screen_w; ++x)
-                {
-                        io::draw_tile(
-                                TileId::popup_hor,
-                                Panel::screen,
-                                P(x, 0),
-                                colors::title());
-
-                        io::draw_tile(
-                                TileId::popup_hor,
-                                Panel::screen,
-                                P(x, screen_h - 1),
-                                colors::title());
-                }
-        }
-        else // Text mode
-        {
-                const std::string decoration_line(map_w, '-');
-
-                io::draw_text(
-                        decoration_line,
-                        Panel::screen,
-                        P(0, 0),
-                        colors::title());
-
-                io::draw_text(
-                        decoration_line,
-                        Panel::screen,
-                        P(0, screen_h - 1),
-                        colors::title());
-        }
-
-        const int x_label = 3;
-
-        io::draw_text(
-                " " + title + " ",
-                Panel::screen,
-                P(x_label, 0),
-                colors::title());
-
-        const std::string cmd_info =
-                (screen_type == InfScreenType::scrolling) ?
-                info_scr_tip_scrollable :
-                info_scr_tip;
-
-        io::draw_text(
-                " " + cmd_info + " ",
-                Panel::screen,
-                P(x_label, screen_h - 1),
-                colors::title());
-}
-
-P px_pos_for_cell_in_panel(const Panel panel, const P& pos)
-{
-        const P cell_dims(config::cell_px_w(),
-                          config::cell_px_h());
-
-        switch (panel)
-        {
-        case Panel::screen:
-                return
-                        P(pos.x * cell_dims.x,
-                          pos.y * cell_dims.y);
-
-        case Panel::map:
-                return
-                        (pos * cell_dims) +
-                        P(0, config::map_px_offset_h());
-
-        case Panel::log:
-                return pos * cell_dims;
-
-        case Panel::status_lines:
-                return
-                        (pos * cell_dims) +
-                        P(0, config::stat_lines_px_offset_h());
-        }
-
-        return P();
 }
 
 void flush_input()

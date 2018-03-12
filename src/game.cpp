@@ -7,6 +7,7 @@
 #include "draw_map.hpp"
 #include "popup.hpp"
 #include "io.hpp"
+#include "panel.hpp"
 #include "highscore.hpp"
 #include "text_format.hpp"
 #include "query.hpp"
@@ -988,12 +989,13 @@ void win_game()
 
     ++y;
 
-    const std::string cmd_label = "[space/esc/enter] to continue";
+    const int screen_w = panels::get_w(Panel::screen);
+    const int screen_h = panels::get_h(Panel::screen);
 
     io::draw_text_center(
         "[space/esc/enter] to continue",
         Panel::screen,
-        P(map_w_half, screen_h - 2),
+        P((screen_w - 1) / 2, screen_h - 2),
         colors::menu_dark(),
         colors::black(),
         false);

@@ -268,8 +268,6 @@ void MarkerState::draw_marker(
 
                 if ((int)line_idx < tail_size_int)
                 {
-                        io::cover_cell_in_map(line_pos);
-
                         auto& d = marker_render_data_[line_pos.x][line_pos.y];
 
                         d.tile = TileId::aim_marker_line;

@@ -48,6 +48,7 @@ set(SRC
   include/global.hpp
   include/gods.hpp
   include/highscore.hpp
+  include/info_screen_state.hpp
   include/init.hpp
   include/insanity.hpp
   include/inventory_handling.hpp
@@ -77,6 +78,7 @@ set(SRC
   include/map_travel.hpp
   include/marker.hpp
   include/msg_log.hpp
+  include/panel.hpp
   include/pickup.hpp
   include/player_bon.hpp
   include/player_spells.hpp
@@ -140,6 +142,7 @@ set(SRC
   src/gfx.cpp
   src/gods.cpp
   src/highscore.cpp
+  src/info_screen_state.cpp
   src/init.cpp
   src/insanity.cpp
   src/inventory.cpp
@@ -182,6 +185,7 @@ set(SRC
   src/map_travel.cpp
   src/marker.cpp
   src/msg_log.cpp
+  src/panel.cpp
   src/pickup.cpp
   src/player_bon.cpp
   src/player_spells.cpp
@@ -265,10 +269,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
   set(COMMON_COMPILE_FLAGS
     -std=c++14
     -fno-rtti
+    -Wpedantic
     -Wall
     -Wextra
     -Werror
-    -Wno-unused-value
     # implicit-fallthrough warnings must be disabled for tinyxml2, which relies
     # on this technique
     -Wno-implicit-fallthrough
@@ -474,11 +478,13 @@ else()
     find_package(SDL2       REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+    # find_package(SDL2_ttf   REQUIRED)
 
     set(SDL_INCLUDE_DIRS
         ${SDL2_INCLUDE_DIR}
         ${SDL2_IMAGE_INCLUDE_DIR}
         ${SDL2_MIXER_INCLUDE_DIR}
+        # ${SDL2_TTF_INCLUDE_DIR}
         )
 
     target_include_directories(ia       PUBLIC ${SDL_INCLUDE_DIRS})
@@ -488,6 +494,7 @@ else()
         ${SDL2_LIBRARY}
         ${SDL2_IMAGE_LIBRARIES}
         ${SDL2_MIXER_LIBRARIES}
+        # ${SDL2_TTF_LIBRARIES}
         )
 
     target_link_libraries(ia PUBLIC         ${SDL_LIBS})

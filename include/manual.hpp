@@ -5,65 +5,69 @@
 #include <string>
 
 #include "state.hpp"
+#include "info_screen_state.hpp"
 #include "global.hpp"
 #include "browser.hpp"
 
 struct ManualPage
 {
-    ManualPage() :
-        title   (""),
-        lines   () {}
+        std::string title = "";
 
-    std::string title;
-
-    std::vector<std::string> lines;
+        std::vector<std::string> lines = {};
 };
 
 class BrowseManual: public State
 {
 public:
-    BrowseManual() :
-        State       (),
-        browser_    (),
-        pages_      (),
-        top_idx_    (0) {}
+        BrowseManual() :
+                State(),
+                browser_(),
+                pages_(),
+                top_idx_(0) {}
 
-    void on_start() override;
+        void on_start() override;
 
-    void draw() override;
+        void draw() override;
 
-    void update() override;
+        void update() override;
 
-    StateId id() override;
+        StateId id() override;
 
 private:
-    void read_file();
+        void read_file();
 
-    MenuBrowser browser_;
+        MenuBrowser browser_;
 
-    std::vector<ManualPage> pages_;
+        std::vector<ManualPage> pages_;
 
-    int top_idx_;
+        int top_idx_;
 };
 
-class BrowseManualPage: public State
+class BrowseManualPage: public InfoScreenState
 {
 public:
-    BrowseManualPage(const ManualPage& page) :
-        State       (),
-        page_       (page),
-        top_idx_    (0) {}
+        BrowseManualPage(const ManualPage& page) :
+                InfoScreenState(),
+                page_(page),
+                top_idx_(0) {}
 
-    void draw() override;
+        void draw() override;
 
-    void update() override;
+        void update() override;
 
-    StateId id() override;
+        StateId id() override;
 
 private:
-    const ManualPage& page_;
+        std::string title() const override;
 
-    int top_idx_;
+        InfoScreenType type() const override
+        {
+                return InfoScreenType::scrolling;
+        }
+
+        const ManualPage& page_;
+
+        int top_idx_;
 };
 
 #endif // MANUAL_HPP

@@ -425,7 +425,7 @@ static int lifebar_length(const Actor& actor)
         {
                 int hp_percent = (actor_hp * 100) / actor_hp_max;
 
-                return ((config::cell_px_w() - 2) * hp_percent) / 100;
+                return ((config::map_cell_px_w() - 2) * hp_percent) / 100;
         }
 
         return -1;
@@ -440,7 +440,8 @@ static void draw_life_bar(const Actor& actor)
                 return;
         }
 
-        const P cell_dims(config::cell_px_w(), config::cell_px_h());
+        const P cell_dims(config::map_cell_px_w(),
+                          config::map_cell_px_h());
 
         const int w_green = length;
 
@@ -448,21 +449,20 @@ static void draw_life_bar(const Actor& actor)
 
         const int w_red = w_bar_tot - w_green;
 
-        const P& pos = actor.pos;
+        PxPos px_pos = io::get_px_pos(
+                Panel::map,
+                actor.pos.with_y_offset(1));
 
-        const P px_pos =
-                io::px_pos_for_cell_in_panel(
-                        Panel::map,
-                        pos + P(0, 1)) - P(0, 2);
+        px_pos.value.y -= 2;
 
-        const int x0_green = px_pos.x + 1;
+        const int x0_green = px_pos.value.x + 1;
 
         const int x0_red = x0_green + w_green;
 
         if (w_green > 0)
         {
                 io::draw_line_hor(
-                        P(x0_green, px_pos.y),
+                        PxPos(x0_green, px_pos.value.y),
                         w_green,
                         colors::light_green());
         }
@@ -470,7 +470,7 @@ static void draw_life_bar(const Actor& actor)
         if (w_red > 0)
         {
                 io::draw_line_hor(
-                        P(x0_red, px_pos.y),
+                        PxPos(x0_red, px_pos.value.y),
                         w_red,
                         colors::light_red());
         }

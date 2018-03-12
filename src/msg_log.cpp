@@ -10,105 +10,108 @@
 #include "map.hpp"
 #include "text_format.hpp"
 
-namespace msg_log
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static std::vector<Msg> lines_[2];
+
+static const size_t history_capacity_ = 200;
+
+static size_t history_size_ = 0;
+
+static size_t history_count_ = 0;
+
+static std::vector<Msg> history_[history_capacity_];
+
+static const std::string more_str = "-More-";
+
+static int x_after_msg(const Msg* const msg)
 {
+        if (!msg)
+        {
+                return 0;
+        }
 
-namespace
-{
+        std::string str = "";
 
-std::vector<Msg> lines_[2];
+        msg->str_with_repeats(str);
 
-const size_t history_capacity_ = 200;
-
-size_t history_size_ = 0;
-
-size_t history_count_ = 0;
-
-std::vector<Msg> history_[history_capacity_];
-
-const std::string more_str = "-More-";
-
-int x_after_msg(const Msg* const msg)
-{
-    if (!msg)
-    {
-        return 0;
-    }
-
-    std::string str = "";
-
-    msg->str_with_repeats(str);
-
-    return msg->x_pos_ + str.size() + 1;
+        return msg->x_pos_ + str.size() + 1;
 }
 
 // Used by normal log and history viewer
-void draw_line(const std::vector<Msg>& line, const int y_pos)
+static void draw_line(const std::vector<Msg>& line, const int y_pos)
 {
-    for (const Msg& msg : line)
-    {
-        std::string str = "";
+        for (const Msg& msg : line)
+        {
+                std::string str = "";
 
-        msg.str_with_repeats(str);
+                msg.str_with_repeats(str);
 
-        io::draw_text(str,
-                      Panel::log,
-                      P(msg.x_pos_, y_pos),
-                      msg.color_);
-    }
+                io::draw_text(
+                        str,
+                        Panel::log,
+                        P(msg.x_pos_, y_pos),
+                        msg.color_);
+        }
 }
 
-} // namespace
+// -----------------------------------------------------------------------------
+// msg_log
+// -----------------------------------------------------------------------------
+namespace msg_log
+{
 
 void init()
 {
-    for (std::vector<Msg>& line : lines_)
-    {
-        line.clear();
-    }
+        for (std::vector<Msg>& line : lines_)
+        {
+                line.clear();
+        }
 
-    history_size_   = 0;
-    history_count_  = 0;
+        history_size_   = 0;
+        history_count_  = 0;
 }
 
 void draw()
 {
-    const int nr_lines_with_content =
-        lines_[0].empty() ? 0 :
-        lines_[1].empty() ? 1 : 2;
+        const int nr_lines_with_content =
+                lines_[0].empty() ? 0 :
+                lines_[1].empty() ? 1 : 2;
 
-    if (nr_lines_with_content > 0)
-    {
-        io::cover_area(Panel::log,
-                       P(0, 0),
-                       P(map_w, nr_lines_with_content));
-
-        for (int i = 0; i < nr_lines_with_content; ++i)
+        if (nr_lines_with_content > 0)
         {
-            draw_line(lines_[i], i);
+                io::cover_area(
+                        Panel::log,
+                        P(0, 0),
+                        P(map_w, nr_lines_with_content));
+
+                for (int i = 0; i < nr_lines_with_content; ++i)
+                {
+                        draw_line(lines_[i], i);
+                }
         }
-    }
 }
 
 void clear()
 {
-    for (std::vector<Msg>& line : lines_)
-    {
-        if (!line.empty())
+        for (std::vector<Msg>& line : lines_)
         {
-            // Add cleared line to history
-            history_[history_count_ % history_capacity_] = line;
+                if (!line.empty())
+                {
+                        // Add cleared line to history
+                        history_[history_count_ % history_capacity_] = line;
 
-            ++history_count_;
+                        ++history_count_;
 
-            if (history_size_ < history_capacity_)
-            {
-                ++history_size_;
-            }
+                        if (history_size_ < history_capacity_)
+                        {
+                                ++history_size_;
+                        }
 
-            line.clear();
+                        line.clear();
+                }
         }
-    }
 }
 
 void add(const std::string& str,
@@ -116,230 +119,234 @@ void add(const std::string& str,
          const bool interrupt_all_player_actions,
          const MorePromptOnMsg add_more_prompt_on_msg)
 {
-    ASSERT(!str.empty());
+        ASSERT(!str.empty());
 
 #ifndef NDEBUG
-    if (str[0] == ' ')
-    {
-        TRACE << "Message starts with space: \"" << str << "\"" << std::endl;
-        ASSERT(false);
-    }
-#endif
-
-    // If frenzied, change message
-    if (map::player->has_prop(PropId::frenzied))
-    {
-        std::string frenzied_str = str;
-
-        bool has_lower_case = false;
-
-        for (auto c : frenzied_str)
+        if (str[0] == ' ')
         {
-            if ((c >= 'a') &&
-                (c <= 'z'))
-            {
-                has_lower_case = true;
-                break;
-            }
+                TRACE << "Message starts with space: \""
+                      << str
+                      << "\""
+                      << std::endl;
+
+                ASSERT(false);
         }
+#endif // NDEBUG
 
-        const char last_msg_char = frenzied_str.back();
-
-        bool is_ended_by_punctuation =
-            (last_msg_char == '.') ||
-            (last_msg_char == '!');
-
-        if (has_lower_case && is_ended_by_punctuation)
+        // If frenzied, change message
+        if (map::player->has_prop(PropId::frenzied))
         {
-            // Convert to upper case
-            frenzied_str = text_format::all_to_upper(frenzied_str);
+                std::string frenzied_str = str;
 
-            // Do not put "!" if string contains "..."
-            if (frenzied_str.find("...") == std::string::npos)
-            {
-                // Change "." to "!" at the end
-                if (frenzied_str.back() == '.')
+                bool has_lower_case = false;
+
+                for (auto c : frenzied_str)
                 {
-                    frenzied_str.back() = '!';
+                        if ((c >= 'a') &&
+                            (c <= 'z'))
+                        {
+                                has_lower_case = true;
+                                break;
+                        }
                 }
 
-                // Add some exclamation marks
-                frenzied_str += "!!";
-            }
+                const char last_msg_char = frenzied_str.back();
 
-            add(frenzied_str,
-                color,
-                interrupt_all_player_actions,
-                add_more_prompt_on_msg);
+                bool is_ended_by_punctuation =
+                        (last_msg_char == '.') ||
+                        (last_msg_char == '!');
 
-            return;
+                if (has_lower_case && is_ended_by_punctuation)
+                {
+                        // Convert to upper case
+                        frenzied_str = text_format::all_to_upper(frenzied_str);
+
+                        // Do not put "!" if string contains "..."
+                        if (frenzied_str.find("...") == std::string::npos)
+                        {
+                                // Change "." to "!" at the end
+                                if (frenzied_str.back() == '.')
+                                {
+                                        frenzied_str.back() = '!';
+                                }
+
+                                // Add some exclamation marks
+                                frenzied_str += "!!";
+                        }
+
+                        add(frenzied_str,
+                            color,
+                            interrupt_all_player_actions,
+                            add_more_prompt_on_msg);
+
+                        return;
+                }
         }
-    }
 
-    int current_line_nr = lines_[1].empty() ? 0 : 1;
+        int current_line_nr = lines_[1].empty() ? 0 : 1;
 
-    Msg* prev_msg = nullptr;
+        Msg* prev_msg = nullptr;
 
-    if (!lines_[current_line_nr].empty())
-    {
-        prev_msg = &lines_[current_line_nr].back();
-    }
-
-    bool is_repeated = false;
-
-    // Check if message is identical to previous
-    if (add_more_prompt_on_msg == MorePromptOnMsg::no &&
-        prev_msg)
-    {
-        std::string prev_str = "";
-
-        prev_msg->str_raw(prev_str);
-
-        if (prev_str.compare(str) == 0)
+        if (!lines_[current_line_nr].empty())
         {
-            prev_msg->incr_repeat();
-
-            is_repeated = true;
+                prev_msg = &lines_[current_line_nr].back();
         }
-    }
 
-    if (!is_repeated)
-    {
-        const int repeat_str_len = 4;
+        bool is_repeated = false;
 
-        const int padding_len =
-            repeat_str_len +
-            ((current_line_nr == 0) ? 0 :
-             (more_str.size() + 1));
-
-        int x_pos = x_after_msg(prev_msg);
-
-        const bool is_msg_fit =
-            (x_pos + (int)str.size() + padding_len - 1) < map_w;
-
-        if (!is_msg_fit)
+        // Check if message is identical to previous
+        if (add_more_prompt_on_msg == MorePromptOnMsg::no &&
+            prev_msg)
         {
-            if (current_line_nr == 0)
-            {
-                current_line_nr = 1;
-            }
-            else // Current line number is not zero
-            {
+                std::string prev_str = "";
+
+                prev_msg->str_raw(prev_str);
+
+                if (prev_str.compare(str) == 0)
+                {
+                        prev_msg->incr_repeat();
+
+                        is_repeated = true;
+                }
+        }
+
+        if (!is_repeated)
+        {
+                const int repeat_str_len = 4;
+
+                const int padding_len =
+                        repeat_str_len +
+                        ((current_line_nr == 0) ? 0 :
+                         (more_str.size() + 1));
+
+                int x_pos = x_after_msg(prev_msg);
+
+                const bool is_msg_fit =
+                        (x_pos + (int)str.size() + padding_len - 1) < map_w;
+
+                if (!is_msg_fit)
+                {
+                        if (current_line_nr == 0)
+                        {
+                                current_line_nr = 1;
+                        }
+                        else // Current line number is not zero
+                        {
+                                more_prompt();
+
+                                current_line_nr = 0;
+                        }
+
+                        x_pos = 0;
+                }
+
+                lines_[current_line_nr].push_back(Msg(str, color, x_pos));
+        }
+
+        io::clear_screen();
+
+        states::draw();
+
+        if (add_more_prompt_on_msg == MorePromptOnMsg::yes)
+        {
                 more_prompt();
-
-                current_line_nr = 0;
-            }
-
-            x_pos = 0;
         }
 
-        lines_[current_line_nr].push_back(Msg(str, color, x_pos));
-    }
+        // Messages may stop long actions like first aid and quick walk
+        if (interrupt_all_player_actions)
+        {
+                map::player->interrupt_actions();
+        }
 
-    io::clear_screen();
-
-    states::draw();
-
-    if (add_more_prompt_on_msg == MorePromptOnMsg::yes)
-    {
-        more_prompt();
-    }
-
-    // Messages may stop long actions like first aid and quick walk
-    if (interrupt_all_player_actions)
-    {
-        map::player->interrupt_actions();
-    }
-
-    // Some actions are always interrupted by messages, regardless of the
-    // "interrupt_all_player_actions" parameter
-    map::player->on_log_msg_printed();
+        // Some actions are always interrupted by messages, regardless of the
+        // "interrupt_all_player_actions" parameter
+        map::player->on_log_msg_printed();
 }
 
 void more_prompt()
 {
-    // If the current log is empty, do nothing
-    if (lines_[0].empty())
-    {
-        return;
-    }
-
-    states::draw();
-
-    draw();
-
-    int x_pos = 0;
-
-    int line_nr =
-        lines_[1].empty() ?
-        0 : 1;
-
-    if (!lines_[line_nr].empty())
-    {
-        Msg* const last_msg = &lines_[line_nr].back();
-
-        x_pos = x_after_msg(last_msg);
-
-        if (line_nr == 0)
+        // If the current log is empty, do nothing
+        if (lines_[0].empty())
         {
-            if ((x_pos + (int)more_str.size() - 1) >= map_w)
-            {
-                x_pos = 0;
-                line_nr  = 1;
-            }
+                return;
         }
-    }
 
-    io::draw_text(more_str,
-                  Panel::log,
-                  P(x_pos, line_nr),
-                  colors::black(),
-                  colors::gray());
+        states::draw();
 
-    query::wait_for_msg_more();
+        draw();
 
-    clear();
+        int x_pos = 0;
+
+        int line_nr =
+                lines_[1].empty() ?
+                0 : 1;
+
+        if (!lines_[line_nr].empty())
+        {
+                Msg* const last_msg = &lines_[line_nr].back();
+
+                x_pos = x_after_msg(last_msg);
+
+                if (line_nr == 0)
+                {
+                        if ((x_pos + (int)more_str.size() - 1) >= map_w)
+                        {
+                                x_pos = 0;
+                                line_nr  = 1;
+                        }
+                }
+        }
+
+        io::draw_text(more_str,
+                      Panel::log,
+                      P(x_pos, line_nr),
+                      colors::black(),
+                      colors::gray());
+
+        query::wait_for_msg_more();
+
+        clear();
 }
 
 void add_line_to_history(const std::string& line_to_add)
 {
-    std::vector<Msg> history_line;
+        std::vector<Msg> history_line;
 
-    const Msg msg(line_to_add,
-                  colors::white(),
-                  0);
+        const Msg msg(line_to_add,
+                      colors::white(),
+                      0);
 
-    history_[history_count_ % history_capacity_] = {msg};
+        history_[history_count_ % history_capacity_] = {msg};
 
-    ++history_count_;
+        ++history_count_;
 
-    if (history_size_ < history_capacity_)
-    {
-        ++history_size_;
-    }
+        if (history_size_ < history_capacity_)
+        {
+                ++history_size_;
+        }
 }
 
 const std::vector< std::vector<Msg> > history()
 {
-    std::vector< std::vector<Msg> > ret;
+        std::vector< std::vector<Msg> > ret;
 
-    ret.reserve(history_size_);
+        ret.reserve(history_size_);
 
-    size_t start = 0;
+        size_t start = 0;
 
-    if (history_count_ >= history_capacity_)
-    {
-        start = history_count_ - history_capacity_;
-    }
+        if (history_count_ >= history_capacity_)
+        {
+                start = history_count_ - history_capacity_;
+        }
 
-    for (size_t i = start; i < history_count_; ++i)
-    {
-        const auto& line = history_[i % history_capacity_];
+        for (size_t i = start; i < history_count_; ++i)
+        {
+                const auto& line = history_[i % history_capacity_];
 
-        ret.push_back(line);
-    }
+                ret.push_back(line);
+        }
 
-    return ret;
+        return ret;
 }
 
 } // msg_log
@@ -349,105 +356,111 @@ const std::vector< std::vector<Msg> > history()
 // -----------------------------------------------------------------------------
 StateId MsgHistoryState::id()
 {
-    return StateId::message;
+        return StateId::message;
 }
 
 void MsgHistoryState::on_start()
 {
-    history_ = msg_log::history();
+        history_ = msg_log::history();
 
-    const int history_size = history_.size();
+        const int history_size = history_.size();
 
-    top_line_nr_ = history_size - max_nr_lines_on_scr_;
-    top_line_nr_ = std::max(0, top_line_nr_);
+        top_line_nr_ = history_size - max_nr_lines_on_screen();
+        top_line_nr_ = std::max(0, top_line_nr_);
 
-    btm_line_nr_ = top_line_nr_ + max_nr_lines_on_scr_ - 1;
-    btm_line_nr_ = std::min(history_size - 1, btm_line_nr_);
+        btm_line_nr_ = top_line_nr_ + max_nr_lines_on_screen();
+        btm_line_nr_ = std::min(history_size - 1, btm_line_nr_);
+}
+
+std::string MsgHistoryState::title() const
+{
+        std::string title = "";
+
+        if (history_.empty())
+        {
+                title = "No message history";
+        }
+        else // History has content
+        {
+                const std::string msg_nr_str_first
+                        = std::to_string(top_line_nr_ + 1);
+
+                const std::string msg_nr_str_last
+                        = std::to_string(btm_line_nr_ + 1);
+
+                title =
+                        "Messages " +
+                        msg_nr_str_first + "-" +
+                        msg_nr_str_last +
+                        " of " + std::to_string(history_.size());
+        }
+
+        return title;
 }
 
 void MsgHistoryState::draw()
 {
-    std::string title = "";
+        draw_interface();
 
-    if (history_.empty())
-    {
-        title = "No message history";
-    }
-    else // History has content
-    {
-        const std::string msg_nr_str_first  = std::to_string(top_line_nr_ + 1);
-        const std::string msg_nr_str_last   = std::to_string(btm_line_nr_ + 1);
+        int y = 1;
 
-        title =
-            "Messages " +
-            msg_nr_str_first + "-" +
-            msg_nr_str_last +
-            " of " + std::to_string(history_.size());
-    }
+        for (int i = top_line_nr_; i <= btm_line_nr_; ++i)
+        {
+                const auto& line = history_[i];
 
-    io::draw_info_scr_interface(title,
-                                InfScreenType::scrolling);
+                draw_line(line, y);
 
-    int y = 1;
-
-    for (int i = top_line_nr_; i <= btm_line_nr_; ++i)
-    {
-        const auto& line = history_[i];
-
-        msg_log::draw_line(line, y);
-
-        ++y;
-    }
+                ++y;
+        }
 }
 
 void MsgHistoryState::update()
 {
-    const int line_jump = 3;
+        const int line_jump = 3;
 
-    const int max_nr_lines_on_scr = screen_h - 2;
+        const int history_size = history_.size();
 
-    const int history_size = history_.size();
+        const auto input = io::get(false);
 
-    const auto input = io::get(false);
+        switch (input.key)
+        {
+        case SDLK_DOWN:
+        case '2':
+        case 'j':
+        {
+                top_line_nr_ += line_jump;
 
-    switch (input.key)
-    {
-    case SDLK_DOWN:
-    case '2':
-    case 'j':
-    {
-        top_line_nr_ += line_jump;
+                const int top_nr_max =
+                        std::max(0, history_size - max_nr_lines_on_screen());
 
-        const int top_nr_max =
-            std::max(0, history_size - max_nr_lines_on_scr);
-
-        top_line_nr_ =
-            std::min(top_nr_max, top_line_nr_);
-    }
-    break;
-
-    case SDLK_UP:
-    case '8':
-    case 'k':
-    {
-        top_line_nr_ =
-            std::max(0, top_line_nr_ - line_jump);
-    }
-    break;
-
-    case SDLK_SPACE:
-    case SDLK_ESCAPE:
-    {
-        states::pop();
-
-        return;
-    }
-    break;
-
-    default:
+                top_line_nr_ =
+                        std::min(top_nr_max, top_line_nr_);
+        }
         break;
-    }
 
-    btm_line_nr_ = std::min(top_line_nr_ + max_nr_lines_on_scr - 1,
-                            history_size - 1);
+        case SDLK_UP:
+        case '8':
+        case 'k':
+        {
+                top_line_nr_ =
+                        std::max(0, top_line_nr_ - line_jump);
+        }
+        break;
+
+        case SDLK_SPACE:
+        case SDLK_ESCAPE:
+        {
+                states::pop();
+
+                return;
+        }
+        break;
+
+        default:
+                break;
+        }
+
+        btm_line_nr_ = std::min(
+                top_line_nr_ + max_nr_lines_on_screen() - 1,
+                history_size - 1);
 }

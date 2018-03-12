@@ -10,14 +10,7 @@
 #include "game_time.hpp"
 #include "config.hpp"
 #include "gfx.hpp"
-
-enum class Panel
-{
-        screen,
-        map,
-        status_lines,
-        log
-};
+#include "panel.hpp"
 
 struct CellRenderData
 {
@@ -47,6 +40,26 @@ struct InputData
         bool is_shift_held, is_ctrl_held;
 };
 
+struct PxPos
+{
+        PxPos() {}
+
+        PxPos (int x, int y) :
+                value(P(x, y)) {}
+
+        P value = P();
+};
+
+struct PxRect
+{
+        PxRect() {}
+
+        PxRect(int x0, int y0, int x1, int y1) :
+                value(x0, y0, x1, y1) {}
+
+        R value = R();
+};
+
 namespace io
 {
 
@@ -57,70 +70,77 @@ void update_screen();
 
 void clear_screen();
 
+// Scale from cell coordinate(s) to screen pixel coordinate(s)
+int to_px_x(const int value);
+int to_px_y(const int value);
+PxPos to_px(const P pos);
+PxPos to_px(const int x, const int y);
+
+// Returns a screen pixel position, relative to a cell position in a panel
+PxPos get_px_pos(const Panel panel, const P offset);
+
 void draw_symbol(
         const TileId tile,
         const char character,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg = colors::black());
 
 void draw_tile(
         const TileId tile,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg = colors::black());
 
 void draw_character(
         const char character,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg = colors::black());
 
 void draw_text(
         const std::string& str,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg = colors::black());
 
 int draw_text_center(
         const std::string& str,
         const Panel panel,
-        const P& pos,
+        const P pos,
         const Color& color,
         const Color& color_bg = colors::black(),
         const bool is_pixel_pos_adj_allowed = true);
 
-void cover_cell_in_map(const P& pos);
+void cover_cell(const Panel panel, const P offset);
 
 void cover_panel(const Panel panel);
 
-void cover_area(const Panel panel, const R& area);
+void cover_area(const Panel panel, const R area);
 
-void cover_area(const Panel panel, const P& pos, const P& dims);
-
-void cover_area_px(const P& px_pos, const P& px_dims);
+void cover_area(const Panel panel, const P offset, const P dims);
 
 void draw_rectangle_solid(
-        const P& px_pos,
-        const P& px_dims,
+        const PxPos px_pos,
+        const PxPos px_dims,
         const Color& color);
 
 void draw_line_hor(
-        const P& px_pos,
-        const int w,
+        const PxPos px_pos,
+        const int px_w,
         const Color& color);
 
 void draw_line_ver(
-        const P& px_pos,
-        const int h,
+        const PxPos px_pos,
+        const int px_h,
         const Color& color);
 
 void draw_blast_at_field(
-        const P& center_pos,
+        const P center_pos,
         const int radius,
         bool forbidden_cells[map_w][map_h],
         const Color& color_inner,
@@ -140,7 +160,7 @@ void draw_blast_at_seen_actors(
 
 void draw_main_menu_logo(const int y_pos);
 
-void draw_skull(const P& p);
+void draw_skull(const P pos);
 
 void draw_box(
         const R& area,
@@ -151,12 +171,6 @@ void draw_box(
 // Draws a description "box" for items, spells, etc. The parameter lines may be
 // empty, in which case an empty area is drawn.
 void draw_descr_box(const std::vector<ColoredString>& lines);
-
-void draw_info_scr_interface(
-        const std::string& title,
-        const InfScreenType screen_type);
-
-P px_pos_for_cell_in_panel(const Panel panel, const P& pos);
 
 // ----------------------------------------
 // TODO: WTF is the difference between these two functions?

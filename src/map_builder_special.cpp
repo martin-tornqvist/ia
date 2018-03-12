@@ -109,7 +109,7 @@ void MapBuilderIntroForest::handle_template_pos(const P&p, const char c)
                 // Store this position for placing player graves
                 possible_grave_positions_.push_back(p);
         }
-        // NOTE: Intentional fall through!
+        [[fallthrough]];
         case ',':
         {
                 if (rnd::one_in(12))

@@ -3,6 +3,7 @@
 #include "game_time.hpp"
 #include "colors.hpp"
 #include "io.hpp"
+#include "panel.hpp"
 #include "actor_player.hpp"
 #include "map.hpp"
 #include "game.hpp"
@@ -383,11 +384,14 @@ void draw()
         }
 
         // Turn number
-        const int turn = game_time::turn_nr();
+        const int turn_nr = game_time::turn_nr();
 
-        const std::string turn_str = std::to_string(turn);
+        const std::string turn_nr_str = std::to_string(turn_nr);
 
-        p.x = screen_w - turn_str.size() - 2; // "T" + ":"
+        // "T:" + current turn number
+        const int total_turn_info_w = turn_nr_str.size() + 2;
+
+        p.x = panels::get_x1(panel) - total_turn_info_w + 1;
 
         io::draw_text("T", panel, p, colors::dark_gray(), colors::black());
 
@@ -397,7 +401,7 @@ void draw()
 
         ++p.x;
 
-        io::draw_text(turn_str, panel, p, colors::white());
+        io::draw_text(turn_nr_str, panel, p, colors::white());
 }
 
 } // status_lines

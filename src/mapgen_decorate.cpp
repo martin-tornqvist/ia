@@ -21,24 +21,18 @@ void decorate()
 
             if (cell.rigid->id() == FeatureId::wall)
             {
-                //
                 // Convert some walls to high rubble
-                //
                 if (rnd::one_in(10))
                 {
                     map::put(new RubbleHigh(P(x, y)));
                     continue;
                 }
 
-                //
                 // Moss grown walls
-                //
                 Wall* const wall = static_cast<Wall*>(cell.rigid);
                 wall->set_random_is_moss_grown();
 
-                //
                 // Convert some walls to cave
-                //
                 bool should_convert_to_cave_wall = false;
 
                 if (map::dlvl >= dlvl_first_late_game)
@@ -67,14 +61,13 @@ void decorate()
                         const auto adj_id = adj_cell.rigid->id();
 
                         // TODO: Traps count as floor here - otherwise walls
-                        //       that are only adjacent to traps would be
-                        //       converted to cave walls, which would spoil the
-                        //       presence of the trap, and just be weird in
-                        //       general. This works for now, but it should
-                        //       probably be handled better. Currently, traps
-                        //       are the only rigid that can "mimic" floor, but
-                        //       if some other feature like that is added, it
-                        //       could be a problem.
+                        // that are only adjacent to traps would be converted to
+                        // cave walls, which would spoil the presence of the
+                        // trap, and just be weird in general. This works for
+                        // now, but it should probably be handled better.
+                        // Currently, traps are the only rigid that can "mimic"
+                        // floor, but if some other feature like that is added,
+                        // it could be a problem.
 
                         if (adj_id == FeatureId::floor ||
                             adj_id == FeatureId::carpet ||
@@ -82,11 +75,9 @@ void decorate()
                         {
                             has_adj_floor = true;
 
-                            //
                             // TODO: Currently, traps always prevents converting
-                            //       adjacent walls to cave wall - even if the
-                            //       trap mimics cave floor
-                            //
+                            // adjacent walls to cave wall - even if the trap
+                            // mimics cave floor
 
                             // Cave floor?
                             if (adj_id == FeatureId::floor)
@@ -136,17 +127,13 @@ void decorate()
             if (cell.rigid->id() == FeatureId::floor)
             {
 
-                //
                 // Randomly put low rubble
-                //
                 if (rnd::one_in(100))
                 {
                     map::put(new RubbleLow(p));
                 }
 
-                //
                 // Randomly put vines
-                //
                 if (rnd::one_in(150))
                 {
                     for (const P& d : dir_utils::dir_list_w_center)
@@ -168,9 +155,7 @@ void decorate()
             // Not floor
             else if (cell.rigid->id() == FeatureId::wall)
             {
-                //
                 // Convert some walls to grates
-                //
                 if (rnd::one_in(6))
                 {
                     bool is_allowed = true;
@@ -201,10 +186,10 @@ void decorate()
 
                     if (is_allowed)
                     {
-                        const P adj_hor_1(p + P(-1, 0));
-                        const P adj_hor_2(p + P(1, 0));
-                        const P adj_ver_1(p + P(0, 1));
-                        const P adj_ver_2(p + P(0, -1));
+                        const P adj_hor_1 = p.with_x_offset(-1);
+                        const P adj_hor_2 = p.with_x_offset(1);
+                        const P adj_ver_1 = p.with_y_offset(1);
+                        const P adj_ver_2 = p.with_y_offset(-1);
 
                         auto is_free = [&](const P& p)
                         {

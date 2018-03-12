@@ -22,13 +22,6 @@
 #include "property_data.hpp"
 #include "property_handler.hpp"
 
-namespace
-{
-
-const int max_nr_lines_on_scr_ = screen_h - 2;
-
-} // namespace
-
 // -----------------------------------------------------------------------------
 // View actor description
 // -----------------------------------------------------------------------------
@@ -376,12 +369,11 @@ void ViewActorDescr::on_start()
 
 void ViewActorDescr::draw()
 {
-    io::draw_info_scr_interface("Monster info",
-                                InfScreenType::scrolling);
+    draw_interface();
 
     const int nr_lines_tot = lines_.size();
 
-    int btm_nr = std::min(top_idx_ + max_nr_lines_on_scr_ - 1,
+    int btm_nr = std::min(top_idx_ + max_nr_lines_on_screen() - 1,
                           nr_lines_tot - 1);
 
     int screen_y = 1;
@@ -394,7 +386,7 @@ void ViewActorDescr::draw()
         {
             io::draw_text(text.str,
                           Panel::screen,
-                          P(text.p.x, screen_y),
+                          P(text.x_pos, screen_y),
                           text.color);
         }
 
@@ -416,13 +408,15 @@ void ViewActorDescr::update()
     case 'j':
         top_idx_ += line_jump;
 
-        if (nr_lines_tot <= max_nr_lines_on_scr_)
+        if (nr_lines_tot <= max_nr_lines_on_screen())
         {
             top_idx_ = 0;
         }
         else
         {
-            top_idx_ = std::min(nr_lines_tot - max_nr_lines_on_scr_, top_idx_);
+            top_idx_ = std::min(
+                nr_lines_tot - max_nr_lines_on_screen(),
+                top_idx_);
         }
         break;
 
@@ -462,7 +456,7 @@ void ViewActorDescr::put_text(const std::string str,
 
     text.color = color;
 
-    text.p = p;
+    text.x_pos = p.x;
 
     line.push_back(text);
 }

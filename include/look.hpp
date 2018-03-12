@@ -4,64 +4,66 @@
 #include <string>
 
 #include "rl_utils.hpp"
-#include "state.hpp"
+#include "info_screen_state.hpp"
 #include "global.hpp"
 
 class Actor;
 
 struct ActorDescrText
 {
-    ActorDescrText() :
-        str(),
-        color(colors::black()),
-        p() {}
+        std::string str = {};
 
-    std::string str;
+        Color color = colors::black();
 
-    Color color;
-
-    P p;
+        int x_pos = 0;
 };
 
-class ViewActorDescr: public State
+class ViewActorDescr: public InfoScreenState
 {
 public:
-    ViewActorDescr(Actor& actor) :
-        State       (),
-        lines_      (),
-        top_idx_    (0),
-        actor_      (actor) {}
+        ViewActorDescr(Actor& actor) :
+                InfoScreenState(),
+                lines_(),
+                top_idx_(0),
+                actor_(actor) {}
 
-    void on_start() override;
+        void on_start() override;
 
-    void draw() override;
+        void draw() override;
 
-    void update() override;
+        void update() override;
 
-    StateId id() override;
+        StateId id() override;
 
 private:
-    void put_text(const std::string str,
-                  const P& p,
-                  const Color& color);
+        std::string title() const override
+        {
+                return "Monster info";
+        }
 
-    std::string auto_description_str() const;
+        InfoScreenType type() const override
+        {
+                return InfoScreenType::scrolling;
+        }
 
-    std::string mon_speed_str() const;
+        void put_text(const std::string str,
+                      const P& p,
+                      const Color& color);
 
-    std::string mon_dwell_lvl_str() const;
+        std::string auto_description_str() const;
 
-    void mon_shock_str(std::string& shock_str_out,
-                       std::string& punct_str_out) const;
+        std::string mon_speed_str() const;
 
-    // NOTE: The y position of the Text struct is not used at all here, instead
-    // the indexes of the lines_ vector represents the y position. This is more
-    // convenient when iterating over the lines to draw text.
-    std::vector< std::vector<ActorDescrText> > lines_;
+        std::string mon_dwell_lvl_str() const;
 
-    int top_idx_;
+        void mon_shock_str(std::string& shock_str_out,
+                           std::string& punct_str_out) const;
 
-    Actor& actor_;
+        std::vector< std::vector<ActorDescrText> > lines_;
+
+        int top_idx_;
+
+        Actor& actor_;
 };
 
 namespace look

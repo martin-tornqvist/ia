@@ -411,7 +411,7 @@ void PostmortemMenu::draw()
                               colors::gray());
         }
 
-        io::draw_box(R(0, 0, screen_w - 1, screen_h - 1));
+        io::draw_box(panels::get_area(Panel::screen));
 }
 
 void PostmortemMenu::make_memorial_file(const std::string path) const
@@ -560,8 +560,7 @@ void PostmortemInfo::draw()
 {
         io::clear_screen();
 
-        io::draw_info_scr_interface("Game summary",
-                                    InfScreenType::scrolling);
+        draw_interface();
 
         const int nr_info_lines = (int)info_lines_.size();
 
@@ -570,7 +569,7 @@ void PostmortemInfo::draw()
         int screen_y = 1;
 
         for (int i = top_idx_;
-             (i < nr_lines_tot) && ((i - top_idx_) < max_nr_lines_on_scr_);
+             (i < nr_lines_tot) && ((i - top_idx_) < max_nr_lines_on_screen());
              ++i)
         {
                 const bool is_info_lines = i < nr_info_lines;
@@ -625,15 +624,15 @@ void PostmortemInfo::update()
         case 'j':
                 top_idx_ += line_jump;
 
-                if (nr_lines_tot <= max_nr_lines_on_scr_)
+                if (nr_lines_tot <= max_nr_lines_on_screen())
                 {
                         top_idx_ = 0;
                 }
                 else
                 {
-                        top_idx_ =
-                                std::min(nr_lines_tot - max_nr_lines_on_scr_,
-                                         top_idx_);
+                        top_idx_ = std::min(
+                                nr_lines_tot - max_nr_lines_on_screen(),
+                                top_idx_);
                 }
                 break;
 

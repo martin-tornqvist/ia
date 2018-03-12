@@ -590,14 +590,14 @@ static std::unique_ptr<Snd> ranged_fire_snd(const AttData& att_data,
 {
         std::unique_ptr<Snd> snd;
 
-        const SndVol vol = wpn.data().ranged.snd_vol;
-
         const std::string snd_msg = wpn.data().ranged.snd_msg;
-
-        const SfxId sfx = wpn.data().ranged.att_sfx;
 
         if (!snd_msg.empty())
         {
+                const SfxId sfx = wpn.data().ranged.att_sfx;
+
+                const SndVol vol = wpn.data().ranged.snd_vol;
+
                 std::string snd_msg_used = snd_msg;
 
                 if (att_data.attacker == map::player)
@@ -1160,8 +1160,6 @@ static void draw_projectile(const Projectile& projectile)
         {
                 return;
         }
-
-        io::cover_cell_in_map(projectile.pos);
 
         io::draw_symbol(
                 projectile.tile,

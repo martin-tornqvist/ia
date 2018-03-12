@@ -169,8 +169,10 @@ void make_sub_rooms()
 
                             // Only consider this position if it is completely
                             // inside the edge of the inner room
-                            if (p > outer_room_rect.p0 &&
-                                p < outer_room_rect.p1)
+                            if (p.x > outer_room_rect.p0.x &&
+                                p.y > outer_room_rect.p0.y &&
+                                p.x < outer_room_rect.p1.x &&
+                                p.y < outer_room_rect.p1.y)
                             {
                                 // Do not put entrances on the corners of the
                                 // inner room

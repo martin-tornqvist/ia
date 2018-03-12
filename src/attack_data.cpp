@@ -83,7 +83,7 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         dodging_mod = 0;
 
         const bool player_is_handling_armor =
-                map::player->nr_turns_until_handle_armor_done_ > 0;
+                map::player->handle_armor_countdown_ > 0;
 
         const int dodging_ability = defender.ability(AbilityId::dodging, true);
 
@@ -322,7 +322,7 @@ RangedAttData::RangedAttData(Actor* const attacker,
                 dodging_mod = 0;
 
                 const bool player_is_handling_armor =
-                        map::player->nr_turns_until_handle_armor_done_ > 0;
+                        map::player->handle_armor_countdown_ > 0;
 
                 const bool allow_positive_doge =
                         is_defender_aware &&
@@ -505,7 +505,7 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                 dodging_mod = 0;
 
                 const bool player_is_handling_armor =
-                        map::player->nr_turns_until_handle_armor_done_ > 0;
+                        map::player->handle_armor_countdown_ > 0;
 
                 const int dodging_ability =
                         defender->ability(AbilityId::dodging, true);

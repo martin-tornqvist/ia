@@ -1655,7 +1655,7 @@ void PropConfusesAdjacent::on_std_turn()
 {
         if (!owner_->is_alive() ||
             !map::player->can_see_actor(*owner_) ||
-            !map::player->pos.is_adjacent_to(owner_->pos))
+            !map::player->pos.is_adjacent(owner_->pos))
         {
                 return;
         }

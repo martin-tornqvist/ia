@@ -65,7 +65,7 @@ Player::Player() :
     Actor(),
     thrown_item_(),
     active_medical_bag_(nullptr),
-    nr_turns_until_handle_armor_done_(0),
+    handle_armor_countdown_(0),
     armor_putting_on_backpack_idx_(-1),
     is_dropping_armor_from_body_slot_(false),
     active_explosive_(nullptr),
@@ -670,12 +670,12 @@ void Player::act()
         return;
     }
 
-    if (nr_turns_until_handle_armor_done_ > 0)
+    if (handle_armor_countdown_ > 0)
     {
-        --nr_turns_until_handle_armor_done_;
+        --handle_armor_countdown_;
 
         // Done handling armor?
-        if (nr_turns_until_handle_armor_done_ == 0)
+        if (handle_armor_countdown_ == 0)
         {
             // Putting on armor?
             if (armor_putting_on_backpack_idx_ >= 0)
@@ -916,7 +916,7 @@ void Player::on_actor_turn()
     update_tmp_shock();
 
     if (active_medical_bag_ ||
-        (nr_turns_until_handle_armor_done_ > 0) ||
+        (handle_armor_countdown_ > 0) ||
         (wait_turns_left > 0) ||
         (quick_move_dir_ != Dir::END))
     {
@@ -979,7 +979,7 @@ void Player::on_actor_turn()
             }
 
             if (active_medical_bag_ ||
-                (nr_turns_until_handle_armor_done_ > 0) ||
+                (handle_armor_countdown_ > 0) ||
                 (wait_turns_left > 0) ||
                 (quick_move_dir_ != Dir::END))
             {
@@ -1558,7 +1558,7 @@ void Player::interrupt_actions()
     }
 
     // Abort putting on / taking off armor?
-    if (nr_turns_until_handle_armor_done_ > 0)
+    if (handle_armor_countdown_ > 0)
     {
         bool should_continue = true;
 
@@ -1570,7 +1570,7 @@ void Player::interrupt_actions()
         if (should_continue)
         {
             const std::string turns_left_str =
-                std::to_string(nr_turns_until_handle_armor_done_);
+                std::to_string(handle_armor_countdown_);
 
             std::string msg = "";
 
@@ -1615,7 +1615,7 @@ void Player::interrupt_actions()
 
         if (!should_continue)
         {
-            nr_turns_until_handle_armor_done_ = 0;
+            handle_armor_countdown_ = 0;
 
             armor_putting_on_backpack_idx_ = -1;
 

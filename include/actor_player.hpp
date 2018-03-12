@@ -137,7 +137,7 @@ public:
 
     Item* thrown_item_;
     MedicalBag* active_medical_bag_;
-    int nr_turns_until_handle_armor_done_;
+    int handle_armor_countdown_;
     int armor_putting_on_backpack_idx_;
     bool is_dropping_armor_from_body_slot_;
     Explosive* active_explosive_;

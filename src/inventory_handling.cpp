@@ -20,12 +20,12 @@
 #include "text_format.hpp"
 #include "marker.hpp"
 
-// TODO: All this should probably be moved to the inventory screen base class
-namespace
-{
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
 
 // Index can mean Slot index or Backpack Index (both start from zero)
-bool run_drop_query(const InvType inv_type, const size_t idx)
+static bool run_drop_query(const InvType inv_type, const size_t idx)
 {
         TRACE_FUNC_BEGIN;
 
@@ -136,19 +136,12 @@ bool run_drop_query(const InvType inv_type, const size_t idx)
         return false;
 }
 
-} // namespace
-
 // -----------------------------------------------------------------------------
 // Abstract inventory screen state
 // -----------------------------------------------------------------------------
 InvState::InvState() :
         State(),
-        browser_(),
-        top_more_y_(0),
-        btm_more_y_(screen_h - 1),
-        inv_y0_(top_more_y_ + 1),
-        inv_y1_(btm_more_y_ - 1),
-        inv_h_(inv_y1_ - inv_y0_ + 1)
+        browser_()
 {
 
 }
@@ -339,7 +332,8 @@ void InvState::draw_weight_pct_and_dots(
         }
 
         std::string weight_str = std::to_string(item_weight_pct) + "%";
-        int weight_x = descr_x0 - 1 - weight_str.size();
+
+        int weight_x = panels::get_x1(Panel::item_menu) - weight_str.size() + 1;
 
         ASSERT(item_weight_pct >= 0 && item_weight_pct <= 100);
 
@@ -361,7 +355,7 @@ void InvState::draw_weight_pct_and_dots(
         {
                 // No weight percent is displayed
                 weight_str = "";
-                weight_x = descr_x0 - 1;
+                weight_x = panels::get_x1(Panel::item_menu);
         }
 
         int dots_x = item_pos.x + item_name_len;
@@ -427,12 +421,13 @@ void InvState::draw_detailed_item_descr(const Item* const item) const
 
                 const std::string ref_str =
                         is_plural ?
-                        "They are " : "It is ";
+                        "They are " :
+                        "It is ";
 
                 const ItemData& d = item->data();
 
                 // -------------------------------------------------------------
-                // Damage dice?
+                // Damage dice
                 // -------------------------------------------------------------
                 if (d.allow_display_dmg)
                 {
@@ -608,7 +603,9 @@ void BrowseInv::on_start()
                 (int)SlotId::END +
                 (int)inv.backpack_.size();
 
-        browser_.reset(list_size, inv_h_);
+        browser_.reset(
+                list_size,
+                panels::get_h(Panel::item_menu));
 
         inv.sort_backpack();
 
@@ -628,7 +625,9 @@ void BrowseInv::on_resume()
                 (int)inv.backpack_.size();
 
         // (The browser will also set the y pos to the nearest valid point)
-        browser_.reset(list_size, inv_h_);
+        browser_.reset(
+                list_size,
+                panels::get_h(Panel::item_menu));
 }
 
 void BrowseInv::draw()
@@ -650,12 +649,12 @@ void BrowseInv::draw()
         io::draw_text_center(
                 "Browsing inventory" + drop_info_str,
                 Panel::screen,
-                P(screen_w / 2, 0),
+                P(panels::get_center_x(Panel::screen), 0),
                 colors::title());
 
         const Range idx_range_shown = browser_.range_shown();
 
-        int y = inv_y0_;
+        int y = panels::get_y0(Panel::item_menu);
 
         char key = 'a';
 
@@ -694,7 +693,7 @@ void BrowseInv::draw()
                 io::draw_text(
                         "(More - Page Up)",
                         Panel::screen,
-                        P(0, top_more_y_),
+                        P(0, panels::get_y0(Panel::item_menu) - 1),
                         colors::light_white());
         }
 
@@ -703,7 +702,7 @@ void BrowseInv::draw()
                 io::draw_text(
                         "(More - Page Down)",
                         Panel::screen,
-                        P(0, btm_more_y_),
+                        P(0, panels::get_y1(Panel::item_menu) + 1),
                         colors::light_white());
         }
 }
@@ -721,12 +720,14 @@ void BrowseInv::update()
         Inventory& inv = map::player->inv();
 
         auto inv_type = [&]() {
-                const InvType inv_type_marked =
-                (browser_.y() < (int)SlotId::END) ?
-                InvType::slots :
-                InvType::backpack;
-
-                return inv_type_marked;
+                if (browser_.y() < (int)SlotId::END)
+                {
+                        return InvType::slots;
+                }
+                else
+                {
+                        return InvType::backpack;
+                }
         };
 
         const auto input = io::get(false);
@@ -743,6 +744,7 @@ void BrowseInv::update()
                 if (inv_type_marked == InvType::slots)
                 {
                         const size_t browser_y = browser_.y();
+
                         InvSlot& slot = inv.slots_[browser_y];
 
                         if (slot.item)
@@ -755,7 +757,7 @@ void BrowseInv::update()
                                 if (slot.id == SlotId::body)
                                 {
                                         // Start taking off the armor
-                                        map::player->nr_turns_until_handle_armor_done_ =
+                                        map::player->handle_armor_countdown_ =
                                                 nr_turns_to_handle_armor;
                                 }
                                 else // Not the body slot
@@ -809,7 +811,7 @@ void BrowseInv::update()
                     (idx == (size_t)SlotId::body))
                 {
                         // Start dropping the armor
-                        map::player->nr_turns_until_handle_armor_done_ =
+                        map::player->handle_armor_countdown_ =
                                 nr_turns_to_handle_armor;
 
                         map::player->is_dropping_armor_from_body_slot_ = true;
@@ -884,8 +886,9 @@ void Apply::on_start()
                 return;
         }
 
-        browser_.reset(filtered_backpack_indexes_.size(),
-                       inv_h_);
+        browser_.reset(
+                filtered_backpack_indexes_.size(),
+                panels::get_h(Panel::item_menu));
 
         audio::play(SfxId::backpack);
 }
@@ -901,18 +904,17 @@ void Apply::draw()
 
         io::clear_screen();
 
-        const Panel panel = Panel::screen;
-
         const int browser_y = browser_.y();
 
-        io::draw_text_center("Apply which item?" + drop_info_str,
-                             panel,
-                             P(screen_w / 2, 0),
-                             colors::title());
+        io::draw_text_center(
+                "Apply which item?" + drop_info_str,
+                Panel::screen,
+                P(panels::get_center_x(Panel::screen), 0),
+                colors::title());
 
         const Range idx_range_shown = browser_.range_shown();
 
-        int y = inv_y0_;
+        int y = panels::get_y0(Panel::item_menu);
 
         char key = 'a';
 
@@ -922,11 +924,12 @@ void Apply::draw()
 
                 const size_t backpack_idx = filtered_backpack_indexes_[i];
 
-                draw_backpack_item(backpack_idx,
-                                   y,
-                                   key,
-                                   is_marked,
-                                   ItemRefAttInf::wpn_main_att_mode);
+                draw_backpack_item(
+                        backpack_idx,
+                        y,
+                        key,
+                        is_marked,
+                        ItemRefAttInf::wpn_main_att_mode);
 
                 ++key;
 
@@ -936,18 +939,20 @@ void Apply::draw()
         // Draw "more" labels
         if (!browser_.is_on_top_page())
         {
-                io::draw_text("(More - Page Up)",
-                              panel,
-                              P(0, top_more_y_),
-                              colors::light_white());
+                io::draw_text(
+                        "(More - Page Up)",
+                        Panel::screen,
+                        P(0, panels::get_y0(Panel::item_menu) - 1),
+                        colors::light_white());
         }
 
         if (!browser_.is_on_btm_page())
         {
-                io::draw_text("(More - Page Down)",
-                              panel,
-                              P(0, btm_more_y_),
-                              colors::light_white());
+                io::draw_text(
+                        "(More - Page Down)",
+                        Panel::screen,
+                        P(0, panels::get_y1(Panel::item_menu) + 1),
+                        colors::light_white());
         }
 }
 
@@ -1072,7 +1077,9 @@ void Equip::on_start()
                 }
         }
 
-        browser_.reset(filtered_backpack_indexes_.size(), inv_h_);
+        browser_.reset(
+                filtered_backpack_indexes_.size(),
+                panels::get_h(Panel::item_menu));
 
         browser_.set_y(0);
 }
@@ -1080,7 +1087,7 @@ void Equip::on_start()
 void Equip::draw()
 {
         const bool has_item = !filtered_backpack_indexes_.empty();
-        const Panel panel = Panel::screen;
+
         std::string heading = "";
 
         switch (slot_to_equip_.id)
@@ -1120,7 +1127,7 @@ void Equip::draw()
         if (!has_item)
         {
                 io::draw_text(heading + any_key_info_str,
-                              panel,
+                              Panel::screen,
                               P(0, 0),
                               colors::light_white());
 
@@ -1129,10 +1136,11 @@ void Equip::draw()
 
         // An item is available
 
-        io::draw_text_center(heading + drop_info_str,
-                             panel,
-                             P(screen_w / 2, 0),
-                             colors::title());
+        io::draw_text_center(
+                heading + drop_info_str,
+                Panel::screen,
+                P(panels::get_center_x(Panel::screen), 0),
+                colors::title());
 
         auto& inv = map::player->inv();
 
@@ -1140,7 +1148,7 @@ void Equip::draw()
 
         const Range idx_range_shown = browser_.range_shown();
 
-        int y =inv_y0_;
+        int y = panels::get_y0(Panel::item_menu);
 
         char key = 'a';
 
@@ -1182,16 +1190,16 @@ void Equip::draw()
         if (!browser_.is_on_top_page())
         {
                 io::draw_text("(More - Page Up)",
-                              panel,
-                              P(0, top_more_y_),
+                              Panel::screen,
+                              P(0, panels::get_y0(Panel::item_menu) - 1),
                               colors::light_white());
         }
 
         if (!browser_.is_on_btm_page())
         {
                 io::draw_text("(More - Page Down)",
-                              panel,
-                              P(0, btm_more_y_),
+                              Panel::screen,
+                              P(0, panels::get_y1(Panel::item_menu) + 1),
                               colors::light_white());
         }
 }
@@ -1241,7 +1249,7 @@ void Equip::update()
                         }
 
                         // Start putting on armor
-                        map::player->nr_turns_until_handle_armor_done_ =
+                        map::player->handle_armor_countdown_ =
                                 nr_turns_to_handle_armor;
 
                         map::player->armor_putting_on_backpack_idx_ = idx;
@@ -1340,23 +1348,26 @@ void SelectThrow::on_start()
                 return;
         }
 
-        browser_.reset(list_size, inv_h_);
+        browser_.reset(
+                list_size,
+                panels::get_h(Panel::item_menu));
 
         audio::play(SfxId::backpack);
 }
 
 void SelectThrow::draw()
 {
-        io::draw_text_center("Throw which item?" + drop_info_str,
-                             Panel::log,
-                             P(screen_w / 2, 0),
-                             colors::title());
+        io::draw_text_center(
+                "Throw which item?" + drop_info_str,
+                Panel::log,
+                P(panels::get_center_x(Panel::screen), 0),
+                colors::title());
 
         const int browser_y = browser_.y();
 
         const Range idx_range_shown = browser_.range_shown();
 
-        int y = inv_y0_;
+        int y = panels::get_y0(Panel::item_menu);
 
         char key = 'a';
 
@@ -1401,7 +1412,7 @@ void SelectThrow::draw()
                 io::draw_text(
                         "(More - Page Up)",
                         Panel::screen,
-                        P(0, top_more_y_),
+                        P(0, panels::get_y0(Panel::item_menu) - 1),
                         colors::light_white());
         }
 
@@ -1410,7 +1421,7 @@ void SelectThrow::draw()
                 io::draw_text(
                         "(More - Page Down)",
                         Panel::screen,
-                        P(0, btm_more_y_),
+                        P(0, panels::get_y1(Panel::item_menu) + 1),
                         colors::light_white());
         }
 }
@@ -1418,12 +1429,14 @@ void SelectThrow::draw()
 void SelectThrow::update()
 {
         auto inv_type = [&]() {
-                const InvType inv_type_marked =
-                (browser_.y() < (int)slots_.size()) ?
-                InvType::slots :
-                InvType::backpack;
-
-                return inv_type_marked;
+                if (browser_.y() < (int)slots_.size())
+                {
+                        return InvType::slots;
+                }
+                else
+                {
+                        return InvType::backpack;
+                }
         };
 
         const auto input = io::get(false);
@@ -1561,7 +1574,9 @@ void SelectIdentify::on_start()
                 return;
         }
 
-        browser_.reset(list_size, inv_h_);
+        browser_.reset(
+                list_size,
+                panels::get_h(Panel::item_menu));
 
         audio::play(SfxId::backpack);
 }
@@ -1572,14 +1587,15 @@ void SelectIdentify::draw()
 
         const int browser_y = browser_.y();
 
-        io::draw_text_center("Identify which item?",
-                             Panel::screen,
-                             P(screen_w / 2, 0),
-                             colors::title());
+        io::draw_text_center(
+                "Identify which item?",
+                Panel::screen,
+                P(panels::get_center_x(Panel::screen), 0),
+                colors::title());
 
         const Range idx_range_shown = browser_.range_shown();
 
-        int y = inv_y0_;
+        int y = panels::get_y0(Panel::item_menu);
 
         char key = 'a';
 
@@ -1617,32 +1633,35 @@ void SelectIdentify::draw()
         // Draw "more" labels
         if (!browser_.is_on_top_page())
         {
-                io::draw_text("(More - Page Up)",
-                              Panel::screen,
-                              P(0, top_more_y_),
-                              colors::light_white());
+                io::draw_text(
+                        "(More - Page Up)",
+                        Panel::screen,
+                        P(0, panels::get_y0(Panel::item_menu) - 1),
+                        colors::light_white());
         }
 
         if (!browser_.is_on_btm_page())
         {
-                io::draw_text("(More - Page Down)",
-                              Panel::screen,
-                              P(0, btm_more_y_),
-                              colors::light_white());
+                io::draw_text(
+                        "(More - Page Down)",
+                        Panel::screen,
+                        P(0, panels::get_y1(Panel::item_menu) + 1),
+                        colors::light_white());
         }
 }
 
 void SelectIdentify::update()
 {
-        auto inv_type = [&]()
+        auto inv_type = [&]() {
+                if (browser_.y() < (int)slots_.size())
                 {
-                        const InvType inv_type_marked =
-                        (browser_.y() < (int)slots_.size()) ?
-                        InvType::slots :
-                        InvType::backpack;
-
-                        return inv_type_marked;
-                };
+                        return InvType::slots;
+                }
+                else
+                {
+                        return InvType::backpack;
+                }
+        };
 
         const auto input = io::get(false);
 
