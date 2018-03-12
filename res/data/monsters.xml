@@ -3051,7 +3051,7 @@
             <name_the>the Ghoul</name_the>
             <corpse_name_a>a Ghoul corpse</corpse_name_a>
             <corpse_name_the>the Ghoul corpse</corpse_name_the>
-            <description>"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness" -H.P.Lovecraft "Pickman's Model". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.</description>
+            <description>A gaunt, bipedal predator bearing canine features. Dried blood mottles its snout and its claws are filthy with sodden earth and chunks of flesh.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>looks wary.</wary_message>
             <aware_message_seen>the Ghoul growls.</aware_message_seen>
@@ -4516,7 +4516,7 @@
             <name_the>the Deep One</name_the>
             <corpse_name_a>a corpse of a Deep One</corpse_name_a>
             <corpse_name_the>the corpse of a Deep One</corpse_name_the>
-            <description>A shambling, bipedal thing which could be taken for a man were it not for its briny whiff and scaly skin. Slits on its neck emit a labored inflection, marking its struggle to gulp at breathable air. It hoists a rust-eaten spear and a net through which the thrashing remains of its last feast can be seen.</description>
+            <description>A shambling thing which could be taken for a man were it not for its briny whiff and scaly skin. Slits on its neck emit a labored inflection, marking its struggle to gulp at breathable air. It hoists a rust-eaten spear and a net through which the thrashing remains of its last feast can be seen.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
