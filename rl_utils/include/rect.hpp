@@ -84,8 +84,6 @@ public:
                 return R(
                         p0.scaled_up(x_factor, y_factor),
                         p1.scaled_up(x_factor, y_factor));
-
-                return *this;
         }
 
         P p0;

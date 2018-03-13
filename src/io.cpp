@@ -1005,14 +1005,11 @@ void cover_area(const Panel panel, const R area)
 
 void cover_area(const Panel panel, const P offset, const P dims)
 {
-        R area =
-                panels::get_area(panel)
-                .with_offset(offset);
+        const P p0 = panels::get_p0(panel) + offset;
 
-        area.p1.x += (dims.x - 1);
-        area.p1.y += (dims.y - 1);
+        const P p1 = p0 + dims - 1;
 
-        const PxRect px_area = to_px_rect(area);
+        const PxRect px_area = to_px_rect({p0, p1});
 
         cover_area(px_area);
 }
@@ -1036,10 +1033,11 @@ void draw_line_ver(const PxPos px_pos, const int px_h, const Color& color)
         draw_rectangle_solid(px_pos, px_dims, color);
 }
 
-void draw_box(const R& border,
-              const Panel panel,
-              const Color& color,
-              const bool do_cover_area)
+void draw_box(
+        const R& border,
+        const Panel panel,
+        const Color& color,
+        const bool do_cover_area)
 {
         if (do_cover_area)
         {

@@ -50,13 +50,13 @@ void init()
 
         set_panel(Panel::create_char_menu,
                   0,
-                  1,
+                  2,
                   23,
                   get_y1(Panel::screen));
 
         set_panel(Panel::create_char_descr,
                   get_x1(Panel::create_char_menu) + 2,
-                  1,
+                  2,
                   get_x1(Panel::screen),
                   get_y1(Panel::screen));
 
