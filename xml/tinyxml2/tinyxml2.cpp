@@ -21,6 +21,14 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+
+// -----------------------------------------------------------------------------
+// Martin Törnqvist: Some comments have been added to this code, to suppress
+// warnings regarding implicit fallthrough in a swtich statement - I have marked
+// these lines with my name.
+// -----------------------------------------------------------------------------
+
+
 #include "tinyxml2.h"
 
 #include <new>		// yes, this one new style header, is in the Android SDK.
@@ -430,14 +438,17 @@ void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+        // fallthrough - Martin Törnqvist: Added comment to suppress gcc warning
         case 3:
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+        // fallthrough - Martin Törnqvist: Added comment to suppress gcc warning
         case 2:
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+        // fallthrough - Martin Törnqvist: Added comment to suppress gcc warning
         case 1:
             --output;
             *output = (char)(input | FIRST_BYTE_MARK[*length]);
@@ -754,7 +765,7 @@ XMLNode::~XMLNode()
     }
 }
 
-const char* XMLNode::Value() const 
+const char* XMLNode::Value() const
 {
     // Edge case: XMLDocuments don't have a Value. Return null.
     if ( this->ToDocument() )
@@ -1321,12 +1332,12 @@ bool XMLUnknown::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLAttribute ---------- //
 
-const char* XMLAttribute::Name() const 
+const char* XMLAttribute::Name() const
 {
     return _name.GetStr();
 }
 
-const char* XMLAttribute::Value() const 
+const char* XMLAttribute::Value() const
 {
     return _value.GetStr();
 }
@@ -1513,42 +1524,42 @@ const char* XMLElement::Attribute( const char* name, const char* value ) const
     return 0;
 }
 
-int XMLElement::IntAttribute(const char* name, int defaultValue) const 
+int XMLElement::IntAttribute(const char* name, int defaultValue) const
 {
 	int i = defaultValue;
 	QueryIntAttribute(name, &i);
 	return i;
 }
 
-unsigned XMLElement::UnsignedAttribute(const char* name, unsigned defaultValue) const 
+unsigned XMLElement::UnsignedAttribute(const char* name, unsigned defaultValue) const
 {
 	unsigned i = defaultValue;
 	QueryUnsignedAttribute(name, &i);
 	return i;
 }
 
-int64_t XMLElement::Int64Attribute(const char* name, int64_t defaultValue) const 
+int64_t XMLElement::Int64Attribute(const char* name, int64_t defaultValue) const
 {
 	int64_t i = defaultValue;
 	QueryInt64Attribute(name, &i);
 	return i;
 }
 
-bool XMLElement::BoolAttribute(const char* name, bool defaultValue) const 
+bool XMLElement::BoolAttribute(const char* name, bool defaultValue) const
 {
 	bool b = defaultValue;
 	QueryBoolAttribute(name, &b);
 	return b;
 }
 
-double XMLElement::DoubleAttribute(const char* name, double defaultValue) const 
+double XMLElement::DoubleAttribute(const char* name, double defaultValue) const
 {
 	double d = defaultValue;
 	QueryDoubleAttribute(name, &d);
 	return d;
 }
 
-float XMLElement::FloatAttribute(const char* name, float defaultValue) const 
+float XMLElement::FloatAttribute(const char* name, float defaultValue) const
 {
 	float f = defaultValue;
 	QueryFloatAttribute(name, &f);
@@ -1575,7 +1586,7 @@ void	XMLElement::SetText( const char* inText )
 }
 
 
-void XMLElement::SetText( int v ) 
+void XMLElement::SetText( int v )
 {
     char buf[BUF_SIZE];
     XMLUtil::ToStr( v, buf, BUF_SIZE );
@@ -1583,7 +1594,7 @@ void XMLElement::SetText( int v )
 }
 
 
-void XMLElement::SetText( unsigned v ) 
+void XMLElement::SetText( unsigned v )
 {
     char buf[BUF_SIZE];
     XMLUtil::ToStr( v, buf, BUF_SIZE );
@@ -1607,7 +1618,7 @@ void XMLElement::SetText( bool v )
 }
 
 
-void XMLElement::SetText( float v ) 
+void XMLElement::SetText( float v )
 {
     char buf[BUF_SIZE];
     XMLUtil::ToStr( v, buf, BUF_SIZE );
@@ -1615,7 +1626,7 @@ void XMLElement::SetText( float v )
 }
 
 
-void XMLElement::SetText( double v ) 
+void XMLElement::SetText( double v )
 {
     char buf[BUF_SIZE];
     XMLUtil::ToStr( v, buf, BUF_SIZE );
@@ -2038,7 +2049,7 @@ void XMLDocument::Clear()
     _commentPool.Trace( "comment" );
     _attributePool.Trace( "attribute" );
 #endif
-    
+
 #ifdef DEBUG
     if ( !hadError ) {
         TIXMLASSERT( _elementPool.CurrentAllocs()   == _elementPool.Untracked() );
@@ -2117,7 +2128,7 @@ static FILE* callfopen( const char* filepath, const char* mode )
 #endif
     return fp;
 }
-    
+
 void XMLDocument::DeleteNode( XMLNode* node )	{
     TIXMLASSERT( node );
     TIXMLASSERT(node->_document == this );
@@ -2289,7 +2300,7 @@ void XMLDocument::SetError( XMLError error, const char* str1, const char* str2, 
 {
     TIXMLASSERT( error >= 0 && error < XML_ERROR_COUNT );
     _errorID = error;
-	
+
 	_errorStr1.Reset();
 	_errorStr2.Reset();
     _errorLineNum = lineNum;
@@ -2308,12 +2319,12 @@ void XMLDocument::SetError( XMLError error, const char* str1, const char* str2, 
     return errorName;
 }
 
-const char* XMLDocument::GetErrorStr1() const 
+const char* XMLDocument::GetErrorStr1() const
 {
 	return _errorStr1.GetStr();
 }
 
-const char* XMLDocument::GetErrorStr2() const 
+const char* XMLDocument::GetErrorStr2() const
 {
 	return _errorStr2.GetStr();
 }
@@ -2738,4 +2749,3 @@ bool XMLPrinter::Visit( const XMLUnknown& unknown )
 }
 
 }   // namespace tinyxml2
-

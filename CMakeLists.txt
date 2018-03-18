@@ -273,18 +273,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
     -Wall
     -Wextra
     -Werror
-    # implicit-fallthrough warnings must be disabled for tinyxml2, which relies
-    # on this technique
-    -Wno-implicit-fallthrough
     )
 
   set(DEBUG_COMPILE_FLAGS
     -fno-exceptions
     -O0
     -g
-    # Uncomment to generate gmon.out for gprof (must also be done for linker
-    # flags, see below)
-    # -pg
     )
 
   set(RELEASE_COMPILE_FLAGS
