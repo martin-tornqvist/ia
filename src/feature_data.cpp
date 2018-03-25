@@ -54,7 +54,7 @@ void reset_data(FeatureData& d)
     d.make_obj = [](const P & p) {(void)p; return nullptr;};
     d.id = FeatureId::END;
     d.character = ' ';
-    d.tile = TileId::empty;
+    d.tile = TileId::END;
     d.move_rules.reset();
     d.is_sound_passable = true;
     d.is_projectile_passable = true;

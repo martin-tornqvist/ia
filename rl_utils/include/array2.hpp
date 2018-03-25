@@ -11,19 +11,19 @@ class Array2
 {
 public:
         Array2() :
-                data_   (nullptr),
-                dims_   (0, 0) {}
+                data_(nullptr),
+                dims_(0, 0) {}
 
         Array2(const P& dims) :
-                data_   (nullptr),
-                dims_   ()
+                data_(nullptr),
+                dims_()
         {
                 resize(dims);
         }
 
         Array2(const int w, const int h) :
-                data_   (nullptr),
-                dims_   ()
+                data_(nullptr),
+                dims_()
         {
                 resize(P(w, h));
         }
@@ -34,8 +34,8 @@ public:
         }
 
         Array2(const Array2<T>& other) :
-                data_   (nullptr),
-                dims_   ()
+                data_(nullptr),
+                dims_()
         {
                 resize(other.dims_);
 

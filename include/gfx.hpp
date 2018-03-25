@@ -7,7 +7,6 @@
 // NOTE: When updating this, also update the two maps below
 enum class TileId
 {
-    empty,
     player_firearm,
     player_melee,
     zombie_unarmed,
@@ -101,6 +100,7 @@ enum class TileId
     floor,
     aim_marker_head,
     aim_marker_line,
+    excl_mark,
     wall_top,
     wall_front_alt1,
     wall_front_alt2,
@@ -173,19 +173,9 @@ enum class TileId
     smoke,
     trapez,
     pit,
-    popup_top_l,
-    popup_top_r,
-    popup_btm_l,
-    popup_btm_r,
-    popup_hor,
-    popup_ver,
     hangbridge_ver,
     hangbridge_hor,
     scorched_ground,
-    popup_hor_down,
-    popup_hor_up,
-    popup_ver_r,
-    popup_ver_l,
     stalagmite,
     heart,
     brain,
@@ -290,6 +280,7 @@ const std::unordered_map<std::string, TileId> str_to_tile_id_map = {
     {"floor", TileId::floor},
     {"aim_marker_head", TileId::aim_marker_head},
     {"aim_marker_line", TileId::aim_marker_line},
+    {"excl_mark", TileId::excl_mark},
     {"wall_front", TileId::wall_front},
     {"square_checkered_sparse", TileId::square_checkered_sparse},
     {"rubble_high", TileId::rubble_high},
@@ -359,19 +350,9 @@ const std::unordered_map<std::string, TileId> str_to_tile_id_map = {
     {"monolith", TileId::monolith},
     {"bookshelf_full", TileId::bookshelf_full},
     {"bookshelf_empty", TileId::bookshelf_empty},
-    {"popup_top_l", TileId::popup_top_l},
-    {"popup_top_r", TileId::popup_top_r},
-    {"popup_btm_l", TileId::popup_btm_l},
-    {"popup_btm_r", TileId::popup_btm_r},
-    {"popup_hor", TileId::popup_hor},
-    {"popup_ver", TileId::popup_ver},
     {"hangbridge_ver", TileId::hangbridge_ver},
     {"hangbridge_hor", TileId::hangbridge_hor},
     {"scorched_ground", TileId::scorched_ground},
-    {"popup_hor_down", TileId::popup_hor_down},
-    {"popup_hor_up", TileId::popup_hor_up},
-    {"popup_ver_r", TileId::popup_ver_r},
-    {"popup_ver_l", TileId::popup_ver_l},
     {"stalagmite", TileId::stalagmite},
     {"trap_general", TileId::trap_general},
     {"alchemist_bench_full", TileId::alchemist_bench_full},
@@ -381,7 +362,7 @@ const std::unordered_map<std::string, TileId> str_to_tile_id_map = {
     {"weight", TileId::weight},
     {"spirit", TileId::spirit},
     {"stopwatch", TileId::stopwatch},
-    {"empty", TileId::empty}
+    {"none", TileId::END}
 };
 
 const std::unordered_map<TileId, std::string> tile_id_to_str_map = {
@@ -478,6 +459,7 @@ const std::unordered_map<TileId, std::string> tile_id_to_str_map = {
     {TileId::floor, "floor"},
     {TileId::aim_marker_head, "aim_marker_head"},
     {TileId::aim_marker_line, "aim_marker_line"},
+    {TileId::excl_mark, "excl_mark"},
     {TileId::wall_front, "wall_front"},
     {TileId::square_checkered_sparse, "square_checkered_sparse"},
     {TileId::rubble_high, "rubble_high"},
@@ -547,19 +529,9 @@ const std::unordered_map<TileId, std::string> tile_id_to_str_map = {
     {TileId::monolith, "monolith"},
     {TileId::bookshelf_full, "bookshelf_full"},
     {TileId::bookshelf_empty, "bookshelf_empty"},
-    {TileId::popup_top_l, "popup_top_l"},
-    {TileId::popup_top_r, "popup_top_r"},
-    {TileId::popup_btm_l, "popup_btm_l"},
-    {TileId::popup_btm_r, "popup_btm_r"},
-    {TileId::popup_hor, "popup_hor"},
-    {TileId::popup_ver, "popup_ver"},
     {TileId::hangbridge_ver, "hangbridge_ver"},
     {TileId::hangbridge_hor, "hangbridge_hor"},
     {TileId::scorched_ground, "scorched_ground"},
-    {TileId::popup_hor_down, "popup_hor_down"},
-    {TileId::popup_hor_up, "popup_hor_up"},
-    {TileId::popup_ver_r, "popup_ver_r"},
-    {TileId::popup_ver_l, "popup_ver_l"},
     {TileId::stalagmite, "stalagmite"},
     {TileId::trap_general, "trap_general"},
     {TileId::alchemist_bench_full, "alchemist_bench_full"},
@@ -569,7 +541,7 @@ const std::unordered_map<TileId, std::string> tile_id_to_str_map = {
     {TileId::weight, "weight"},
     {TileId::spirit, "spirit"},
     {TileId::stopwatch, "stopwatch"},
-    {TileId::empty, "empty"}
+    {TileId::END, "none"}
 };
 
 class P;

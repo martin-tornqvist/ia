@@ -85,7 +85,7 @@ void pathfind_with_flood(const P& p0,
                 return;
             }
 
-            if (map_r.is_p_inside(adj_p))
+            if (map_r.is_pos_inside(adj_p))
             {
                 const int adj_val = flood[adj_p.x][adj_p.y];
 

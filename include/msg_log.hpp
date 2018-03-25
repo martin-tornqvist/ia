@@ -15,43 +15,59 @@ public:
         Msg(const std::string& text,
             const Color& color_id,
             const int x_pos) :
-                color_(color_id),
-                x_pos_(x_pos),
-                str_(text),
+                text_(text),
                 repeats_str_(""),
-                nr_(1) {}
+                nr_repeats_(1),
+                x_pos_(x_pos),
+                color_(color_id) {}
 
         Msg() :
-                color_(colors::white()),
-                x_pos_(0),
-                str_(""),
+                text_(""),
                 repeats_str_(""),
-                nr_(1) {}
+                nr_repeats_(1),
+                x_pos_(0),
+                color_(colors::white()) {}
 
-        void str_with_repeats(std::string& str_ref) const
+        std::string text_with_repeats() const
         {
-                str_ref = str_ + (nr_ > 1 ? repeats_str_ : "");
+                std::string result_str = text_;
+
+                if (nr_repeats_ > 1)
+                {
+                        result_str += repeats_str_;
+                }
+
+                return result_str;
         }
 
-        void str_raw(std::string& str_ref) const
+        std::string text() const
         {
-                str_ref = str_;
+                return text_;
         }
 
-        void incr_repeat()
+        void incr_repeats()
         {
-                ++nr_;
+                ++nr_repeats_;
 
-                repeats_str_ = "(x" + std::to_string(nr_) + ")";
+                repeats_str_ = "(x" + std::to_string(nr_repeats_) + ")";
         }
 
-        Color color_;
-        int x_pos_;
+        int x_pos() const
+        {
+                return x_pos_;
+        }
+
+        Color color() const
+        {
+                return color_;
+        }
 
 private:
-        std::string str_;
+        std::string text_;
         std::string repeats_str_;
-        int nr_;
+        int nr_repeats_;
+        int x_pos_;
+        Color color_;
 };
 
 namespace msg_log

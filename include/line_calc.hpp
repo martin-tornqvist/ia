@@ -10,13 +10,16 @@ namespace line_calc
 
 void init();
 
-std::vector<P> calc_new_line(const P& origin, const P& target,
-                             const bool should_stop_at_target,
-                             const int king_dist_limit,
-                             const bool allow_outside_map);
+std::vector<P> calc_new_line(
+        const P& origin,
+        const P& target,
+        const bool should_stop_at_target,
+        const int king_dist_limit,
+        const bool allow_outside_map);
 
-const std::vector<P>* fov_delta_line(const P& delta,
-                                     const double& max_dist_abs);
+const std::vector<P>* fov_delta_line(
+        const P& delta,
+        const double& max_dist_abs);
 
 } // line_calc
 

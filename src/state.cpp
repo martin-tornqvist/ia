@@ -90,6 +90,14 @@ void draw()
     }
 }
 
+void on_window_resized()
+{
+        for (auto& state : states_)
+        {
+                state->on_window_resized();
+        }
+}
+
 void update()
 {
     if (states_.empty())

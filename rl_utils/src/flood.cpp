@@ -44,7 +44,7 @@ void floodfill(const P& p0,
             const P new_p(p + d);
 
             if (!blocked[new_p.x][new_p.y] &&
-                bounds.is_p_inside(new_p) &&
+                bounds.is_pos_inside(new_p) &&
                 (out[new_p.x][new_p.y] == 0) &&
                 (new_p != p0))
             {

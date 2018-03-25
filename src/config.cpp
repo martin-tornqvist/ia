@@ -19,10 +19,7 @@
 namespace config
 {
 
-namespace
-{
-
-const std::vector<std::string> font_image_names = {
+static const std::vector<std::string> font_image_names = {
         "8x12_DOS.png",
         "11x19.png",
         "11x22.png",
@@ -35,31 +32,33 @@ const std::vector<std::string> font_image_names = {
         "16x24_typewriter_v2.png",
 };
 
-const int opt_y0_ = 1;
-const int opt_values_x_pos_ = 40;
+static const int opt_y0_ = 1;
+static const int opt_values_x_pos_ = 40;
 
-std::string font_name_ = "";
-bool is_fullscreen_ = false;
-bool is_tiles_wall_full_square_ = false;
-bool is_text_mode_wall_full_square_ = false;
-bool is_light_explosive_prompt_ = false;
-bool is_drink_malign_pot_prompt_ = false;
-bool is_ranged_wpn_meleee_prompt_ = false;
-bool is_ranged_wpn_auto_reload_ = false;
-bool is_intro_lvl_skipped_ = false;
-bool is_any_key_confirm_more_ = false;
-int delay_projectile_draw_ = -1;
-int delay_shotgun_ = -1;
-int delay_explosion_ = -1;
-std::string default_player_name_ = "";
-bool is_bot_playing_ = false;
-bool is_audio_enabled_ = false;
-bool is_amb_audio_enabled_ = false;
-bool is_tiles_mode_ = false;
-int map_cell_px_w_ = -1;
-int map_cell_px_h_ = -1;
+static std::string font_name_ = "";
+static bool is_fullscreen_ = false;
+static bool is_tiles_wall_full_square_ = false;
+static bool is_text_mode_wall_full_square_ = false;
+static bool is_light_explosive_prompt_ = false;
+static bool is_drink_malign_pot_prompt_ = false;
+static bool is_ranged_wpn_meleee_prompt_ = false;
+static bool is_ranged_wpn_auto_reload_ = false;
+static bool is_intro_lvl_skipped_ = false;
+static bool is_any_key_confirm_more_ = false;
+static int delay_projectile_draw_ = -1;
+static int delay_shotgun_ = -1;
+static int delay_explosion_ = -1;
+static std::string default_player_name_ = "";
+static bool is_bot_playing_ = false;
+static bool is_audio_enabled_ = false;
+static bool is_amb_audio_enabled_ = false;
+static bool is_tiles_mode_ = false;
+static int gui_cell_px_w_ = -1;
+static int gui_cell_px_h_ = -1;
+static int map_cell_px_w_ = -1;
+static int map_cell_px_h_ = -1;
 
-P parse_dims_from_font_name(std::string font_name)
+static P parse_dims_from_font_name(std::string font_name)
 {
         char ch = font_name.front();
 
@@ -105,26 +104,51 @@ P parse_dims_from_font_name(std::string font_name)
         return P(w, h);
 }
 
-void update_render_dims()
+static void update_render_dims()
 {
         TRACE_FUNC_BEGIN;
 
-        const P font_dims = parse_dims_from_font_name(font_name_);
+        if (is_tiles_mode_)
+        {
+                // TODO: Temporary solution
+                const P font_dims = parse_dims_from_font_name(font_name_);
 
-        map_cell_px_w_ = font_dims.x;
-        map_cell_px_h_ = font_dims.y;
+                gui_cell_px_w_ = font_dims.x;
+                gui_cell_px_h_ = font_dims.y;
+                map_cell_px_w_ = 24;
+                map_cell_px_h_ = 24;
+        }
+        else
+        {
+                const P font_dims = parse_dims_from_font_name(font_name_);
+
+                gui_cell_px_w_ = map_cell_px_w_ = font_dims.x;
+                gui_cell_px_h_ = map_cell_px_h_ = font_dims.y;
+        }
+
+        TRACE << "GUI cell size: "
+              << gui_cell_px_w_
+              << ", "
+              << gui_cell_px_h_
+              << std::endl;
+
+        TRACE << "Map cell size: "
+              << map_cell_px_w_
+              << ", "
+              << map_cell_px_h_
+              << std::endl;
 
         TRACE_FUNC_END;
 }
 
-void set_default_variables()
+static void set_default_variables()
 {
         TRACE_FUNC_BEGIN;
 
         is_audio_enabled_ = true;
         is_amb_audio_enabled_ = true;
         is_tiles_mode_ = true;
-        font_name_ = "16x24_v1.png";
+        font_name_ = "12x24.png";
 
         update_render_dims();
 
@@ -145,7 +169,7 @@ void set_default_variables()
         TRACE_FUNC_END;
 }
 
-void player_sets_option(const MenuBrowser& browser)
+static void player_sets_option(const MenuBrowser& browser)
 {
         switch (browser.y())
         {
@@ -171,23 +195,23 @@ void player_sets_option(const MenuBrowser& browser)
 
                 // If we do not have a font loaded with the same size as the
                 // tiles, use the first font with matching size
-                if (is_tiles_mode_ &&
-                    ((map_cell_px_w_ != tile_px_w) ||
-                     (map_cell_px_h_ != tile_px_h)))
-                {
-                        for (const auto& font_name : font_image_names)
-                        {
-                                const P font_dims =
-                                        parse_dims_from_font_name(font_name);
+                // if (is_tiles_mode_ &&
+                //     ((map_cell_px_w_ != tile_px_w) ||
+                //      (map_cell_px_h_ != tile_px_h)))
+                // {
+                //         for (const auto& font_name : font_image_names)
+                //         {
+                //                 const P font_dims =
+                //                         parse_dims_from_font_name(font_name);
 
-                                if (font_dims == P(tile_px_w, tile_px_h))
-                                {
-                                        font_name_ = font_name;
+                //                 if (font_dims == P(tile_px_w, tile_px_h))
+                //                 {
+                //                         font_name_ = font_name;
 
-                                        break;
-                                }
-                        }
-                }
+                //                         break;
+                //                 }
+                //         }
+                // }
 
                 update_render_dims();
 
@@ -229,17 +253,17 @@ void player_sets_option(const MenuBrowser& browser)
                         }
 
                         // Try fonts until a matching one is found
-                        while ((map_cell_px_w_ != tile_px_w) ||
-                               (map_cell_px_h_ != tile_px_h))
-                        {
-                                font_idx =
-                                        (font_idx + 1) %
-                                        font_image_names.size();
+                        // while ((map_cell_px_w_ != tile_px_w) ||
+                        //        (map_cell_px_h_ != tile_px_h))
+                        // {
+                        //         font_idx =
+                        //                 (font_idx + 1) %
+                        //                 font_image_names.size();
 
-                                font_name_ = font_image_names[font_idx];
+                        //         font_name_ = font_image_names[font_idx];
 
-                                update_render_dims();
-                        }
+                        //         update_render_dims();
+                        // }
                 }
 
                 sdl_base::init();
@@ -250,7 +274,9 @@ void player_sets_option(const MenuBrowser& browser)
 
         case 4: // Fullscreen
         {
-                toggle_fullscreen();
+                set_fullscreen(!is_fullscreen_);
+
+                io::on_fullscreen_toggled();
         }
         break;
 
@@ -380,7 +406,7 @@ void player_sets_option(const MenuBrowser& browser)
         }
 }
 
-void read_file(std::vector<std::string>& lines)
+static void read_file(std::vector<std::string>& lines)
 {
         std::ifstream file;
         file.open("res/data/config");
@@ -398,7 +424,7 @@ void read_file(std::vector<std::string>& lines)
         }
 }
 
-void set_variables_from_lines(std::vector<std::string>& lines)
+static void set_variables_from_lines(std::vector<std::string>& lines)
 {
         TRACE_FUNC_BEGIN;
 
@@ -468,7 +494,7 @@ void set_variables_from_lines(std::vector<std::string>& lines)
         TRACE_FUNC_END;
 }
 
-void write_lines_to_file(const std::vector<std::string>& lines)
+static void write_lines_to_file(const std::vector<std::string>& lines)
 {
         std::ofstream file;
         file.open("res/data/config", std::ios::trunc);
@@ -486,7 +512,7 @@ void write_lines_to_file(const std::vector<std::string>& lines)
         file.close();
 }
 
-std::vector<std::string> lines_from_variables()
+static std::vector<std::string> lines_from_variables()
 {
         TRACE_FUNC_BEGIN;
 
@@ -526,8 +552,6 @@ std::vector<std::string> lines_from_variables()
         return lines;
 }
 
-} // namespace
-
 void init()
 {
         font_name_ = "";
@@ -562,6 +586,16 @@ std::string font_name()
 bool is_fullscreen()
 {
         return is_fullscreen_;
+}
+
+int gui_cell_px_w()
+{
+        return gui_cell_px_w_;
+}
+
+int gui_cell_px_h()
+{
+        return gui_cell_px_h_;
 }
 
 int map_cell_px_w()
@@ -662,23 +696,9 @@ std::string default_player_name()
         return default_player_name_;
 }
 
-void toggle_fullscreen()
+void set_fullscreen(const bool value)
 {
-        is_fullscreen_ = !is_fullscreen_;
-
-        update_render_dims();
-
-        io::clear_screen();
-
-        io::update_screen();
-
-        sdl_base::init();
-
-        io::init();
-
-        states::draw();
-
-        io::update_screen();
+        is_fullscreen_ = value;
 
         const auto lines = lines_from_variables();
 
@@ -750,7 +770,7 @@ void ConfigState::draw()
         io::draw_text(
                 "-Options-",
                 Panel::screen,
-                P(0, 0),
+                P(1, 0),
                 colors::white());
 
         std::string font_disp_name = config::font_name_;
@@ -863,7 +883,7 @@ void ConfigState::draw()
                 io::draw_text(
                         str_l,
                         Panel::screen,
-                        P(0, y),
+                        P(1, y),
                         color);
 
                 if (str_r != "")
@@ -885,7 +905,7 @@ void ConfigState::draw()
         io::draw_text(
                 "[enter] to set option [space/esc] to exit",
                 Panel::screen,
-                P(0, 20),
+                P(1, 20),
                 colors::white());
 
         str =
@@ -895,7 +915,7 @@ void ConfigState::draw()
 
         const auto lines = text_format::split(
                 str,
-                panels::get_w(Panel::screen));
+                79); // TODO: Set from standard value
 
         int y = panels::get_y1(Panel::screen) - lines.size() + 1;
 
@@ -904,7 +924,7 @@ void ConfigState::draw()
                 io::draw_text(
                         line,
                         Panel::screen,
-                        P(0, y),
+                        P(1, y),
                         colors::gray());
 
                 ++y;

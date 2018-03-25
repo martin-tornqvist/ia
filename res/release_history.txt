@@ -13,7 +13,13 @@ Gameplay
 * Improved check for if Phobia of open places should trigger (for example it no longer triggers while standing in smoke)
 
 Interface
+* The interface has a new layout, and there is a scrolling viewport centered on the player
+* The tiles are 24x24 pixels, instead of 16x24
+* The window can be resized
+* Thrown item is selected via an inventory slot again, instead of by pressing "T" - but selecting thrown weapon is still a free action (does not end the turn), and you can still select the same item that you are simultaneously wielding
 * Many monster descriptions have been completely rewritten (thanks Renan Nunes)
+* Dropping items is now done from a separate inventory screen, accessed by pressing "d" (which is a more conventional method than the old way of pressing shift+enter)
+* Changed command for disarming traps to "D" (instead of "d")
 * Reworked the tile for Deep Ones
 
 --------------------------------------------------------------

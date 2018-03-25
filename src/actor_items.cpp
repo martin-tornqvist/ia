@@ -132,7 +132,7 @@ static void make_for_player_rogue()
 
         inv.put_in_backpack(throwing_knives);
 
-        map::player->thrown_item_ = throwing_knives;
+        inv.slots_[(size_t)SlotId::thrown].item = throwing_knives;
 }
 
 static void make_for_player_war_vet()
@@ -175,7 +175,7 @@ static void make_for_player_war_vet()
 
         inv.put_in_backpack(throwing_knives);
 
-        map::player->thrown_item_ = throwing_knives;
+        inv.slots_[(size_t)SlotId::thrown].item = throwing_knives;
 }
 
 static void make_for_player_ghoul()

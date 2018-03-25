@@ -3,75 +3,69 @@
 #include <vector>
 #include <memory>
 
-#include "init.hpp"
-#include "draw_map.hpp"
-#include "popup.hpp"
-#include "io.hpp"
-#include "panel.hpp"
-#include "highscore.hpp"
-#include "text_format.hpp"
-#include "query.hpp"
-#include "actor_items.hpp"
-#include "actor_player.hpp"
-#include "msg_log.hpp"
-#include "sdl_base.hpp"
-#include "map.hpp"
-#include "create_character.hpp"
-#include "actor_mon.hpp"
-#include "saving.hpp"
-#include "status_lines.hpp"
-#include "feature_rigid.hpp"
-#include "feature_mob.hpp"
-#include "feature_door.hpp"
-#include "reload.hpp"
-#include "wham.hpp"
-#include "close.hpp"
-#include "disarm.hpp"
-#include "pickup.hpp"
-#include "look.hpp"
-#include "attack.hpp"
-#include "throwing.hpp"
-#include "marker.hpp"
-#include "explosion.hpp"
-#include "item_factory.hpp"
+#include "actor_data.hpp"
 #include "actor_factory.hpp"
-#include "player_spells.hpp"
-#include "map_travel.hpp"
+#include "actor_items.hpp"
+#include "actor_mon.hpp"
+#include "actor_player.hpp"
+#include "attack.hpp"
+#include "character_descr.hpp"
+#include "close.hpp"
+#include "colors.hpp"
+#include "create_character.hpp"
+#include "disarm.hpp"
+#include "draw_map.hpp"
+#include "explosion.hpp"
+#include "feature_door.hpp"
+#include "feature_mob.hpp"
+#include "feature_rigid.hpp"
+#include "highscore.hpp"
+#include "init.hpp"
+#include "io.hpp"
+#include "item_factory.hpp"
+#include "look.hpp"
+#include "manual.hpp"
+#include "map.hpp"
 #include "map_builder.hpp"
 #include "map_controller.hpp"
+#include "map_travel.hpp"
 #include "mapgen.hpp"
-#include "manual.hpp"
+#include "marker.hpp"
+#include "msg_log.hpp"
+#include "panel.hpp"
+#include "pickup.hpp"
+#include "player_spells.hpp"
+#include "popup.hpp"
 #include "postmortem.hpp"
-#include "character_descr.hpp"
-#include "actor_data.hpp"
-#include "colors.hpp"
 #include "property.hpp"
 #include "property_data.hpp"
 #include "property_handler.hpp"
+#include "query.hpp"
+#include "reload.hpp"
+#include "saving.hpp"
+#include "sdl_base.hpp"
+#include "status_lines.hpp"
+#include "text_format.hpp"
+#include "throwing.hpp"
+#include "viewport.hpp"
+#include "wham.hpp"
 
-namespace game
+static int clvl_ = 0;
+static int xp_pct_ = 0;
+static int xp_accum_ = 0;
+static TimeData start_time_;
+
+static std::vector<HistoryEvent> history_events_;
+
+static void query_quit()
 {
-
-namespace
-{
-
-int clvl_ = 0;
-int xp_pct_ = 0;
-int xp_accum_ = 0;
-TimeData start_time_;
-
-std::vector<HistoryEvent> history_events_;
-
-void query_quit()
-{
-    const auto quit_choices = std::vector<std::string>
-    {
+    const auto quit_choices = std::vector<std::string> {
         "Yes",
         "No"
     };
 
     const int quit_choice =
-        popup::show_menu_msg(
+        popup::menu(
             "Save and highscore are not kept.",
             quit_choices,
             "Quit the current game?");
@@ -84,7 +78,8 @@ void query_quit()
     }
 }
 
-} // namespace
+namespace game
+{
 
 void init()
 {
@@ -321,7 +316,7 @@ void handle_player_input(const InputData& input)
     break;
 
     // Disarm
-    case 'd':
+    case 'D':
     {
         disarm::player_disarm();
     }
@@ -431,7 +426,8 @@ void handle_player_input(const InputData& input)
     // Inventory screen
     case 'i':
     {
-        std::unique_ptr<State> browse_inv(new BrowseInv);
+        std::unique_ptr<State> browse_inv(
+                std::make_unique<BrowseInv>());
 
         states::push(std::move(browse_inv));
     }
@@ -440,9 +436,20 @@ void handle_player_input(const InputData& input)
     // Apply item
     case 'a':
     {
-        std::unique_ptr<State> apply_state(new Apply);
+        std::unique_ptr<State> apply_state(
+                std::make_unique<Apply>());
 
         states::push(std::move(apply_state));
+    }
+    break;
+
+    // Drop item
+    case 'd':
+    {
+            std::unique_ptr<State> drop_state(
+                    std::make_unique<Drop>());
+
+            states::push(std::move(drop_state));
     }
     break;
 
@@ -458,37 +465,40 @@ void handle_player_input(const InputData& input)
         if (wielded || alt)
         {
             const std::string alt_name_a =
-                alt ?
-                alt->name(ItemRefType::a) :
-                "";
+                    alt
+                    ? alt->name(ItemRefType::a)
+                    : "";
 
             // War veteran swaps instantly
             const bool is_instant = player_bon::bg() == Bg::war_vet;
 
             const std::string swift_str =
-                is_instant ?
-                "swiftly " :
-                "";
+                    is_instant
+                    ? "swiftly "
+                    : "";
 
             if (wielded)
             {
                 if (alt)
                 {
-                    msg_log::add("I " +
-                                 swift_str +
-                                 "swap to " +
-                                 alt_name_a +
-                                 ".");
+                        msg_log::add(
+                                "I " +
+                                swift_str +
+                                "swap to " +
+                                alt_name_a +
+                                ".");
                 }
                 else // No current alt weapon
                 {
-                    const std::string name = wielded->name(ItemRefType::plain);
+                    const std::string name =
+                            wielded->name(ItemRefType::plain);
 
-                    msg_log::add("I " +
-                                 swift_str +
-                                 "put away my " +
-                                 name +
-                                 ".");
+                    msg_log::add(
+                            "I " +
+                            swift_str +
+                            "put away my " +
+                            name +
+                            ".");
                 }
             }
             else // No current wielded item
@@ -574,9 +584,12 @@ void handle_player_input(const InputData& input)
         }
         else // Not holding explosive - run throwing attack instead
         {
-                if (!map::player->thrown_item_)
+            auto* const thrown_item =
+                map::player->inv().item_in_slot(SlotId::thrown);
+
+            if (!thrown_item)
             {
-                msg_log::add("No item selected for throwing (press [T]).");
+                msg_log::add("No item selected for throwing (press [i]).");
 
                 return;
             }
@@ -587,9 +600,9 @@ void handle_player_input(const InputData& input)
 
             if (is_allowed)
             {
-                std::unique_ptr<State> throwing(
-                    new Throwing(map::player->pos,
-                                 *map::player->thrown_item_));
+                    std::unique_ptr<State> throwing(
+                            std::make_unique<Throwing>(
+                                    map::player->pos, *thrown_item));
 
                 states::push(std::move(throwing));
             }
@@ -598,13 +611,13 @@ void handle_player_input(const InputData& input)
     break;
 
     // Select item for throwing
-    case 'T':
-    {
-        std::unique_ptr<State> select_throw(new SelectThrow);
+    // case 'T':
+    // {
+    //     std::unique_ptr<State> select_throw(new SelectThrow);
 
-        states::push(std::move(select_throw));
-    }
-    break;
+    //     states::push(std::move(select_throw));
+    // }
+    // break;
 
     // View
     case 'v':
@@ -694,8 +707,7 @@ void handle_player_input(const InputData& input)
             "Cancel"
         };
 
-        const int choice =
-            popup::show_menu_msg("", choices);
+        const int choice = popup::menu("", choices);
 
         if (choice == 0)
         {
@@ -976,6 +988,7 @@ void win_game()
                           Panel::screen,
                           P(x0, y),
                           colors::white(),
+                          false, // Do not draw background color
                           colors::black());
 
             io::update_screen();
@@ -997,8 +1010,9 @@ void win_game()
         Panel::screen,
         P((screen_w - 1) / 2, screen_h - 2),
         colors::menu_dark(),
+        false, // Do not draw background color
         colors::black(),
-        false);
+        false); // Do not allow pixel-level adjustment
 
     io::update_screen();
 
@@ -1137,10 +1151,11 @@ void GameState::on_start()
                 "of non-human origin called \"The shining Trapezohedron\" - a "
                 "window to all the secrets of the universe!";
 
-            popup::show_msg(msg,
-                            "The story so far...",
-                            SfxId::END,
-                            5);
+            popup::msg(
+                    msg,
+                    "The story so far...",
+                    SfxId::END,
+                    5);
         }
     }
 
@@ -1163,11 +1178,16 @@ void GameState::on_start()
         }
     }
 
-    game::start_time_ = current_time();
+    start_time_ = current_time();
 }
 
 void GameState::draw()
 {
+    if (states::is_current_state(*this))
+    {
+        viewport::focus_on(map::player->pos);
+    }
+
     draw_map::run();
 
     status_lines::draw();

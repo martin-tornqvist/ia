@@ -3,42 +3,42 @@
 #include <string>
 #include <cmath>
 
-#include "init.hpp"
-#include "io.hpp"
-#include "audio.hpp"
-#include "feature_trap.hpp"
-#include "create_character.hpp"
-#include "msg_log.hpp"
-#include "popup.hpp"
-#include "game.hpp"
-#include "map.hpp"
-#include "explosion.hpp"
+#include "actor_factory.hpp"
 #include "actor_mon.hpp"
+#include "attack.hpp"
+#include "audio.hpp"
+#include "bot.hpp"
+#include "create_character.hpp"
+#include "drop.hpp"
+#include "explosion.hpp"
 #include "feature_door.hpp"
 #include "feature_mob.hpp"
-#include "query.hpp"
-#include "attack.hpp"
+#include "feature_trap.hpp"
 #include "fov.hpp"
+#include "game.hpp"
+#include "init.hpp"
+#include "insanity.hpp"
+#include "inventory.hpp"
+#include "inventory_handling.hpp"
+#include "io.hpp"
 #include "item.hpp"
 #include "item_device.hpp"
 #include "item_factory.hpp"
-#include "actor_factory.hpp"
-#include "player_bon.hpp"
-#include "inventory.hpp"
-#include "inventory_handling.hpp"
-#include "player_spells.hpp"
-#include "bot.hpp"
-#include "map_parsing.hpp"
-#include "property.hpp"
-#include "property_handler.hpp"
+#include "item_potion.hpp"
 #include "item_rod.hpp"
 #include "item_scroll.hpp"
-#include "item_potion.hpp"
-#include "text_format.hpp"
-#include "saving.hpp"
-#include "insanity.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "msg_log.hpp"
+#include "player_bon.hpp"
+#include "player_spells.hpp"
+#include "popup.hpp"
+#include "property.hpp"
+#include "property_handler.hpp"
+#include "query.hpp"
 #include "reload.hpp"
-#include "drop.hpp"
+#include "saving.hpp"
+#include "text_format.hpp"
 
 // -----------------------------------------------------------------------------
 // Private
@@ -52,10 +52,11 @@ static void print_aware_invis_mon_msg(const Mon& mon)
         d.is_humanoid ? "someone" :
         "a creature";
 
-    msg_log::add("There is " + mon_ref + " here!",
-                 colors::msg_note(),
-                 false,
-                 MorePromptOnMsg::yes);
+    msg_log::add(
+        "There is " + mon_ref + " here!",
+        colors::msg_note(),
+        false,
+        MorePromptOnMsg::yes);
 }
 
 // -----------------------------------------------------------------------------
@@ -63,7 +64,6 @@ static void print_aware_invis_mon_msg(const Mon& mon)
 // -----------------------------------------------------------------------------
 Player::Player() :
     Actor(),
-    thrown_item_(),
     active_medical_bag_(nullptr),
     handle_armor_countdown_(0),
     armor_putting_on_backpack_idx_(-1),
@@ -477,9 +477,7 @@ void Player::incr_insanity()
             "My mind can no longer withstand what it has grasped. "
             "I am hopelessly lost.";
 
-        popup::show_msg(msg,
-                        "Insane!",
-                        SfxId::insanity_rise);
+        popup::msg(msg, "Insane!", SfxId::insanity_rise);
 
         die(true, false, false);
         return;
@@ -1580,14 +1578,11 @@ void Player::interrupt_actions()
                         inv_->backpack_[armor_putting_on_backpack_idx_];
 
                 const std::string armor_name =
-                    item->name(ItemRefType::plain, ItemRefInf::yes);
+                    item->name(ItemRefType::a, ItemRefInf::yes);
 
                 msg =
-                    "Continue putting on the " +
-                    armor_name +
-                    " (" +
-                    turns_left_str +
-                    " turns left)? [y/n]";
+                        "Putting on " + armor_name +
+                        " (" + turns_left_str + " turns left).";
             }
             else // Taking off armor, or dropping from armor slot
             {
@@ -1596,17 +1591,16 @@ void Player::interrupt_actions()
                 ASSERT(item);
 
                 const std::string armor_name =
-                    item->name(ItemRefType::plain, ItemRefInf::yes);
+                        item->name(ItemRefType::a, ItemRefInf::yes);
 
                 msg =
-                    "Continue taking off the " +
-                    armor_name +
-                    " (" +
-                    turns_left_str +
-                    " turns left)? [y/n]";
+                        "Taking off " + armor_name +
+                        " (" + turns_left_str + " turns left).";
             }
 
             msg_log::add(msg, colors::light_white());
+
+            msg_log::add("Continue? [y/n]", colors::light_white());
 
             should_continue = (query::yes_or_no() == BinaryAnswer::yes);
 
@@ -1737,14 +1731,18 @@ void Player::move(Dir dir)
                                 wpn->name(ItemRefType::a);
 
                             const std::string mon_name =
-                                can_see_mon ?
-                                mon->name_the() :
-                                "it";
+                                    can_see_mon
+                                    ? mon->name_the()
+                                    : "it";
 
-                            msg_log::add("Attack " + mon_name +
-                                         " with " + wpn_name +
-                                         "? [y/n]",
-                                         colors::light_white());
+                            msg_log::add(
+                                    "Attacking " + mon_name +
+                                    " with " + wpn_name + ".",
+                                    colors::light_white());
+
+                            msg_log::add(
+                                    "Continue? [y/n]",
+                                    colors::light_white());
 
                             if (query::yes_or_no() == BinaryAnswer::no)
                             {
@@ -2176,15 +2174,11 @@ void Player::update_fov()
         fov_hack();
     }
 
-    //
     // The player's current cell is always seen - mostly to update item info
     // while blind (i.e. when you pick up an item you should see it disappear)
-    //
     map::cells[pos.x][pos.y].is_seen_by_player = true;
 
-    //
     // Cheat vision
-    //
     if (init::is_cheat_vision_enabled)
     {
         // Show all cells adjacent to cells which can be shot or seen through

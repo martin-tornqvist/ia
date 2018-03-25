@@ -5,45 +5,45 @@ namespace dir_utils
 
 const std::vector<P> cardinal_list
 {
-        P(-1,  0),
-                P( 1,  0),
-                P( 0, -1),
-                P( 0,  1)
-                };
+        {-1,  0},
+        { 1,  0},
+        { 0, -1},
+        { 0,  1}
+};
 
 const std::vector<P> cardinal_list_w_center
 {
-        P( 0,  0),
-                P(-1,  0),
-                P( 1,  0),
-                P( 0, -1),
-                P( 0,  1)
-                };
+        { 0,  0},
+        {-1,  0},
+        { 1,  0},
+        { 0, -1},
+        { 0,  1}
+};
 
 const std::vector<P> dir_list
 {
-        P(-1,  0),
-                P( 1,  0),
-                P( 0, -1),
-                P( 0,  1),
-                P(-1, -1),
-                P(-1,  1),
-                P( 1, -1),
-                P( 1,  1)
-                };
+        {-1,  0},
+        { 1,  0},
+        { 0, -1},
+        { 0,  1},
+        {-1, -1},
+        {-1,  1},
+        { 1, -1},
+        { 1,  1}
+};
 
 const std::vector<P> dir_list_w_center
 {
-        P( 0,  0),
-                P(-1,  0),
-                P( 1,  0),
-                P( 0, -1),
-                P( 0,  1),
-                P(-1, -1),
-                P(-1,  1),
-                P( 1, -1),
-                P( 1,  1)
-                };
+        { 0,  0},
+        {-1,  0},
+        { 1,  0},
+        { 0, -1},
+        { 0,  1},
+        {-1, -1},
+        {-1,  1},
+        { 1, -1},
+        { 1,  1}
+};
 
 static const std::string compass_dir_names[3][3] =
 {
@@ -52,8 +52,10 @@ static const std::string compass_dir_names[3][3] =
         {"SW", "S", "SE"}
 };
 
-static const double pi_db            = 3.14159265;
-static const double angle_45_db      = 2 * pi_db / 8;
+static const double pi_db = 3.14159265;
+
+static const double angle_45_db = 2 * pi_db / 8;
+
 static const double angle_45_half_db = angle_45_db / 2.0;
 
 static const double edge[4] =
@@ -73,7 +75,8 @@ Dir dir(const P& offset)
 
         if (offset.y == -1)
         {
-                return offset.x == -1 ? Dir::up_left :
+                return
+                        offset.x == -1 ? Dir::up_left :
                         offset.x ==  0 ? Dir::up :
                         offset.x ==  1 ? Dir::up_right :
                         Dir::END;
@@ -81,7 +84,8 @@ Dir dir(const P& offset)
 
         if (offset.y == 0)
         {
-                return offset.x == -1 ? Dir::left :
+                return
+                        offset.x == -1 ? Dir::left :
                         offset.x ==  0 ? Dir::center :
                         offset.x ==  1 ? Dir::right :
                         Dir::END;
@@ -89,7 +93,8 @@ Dir dir(const P& offset)
 
         if (offset.y == 1)
         {
-                return offset.x == -1 ? Dir::down_left :
+                return
+                        offset.x == -1 ? Dir::down_left :
                         offset.x ==  0 ? Dir::down :
                         offset.x ==  1 ? Dir::down_right :
                         Dir::END;

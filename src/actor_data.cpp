@@ -684,7 +684,7 @@ void ActorData::reset()
         name_the = "";
         corpse_name_a = "";
         corpse_name_the = "";
-        tile = TileId::empty;
+        tile = TileId::END;
         character = 'X';
         color = colors::yellow();
 

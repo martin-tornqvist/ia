@@ -11,11 +11,13 @@ namespace config
 
 void init();
 
-void toggle_fullscreen();
+void set_fullscreen(const bool value);
 
 bool is_tiles_mode();
 std::string font_name();
 bool is_fullscreen();
+int gui_cell_px_w();
+int gui_cell_px_h();
 int map_cell_px_w();
 int map_cell_px_h();
 bool is_text_mode_wall_full_square();
@@ -53,4 +55,4 @@ private:
     MenuBrowser browser_;
 };
 
-#endif
+#endif // CONFIG_HPP

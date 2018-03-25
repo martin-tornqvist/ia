@@ -36,7 +36,9 @@ void CharacterDescr::on_start()
 
         lines_.push_back(ColoredString("Current properties", clr_heading));
 
-        const auto prop_list = map::player->properties().text_list();
+        const auto prop_list =
+                map::player->properties()
+                .property_names_and_descr();
 
         if (prop_list.empty())
         {

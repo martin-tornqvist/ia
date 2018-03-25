@@ -80,14 +80,11 @@ public:
 
         bool end_prop_silent(const PropId id);
 
-        // A line of property names of the short form
-        std::vector<ColoredString> text_line() const;
+        std::vector<ColoredString> property_names_short() const;
 
-        // A list of properties names of the full form, with descriptions
-        std::vector<PropTextListEntry> text_list() const;
+        std::vector<PropTextListEntry> property_names_and_descr() const;
 
-        // Used for monster description property list
-        std::vector<PropTextListEntry> text_list_temporary_negative_props();
+        std::vector<PropTextListEntry> property_names_temporary_negative();
 
         bool has_temporary_negative_prop_mon() const;
 

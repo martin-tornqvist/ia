@@ -135,7 +135,6 @@ public:
     // are unique monsters on the map, and the player is observant
     void mon_feeling();
 
-    Item* thrown_item_;
     MedicalBag* active_medical_bag_;
     int handle_armor_countdown_;
     int armor_putting_on_backpack_idx_;

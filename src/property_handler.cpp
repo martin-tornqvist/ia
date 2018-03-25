@@ -589,11 +589,11 @@ bool PropHandler::is_temporary_negative_prop(const Prop& prop) const
                 (prop.alignment() == PropAlignment::bad);
 }
 
-std::vector<PropTextListEntry> PropHandler::text_list_temporary_negative_props()
+std::vector<PropTextListEntry> PropHandler::property_names_temporary_negative()
 {
         ASSERT(owner_ != map::player);
 
-        auto prop_list = owner_->properties().text_list();
+        auto prop_list = owner_->properties().property_names_and_descr();
 
         // Remove all non-negative properties (we should not show temporary
         // spell resistance for example), and all natural properties (properties
@@ -630,7 +630,7 @@ bool PropHandler::has_temporary_negative_prop_mon() const
         return false;
 }
 
-std::vector<ColoredString> PropHandler::text_line() const
+std::vector<ColoredString> PropHandler::property_names_short() const
 {
         std::vector<ColoredString> line;
 
@@ -708,7 +708,7 @@ std::vector<ColoredString> PropHandler::text_line() const
 }
 
 // TODO: Lots of copy paste from 'text_line' above, refactor
-std::vector<PropTextListEntry> PropHandler::text_list() const
+std::vector<PropTextListEntry> PropHandler::property_names_and_descr() const
 {
         std::vector<PropTextListEntry> list;
 

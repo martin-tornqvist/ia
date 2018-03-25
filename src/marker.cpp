@@ -19,6 +19,7 @@
 #include "explosion.hpp"
 #include "map_parsing.hpp"
 #include "draw_map.hpp"
+#include "viewport.hpp"
 
 // -----------------------------------------------------------------------------
 // Marker state
@@ -53,8 +54,18 @@ void MarkerState::on_start()
         on_moved();
 }
 
+void MarkerState::on_popped()
+{
+
+}
+
 void MarkerState::draw()
 {
+        if (!viewport::is_in_ivew(pos_))
+        {
+                viewport::focus_on(pos_);
+        }
+
         auto line =
                 line_calc::calc_new_line(
                         origin_,
@@ -92,10 +103,11 @@ void MarkerState::draw()
                 }
         }
 
-        draw_marker(line,
-                    orange_from_dist,
-                    red_from_dist,
-                    red_from_idx);
+        draw_marker(
+                line,
+                orange_from_dist,
+                red_from_dist,
+                red_from_idx);
 
         on_draw();
 }
@@ -222,7 +234,7 @@ void MarkerState::draw_marker(
                 {
                         auto& d = marker_render_data_[x][y];
 
-                        d.tile  = TileId::empty;
+                        d.tile  = TileId::END;
                         d.character = 0;
                 }
         }
@@ -237,6 +249,11 @@ void MarkerState::draw_marker(
         for (size_t line_idx = 0; line_idx < line.size(); ++line_idx)
         {
                 const P& line_pos = line[line_idx];
+
+                if (!viewport::is_in_ivew(line_pos))
+                {
+                        continue;
+                }
 
                 const int dist = king_dist(origin_, line_pos);
 
@@ -278,51 +295,44 @@ void MarkerState::draw_marker(
 
                         d.color_bg = colors::black();
 
-                        // If red, always draw a character (more distinct)
-                        if (config::is_tiles_mode() && !is_red)
-                        {
-                                io::draw_tile(
-                                        d.tile,
-                                        Panel::map,
-                                        line_pos,
-                                        d.color,
-                                        d.color_bg);
-                        }
-                        else // Text mode, or blocked
-                        {
-                                io::draw_character(
-                                        d.character,
-                                        Panel::map,
-                                        line_pos,
-                                        d.color,
-                                        d.color_bg);
-                        }
+                        io::draw_symbol(
+                                d.tile,
+                                d.character,
+                                Panel::map,
+                                viewport::to_view_pos(line_pos),
+                                d.color,
+                                true, // Draw background color
+                                d.color_bg);
                 }
         } // line loop
 
         // Draw the head
         const P& head_pos =
-                line.empty() ?
-                origin_ :
-                line.back();
+                line.empty()
+                ? origin_
+                : line.back();
 
-        auto& d = marker_render_data_[head_pos.x][head_pos.y];
+        if (viewport::is_in_ivew(head_pos))
+        {
+                auto& d = marker_render_data_[head_pos.x][head_pos.y];
 
-        d.tile = TileId::aim_marker_head;
+                d.tile = TileId::aim_marker_head;
 
-        d.character = 'X';
+                d.character = 'X';
 
-        d.color = color;
+                d.color = color;
 
-        d.color_bg = colors::black();
+                d.color_bg = colors::black();
 
-        io::draw_symbol(
-                d.tile,
-                d.character,
-                Panel::map,
-                head_pos,
-                d.color,
-                d.color_bg);
+                io::draw_symbol(
+                        d.tile,
+                        d.character,
+                        Panel::map,
+                        viewport::to_view_pos(head_pos),
+                        d.color,
+                        true, // Draw background color
+                        d.color_bg);
+        }
 }
 
 void MarkerState::move(const Dir dir)
@@ -525,14 +535,20 @@ int Aiming::orange_from_king_dist() const
 {
         const int effective_range = wpn_.data().ranged.effective_range;
 
-        return (effective_range < 0) ? -1 : (effective_range + 1);
+        return
+                (effective_range < 0)
+                ? -1
+                : (effective_range + 1);
 }
 
 int Aiming::red_from_king_dist() const
 {
         const int max_range = wpn_.data().ranged.max_range;
 
-        return (max_range < 0) ? -1 : (max_range + 1);
+        return
+                (max_range < 0)
+                ? -1
+                : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -627,9 +643,9 @@ int Throwing::orange_from_king_dist() const
         const int effective_range = inv_item_->data().ranged.effective_range;
 
         return
-                (effective_range < 0) ?
-                -1 :
-                (effective_range + 1);
+                (effective_range < 0)
+                ? -1
+                : (effective_range + 1);
 }
 
 int Throwing::red_from_king_dist() const
@@ -637,9 +653,9 @@ int Throwing::red_from_king_dist() const
         const int max_range = inv_item_->data().ranged.max_range;
 
         return
-                (max_range < 0) ?
-                -1 :
-                (max_range + 1);
+                (max_range < 0)
+                ? -1
+                : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -666,6 +682,13 @@ void ThrowingExplosive::on_draw()
         {
                 for (int x = expl_area.p0.x; x <= expl_area.p1.x; ++x)
                 {
+                        const P p(x, y);
+
+                        if (!viewport::is_in_ivew(p))
+                        {
+                                continue;
+                        }
+
                         const auto& render_d = draw_map::get_drawn_cell(x, y);
 
                         const auto& marker_render_d = marker_render_data_[x][y];
@@ -679,18 +702,17 @@ void ThrowingExplosive::on_draw()
                                         marker_render_d.character != 0;
 
                                 const auto& d =
-                                        has_marker ?
-                                        marker_render_d :
-                                        render_d;
-
-                                const P p(x, y);
+                                        has_marker
+                                        ? marker_render_d
+                                        : render_d;
 
                                 io::draw_symbol(
                                         d.tile,
                                         d.character,
                                         Panel::map,
-                                        p,
+                                        viewport::to_view_pos(p),
                                         d.color,
+                                        true, // Draw background color
                                         color_bg);
                         }
                 }
@@ -739,7 +761,10 @@ int ThrowingExplosive::red_from_king_dist() const
 {
         const int max_range = explosive_.data().ranged.max_range;
 
-        return (max_range < 0) ? -1 : (max_range + 1);
+        return
+                (max_range < 0)
+                ? -1
+                : (max_range + 1);
 }
 
 // -----------------------------------------------------------------------------

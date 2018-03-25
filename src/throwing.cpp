@@ -25,6 +25,7 @@
 #include "text_format.hpp"
 #include "property_data.hpp"
 #include "property_handler.hpp"
+#include "viewport.hpp"
 
 namespace throwing
 {
@@ -72,13 +73,14 @@ void player_throw_lit_explosive(const P& aim_cell)
         {
             states::draw();
 
-            if (map::cells[p.x][p.y].is_seen_by_player)
+            if (map::cells[p.x][p.y].is_seen_by_player &&
+                viewport::is_in_ivew(p))
             {
                 io::draw_symbol(
                     explosive->tile(),
                     explosive->character(),
                     Panel::map,
-                    p,
+                    viewport::to_view_pos(p),
                     color);
 
                 io::update_screen();
@@ -289,13 +291,14 @@ void throw_item(Actor& actor_throwing,
             break;
         }
 
-        if (map::cells[pos.x][pos.y].is_seen_by_player)
+        if (map::cells[pos.x][pos.y].is_seen_by_player &&
+            viewport::is_in_ivew(pos))
         {
             io::draw_symbol(
                 item_thrown.tile(),
                 item_thrown.character(),
                 Panel::map,
-                pos,
+                viewport::to_view_pos(pos),
                 item_color);
 
             io::update_screen();

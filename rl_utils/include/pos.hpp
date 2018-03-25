@@ -19,7 +19,7 @@ public:
                 y(p.y) {}
 
         // Construct from a direction -> offsets (e.g. 1, -1)
-        P(const Dir dir);
+        explicit P(const Dir dir);
 
         P& operator=(const P p)
         {
@@ -89,6 +89,11 @@ public:
                 return P(x - v, y - v);
         }
 
+        P with_offsets(const int x_offset, const int y_offset) const
+        {
+                return P(x + x_offset, y + y_offset);
+        }
+
         P with_x_offset(const int offset) const
         {
                 return P(x + offset, y);
@@ -114,14 +119,19 @@ public:
                 return P(x * v, y * v);
         }
 
-        P scaled_down(const int  v) const
+        P scaled_down(const int x_denom, const int y_denom) const
+        {
+                return P(x / x_denom, y / y_denom);
+        }
+
+        P scaled_down(const int v) const
         {
                 return P(x / v, y / v);
         }
 
-        P scaled_down(const P p) const
+        P scaled_down(const P denoms) const
         {
-                return P(x / p.x, y / p.y);
+                return P(x / denoms.x, y / denoms.y);
         }
 
         bool operator==(const P p) const
@@ -163,7 +173,7 @@ public:
                 y = p.y;
         }
 
-        void swap(P p)
+        void swap(P& p)
         {
                 P tmp(p);
 

@@ -3,7 +3,7 @@
 
   <color name="gray" rgb_hex="808080"/>
   <color name="dark_gray" rgb_hex="303030"/>
-  <color name="extra_dark_gray" rgb_hex="1e1e1e"/>
+  <color name="extra_dark_gray" rgb_hex="0d0d0d"/>
 
   <color name="white" rgb_hex="c0c0c0"/>
   <color name="light_white" rgb_hex="ffffff"/>

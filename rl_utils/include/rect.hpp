@@ -56,7 +56,7 @@ public:
                          (p0.y + p1.y) / 2);
         }
 
-        bool is_p_inside(const P p) const
+        bool is_pos_inside(const P p) const
         {
                 return
                         (p.x >= p0.x) &&

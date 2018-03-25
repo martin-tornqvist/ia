@@ -34,7 +34,7 @@ Rigid::Rigid(const P& p) :
     item_container_(),
     burn_state_(BurnState::not_burned),
     started_burning_this_turn_(false),
-    gore_tile_(TileId::empty),
+    gore_tile_(TileId::END),
     gore_character_(0),
     is_bloody_(false),
     nr_turns_color_corrupted_(-1) {}
@@ -285,9 +285,9 @@ void Rigid::hit(const int dmg,
                     !map::cells[pos_.x][pos_.y].is_seen_by_player;
 
                 const std::string rigid_name =
-                    can_see_feature ?
-                    "something" :
-                    name(Article::the);
+                        can_see_feature
+                        ? "something"
+                        : name(Article::the);
 
                 msg_log::add("I kick " + rigid_name + "!");
 
@@ -428,9 +428,9 @@ Color Rigid::color() const
         else
         {
             return
-                (burn_state_ == BurnState::not_burned) ?
-                color_default() :
-                colors::dark_gray();
+                (burn_state_ == BurnState::not_burned)
+                ? color_default()
+                : colors::dark_gray();
         }
     }
 }
@@ -456,7 +456,7 @@ Color Rigid::color_bg() const
 
 void Rigid::clear_gore()
 {
-    gore_tile_ = TileId::empty;
+    gore_tile_ = TileId::END;
     gore_character_ = ' ';
     is_bloody_ = false;
 }
@@ -507,14 +507,17 @@ void Floor::on_hit(const int dmg,
 
 TileId Floor::tile() const
 {
-    return burn_state_ == BurnState::has_burned ?
-        TileId::scorched_ground :
-        data().tile;
+    return burn_state_ == BurnState::has_burned
+        ? TileId::scorched_ground
+        : data().tile;
 }
 
 std::string Floor::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "" : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? ""
+            : "the ";
 
     if (burn_state_ == BurnState::burning)
     {
@@ -655,8 +658,9 @@ bool Wall::is_wall_top_tile(const TileId tile)
 std::string Wall::name(const Article article) const
 {
     std::string ret =
-        article == Article::a ?
-        "a " : "the ";
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     if (is_mossy_)
     {
@@ -715,7 +719,9 @@ Color Wall::color_default() const
 
 char Wall::character() const
 {
-    return config::is_text_mode_wall_full_square() ? 10 : '#';
+    return config::is_text_mode_wall_full_square()
+            ? 10
+            : '#';
 }
 
 TileId Wall::front_wall_tile() const
@@ -758,7 +764,7 @@ TileId Wall::front_wall_tile() const
     }
 
     ASSERT(false && "Failed to set front wall tile");
-    return TileId::empty;
+    return TileId::END;
 }
 
 TileId Wall::top_wall_tile() const
@@ -779,7 +785,7 @@ TileId Wall::top_wall_tile() const
     }
 
     ASSERT(false && "Failed to set top wall tile");
-    return TileId::empty;
+    return TileId::END;
 }
 
 void Wall::set_rnd_common_wall()
@@ -849,8 +855,9 @@ void RubbleHigh::on_hit(const int dmg,
 std::string RubbleHigh::name(const Article article) const
 {
     std::string ret =
-        article == Article::a ?
-        "a " : "the ";
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     return ret + "big pile of debris";
 }
@@ -966,9 +973,9 @@ void GraveStone::bump(Actor& actor_bumping)
 std::string GraveStone::name(const Article article) const
 {
     const std::string ret =
-        article == Article::a ?
-        "a " :
-        "the ";
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     return ret + "gravestone; " + inscr_;
 }
@@ -996,8 +1003,10 @@ void ChurchBench::on_hit(const int dmg,
 
 std::string ChurchBench::name(const Article article) const
 {
-    const std::string ret = article == Article::a ?
-        "a " : "the ";
+    const std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     return ret + "church bench";
 }
@@ -1012,7 +1021,9 @@ Color ChurchBench::color_default() const
 // -----------------------------------------------------------------------------
 Statue::Statue(const P& p) :
     Rigid   (p),
-    type_   (rnd::one_in(8) ? StatueType::ghoul : StatueType::common)
+    type_   (rnd::one_in(8)
+             ? StatueType::ghoul
+             : StatueType::common)
 {
 
 }
@@ -1046,9 +1057,10 @@ void Statue::on_hit(const int dmg,
             return;
         }
 
-        const AlertsMon alerts_mon = actor == map::player ?
-            AlertsMon::yes :
-            AlertsMon::no;
+        const AlertsMon alerts_mon =
+                (actor == map::player)
+                ? AlertsMon::yes
+                : AlertsMon::no;
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -1105,7 +1117,10 @@ void Statue::on_hit(const int dmg,
 
 std::string Statue::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     switch (type_)
     {
@@ -1124,9 +1139,9 @@ std::string Statue::name(const Article article) const
 TileId Statue::tile() const
 {
     return
-        (type_ == StatueType::common) ?
-        TileId::witch_or_warlock :
-        TileId::ghoul;
+        (type_ == StatueType::common)
+            ? TileId::witch_or_warlock
+            : TileId::ghoul;
 }
 
 Color Statue::color_default() const
@@ -1153,7 +1168,11 @@ void Stalagmite::on_hit(const int dmg,
 
 std::string Stalagmite::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
+
     return ret + "stalagmite";
 }
 
@@ -1197,8 +1216,7 @@ void Stairs::bump(Actor& actor_bumping)
 
         const std::string title = "A staircase leading downwards";
 
-        const int choice =
-            popup::show_menu_msg("", choices, title);
+        const int choice = popup::menu("", choices, title);
 
         switch (choice)
         {
@@ -1229,7 +1247,11 @@ void Stairs::bump(Actor& actor_bumping)
 
 std::string Stairs::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
+
     return ret + "downward staircase";
 }
 
@@ -1243,7 +1265,9 @@ Color Stairs::color_default() const
 // -----------------------------------------------------------------------------
 TileId Bridge::tile() const
 {
-    return axis_ == Axis::hor ? TileId::hangbridge_hor : TileId::hangbridge_ver;
+        return (axis_ == Axis::hor)
+                ? TileId::hangbridge_hor
+                : TileId::hangbridge_ver;
 }
 
 void Bridge::on_hit(const int dmg,
@@ -1259,12 +1283,17 @@ void Bridge::on_hit(const int dmg,
 
 char Bridge::character() const
 {
-    return axis_ == Axis::hor ? '|' : '=';
+        return (axis_ == Axis::hor)
+                ? '|'
+                : '=';
 }
 
 std::string Bridge::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+        std::string ret = (article == Article::a)
+                ? "a "
+                : "the ";
+
     return ret + "bridge";
 }
 
@@ -1304,9 +1333,9 @@ void LiquidShallow::bump(Actor& actor_bumping)
     if (actor_bumping.is_player())
     {
         const std::string type_str =
-            (type_ == LiquidType::water) ?
-            "water" :
-            "mud";
+                (type_ == LiquidType::water)
+                ? "water"
+                : "mud";
 
         msg_log::add("I wade slowly through the knee high " + type_str + ".");
 
@@ -1466,7 +1495,9 @@ void Chasm::on_hit(const int dmg,
 
 std::string Chasm::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+        std::string ret = (article == Article::a)
+                ? "a "
+                : "the ";
 
     return ret + "chasm";
 }
@@ -1498,14 +1529,16 @@ void Lever::on_hit(const int dmg,
 std::string Lever::name(const Article article) const
 {
     std::string ret =
-        (article == Article::a) ?
-        "a" : "the";
+            (article == Article::a)
+            ? "a"
+            : "the";
 
     ret += " lever (in ";
 
     ret +=
-        is_left_pos_ ?
-        "left" : "right";
+            is_left_pos_
+            ? "left"
+            : "right";
 
     ret += " position)";
 
@@ -1523,9 +1556,9 @@ Color Lever::color_default() const
 TileId Lever::tile() const
 {
     return
-        is_left_pos_ ?
-        TileId::lever_left :
-        TileId::lever_right;
+            is_left_pos_
+            ? TileId::lever_left
+            : TileId::lever_right;
 }
 
 void Lever::bump(Actor& actor_bumping)
@@ -1539,7 +1572,13 @@ void Lever::bump(Actor& actor_bumping)
     {
         msg_log::clear();
 
-        msg_log::add("There is a lever here, pull it? [y/n]");
+        msg_log::add(
+                "There is a lever here.",
+                colors::light_white());
+
+        msg_log::add(
+                "Pull it? [y/n]",
+                colors::light_white());
 
         const auto answer = query::yes_or_no();
 
@@ -1608,7 +1647,10 @@ void Altar::on_hit(const int dmg,
 
 std::string Altar::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "an " : "the ";
+        std::string ret = (article == Article::a)
+                ? "an "
+                : "the ";
+
     return ret + "altar";
 }
 
@@ -1651,7 +1693,10 @@ WasDestroyed Carpet::on_finished_burning()
 
 std::string Carpet::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "" : "the ";
+        std::string ret = (article == Article::a)
+                ? "" :
+                "the ";
+
     return ret + "carpet";
 }
 
@@ -1691,10 +1736,9 @@ void Grass::on_hit(const int dmg,
 
 TileId Grass::tile() const
 {
-    return
-        (burn_state_ == BurnState::has_burned) ?
-        TileId::scorched_ground :
-        data().tile;
+    return (burn_state_ == BurnState::has_burned)
+            ? TileId::scorched_ground
+            : data().tile;
 }
 
 std::string Grass::name(const Article article) const
@@ -1785,7 +1829,10 @@ WasDestroyed Bush::on_finished_burning()
 
 std::string Bush::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+        std::string ret =
+                (article == Article::a)
+                ? "a "
+                : "the ";
 
     switch (burn_state_)
     {
@@ -1863,7 +1910,10 @@ WasDestroyed Vines::on_finished_burning()
 
 std::string Vines::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "" : "the ";
+        std::string ret =
+                (article == Article::a)
+                ? ""
+                : "the ";
 
     switch (burn_state_)
     {
@@ -1896,8 +1946,9 @@ Chains::Chains(const P& p) :
 std::string Chains::name(const Article article) const
 {
     std::string ret =
-        article == Article::a ?
-        "" : "the ";
+            (article == Article::a)
+            ? ""
+            : "the ";
 
     return ret + "rusty chains";
 }
@@ -1941,9 +1992,9 @@ void Chains::bump(Actor& actor_bumping)
         }
 
         const AlertsMon alerts_mon =
-            actor_bumping.is_player() ?
-            AlertsMon::yes :
-            AlertsMon::no;
+                actor_bumping.is_player()
+                ? AlertsMon::yes
+                : AlertsMon::no;
 
         Snd snd(msg,
                 SfxId::chains,
@@ -2019,8 +2070,9 @@ void Grate::on_hit(const int dmg,
 std::string Grate::name(const Article article) const
 {
     std::string ret =
-        article == Article::a ?
-        "a " : "the ";
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     return ret + "grate";
 }
@@ -2075,7 +2127,10 @@ WasDestroyed Tree::on_finished_burning()
 
 std::string Tree::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     switch (burn_state_)
     {
@@ -2104,7 +2159,11 @@ Color Tree::color_default() const
 // -----------------------------------------------------------------------------
 std::string Brazier::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
+
     return ret + "brazier";
 }
 
@@ -2127,9 +2186,9 @@ void Brazier::on_hit(const int dmg,
         }
 
         const AlertsMon alerts_mon =
-            actor == map::player ?
-            AlertsMon::yes :
-            AlertsMon::no;
+                (actor == map::player)
+                ? AlertsMon::yes
+                : AlertsMon::no;
 
         if (map::cells[pos_.x][pos_.y].is_seen_by_player)
         {
@@ -2326,9 +2385,9 @@ void ItemContainer::open(const P& feature_pos,
             const ItemData&  data = item->data();
 
             Wpn* wpn =
-                data.ranged.is_ranged_wpn ?
-                static_cast<Wpn*>(item) :
-                nullptr;
+                    data.ranged.is_ranged_wpn
+                    ? static_cast<Wpn*>(item)
+                    : nullptr;
 
             const bool is_unloadable_wpn =
                 wpn &&
@@ -2341,7 +2400,10 @@ void ItemContainer::open(const P& feature_pos,
             }
 
             const BinaryAnswer answer =
-                query::yes_or_no(is_unloadable_wpn ? 'G' : -1);
+                query::yes_or_no(
+                        is_unloadable_wpn
+                        ? 'G'
+                        : -1);
 
             msg_log::clear();
 
@@ -2421,7 +2483,10 @@ Tomb::Tomb(const P& p) :
     trait_                  (TombTrait::END)
 {
     // Contained items
-    const int nr_items_min = rnd::one_in(4) ? 0 : 1;
+    const int nr_items_min =
+            rnd::one_in(4)
+            ? 0
+            : 1;
 
     int nr_items_max = 1;
 
@@ -2506,20 +2571,23 @@ std::string Tomb::name(const Article article) const
         item_container_.items_.empty();
 
     const std::string empty_str =
-        is_empty ?
-        "empty " : "";
+            is_empty
+            ? "empty "
+            : "";
 
     const std::string open_str =
-        (is_open_ && !is_empty) ?
-        "open " : "";
+            (is_open_ && !is_empty)
+            ? "open "
+            : "";
 
     std::string a = "";
 
     if (article == Article::a)
     {
         a =
-            (is_open_ || (appearance_ == TombAppearance::ornate)) ?
-            "an " : "a ";
+                (is_open_ || (appearance_ == TombAppearance::ornate))
+                ? "an "
+                : "a ";
     }
     else
     {
@@ -2552,9 +2620,9 @@ std::string Tomb::name(const Article article) const
 TileId Tomb::tile() const
 {
     return
-        is_open_ ?
-        TileId::tomb_open :
-        TileId::tomb_closed;
+            is_open_
+            ? TileId::tomb_open
+            : TileId::tomb_closed;
 }
 
 Color Tomb::color_default() const
@@ -2607,8 +2675,9 @@ void Tomb::bump(Actor& actor_bumping)
                 else // Not weakened
                 {
                     const int bon =
-                        player_bon::traits[(size_t)Trait::tough] ?
-                        4 : 0;
+                            player_bon::traits[(size_t)Trait::tough]
+                            ? 4
+                            : 0;
 
                     TRACE << "Base chance to push lid is: 1 in "
                           << push_lid_one_in_n_ << std::endl;
@@ -2905,7 +2974,10 @@ Chest::Chest(const P& p) :
     }
 
     // Contained items
-    const int nr_items_min = rnd::one_in(4) ? 0 : 1;
+    const int nr_items_min =
+            rnd::one_in(4)
+            ? 0
+            : 1;
 
     int nr_items_max = 2;
 
@@ -2925,9 +2997,9 @@ Chest::Chest(const P& p) :
                          rnd::range(nr_items_min, nr_items_max));
 
     const int locked_numer =
-        item_container_.items_.empty() ?
-        1 :
-        std::min(8, map::dlvl);
+            item_container_.items_.empty()
+            ? 1
+            : std::min(8, map::dlvl);
 
     is_locked_ = rnd::fraction(locked_numer, 10);
 }
@@ -3054,8 +3126,9 @@ void Chest::hit(const int dmg,
                         }
 
                         const int open_one_in_n =
-                            player_bon::traits[(size_t)Trait::tough] ?
-                            3 : 4;
+                                player_bon::traits[(size_t)Trait::tough]
+                                ? 3
+                                : 4;
 
                         if (rnd::one_in(open_one_in_n))
                         {
@@ -3170,17 +3243,17 @@ std::string Chest::name(const Article article) const
 TileId Chest::tile() const
 {
     return
-        is_open_ ?
-        TileId::chest_open :
-        TileId::chest_closed;
+            is_open_
+            ? TileId::chest_open
+            : TileId::chest_closed;
 }
 
 Color Chest::color_default() const
 {
     return
-        (matl_ == ChestMatl::wood) ?
-        colors::dark_brown() :
-        colors::gray();
+            (matl_ == ChestMatl::wood)
+            ? colors::dark_brown()
+            : colors::gray();
 }
 
 // -----------------------------------------------------------------------------
@@ -3239,9 +3312,9 @@ void Fountain::on_hit(const int dmg,
 Color Fountain::color_default() const
 {
     return
-        has_drinks_left_ ?
-        colors::light_blue() :
-        colors::gray();
+            has_drinks_left_
+            ? colors::light_blue()
+            : colors::gray();
 
     ASSERT("Failed to get fountain color" && false);
     return colors::black();
@@ -3250,8 +3323,9 @@ Color Fountain::color_default() const
 std::string Fountain::name(const Article article) const
 {
     std::string a =
-        article == Article::a ?
-        "a " : "the ";
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     return a + "fountain";
 }
@@ -3271,7 +3345,13 @@ void Fountain::bump(Actor& actor_bumping)
         {
             msg_log::clear();
 
-            msg_log::add("There is a fountain here. Drink from it? [y/n]");
+            msg_log::add(
+                    "There is a fountain here.",
+                    colors::light_white());
+
+            msg_log::add(
+                    "Drink from it? [y/n]",
+                    colors::light_white());
 
             const auto answer = query::yes_or_no();
 
@@ -3398,7 +3478,10 @@ Cabinet::Cabinet(const P& p) :
     is_open_    (false)
 {
     // Contained items
-    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+    const int nr_items_min =
+            rnd::coin_toss()
+            ? 0
+            : 1;
 
     int nr_items_max = 1;
 
@@ -3493,7 +3576,10 @@ DidOpen Cabinet::open(Actor* const actor_opening)
 
 std::string Cabinet::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     if (burn_state_ == BurnState::burning)
     {
@@ -3505,10 +3591,9 @@ std::string Cabinet::name(const Article article) const
 
 TileId Cabinet::tile() const
 {
-    return
-        is_open_ ?
-        TileId::cabinet_open :
-        TileId::cabinet_closed;
+    return is_open_
+            ? TileId::cabinet_open
+            : TileId::cabinet_closed;
 }
 
 Color Cabinet::color_default() const
@@ -3524,7 +3609,10 @@ Bookshelf::Bookshelf(const P& p) :
     is_looted_  (false)
 {
     // Contained items
-    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+    const int nr_items_min =
+            rnd::coin_toss()
+            ? 0
+            : 1;
 
     int nr_items_max = 1;
 
@@ -3597,7 +3685,10 @@ void Bookshelf::player_loot()
 
 std::string Bookshelf::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     if (burn_state_ == BurnState::burning)
     {
@@ -3609,10 +3700,9 @@ std::string Bookshelf::name(const Article article) const
 
 TileId Bookshelf::tile() const
 {
-    return
-        is_looted_ ?
-        TileId::bookshelf_empty :
-        TileId::bookshelf_full;
+    return is_looted_
+            ? TileId::bookshelf_empty
+            : TileId::bookshelf_full;
 }
 
 Color Bookshelf::color_default() const
@@ -3628,7 +3718,10 @@ AlchemistBench::AlchemistBench(const P& p) :
     is_looted_  (false)
 {
     // Contained items
-    const int nr_items_min = rnd::coin_toss() ? 0 : 1;
+    const int nr_items_min =
+            rnd::coin_toss()
+            ? 0
+            : 1;
 
     int nr_items_max = 1;
 
@@ -3702,9 +3795,9 @@ void AlchemistBench::player_loot()
 std::string AlchemistBench::name(const Article article) const
 {
     std::string a =
-        (article == Article::a) ?
-        "an " :
-        "the ";
+            (article == Article::a)
+            ? "an "
+            : "the ";
 
     std::string mod = "";
 
@@ -3723,10 +3816,9 @@ std::string AlchemistBench::name(const Article article) const
 
 TileId AlchemistBench::tile() const
 {
-    return
-        is_looted_ ?
-        TileId::alchemist_bench_empty :
-        TileId::alchemist_bench_full;
+    return is_looted_
+            ? TileId::alchemist_bench_empty
+            : TileId::alchemist_bench_full;
 }
 
 Color AlchemistBench::color_default() const
@@ -3753,12 +3845,20 @@ Cocoon::Cocoon(const P& p) :
 
         const Fraction fraction_empty(6, 10);
 
-        const int nr_items_min = fraction_empty.roll() ? 0 : 1;
+        const int nr_items_min =
+                fraction_empty.roll()
+                ? 0
+                : 1;
 
-        const int nr_items_max = nr_items_min + (is_treasure_hunter ? 1 : 0);
+        const int nr_items_max =
+                nr_items_min +
+                (is_treasure_hunter
+                 ? 1
+                 : 0);
 
-        item_container_.init(FeatureId::cocoon,
-                             rnd::range(nr_items_min, nr_items_max));
+        item_container_.init(
+                FeatureId::cocoon,
+                rnd::range(nr_items_min, nr_items_max));
     }
 }
 
@@ -3906,7 +4006,10 @@ DidOpen Cocoon::open(Actor* const actor_opening)
 
 std::string Cocoon::name(const Article article) const
 {
-    std::string ret = article == Article::a ? "a " : "the ";
+    std::string ret =
+            (article == Article::a)
+            ? "a "
+            : "the ";
 
     if (burn_state_ == BurnState::burning)
     {
@@ -3918,7 +4021,9 @@ std::string Cocoon::name(const Article article) const
 
 TileId Cocoon::tile() const
 {
-    return is_open_ ? TileId::cocoon_open : TileId::cocoon_closed;
+    return is_open_
+            ? TileId::cocoon_open
+            : TileId::cocoon_closed;
 }
 
 Color Cocoon::color_default() const

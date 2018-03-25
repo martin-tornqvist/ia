@@ -106,8 +106,9 @@ static void try_cast(const SpellOpt& spell_opt)
 
         if (spi_cost_range.max >= map::player->spi())
         {
-                msg_log::add("Cast spell and risk depleting your spirit? [y/n]",
-                             colors::light_white());
+                msg_log::add(
+                        "Low spirit, try casting spell anyway? [y/n]",
+                        colors::light_white());
 
                 if (query::yes_or_no() == BinaryAnswer::no)
                 {
@@ -318,9 +319,9 @@ void BrowseSpell::draw()
 
                 std::string name = spell->name();
 
-                const int spi_label_x = 26;
+                const int spi_label_x = 24;
 
-                const int skill_label_x = spi_label_x + 11;
+                const int skill_label_x = spi_label_x + 10;
 
                 p.x = 0;
 
@@ -329,19 +330,21 @@ void BrowseSpell::draw()
                         colors::menu_highlight() :
                         colors::menu_dark();
 
-                io::draw_text(key_str,
-                              Panel::screen,
-                              p,
-                              color);
+                io::draw_text(
+                        key_str,
+                        Panel::item_menu,
+                        p,
+                        color);
 
                 ++key_str[0];
 
                 p.x = key_str.size();
 
-                io::draw_text(name,
-                              Panel::screen,
-                              p,
-                              color);
+                io::draw_text(
+                        name,
+                        Panel::item_menu,
+                        p,
+                        color);
 
                 std::string fill_str = "";
 
@@ -354,19 +357,21 @@ void BrowseSpell::draw()
 
                 const Color fill_color = colors::gray().fraction(3.0);
 
-                io::draw_text(fill_str,
-                              Panel::screen,
-                              P(p.x + name.size(), p.y),
-                              fill_color);
+                io::draw_text(
+                        fill_str,
+                        Panel::item_menu,
+                        P(p.x + name.size(), p.y),
+                        fill_color);
 
                 p.x = spi_label_x;
 
                 std::string str = "SP: ";
 
-                io::draw_text(str,
-                              Panel::screen,
-                              p,
-                              colors::dark_gray());
+                io::draw_text(
+                        str,
+                        Panel::item_menu,
+                        p,
+                        colors::dark_gray());
 
                 p.x += str.size();
 
@@ -380,14 +385,15 @@ void BrowseSpell::draw()
                 const std::string upper_str = std::to_string(spi_cost.max);
 
                 str =
-                        (spi_cost.max == 1) ?
-                        "1" :
-                        (lower_str +  "-" + upper_str);
+                        (spi_cost.max == 1)
+                        ? "1"
+                        : (lower_str +  "-" + upper_str);
 
-                io::draw_text(str,
-                              Panel::screen,
-                              p,
-                              colors::white());
+                io::draw_text(
+                        str,
+                        Panel::item_menu,
+                        p,
+                        colors::white());
 
                 // Draw skill level if learned
                 if ((spell_opt.src == SpellSrc::learned) &&
@@ -397,10 +403,11 @@ void BrowseSpell::draw()
 
                         str = "Skill: ";
 
-                        io::draw_text(str,
-                                      Panel::screen,
-                                      p,
-                                      colors::dark_gray());
+                        io::draw_text(
+                                str,
+                                Panel::item_menu,
+                                p,
+                                colors::dark_gray());
 
                         p.x += str.size();
 
@@ -419,10 +426,11 @@ void BrowseSpell::draw()
                                 break;
                         }
 
-                        io::draw_text(str,
-                                      Panel::screen,
-                                      p,
-                                      colors::white());
+                        io::draw_text(
+                                str,
+                                Panel::item_menu,
+                                p,
+                                colors::white());
                 }
 
                 if (is_idx_marked)

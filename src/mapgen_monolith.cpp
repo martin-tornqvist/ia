@@ -40,12 +40,13 @@ void make_monoliths()
     // Block the area around the player
     const P& player_p = map::player->pos;
 
-    const int r = fov_std_radi_int;
+    const int r = fov_radi_int;
 
-    const R fov_r(std::max(0,           player_p.x - r),
-                  std::max(0,           player_p.y - r),
-                  std::min(map_w - 1,   player_p.x + r),
-                  std::min(map_h - 1,   player_p.y + r));
+    const R fov_r(
+            std::max(0, player_p.x - r),
+            std::max(0, player_p.y - r),
+            std::min(map_w - 1, player_p.x + r),
+            std::min(map_h - 1, player_p.y + r));
 
     for (int x = fov_r.p0.x; x <= fov_r.p1.x; ++x)
     {

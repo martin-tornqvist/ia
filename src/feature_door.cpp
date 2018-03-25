@@ -607,7 +607,7 @@ char Door::character() const
 
 TileId Door::tile() const
 {
-    TileId ret = TileId::empty;
+    TileId ret = TileId::END;
 
     if (is_secret_)
     {

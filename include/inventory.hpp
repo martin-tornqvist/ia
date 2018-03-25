@@ -13,133 +13,148 @@ enum class ItemId;
 
 enum class SlotId
 {
-    wpn,
-    wpn_alt,
-    body,
-    head,
-    END
+        wpn,
+        wpn_alt,
+        thrown,
+        body,
+        head,
+        END
 };
 
 struct InvSlot
 {
-    InvSlot(SlotId id_, std::string name_) :
-        id      (id_),
-        name    (name_),
-        item    (nullptr) {}
+        InvSlot(SlotId id_, std::string name_) :
+                id(id_),
+                name(name_),
+                item(nullptr) {}
 
-    InvSlot() :
-        id      (SlotId::wpn),
-        name    (""),
-        item    (nullptr) {}
+        InvSlot() :
+                id(SlotId::wpn),
+                name(""),
+                item(nullptr) {}
 
-    SlotId id;
-    std::string name;
-    Item* item;
+        SlotId id;
+        std::string name;
+        Item* item;
 };
 
 class Inventory
 {
 public:
-    Inventory(Actor* const owning_actor);
+        Inventory(Actor* const owning_actor);
 
-    ~Inventory();
+        ~Inventory();
 
-    void save() const;
-    void load();
+        void save() const;
+        void load();
 
-    // Equip item from backpack
-    void equip_backpack_item(const size_t backpack_idx,
-                             const SlotId slot_id);
+        // Equip item from backpack
+        void equip_backpack_item(
+                const size_t backpack_idx,
+                const SlotId slot_id);
 
-    void equip_backpack_item(const Item* const item,
-                             const SlotId slot_id);
+        void equip_backpack_item(
+                const Item* const item,
+                const SlotId slot_id);
 
-    size_t unequip_slot(const SlotId id);
+        size_t unequip_slot(const SlotId id);
 
-    // NOTE: The "put_in_*" functions should NEVER be called on items already in
-    // the inventory.
-    void put_in_slot(const SlotId id,
-                     Item* item,
-                     Verbosity verbosity);
+        // NOTE: The "put_in_*" functions should NEVER be called on items
+        // already in the inventory. The purpose of these methods are to place
+        // new/external items in the inventory
+        void put_in_slot(const SlotId id,
+                         Item* item,
+                         Verbosity verbosity);
 
-    void put_in_backpack(Item* item);
+        void put_in_backpack(Item* item);
 
-    void put_in_intrinsics(Item* item);
+        void put_in_intrinsics(Item* item);
 
-    void drop_all_non_intrinsic(const P& pos);
+        void print_equip_message(
+                const SlotId slot_id,
+                const Item& item);
 
-    void swap_wielded_and_prepared();
+        void print_unequip_message(
+                const SlotId slot_id,
+                const Item& item);
 
-    bool has_item_in_slot(SlotId id) const;
+        void drop_all_non_intrinsic(const P& pos);
 
-    bool has_ammo_for_firearm_in_inventory();
+        void swap_wielded_and_prepared();
 
-    Item* item_in_backpack(const ItemId id);
+        bool has_item_in_slot(SlotId id) const;
 
-    int backpack_idx(const ItemId item_id) const;
+        bool has_ammo_for_firearm_in_inventory();
 
-    Item* item_in_slot(const SlotId id) const;
+        Item* item_in_backpack(const ItemId id);
 
-    void decr_item_in_slot(SlotId slot_id);
+        int backpack_idx(const ItemId item_id) const;
 
-    void decr_item_in_backpack(const size_t idx);
+        Item* item_in_slot(const SlotId id) const;
 
-    void decr_item(Item* const item);
+        void decr_item_in_slot(SlotId slot_id);
 
-    void decr_item_type_in_backpack(const ItemId item_id);
+        void decr_item_in_backpack(const size_t idx);
 
-    Item* remove_item(Item* const item,
-                      const bool delete_item);
+        void decr_item(Item* const item);
 
-    Item* remove_item_in_slot(const SlotId slot_id,
-                              const bool delete_item);
+        void decr_item_type_in_backpack(const ItemId item_id);
 
-    Item* remove_item_in_backpack_with_idx(const size_t idx,
-                                           const bool delete_item);
+        Item* remove_item(Item* const item,
+                          const bool delete_item);
 
-    Item* remove_item_in_backpack_with_ptr(Item* const item,
-                                           const bool delete_item);
+        Item* remove_item_in_slot(const SlotId slot_id,
+                                  const bool delete_item);
 
-    int intrinsics_size() const
-    {
-        return intrinsics_.size();
-    }
+        Item* remove_item_in_backpack_with_idx(
+                const size_t idx,
+                const bool delete_item);
 
-    Item* intrinsic_in_element(const int idx) const;
+        Item* remove_item_in_backpack_with_ptr(
+                Item* const item,
+                const bool delete_item);
 
-    Item* last_item_in_backpack();
+        int intrinsics_size() const
+        {
+                return intrinsics_.size();
+        }
 
-    bool has_item_in_backpack(const ItemId id) const;
+        Item* intrinsic_in_element(const int idx) const;
 
-    int item_stack_size_in_backpack(const ItemId id) const;
+        Item* last_item_in_backpack();
 
-    void sort_backpack();
+        bool has_item_in_backpack(const ItemId id) const;
 
-    int total_item_weight() const;
+        int item_stack_size_in_backpack(const ItemId id) const;
 
-    InvSlot slots_[(size_t)SlotId::END];
+        void sort_backpack();
 
-    std::vector<Item*> backpack_;
+        int total_item_weight() const;
 
-    std::vector<Item*> intrinsics_;
+        InvSlot slots_[(size_t)SlotId::END];
+
+        std::vector<Item*> backpack_;
+
+        std::vector<Item*> intrinsics_;
 
 private:
-    // Puts the item in the slot, and prints messages
-    void equip(const SlotId id,
-               Item* const item,
-               Verbosity verbosity);
+        // Puts the item in the slot, and prints messages
+        void equip(const SlotId id,
+                   Item* const item,
+                   Verbosity verbosity);
 
-    void equip_from_backpack(const SlotId id,
-                             const size_t backpack_idx);
+        void equip_from_backpack(const SlotId id,
+                                 const size_t backpack_idx);
 
-    size_t move_from_slot_to_backpack(const SlotId id);
+        size_t move_from_slot_to_backpack(const SlotId id);
 
-    // Checks if the item is stackable, and if so attempts to stack it with
-    // another item of the same type in the backpack. The item pointer is still
-    // valid if a stack occurs (it is the other item that gets destroyed)
-    bool try_stack_in_backpack(Item* item);
+        // Checks if the item is stackable, and if so attempts to stack it with
+        // another item of the same type in the backpack. The item pointer is
+        // still valid if a stack occurs (it is the other item that gets
+        // destroyed)
+        bool try_stack_in_backpack(Item* item);
 
-    Actor* const owning_actor_;
+        Actor* const owning_actor_;
 };
 
 #endif // INVENTORY_HPP

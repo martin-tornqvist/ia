@@ -549,10 +549,10 @@ std::vector<Actor*> Mon::seen_actors() const
 
         bool blocked_los[map_w][map_h];
 
-        R los_rect(std::max(0, pos.x - fov_std_radi_int),
-                   std::max(0, pos.y - fov_std_radi_int),
-                   std::min(map_w - 1, pos.x + fov_std_radi_int),
-                   std::min(map_h - 1, pos.y + fov_std_radi_int));
+        R los_rect(std::max(0, pos.x - fov_radi_int),
+                   std::max(0, pos.y - fov_radi_int),
+                   std::min(map_w - 1, pos.x + fov_radi_int),
+                   std::min(map_h - 1, pos.y + fov_radi_int));
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
@@ -582,10 +582,10 @@ std::vector<Actor*> Mon::seen_foes() const
 
         bool blocked_los[map_w][map_h];
 
-        R los_rect(std::max(0, pos.x - fov_std_radi_int),
-                   std::max(0, pos.y - fov_std_radi_int),
-                   std::min(map_w - 1, pos.x + fov_std_radi_int),
-                   std::min(map_h - 1, pos.y + fov_std_radi_int));
+        R los_rect(std::max(0, pos.x - fov_radi_int),
+                   std::max(0, pos.y - fov_radi_int),
+                   std::min(map_w - 1, pos.x + fov_radi_int),
+                   std::min(map_h - 1, pos.y + fov_radi_int));
 
         map_parsers::BlocksLos()
                 .run(blocked_los,

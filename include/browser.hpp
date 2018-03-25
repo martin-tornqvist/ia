@@ -1,5 +1,5 @@
-#ifndef MENU_INPUT_HPP
-#define MENU_INPUT_HPP
+#ifndef BROWSER_HPP
+#define BROWSER_HPP
 
 #include "rl_utils.hpp"
 #include "global.hpp"
@@ -11,7 +11,6 @@ enum class MenuAction
     none,
     moved,
     selected,
-    selected_shift,
     space,
     esc
 };
@@ -81,4 +80,4 @@ private:
     Range range_shown_;
 };
 
-#endif
+#endif // BROWSER

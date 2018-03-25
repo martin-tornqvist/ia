@@ -1091,7 +1091,7 @@ void Actor::die(const bool is_destroyed,
             "Strange emptiness surrounds me. An eternity passes as I lay "
             "frozen in a world of shadows. Suddenly I awake!";
 
-        popup::show_msg(msg, "Dead");
+        popup::msg(msg, "Dead");
 
         restore_hp(999,
                    false,
@@ -1252,7 +1252,7 @@ std::string Actor::death_msg() const
 
     if (data_->death_msg_override.empty())
     {
-            msg_end = "dies";
+            msg_end = "dies.";
     }
     else
     {

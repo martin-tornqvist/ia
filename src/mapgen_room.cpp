@@ -157,10 +157,8 @@ Room* make_template_room(const RoomTempl& templ, Region& region)
 
     // Place features on the map based on the template
 
-    //
     // NOTE: This must be done AFTER "register_room", since it may remove some
-    //       of its cells from the global room map (e.g. untouched cells)
-    //
+    // of its cells from the global room map (e.g. untouched cells)
     put_templ_features(templ.symbols, p0);
 
     region.main_room = room;

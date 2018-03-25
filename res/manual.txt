@@ -1,33 +1,38 @@
 --------------------------------------------------------------------------------
 Command list
 --------------------------------------------------------------------------------
-   Esc    In-game menu
-   ?, F1  This manual
-   =      Options
-   Q      Quit
-   Space  Cancel, proceed
-   Enter  Select something in a menu, confirm
-   o      Alternative Enter key (except in letter based menus)
-   @      Display character information
-   TAB    Melee attack adjacent known monster
-   a      Activate, read or consume an item
-   c      Close a door, or jam a closed door with an iron spike
-   d      Disarm trap
-   e      Auto move (automatically move in some direction until interrupted)
-   f      Aim/fire wielded firearm
-   g      Pick up item
-   G      Unload or pick up ammunition from the ground
-   i      Browse inventory
-   m      Display message history
-   N      Make some noise (to lure monsters)
-   r      Reload wielded firearm
-   s      Wait (and search) for a few turns
-   t      Throw a carried object, or throw held explosive
-   T      Select which item to use as thrown weapon
-   v      View descriptions of things on the map
-   w      Kick or strike objects, or destroy corpses (*Wham*)
-   x      Cast spell
-   z      Swap to readied weapon
+Menu and window commands:
+   Esc       In-game menu
+   ?, F1     This manual
+   =         Options
+   +/-       Change window width
+   Ctrl +/-  Change window height
+   Space     Cancel, proceed
+   Enter     Select something in a menu, confirm
+   o         Alternative Enter key (except in letter selection  menus)
+   Q         Quit   
+
+Gameplay commands:
+   @         Display character information
+   TAB       Melee attack adjacent known monster
+   a         Activate, read or consume an item
+   c         Close a door, or jam a closed door with an iron spike
+   d         Drop an item
+   D         Disarm trap
+   e         Auto move (move in some direction until interrupted)
+   f         Aim/fire wielded firearm
+   g         Pick up item
+   G         Unload or pick up ammunition from the ground
+   i         Browse inventory
+   m         Display message history
+   N         Make some noise (to lure monsters)
+   r         Reload wielded firearm
+   s         Wait (and search) for a few turns
+   t         Throw a carried object, or throw held explosive
+   v         View descriptions of things on the map
+   w         Kick or strike objects, or destroy corpses
+   x         Cast spell
+   z         Swap to readied weapon
 
 --------------------------------------------------------------------------------
 Movement and interaction
@@ -66,32 +71,38 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 --------------------------------------------------------------------------------
 The interface
 --------------------------------------------------------------------------------
-The following is an example of what the interface lines can look like:
+On the right hand side of the screen, information is listed about your character and progress. The following is an example of what these lines can look like:
 
-   HP:9/16 SP:8/8 Ins:45%/12% Exp:1(60%)    ) Sledgehammer 11.0 {+1} -15%
-   Dlvl:2  W:40% [:1  %:Off(500) %:60       / 6 Throwing Knives 4.0 +10%
-   Blind Diseased                                                         T:264
+   Level    1 (60%)
+   Depth         2
+   Health     9/16
+   Spirit      8/8
+   Shock       45%
+   Insanity    12%
 
-From left to right, the first line displays:
-   * Hit Points (current/max - see "Hit Points, Wounds and healing")
-   * Spirit Points (see "Spirit and spell casting")
-   * Shock and Insanity (see "Insanity")
-   * Character Level and remaining Experience Points until next level
-   * Your wielded weapon (average damage with this weapon, weapon damage bonus,
-     weapon accuracy modifier)
+   Lantern     100
+   Med. Suppl.  24
+   Armor         3
+   Weight      40%
 
-The second line displays:
-   * Dungeon level
+   Blind
+   Diseased
+
+From top to bottom, these lines represents:
+   * Character level, and your progress towards next level (experience)
+   * Current floor (or "dungeon level")
+   * Current and maximum Hit Points (see "Hit Points, Wounds and healing")
+   * Current and maximum Spirit Points (see "Spirit and spell casting")
+   * Your level of shock or stress (see "Insanity")
+   * Your level of insanity (see "Insanity")
+   * Remaining number of turns that your Electric Lantern can be used for
+   * Remaining Medical Bag Supplies (see "Hit Points, Wounds and healing")
+   * Armor Points (each point reduces physical damage taken by 1)
    * Encumbrance from carrying items (from 100% you move at half speed, and
      from 125% you cannot move at all)
-   * Armor Points (each point reduces physical damage taken by 1)
-   * Electric Lantern status (Off or On, and how many turns it can be used for)
-   * Medical Bag Supplies (see "Hit Points, Wounds and healing")
-   * Selected throwing weapon (stack size, average damage, accuracy modifier)
+   * Properties currently affecting you
 
-The third line displays properties currently affecting you. This can be temporary properties (e.g. from spells), permanent intrinsic properties (printed in capital letters, e.g. "CURSED"), or properties granted by wearing or wielding items.
-
-To the far right on the third line, the current "standard" turn number is displayed. Note that depending on traits, items, etc, you may sometimes act more often, or less often, than this number is incremented. For example, if you move twice as fast as normal (+100% speed), you will only see the turn number increment on every second action you take.
+The properties at the bottom can be temporary properties (e.g. from spells), permanent intrinsic properties (printed in capital letters, e.g. "CURSED"), or properties granted by wearing or wielding items.
 
 --------------------------------------------------------------------------------
 Inventory handling
@@ -104,18 +115,18 @@ Here, you can see all of your inventory slots (see below), and a complete list o
 To wear or wield items, they are placed in different inventory slots:
    * Wielded  - your currently used melee weapon or firearm
    * Prepared - the weapon to switch to when pressing "z"
-   * Body     - item worn over your body (e.g. an armor or a jacket)
+   * Thrown   - the item used for throwing attacks
+   * Body     - item worn on your body (e.g. an armor or a jacket)
    * Head     - item worn on your head (e.g. a gas mask)
 
    (2) Pressing "a" shows only items which you can "activate" or consume
 This is merely a convenience feature - you can just as well use items by selecting them from the "i" screen, but with this method you get a nice filtered list so you can see at a glance which consumables you have.
 
-   (3) Pressing "T" opens a list to select an item for throwing attacks
-The item currently used for throwing can be seen at the bottom right corner of the screen. To throw this item, press "t", aim somewhere with the movement keys, and press "t" again to throw it.
+   (3) Pressing "d" opens a list to select an item to drop
 
-Note that explosives are used in a different way; first you must ignite or prime the explosive, this is done by "activating" it (can be done from the "a" inventory screen) - now see your character colored yellow as a warning that you are holding an ignited explosive (don't hold on to it too long). Press "t", and aim somewhere (the game will mark the area around your aim position to indicate the explosion size - be careful though, there may be unseen objects blocking the throw path). Press "t" again (or enter) to throw the explosive toward the aim position.
+The item equipped in your "thrown" slot can be thrown by pressing "t", aiming somewhere with the movement keys, and then pressing "t" again to throw it. Moving items to or from the "thrown" slot does not spend any time, and putting an item here will not remove it from it's actual location (so you can for example wield a machete, while also keeping it selected for throwing). This slot merely represents the choice of item which will be thrown.
 
-To drop an item, select the item while holding shift (i.e. shift + enter, or shift + letter). This can be done from any inventory screen. If you are dropping a stack of something (e.g. a number of Shotgun shells), the game will ask how many to drop, by letting you type in a number.
+Note that explosives are not used like throwing weapons. Instead they are used by first igniting or priming the explosive, this is done by "activating" it (can be done from the "a" inventory screen, see above) - now you can see your character colored yellow as a warning that you are holding an ignited explosive. Press "t", and aim somewhere (in some cases the game will mark the area around your aim position to indicate the explosion size - be careful though, there may be unseen objects blocking the throw path). Press "t" again to throw the explosive toward the aim position.
 
 In any inventory screen, you can see percentage values to the far right of each item. This is how many percent of your total carried weight that each item takes (the numbers roughly adds up to 100%, but there will be rounding errors, since decimals are not shown). So if you are overburdened, an item with a high percentage value might be a good candidate to drop.
 
@@ -155,17 +166,16 @@ Insanity
 
 Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. Your mind also takes a hit when you use occult powers, carry weird artifacts, or stand in darkness, etc. Finally, there is a slow perpetual taxing of your mind from exploring and dwelling in this haunted dungeon.
 
-Your state of Insanity is shown by two percentage values like this:
-   Ins:X%/Y%
-
-The X-value represents your current state of shock, stress and paranoia, while the Y-value represents your long term Insanity.
+Your mental health is represented by two percentage values:
+   * "Shock" is your level of stress and paranoia in the current situation
+   * "Insanity" is long term, permanent madness
 
 When various disturbing events occur, the shock value rises. When shock hits 100%, the following happens:
    * You react somehow (scream, laugh, faint, babble, gain a phobia...)
    * The shock value is restored
    * Insanity rises
 
-Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress). Also, standing in a lit area reduces your shock a bit (most characters start with an Electric Lantern).
+Each time you travel to the next dungeon level, your shock is restored (you have escaped the horrors above, and is bestowed with a sense of progress). Also, standing in a lit area reduces your shock a bit (most characters start with an Electric Lantern, which can be useful to prevent shock from rising too high).
 
 If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 

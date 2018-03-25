@@ -279,26 +279,23 @@ std::vector<ColoredString> bg_descr(const Bg id)
 {
         std::vector<ColoredString> descr;
 
-        auto put = [&descr](const std::string& str)
-                {
-                        descr.push_back({str, colors::white()});
-                };
+        auto put = [&descr](const std::string& str) {
+                descr.push_back({str, colors::white()});
+        };
 
-        auto put_trait = [&descr](const Trait id)
-                {
-                        descr.push_back({trait_title(id), colors::white()});
-                        descr.push_back({trait_descr(id), colors::gray()});
-                };
+        auto put_trait = [&descr](const Trait id) {
+                descr.push_back({trait_title(id), colors::white()});
+                descr.push_back({trait_descr(id), colors::gray()});
+        };
 
         switch (id)
         {
         case Bg::ghoul:
                 put("Does not regenerate Hit Points and cannot use medical "
                     "equipment - heals by feeding on corpses (press '5' or '.' "
-                    "while standing on a corpse to feed)");
+                    "while standing on a corpse)");
                 put("");
-                put("Can incite Frenzy (+100% speed, +10% melee hit chance, +1 "
-                    "melee damage, must move towards enemies)");
+                put("Can incite Frenzy");
                 put("");
                 put("Does not become Weakened when Frenzy ends");
                 put("");

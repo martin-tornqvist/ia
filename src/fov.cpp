@@ -13,7 +13,7 @@ namespace fov
 
 R get_fov_rect(const P& p)
 {
-    const int radi = fov_std_radi_int;
+    const int radi = fov_radi_int;
 
     const P p0(std::max(0, p.x - radi),
                std::max(0, p.y - radi));
@@ -26,7 +26,7 @@ R get_fov_rect(const P& p)
 
 bool is_in_fov_range(const P& p0, const P& p1)
 {
-    return king_dist(p0, p1) <= fov_std_radi_int;
+    return king_dist(p0, p1) <= fov_radi_int;
 }
 
 LosResult check_cell(const P& p0,
@@ -48,7 +48,7 @@ LosResult check_cell(const P& p0,
     const P delta(p1 - p0);
 
     const std::vector<P>* path_deltas_ptr =
-        line_calc::fov_delta_line(delta, fov_std_radi_db);
+        line_calc::fov_delta_line(delta, fov_radi_db);
 
     if (!path_deltas_ptr)
     {

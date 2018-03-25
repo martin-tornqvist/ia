@@ -81,7 +81,7 @@ Color light_cyan();
 Color brown();
 Color dark_brown();
 Color gray_brown();
-Color dark_gray_brown_brown();
+Color dark_gray_brown();
 Color violet();
 Color dark_violet();
 Color orange();

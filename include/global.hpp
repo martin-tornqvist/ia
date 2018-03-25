@@ -20,14 +20,11 @@ const std::string date_str = __DATE__;
 const std::string gfx_path = "res/gfx";
 
 const std::string fonts_path = gfx_path + "/fonts";
-const std::string tiles_path = gfx_path + "/tiles/16x24";
+const std::string tiles_path = gfx_path + "/tiles/24x24";
 const std::string images_path = gfx_path + "/images";
 
 const std::string logo_img_path = images_path + "/main_menu_logo.png";
 const std::string skull_img_path = images_path + "/skull.png";
-
-const int tile_px_w = 16;
-const int tile_px_h = 24;
 
 const int screen_bpp = 32;
 
@@ -66,16 +63,12 @@ const int player_start_spi = 4;
 
 const int min_dmg_to_wound = 5;
 
-const int fov_std_radi_int = 8;
-const int fov_std_w_int = (fov_std_radi_int * 2) + 1;
-const double fov_std_radi_db = (double)fov_std_radi_int;
-const double fov_std_w_db = (double)fov_std_w_int;
-const int fov_max_radi_int = fov_std_radi_int * 2;
-const int fov_max_w_int = (fov_max_radi_int * 2) + 1;
-const double fov_max_radi_db = (double)fov_max_radi_int;
-const double fov_max_w_db = (double)fov_max_w_int;
+const int fov_radi_int = 6;
+const int fov_w_int = (fov_radi_int * 2) + 1;
+const double fov_radi_db = (double)fov_radi_int;
+const double fov_w_db = (double)fov_w_int;
 
-const int snd_dist_normal = fov_std_radi_int;
+const int snd_dist_normal = fov_radi_int;
 const int snd_dist_loud = snd_dist_normal * 2;
 
 const int dynamite_fuse_turns = 5;
@@ -125,8 +118,6 @@ const std::string confirm_info_str = " " + confirm_info_str_no_space;
 
 const std::string any_key_info_str_no_space = "[Any key] to continue";
 const std::string any_key_info_str = " " + any_key_info_str_no_space;
-
-const std::string drop_info_str = " [shift+select] to drop";
 
 const std::string msg_disarm_no_trap = "I find nothing there to disarm.";
 

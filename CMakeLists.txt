@@ -102,6 +102,7 @@ set(SRC
   include/status_lines.hpp
   include/text_format.hpp
   include/throwing.hpp
+  include/viewport.hpp
   include/wham.hpp
   include/xml.hpp
 
@@ -209,6 +210,7 @@ set(SRC
   src/status_lines.cpp
   src/text_format.cpp
   src/throwing.cpp
+  src/viewport.cpp
   src/wham.cpp
   src/xml.cpp
 

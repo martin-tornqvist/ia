@@ -650,7 +650,7 @@ TrapPlacementValid TrapDart::on_place()
         rnd::shuffle(offsets);
 
         const int nr_steps_min = 2;
-        const int nr_steps_max = fov_std_radi_int;
+        const int nr_steps_max = fov_radi_int;
 
         auto trap_plament_valid = TrapPlacementValid::no;
 

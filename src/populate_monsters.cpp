@@ -19,7 +19,7 @@ namespace populate_mon
 namespace
 {
 
-const int min_dist_to_player = fov_std_radi_int + 4;
+const int min_dist_to_player = fov_radi_int + 4;
 
 int random_out_of_depth()
 {

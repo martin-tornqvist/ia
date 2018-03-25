@@ -402,16 +402,20 @@ std::string Item::name(const ItemRefType ref_type,
         break;
 
         case ItemRefAttInf::none:
-                break;
+        {
+        }
+        break;
 
         case ItemRefAttInf::wpn_main_att_mode:
+        {
                 TRACE << "Bad attack info type: "
                       << (int)att_inf_used
                       << std::endl;
 
                 ASSERT(false);
-                break;
         }
+        break;
+        } // Attack info switch
 
         std::string inf_str = "";
 

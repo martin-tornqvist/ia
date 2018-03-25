@@ -103,9 +103,7 @@ void InsSympt::on_start()
 
         if (!heading.empty() && !msg.empty())
         {
-                popup::show_msg(msg,
-                                heading,
-                                SfxId::insanity_rise);
+                popup::msg(msg, heading, SfxId::insanity_rise);
         }
 
         const std::string history_event_msg = history_msg();

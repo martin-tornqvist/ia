@@ -97,33 +97,39 @@ void make_floor(const Room& room);
 //------------------------------------------------------------------------------
 void connect_rooms();
 
-void valid_corridor_entries(const Room& room,
-                            std::vector<P>& out);
+void valid_corridor_entries(
+        const Room& room,
+        std::vector<P>& out);
 
-bool is_choke_point(const P& p,
-                    const bool blocked[map_w][map_h],
-                    ChokePointData* out);
+bool is_choke_point(
+        const P& p,
+        const bool blocked[map_w][map_h],
+        ChokePointData* out);
 
-void make_pathfind_corridor(Room& r0,
-                            Room& r1,
-                            bool door_proposals[map_w][map_h] = nullptr);
+void make_pathfind_corridor(
+        Room& r0,
+        Room& r1,
+        bool door_proposals[map_w][map_h] = nullptr);
 
-void rnd_walk(const P& p0,
-              int len,
-              std::vector<P>& pos_list_ref,
-              const bool allow_diagonal = true,
-              R area = R(1, 1, map_w - 2, map_h - 2));
+void rnd_walk(
+        const P& p0,
+        int len,
+        std::vector<P>& pos_list_ref,
+        const bool allow_diagonal = true,
+        R area = R(1, 1, map_w - 2, map_h - 2));
 
-void pathfinder_walk(const P& p0,
-                     const P& p1,
-                     std::vector<P>& pos_list_ref,
-                     const bool is_smooth);
+void pathfinder_walk(
+        const P& p0,
+        const P& p1,
+        std::vector<P>& pos_list_ref,
+        const bool is_smooth);
 
 // Generates a map of spawn chance weights, with emphasis on hidden, optional,
 // or hard to reach areas - this can be used e.g. to place items or levers.
-void make_explore_spawn_weights(const bool blocked[map_w][map_h],
-                                std::vector<P>& positions_out,
-                                std::vector<int>& weights_out);
+void make_explore_spawn_weights(
+        const bool blocked[map_w][map_h],
+        std::vector<P>& positions_out,
+        std::vector<int>& weights_out);
 
 void allowed_stair_cells(bool out[map_w][map_h]);
 

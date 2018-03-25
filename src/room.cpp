@@ -909,7 +909,7 @@ void SnakePitRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
         .run(blocked,
              MapParseMode::overwrite);
 
-    const int min_dist_to_player = fov_std_radi_int + 1;
+    const int min_dist_to_player = fov_radi_int + 1;
 
     const P& player_pos = map::player->pos;
 
@@ -1336,9 +1336,7 @@ void ForestRoom::on_post_connect_hook(bool door_proposals[map_w][map_h])
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
 
-    //
     // Do not consider doors blocking
-    //
     for (int x = 0; x < map_w; ++x)
     {
         for (int y = 0; y < map_h; ++y)

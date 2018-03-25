@@ -21,83 +21,94 @@ bool is_inited = false;
 
 void init()
 {
-    TRACE_FUNC_BEGIN;
+        TRACE_FUNC_BEGIN;
 
-    cleanup();
+        cleanup();
 
-    is_inited = true;
+        is_inited = true;
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
-    {
-        TRACE << "Failed to init SDL" << std::endl;
-        ASSERT(false);
-    }
+        if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
+        {
+                TRACE_ERROR_RELEASE << "Failed to init SDL"
+                                    << std::endl
+                                    << SDL_GetError()
+                                    << std::endl;
 
-    if (IMG_Init(IMG_INIT_PNG) == -1)
-    {
-        TRACE << "Failed to init SDL_image" << std::endl;
-        ASSERT(false);
-    }
+                PANIC;
+        }
 
-    const int     audio_freq      = 44100;
-    const Uint16  audio_format    = MIX_DEFAULT_FORMAT;
-    const int     audio_channels  = 2;
-    const int     audio_buffers   = 1024;
+        if (IMG_Init(IMG_INIT_PNG) == -1)
+        {
+                TRACE_ERROR_RELEASE << "Failed to init SDL_image"
+                                    << std::endl
+                                    << SDL_GetError()
+                                    << std::endl;
 
-    const int result =
-        Mix_OpenAudio(audio_freq,
-                      audio_format,
-                      audio_channels,
-                      audio_buffers);
+                PANIC;
+        }
 
-    if (result == -1)
-    {
-        TRACE << "Failed to init SDL_mixer" << std::endl;
-        ASSERT(false);
-    }
+        const int audio_freq = 44100;
+        const Uint16 audio_format = MIX_DEFAULT_FORMAT;
+        const int audio_channels = 2;
+        const int audio_buffers = 1024;
 
-    Mix_AllocateChannels(audio_allocated_channels);
+        const int result =
+                Mix_OpenAudio(audio_freq,
+                              audio_format,
+                              audio_channels,
+                              audio_buffers);
 
-    TRACE_FUNC_END;
+        if (result == -1)
+        {
+                TRACE_ERROR_RELEASE << "Failed to init SDL_mixer"
+                                    << std::endl
+                                    << SDL_GetError()
+                                    << std::endl;
+
+                ASSERT(false);
+        }
+
+        Mix_AllocateChannels(audio_allocated_channels);
+
+        TRACE_FUNC_END;
 }
 
 void cleanup()
 {
-    if (!is_inited)
-    {
-        return;
-    }
+        if (!is_inited)
+        {
+                return;
+        }
 
-    is_inited = false;
+        is_inited = false;
 
-    IMG_Quit();
+        IMG_Quit();
 
-    Mix_AllocateChannels(0);
+        Mix_AllocateChannels(0);
 
-    Mix_CloseAudio();
+        Mix_CloseAudio();
 
-    SDL_Quit();
+        SDL_Quit();
 }
 
 void sleep(const Uint32 duration)
 {
-    if (is_inited &&
-        !config::is_bot_playing())
-    {
-        if (duration == 1)
+        if (is_inited && !config::is_bot_playing())
         {
-            SDL_Delay(duration);
-        }
-        else // Duration longer than 1 ms
-        {
-            const Uint32 wait_until = SDL_GetTicks() + duration;
+                if (duration == 1)
+                {
+                        SDL_Delay(duration);
+                }
+                else // Duration longer than 1 ms
+                {
+                        const Uint32 wait_until = SDL_GetTicks() + duration;
 
-            while (SDL_GetTicks() < wait_until)
-            {
-                SDL_PumpEvents();
-            }
+                        while (SDL_GetTicks() < wait_until)
+                        {
+                                SDL_PumpEvents();
+                        }
+                }
         }
-    }
 }
 
 } // sdl_base

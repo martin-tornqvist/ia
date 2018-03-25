@@ -19,76 +19,78 @@ class Item;
 class MarkerState: public State
 {
 public:
-    MarkerState(const P& origin) :
-        State   (),
-        origin_ (origin),
-        pos_    () {}
+        MarkerState(const P& origin) :
+                State   (),
+                origin_ (origin),
+                pos_    () {}
 
-    virtual ~MarkerState() {}
+        virtual ~MarkerState() {}
 
-    void on_start() override;
+        void on_start() override final;
 
-    void draw() override;
+        void on_popped() override final;
 
-    bool draw_overlayed() const override
-    {
-        return true;
-    }
+        void draw() override final;
 
-    void update() override;
+        bool draw_overlayed() const override final
+        {
+                return true;
+        }
 
-    StateId id() override;
+        void update() override final;
+
+        StateId id() override final;
 
 protected:
-    virtual void on_start_hook() {}
+        virtual void on_start_hook() {}
 
-    void draw_marker(const std::vector<P>& trail,
-                     const int orange_from_king_dist,
-                     const int red_from_king_dist,
-                     const int red_from_idx);
+        void draw_marker(const std::vector<P>& trail,
+                         const int orange_from_king_dist,
+                         const int red_from_king_dist,
+                         const int red_from_idx);
 
-    // Fire etc
-    virtual void handle_input(const InputData& input) = 0;
+        // Fire etc
+        virtual void handle_input(const InputData& input) = 0;
 
-    // Print messages
-    virtual void on_moved() = 0;
+        // Print messages
+        virtual void on_moved() = 0;
 
-    // Used for overlays, etc - it should be pretty rare that this is needed
-    virtual void on_draw() {}
+        // Used for overlays, etc - it should be pretty rare that this is needed
+        virtual void on_draw() {}
 
-    virtual bool use_player_tgt() const
-    {
-        return false;
-    }
+        virtual bool use_player_tgt() const
+        {
+                return false;
+        }
 
-    virtual bool show_blocked() const
-    {
-        return false;
-    }
+        virtual bool show_blocked() const
+        {
+                return false;
+        }
 
-    virtual int orange_from_king_dist() const
-    {
-        return -1;
-    }
+        virtual int orange_from_king_dist() const
+        {
+                return -1;
+        }
 
-    virtual int red_from_king_dist() const
-    {
-        return -1;
-    }
+        virtual int red_from_king_dist() const
+        {
+                return -1;
+        }
 
-    // Necessary e.g. for marker states drawing overlayed graphics
-    CellRenderData marker_render_data_[map_w][map_h];
+        // Necessary e.g. for marker states drawing overlayed graphics
+        CellRenderData marker_render_data_[map_w][map_h];
 
-    const P origin_;
+        const P origin_;
 
-    P pos_;
+        P pos_;
 
 private:
-    void move(const Dir dir);
+        void move(const Dir dir);
 
-    bool try_go_to_tgt();
+        bool try_go_to_tgt();
 
-    void try_go_to_closest_enemy();
+        void try_go_to_closest_enemy();
 };
 
 // -----------------------------------------------------------------------------
@@ -97,25 +99,25 @@ private:
 class Viewing: public MarkerState
 {
 public:
-    Viewing(const P& origin) :
-        MarkerState(origin) {}
+        Viewing(const P& origin) :
+                MarkerState(origin) {}
 
-    ~Viewing() {}
+        ~Viewing() {}
 
 protected:
-    void on_moved() override;
+        void on_moved() override;
 
-    void handle_input(const InputData& input) override;
+        void handle_input(const InputData& input) override;
 
-    bool use_player_tgt() const override
-    {
-        return true;
-    }
+        bool use_player_tgt() const override
+        {
+                return true;
+        }
 
-    bool show_blocked() const override
-    {
-        return false;
-    }
+        bool show_blocked() const override
+        {
+                return false;
+        }
 };
 
 // -----------------------------------------------------------------------------
@@ -124,32 +126,32 @@ protected:
 class Aiming: public MarkerState
 {
 public:
-    Aiming(const P& origin, Wpn& wpn) :
-        MarkerState (origin),
-        wpn_        (wpn) {}
+        Aiming(const P& origin, Wpn& wpn) :
+                MarkerState(origin),
+                wpn_(wpn) {}
 
-    ~Aiming() {}
+        ~Aiming() {}
 
 protected:
-    void on_moved() override;
+        void on_moved() override;
 
-    void handle_input(const InputData& input) override;
+        void handle_input(const InputData& input) override;
 
-    bool use_player_tgt() const override
-    {
-        return true;
-    }
+        bool use_player_tgt() const override
+        {
+                return true;
+        }
 
-    bool show_blocked() const override
-    {
-        return true;
-    }
+        bool show_blocked() const override
+        {
+                return true;
+        }
 
-    int orange_from_king_dist() const override;
+        int orange_from_king_dist() const override;
 
-    int red_from_king_dist() const override;
+        int red_from_king_dist() const override;
 
-    Wpn& wpn_;
+        Wpn& wpn_;
 };
 
 // -----------------------------------------------------------------------------
@@ -158,32 +160,32 @@ protected:
 class Throwing: public MarkerState
 {
 public:
-    Throwing(const P& origin, Item& inv_item) :
-        MarkerState (origin),
-        inv_item_   (&inv_item) {}
+        Throwing(const P& origin, Item& inv_item) :
+                MarkerState(origin),
+                inv_item_(&inv_item) {}
 
-    ~Throwing() {}
+        ~Throwing() {}
 
 protected:
-    void on_moved() override;
+        void on_moved() override;
 
-    void handle_input(const InputData& input) override;
+        void handle_input(const InputData& input) override;
 
-    bool use_player_tgt() const override
-    {
-        return true;
-    }
+        bool use_player_tgt() const override
+        {
+                return true;
+        }
 
-    bool show_blocked() const override
-    {
-        return true;
-    }
+        bool show_blocked() const override
+        {
+                return true;
+        }
 
-    int orange_from_king_dist() const override;
+        int orange_from_king_dist() const override;
 
-    int red_from_king_dist() const override;
+        int red_from_king_dist() const override;
 
-    Item* inv_item_;
+        Item* inv_item_;
 };
 
 // -----------------------------------------------------------------------------
@@ -192,32 +194,32 @@ protected:
 class ThrowingExplosive: public MarkerState
 {
 public:
-    ThrowingExplosive(const P& origin, const Item& explosive) :
-        MarkerState (origin),
-        explosive_  (explosive) {}
+        ThrowingExplosive(const P& origin, const Item& explosive) :
+                MarkerState(origin),
+                explosive_(explosive) {}
 
-    ~ThrowingExplosive() {}
+        ~ThrowingExplosive() {}
 
 protected:
-    void on_draw() override;
+        void on_draw() override;
 
-    void on_moved() override;
+        void on_moved() override;
 
-    void handle_input(const InputData& input) override;
+        void handle_input(const InputData& input) override;
 
-    bool use_player_tgt() const override
-    {
-        return false;
-    }
+        bool use_player_tgt() const override
+        {
+                return false;
+        }
 
-    bool show_blocked() const override
-    {
-        return true;
-    }
+        bool show_blocked() const override
+        {
+                return true;
+        }
 
-    int red_from_king_dist() const override;
+        int red_from_king_dist() const override;
 
-    const Item& explosive_;
+        const Item& explosive_;
 };
 
 // -----------------------------------------------------------------------------
@@ -226,21 +228,21 @@ protected:
 class CtrlTele: public MarkerState
 {
 public:
-    CtrlTele(const P& origin, const bool blocked[map_w][map_h]);
+        CtrlTele(const P& origin, const bool blocked[map_w][map_h]);
 
-    ~CtrlTele() {}
+        ~CtrlTele() {}
 
 protected:
-    void on_start_hook() override;
+        void on_start_hook() override;
 
-    void on_moved() override;
+        void on_moved() override;
 
-    void handle_input(const InputData& input) override;
+        void handle_input(const InputData& input) override;
 
 private:
-    int chance_of_success_pct(const P& tgt) const;
+        int chance_of_success_pct(const P& tgt) const;
 
-    bool blocked_[map_w][map_h];
+        bool blocked_[map_w][map_h];
 };
 
 #endif // MARKER_HPP

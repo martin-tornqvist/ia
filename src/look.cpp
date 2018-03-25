@@ -94,8 +94,9 @@ void ViewActorDescr::on_start()
 
     p.x = 24;
 
-    const Item* player_wpn_item =
-        map::player->inv().item_in_slot(SlotId::wpn);
+    auto& player_inv = map::player->inv();
+
+    const Item* player_wpn_item = player_inv.item_in_slot(SlotId::wpn);
 
     const Wpn* player_wpn = nullptr;
 
@@ -134,17 +135,19 @@ void ViewActorDescr::on_start()
 
     std::unique_ptr<const ThrowAttData> player_throwing;
 
-    if (map::player->thrown_item_)
+    auto* player_thrown_item = player_inv.item_in_slot(SlotId::thrown);
+
+    if (player_thrown_item)
     {
         player_throwing.reset(
             new ThrowAttData(map::player,
                              actor_.pos, // Aim position
                              actor_.pos, // Current position
-                             *map::player->thrown_item_));
+                             *player_thrown_item));
 
     }
 
-     const std::vector<std::string> labels =
+    const std::vector<std::string> labels =
     {
         "Skill",
         "Weapon",
@@ -303,7 +306,9 @@ void ViewActorDescr::on_start()
 
     p.y += 1;
 
-    auto prop_list = actor_.properties().text_list_temporary_negative_props();
+    auto prop_list =
+            actor_.properties()
+            .property_names_temporary_negative();
 
     // Remove all non-negative properties (we should not show temporary spell
     // resistance for example), and all natural properties (properties which all

@@ -1,14 +1,18 @@
 #ifndef PANEL_HPP
 #define PANEL_HPP
 
-#include "rl_utils.hpp"
+struct PxPos;
+class R;
+class P;
 
+// TODO: Add *_border for other panels than log as well
 enum class Panel
 {
         screen,
         map,
-        status_lines,
+        player_stats,
         log,
+        log_border,
         create_char_menu,
         create_char_descr,
         item_menu,
@@ -19,9 +23,13 @@ enum class Panel
 namespace panels
 {
 
-void init();
+void init(P max_gui_dims);
+
+bool is_valid();
 
 R get_area(const Panel panel);
+
+P get_dims(const Panel panel);
 
 P get_p0(const Panel panel);
 
@@ -42,6 +50,8 @@ int get_h(const Panel panel);
 int get_center_x(const Panel panel);
 
 int get_center_y(const Panel panel);
+
+P get_center(const Panel panel);
 
 } // panels
 

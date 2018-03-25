@@ -9,6 +9,109 @@
 #include "io.hpp"
 
 // -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static const int manual_text_x0 = 1;
+static const int manual_text_x1 = 79; // TODO: Set from standard value
+static const int manual_text_w = manual_text_x1 - manual_text_x0 + 1;
+
+static std::vector<std::string> read_manual_file()
+{
+        std::vector<std::string> lines;
+
+        std::ifstream file("res/manual.txt");
+
+        if (!file.is_open())
+        {
+                TRACE_ERROR_RELEASE << "Could not open manual file"
+                                    << std::endl;
+
+                PANIC;
+        }
+
+        std::string current_line;
+
+        while (getline(file, current_line))
+        {
+                lines.push_back(current_line);
+        }
+
+        file.close();
+
+        return lines;
+}
+
+static std::vector<std::string> format_lines(
+        std::vector<std::string>& raw_lines)
+{
+        std::vector<std::string> formatted_lines;
+
+        for (auto& raw_line : raw_lines)
+        {
+                // Format the line if it does not start with a space
+                const bool should_format_line =
+                        raw_line.size() > 0 &&
+                        raw_line[0] != ' ';
+
+                if (should_format_line)
+                {
+                        const auto split_line = text_format::split(
+                                raw_line,
+                                manual_text_w
+                                /* panels::get_w(Panel::screen) */);
+
+                        for (const auto& line : split_line)
+                        {
+                                formatted_lines.push_back(line);
+                        }
+                }
+                else // Do not format line
+                {
+                        formatted_lines.push_back(raw_line);
+                }
+        }
+
+        return formatted_lines;
+}
+
+static std::vector<ManualPage> init_pages(
+        const std::vector<std::string>& formatted_lines)
+{
+        std::vector<ManualPage> pages;
+
+        ManualPage current_page;
+
+        const std::string delim(80, '-');
+
+        // Sort the parsed lines into different pages
+        for (size_t line_idx = 0; line_idx < formatted_lines.size(); ++line_idx)
+        {
+                if (formatted_lines[line_idx] == delim)
+                {
+                        if (!current_page.lines.empty())
+                        {
+                                pages.push_back(current_page);
+
+                                current_page.lines.clear();
+                        }
+
+                        // Skip first delimiter
+                        ++line_idx;
+
+                        // The title is printed on this line
+                        current_page.title = formatted_lines[line_idx];
+
+                        // Skip second delimiter
+                        line_idx += 2;
+                }
+
+                current_page.lines.push_back(formatted_lines[line_idx]);
+        }
+
+        return pages;
+}
+
+// -----------------------------------------------------------------------------
 // Browse manual
 // -----------------------------------------------------------------------------
 StateId BrowseManual::id()
@@ -18,111 +121,25 @@ StateId BrowseManual::id()
 
 void BrowseManual::on_start()
 {
-        read_file();
-}
+        raw_lines_ = read_manual_file();
 
-void BrowseManual::read_file()
-{
-        pages_.clear();
+        const auto formatted_lines = format_lines(raw_lines_);
 
-        std::ifstream file("res/manual.txt");
-
-        if (!file.is_open())
-        {
-                TRACE << "Failed to open manual file" << std::endl;
-
-                ASSERT(false);
-
-                return;
-        }
-
-        std::string current_line;
-
-        std::vector<std::string> formatted;
-
-        std::vector<std::string> global_lines;
-
-        while (getline(file, current_line))
-        {
-                if (current_line.empty())
-                {
-                        global_lines.push_back(current_line);
-                }
-                else // Current line not empty
-                {
-                        // Do not format lines that start with two spaces
-                        bool should_format_line = true;
-
-                        if (current_line.size() >= 2)
-                        {
-                                if (current_line[0] == ' ' &&
-                                    current_line[1] == ' ')
-                                {
-                                        should_format_line = false;
-                                }
-                        }
-
-                        if (should_format_line)
-                        {
-                                formatted = text_format::split(
-                                        current_line,
-                                        map_w);
-
-                                for (const auto& line : formatted)
-                                {
-                                        global_lines.push_back(line);
-                                }
-                        }
-                        else // Do not format line
-                        {
-                                global_lines.push_back(current_line);
-                        }
-                }
-        }
-
-        file.close();
-
-        // Sort the parsed lines into section
-        ManualPage current_page;
-
-        const std::string delim(80, '-');
-
-        // Sort the parsed lines into different pages
-        for (size_t line_idx = 0; line_idx < global_lines.size(); ++line_idx)
-        {
-                if (global_lines[line_idx] == delim)
-                {
-                        if (!current_page.lines.empty())
-                        {
-                                pages_.push_back(current_page);
-
-                                current_page.lines.clear();
-                        }
-
-                        // Skip first delimiter
-                        ++line_idx;
-
-                        // The title is printed on this line
-                        current_page.title = global_lines[line_idx];
-
-                        // Skip second delimiter
-                        line_idx += 2;
-                }
-
-                current_page.lines.push_back(global_lines[line_idx]);
-        }
+        pages_ = init_pages(formatted_lines);
 
         browser_.reset(pages_.size());
 }
 
 void BrowseManual::draw()
 {
-        io::draw_text_center("Browsing manual",
-                             Panel::screen,
-                             P(map_w_half, 0),
-                             colors::title(),
-                             colors::black(),
-                             true);
+        io::draw_text_center(
+                "Browsing manual",
+                Panel::screen,
+                P(panels::get_center_x(Panel::screen), 0),
+                colors::title(),
+                true, // Draw background color
+                colors::black(),
+                true); // Allow pixel-level adjustment
 
         const int nr_pages = pages_.size();
 
@@ -145,11 +162,18 @@ void BrowseManual::draw()
 
                 io::draw_text(key_str + page.title,
                               Panel::screen,
-                              P(0, y),
+                              P(manual_text_x0, y),
                               draw_color);
 
                 ++key_str[0];
         }
+}
+
+void BrowseManual::on_window_resized()
+{
+        // const auto formatted_lines = format_lines(raw_lines_);
+
+        // pages_ = init_pages(formatted_lines);
 }
 
 void BrowseManual::update()
@@ -163,7 +187,6 @@ void BrowseManual::update()
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
         {
                 const auto& page = pages_[browser_.y()];
 
@@ -191,7 +214,7 @@ void BrowseManual::update()
 // -----------------------------------------------------------------------------
 StateId BrowseManualPage::id()
 {
-        return StateId::manual;
+        return StateId::manual_page;
 }
 
 void BrowseManualPage::draw()
@@ -208,10 +231,11 @@ void BrowseManualPage::draw()
 
         for (int i = top_idx_; i <= btm_nr; ++i)
         {
-                io::draw_text(page_.lines[i],
-                              Panel::screen,
-                              P(0, screen_y),
-                              colors::text());
+                io::draw_text(
+                        page_.lines[i],
+                        Panel::screen,
+                        P(manual_text_x0, screen_y),
+                        colors::text());
 
                 ++screen_y;
         }
@@ -252,9 +276,7 @@ void BrowseManualPage::update()
 
         case SDLK_SPACE:
         case SDLK_ESCAPE:
-                //
                 // Exit screen
-                //
                 states::pop();
                 break;
 

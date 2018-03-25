@@ -59,7 +59,6 @@ void init()
         {
                 MapData map_data = {
                         MapType::std,
-                        IsMainDungeon::yes,
                         AllowSpawnMonOverTime::yes
                 };
 
@@ -69,7 +68,6 @@ void init()
         // Forest intro level
         map_list[0] = {
                 MapType::intro,
-                IsMainDungeon::yes,
                 AllowSpawnMonOverTime::no
         };
 
@@ -78,7 +76,6 @@ void init()
         {
                 map_list[dlvl_first_late_game - 1] = {
                         MapType::rat_cave,
-                        IsMainDungeon::yes,
                         AllowSpawnMonOverTime::no
                 };
         }
@@ -86,19 +83,16 @@ void init()
         // "Pharaoh chamber" is the first late game level
         map_list[dlvl_first_late_game] = {
                 MapType::egypt,
-                IsMainDungeon::yes,
                 AllowSpawnMonOverTime::no
         };
 
         map_list[dlvl_last + 1] = {
                 MapType::boss,
-                IsMainDungeon::yes,
                 AllowSpawnMonOverTime::no
         };
 
         map_list[dlvl_last + 2] = {
                 MapType::trapez,
-                IsMainDungeon::yes,
                 AllowSpawnMonOverTime::no
         };
 }
@@ -110,8 +104,6 @@ void save()
         for (const auto& map_data : map_list)
         {
                 saving::put_int((int)map_data.type);
-
-                saving::put_int((int)map_data.is_main_dungeon);
 
                 saving::put_int((int)map_data.allow_spawn_mon_over_time);
         }
@@ -126,8 +118,6 @@ void load()
         for (auto& map_data : map_list)
         {
                 map_data.type = (MapType)saving::get_int();
-
-                map_data.is_main_dungeon = (IsMainDungeon)saving::get_int();
 
                 map_data.allow_spawn_mon_over_time =
                         (AllowSpawnMonOverTime)saving::get_int();
@@ -147,10 +137,7 @@ void go_to_nxt()
 
         const auto& map_data = map_list.front();
 
-        if (map_data.is_main_dungeon == IsMainDungeon::yes)
-        {
-                ++map::dlvl;
-        }
+        ++map::dlvl;
 
         const auto map_builder = map_builder::make(map_data.type);
 

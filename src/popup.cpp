@@ -57,12 +57,15 @@ static void draw_box(const int text_w, const int text_h)
 
         const R rect(x0, y0, x1, y1);
 
-        io::cover_area(Panel::screen, rect);
+        io::cover_area(
+                Panel::screen,
+                rect,
+                colors::extra_dark_gray());
 
-        io::draw_box(rect, Panel::screen);
+        io::draw_box(rect);
 }
 
-static void menu_msg_drawing_helper(
+static void draw_menu_popup(
         const std::vector<std::string>& lines,
         const std::vector<std::string>& choices,
         const size_t current_choice,
@@ -96,8 +99,9 @@ static void menu_msg_drawing_helper(
                         Panel::screen,
                         P(panels::get_center_x(Panel::screen), y),
                         colors::title(),
+                        false, // Do not draw background color
                         colors::black(),
-                        true);
+                        true); // Allow pixel-level adjustmet
         }
 
         const bool show_msg_centered = lines.size() == 1;
@@ -113,8 +117,9 @@ static void menu_msg_drawing_helper(
                                 Panel::screen,
                                 P(panels::get_center_x(Panel::screen), y),
                                 colors::white(),
+                                false, // Do not draw background color
                                 colors::black(),
-                                true);
+                                true); // Allow pixel-level adjustmet
                 }
                 else // Draw the message with left alignment
                 {
@@ -122,7 +127,8 @@ static void menu_msg_drawing_helper(
                                 line,
                                 Panel::screen,
                                 P(text_x0, y),
-                                colors::white());
+                                colors::white(),
+                                false); // Do not draw background color
                 }
 
                 msg_log::add_line_to_history(line);
@@ -145,8 +151,9 @@ static void menu_msg_drawing_helper(
                         Panel::screen,
                         P(panels::get_center_x(Panel::screen), y),
                         color,
+                        false, // Do not draw background color
                         colors::black(),
-                        true);
+                        true); // Allow pixel-level adjustmet
 
                 ++y;
         }
@@ -160,11 +167,10 @@ static void menu_msg_drawing_helper(
 namespace popup
 {
 
-void show_msg(
-        const std::string& msg,
-        const std::string& title,
-        const SfxId sfx,
-        const int w_change)
+void msg(const std::string& msg,
+         const std::string& title,
+         const SfxId sfx,
+         const int w_change)
 {
         const int text_w = text_w_default + w_change;
 
@@ -188,8 +194,9 @@ void show_msg(
                         Panel::screen,
                         P(panels::get_center_x(Panel::screen), y),
                         colors::title(),
+                        false, // Do not draw background color
                         colors::black(),
-                        true);
+                        true); // Allow pixel-level adjustmet
         }
 
         const bool show_msg_centered = lines.size() == 1;
@@ -205,8 +212,9 @@ void show_msg(
                                 Panel::screen,
                                 P(panels::get_center_x(Panel::screen), y),
                                 colors::white(),
+                                false, // Do not draw background color
                                 colors::black(),
-                                true);
+                                true); // Allow pixel-level adjustmet
                 }
                 else
                 {
@@ -217,7 +225,8 @@ void show_msg(
                                 line,
                                 Panel::screen,
                                 P(text_x0, y),
-                                colors::white());
+                                colors::white(),
+                                false); // Do not draw background color
                 }
 
                 msg_log::add_line_to_history(line);
@@ -229,18 +238,18 @@ void show_msg(
                 confirm_info_str_no_space,
                 Panel::screen,
                 P(panels::get_center_x(Panel::screen), y),
-                colors::menu_dark());
+                colors::menu_dark(),
+                false); // Do not draw background color
 
         io::update_screen();
 
         query::wait_for_confirm();
 }
 
-int show_menu_msg(
-        const std::string& msg,
-        const std::vector<std::string>& choices,
-        const std::string& title,
-        const SfxId sfx)
+int menu(const std::string& msg,
+         const std::vector<std::string>& choices,
+         const std::string& title,
+         const SfxId sfx)
 {
         if (config::is_bot_playing())
         {
@@ -272,7 +281,7 @@ int show_menu_msg(
                 audio::play(sfx);
         }
 
-        menu_msg_drawing_helper(
+        draw_menu_popup(
                 lines,
                 choices,
                 browser.y(),
@@ -292,7 +301,7 @@ int show_menu_msg(
                 switch (action)
                 {
                 case MenuAction::moved:
-                        menu_msg_drawing_helper(
+                        draw_menu_popup(
                                 lines,
                                 choices,
                                 browser.y(),
@@ -306,7 +315,6 @@ int show_menu_msg(
                         return nr_choices - 1;
 
                 case MenuAction::selected:
-                case MenuAction::selected_shift:
                         return browser.y();
 
                 case MenuAction::none:

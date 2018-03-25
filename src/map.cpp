@@ -21,37 +21,37 @@
 #endif // NDEBUG
 
 Cell::Cell() :
-    is_explored(false),
-    is_seen_by_player(false),
-    player_los(),
-    item(nullptr),
-    rigid(nullptr),
-    pos(P(-1, -1)) {}
+        is_explored(false),
+        is_seen_by_player(false),
+        player_los(),
+        item(nullptr),
+        rigid(nullptr),
+        pos(P(-1, -1)) {}
 
 Cell::~Cell()
 {
-    delete rigid;
+        delete rigid;
 
-    delete item;
+        delete item;
 }
 
 void Cell::reset()
 {
-    is_explored = false;
+        is_explored = false;
 
-    is_seen_by_player = false;
+        is_seen_by_player = false;
 
-    player_los.is_blocked_hard = true;
+        player_los.is_blocked_hard = true;
 
-    player_los.is_blocked_by_drk = false;
+        player_los.is_blocked_by_drk = false;
 
-    pos.set(-1, -1);
+        pos.set(-1, -1);
 
-    delete rigid;
-    rigid = nullptr;
+        delete rigid;
+        rigid = nullptr;
 
-    delete item;
-    item = nullptr;
+        delete item;
+        item = nullptr;
 }
 
 namespace map
@@ -79,338 +79,346 @@ namespace
 
 void reset_cells(const bool make_stone_walls)
 {
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        for (int x = 0; x < map_w; ++x)
         {
-            cells[x][y].reset();
-            cells[x][y].pos = P(x, y);
+                for (int y = 0; y < map_h; ++y)
+                {
+                        cells[x][y].reset();
+                        cells[x][y].pos = P(x, y);
 
-            room_map[x][y] = nullptr;
+                        room_map[x][y] = nullptr;
 
-            if (make_stone_walls)
-            {
-                put(new Wall(P(x, y)));
-            }
+                        if (make_stone_walls)
+                        {
+                                put(new Wall(P(x, y)));
+                        }
+                }
         }
-    }
 
-    memset(light, 0, nr_map_cells);
+        memset(light, 0, nr_map_cells);
 
-    memset(dark, 0, nr_map_cells);
+        memset(dark, 0, nr_map_cells);
 }
 
 } // namespace
 
 void init()
 {
-    dlvl = 0;
+        dlvl = 0;
 
-    room_list.clear();
+        room_list.clear();
 
-    reset_cells(false);
+        reset_cells(false);
 
-    const P player_pos(player_start_x, player_start_y);
+        const P player_pos(player_start_x, player_start_y);
 
-    Actor* actor = actor_factory::make(ActorId::player, player_pos);
+        Actor* actor = actor_factory::make(ActorId::player, player_pos);
 
-    player = static_cast<Player*>(actor);
+        player = static_cast<Player*>(actor);
 }
 
 void cleanup()
 {
-    reset();
+        reset();
 
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        for (int x = 0; x < map_w; ++x)
         {
-            auto& cell = cells[x][y];
+                for (int y = 0; y < map_h; ++y)
+                {
+                        auto& cell = cells[x][y];
 
-            delete cell.rigid;
+                        delete cell.rigid;
 
-            cell.rigid = nullptr;
+                        cell.rigid = nullptr;
+                }
         }
-    }
 
-    // NOTE: game_time deletes the player object (the actor list is the owner of
-    // this memory)
-    player = nullptr;
+        // NOTE: game_time deletes the player object (the actor list is the
+        // owner of this memory)
+        player = nullptr;
 }
 
 void save()
 {
-    saving::put_int(dlvl);
+        saving::put_int(dlvl);
 }
 
 void load()
 {
-    dlvl = saving::get_int();
+        dlvl = saving::get_int();
 }
 
 void reset()
 {
-    actor_factory::delete_all_mon();
+        actor_factory::delete_all_mon();
 
-    for (auto* room : room_list)
-    {
-        delete room;
-    }
-
-    room_list.clear();
-
-    choke_point_data.clear();
-
-    reset_cells(true);
-
-    game_time::erase_all_mobs();
-    game_time::reset_turn_type_and_actor_counters();
-
-    // Occasionally set wall color to something unusual
-    if (rnd::one_in(3))
-    {
-        std::vector<Color> wall_color_bucket =
+        for (auto* room : room_list)
         {
-            colors::red(),
-            colors::sepia(),
-            colors::dark_sepia(),
-            colors::dark_brown(),
-            colors::gray_brown(),
-        };
+                delete room;
+        }
 
-        wall_color = rnd::element(wall_color_bucket);
-    }
-    else // Standard wall color
-    {
-        wall_color = colors::gray();
-    }
+        room_list.clear();
+
+        choke_point_data.clear();
+
+        reset_cells(true);
+
+        game_time::erase_all_mobs();
+        game_time::reset_turn_type_and_actor_counters();
+
+        // Occasionally set wall color to something unusual
+        if (rnd::one_in(3))
+        {
+                std::vector<Color> wall_color_bucket =
+                        {
+                                colors::red(),
+                                colors::sepia(),
+                                colors::dark_sepia(),
+                                colors::dark_brown(),
+                                colors::gray_brown(),
+                        };
+
+                wall_color = rnd::element(wall_color_bucket);
+        }
+        else // Standard wall color
+        {
+                wall_color = colors::gray();
+        }
 }
 
 Rigid* put(Rigid* const f)
 {
-    ASSERT(f);
+        ASSERT(f);
 
-    const P p = f->pos();
+        const P p = f->pos();
 
-    Cell& cell = cells[p.x][p.y];
+        Cell& cell = cells[p.x][p.y];
 
-    delete cell.rigid;
+        delete cell.rigid;
 
-    cell.rigid = f;
+        cell.rigid = f;
 
 #ifndef NDEBUG
-    if (init::is_demo_mapgen)
-    {
-        if (f->id() == FeatureId::floor)
+        if (init::is_demo_mapgen)
         {
-            for (int x = 0; x < map_w; ++x)
-            {
-                for (int y = 0; y < map_h; ++y)
+                if (f->id() == FeatureId::floor)
                 {
-                    map::cells[x][y].is_seen_by_player =
-                        map::cells[x][y].is_explored = true;
+                        for (int x = 0; x < map_w; ++x)
+                        {
+                                for (int y = 0; y < map_h; ++y)
+                                {
+                                        auto& cell = map::cells[x][y];
+
+                                        cell.is_seen_by_player =
+                                                cell.is_explored = true;
+                                }
+                        }
+
+                        states::draw();
+
+                        io::draw_character(
+                                'X',
+                                Panel::map,
+                                p,
+                                colors::yellow());
+
+                        io::update_screen();
+
+                        // NOTE: Delay must be > 1 for user input to be read
+                        sdl_base::sleep(3);
                 }
-            }
-
-            states::draw();
-            io::draw_character('X', Panel::map, p, colors::yellow());
-            io::update_screen();
-
-            // NOTE: Delay must be > 1 for user input to be read
-            sdl_base::sleep(3);
         }
-    }
 #endif // NDEBUG
 
-    return f;
+        return f;
 }
 
 void update_vision()
 {
-    game_time::update_light_map();
+        game_time::update_light_map();
 
-    map::player->update_fov();
+        map::player->update_fov();
 
-    map::player->update_mon_awareness();
+        map::player->update_mon_awareness();
 
-    states::draw();
+        states::draw();
 }
 
 void make_blood(const P& origin)
 {
-    for (int dx = -1; dx <= 1; ++dx)
-    {
-        for (int dy = -1; dy <= 1; ++dy)
+        for (int dx = -1; dx <= 1; ++dx)
         {
-            const P c = origin + P(dx, dy);
-
-            Rigid* const f = cells[c.x][c.y].rigid;
-
-            if (f->can_have_blood())
-            {
-                if (rnd::one_in(3))
+                for (int dy = -1; dy <= 1; ++dy)
                 {
-                    f->make_bloody();
+                        const P c = origin + P(dx, dy);
+
+                        Rigid* const f = cells[c.x][c.y].rigid;
+
+                        if (f->can_have_blood())
+                        {
+                                if (rnd::one_in(3))
+                                {
+                                        f->make_bloody();
+                                }
+                        }
                 }
-            }
         }
-    }
 }
 
 void make_gore(const P& origin)
 {
-    for (int dx = -1; dx <= 1; ++dx)
-    {
-        for (int dy = -1; dy <= 1; ++dy)
+        for (int dx = -1; dx <= 1; ++dx)
         {
-            const P c = origin + P(dx, dy);
+                for (int dy = -1; dy <= 1; ++dy)
+                {
+                        const P c = origin + P(dx, dy);
 
-            if (rnd::one_in(3))
-            {
-                cells[c.x][c.y].rigid->try_put_gore();
-            }
+                        if (rnd::one_in(3))
+                        {
+                                cells[c.x][c.y].rigid->try_put_gore();
+                        }
+                }
         }
-    }
 }
 
 void delete_and_remove_room_from_list(Room* const room)
 {
-    for (size_t i = 0; i < room_list.size(); ++i)
-    {
-        if (room_list[i] == room)
+        for (size_t i = 0; i < room_list.size(); ++i)
         {
-            delete room;
-            room_list.erase(room_list.begin() + i);
-            return;
+                if (room_list[i] == room)
+                {
+                        delete room;
+                        room_list.erase(room_list.begin() + i);
+                        return;
+                }
         }
-    }
 
-    ASSERT(false && "Tried to remove non-existing room");
+        ASSERT(false && "Tried to remove non-existing room");
 }
 
 bool is_pos_seen_by_player(const P& p)
 {
-    ASSERT(map::is_pos_inside_map(p));
+        ASSERT(map::is_pos_inside_map(p));
 
-    return cells[p.x][p.y].is_seen_by_player;
+        return cells[p.x][p.y].is_seen_by_player;
 }
 
 Actor* actor_at_pos(const P& pos, ActorState state)
 {
-    for (auto* const actor : game_time::actors)
-    {
-        if (actor->pos == pos &&
-            actor->state() == state)
+        for (auto* const actor : game_time::actors)
         {
-            return actor;
+                if (actor->pos == pos &&
+                    actor->state() == state)
+                {
+                        return actor;
+                }
         }
-    }
 
-    return nullptr;
+        return nullptr;
 }
 
 Mob* first_mob_at_pos(const P& pos)
 {
-    for (auto* const mob : game_time::mobs)
-    {
-        if (mob->pos() == pos)
+        for (auto* const mob : game_time::mobs)
         {
-            return mob;
+                if (mob->pos() == pos)
+                {
+                        return mob;
+                }
         }
-    }
 
-    return nullptr;
+        return nullptr;
 }
 
 void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out)
 {
-    out.clear();
+        out.clear();
 
-    for (const auto* const a : actors)
-    {
-        out.push_back(a->pos);
-    }
+        for (const auto* const a : actors)
+        {
+                out.push_back(a->pos);
+        }
 }
 
 void make_actor_array(Actor* a[map_w][map_h])
 {
-    std::fill_n(*a, nr_map_cells, nullptr);
+        std::fill_n(*a, nr_map_cells, nullptr);
 
-    for (Actor* actor : game_time::actors)
-    {
-        const P& p = actor->pos;
+        for (Actor* actor : game_time::actors)
+        {
+                const P& p = actor->pos;
 
-        a[p.x][p.y] = actor;
-    }
+                a[p.x][p.y] = actor;
+        }
 }
 
 Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
 {
-    if (actors.empty())
-    {
-        return nullptr;
-    }
-
-    if (actors.size() == 1)
-    {
-        return actors[0];
-    }
-
-    // Find distance to nearest actor(s)
-    int dist_to_nearest = INT_MAX;
-
-    for (Actor* actor : actors)
-    {
-        const int current_dist = king_dist(c, actor->pos);
-
-        if (current_dist < dist_to_nearest)
+        if (actors.empty())
         {
-            dist_to_nearest = current_dist;
+                return nullptr;
         }
-    }
 
-    ASSERT(dist_to_nearest != INT_MAX);
-
-    // Store all actors with distance equal to the nearest distance
-    std::vector<Actor*> closest_actors;
-
-    for (Actor* actor : actors)
-    {
-        if (king_dist(c, actor->pos) == dist_to_nearest)
+        if (actors.size() == 1)
         {
-            closest_actors.push_back(actor);
+                return actors[0];
         }
-    }
 
-    ASSERT(!closest_actors.empty());
+        // Find distance to nearest actor(s)
+        int dist_to_nearest = INT_MAX;
 
-    const int element = rnd::range(0, closest_actors.size() - 1);
+        for (Actor* actor : actors)
+        {
+                const int current_dist = king_dist(c, actor->pos);
 
-    return closest_actors[element];
+                if (current_dist < dist_to_nearest)
+                {
+                        dist_to_nearest = current_dist;
+                }
+        }
+
+        ASSERT(dist_to_nearest != INT_MAX);
+
+        // Store all actors with distance equal to the nearest distance
+        std::vector<Actor*> closest_actors;
+
+        for (Actor* actor : actors)
+        {
+                if (king_dist(c, actor->pos) == dist_to_nearest)
+                {
+                        closest_actors.push_back(actor);
+                }
+        }
+
+        ASSERT(!closest_actors.empty());
+
+        const int element = rnd::range(0, closest_actors.size() - 1);
+
+        return closest_actors[element];
 }
 
 bool is_pos_inside_map(const P& pos, const bool count_edge_as_inside)
 {
-    if (count_edge_as_inside)
-    {
-        return pos.x >= 0 &&
-               pos.y >= 0 &&
-               pos.x < map_w &&
-               pos.y < map_h;
-    }
-    else //Edge counts as outside the map
-    {
-        return pos.x > 0 &&
-               pos.y > 0 &&
-               pos.x < map_w - 1 &&
-               pos.y < map_h - 1;
-    }
+        if (count_edge_as_inside)
+        {
+                return pos.x >= 0 &&
+                        pos.y >= 0 &&
+                        pos.x < map_w &&
+                                pos.y < map_h;
+        }
+        else //Edge counts as outside the map
+        {
+                return pos.x > 0 &&
+                                pos.y > 0 &&
+                        pos.x < map_w - 1 &&
+                                pos.y < map_h - 1;
+        }
 }
 
 bool is_area_inside_map(const R& area)
 {
-    return is_pos_inside_map(area.p0) &&
-           is_pos_inside_map(area.p1);
+        return is_pos_inside_map(area.p0) &&
+                is_pos_inside_map(area.p1);
 }
 
 } //map

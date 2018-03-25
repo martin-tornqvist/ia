@@ -198,7 +198,7 @@ void LitFlare::on_new_turn()
 
 void LitFlare::add_light(bool light[map_w][map_h]) const
 {
-    const int radi = fov_std_radi_int; //light_radius();
+    const int radi = fov_radi_int; //light_radius();
 
     P p0(std::max(0, pos_.x - radi),
          std::max(0, pos_.y - radi));

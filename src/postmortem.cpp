@@ -273,30 +273,31 @@ void PostmortemMenu::on_start()
                         "Last messages:",
                         color_heading));
 
-        const std::vector< std::vector<Msg> >& history =
+        const std::vector< std::vector<Msg> >& msg_history =
                 msg_log::history();
 
         int history_element =
-                std::max(0, (int)history.size() - 20);
+                std::max(0, (int)msg_history.size() - 20);
 
-        for (size_t i = history_element; i < history.size(); ++i)
+        for (size_t history_line_idx = history_element;
+             history_line_idx < msg_history.size();
+             ++history_line_idx)
         {
                 std::string row = "";
 
-                for (size_t ii = 0; ii < history[i].size(); ii++)
-                {
-                        std::string msg_str = "";
+                const auto& history_line = msg_history[history_line_idx];
 
-                        history[i][ii].str_with_repeats(msg_str);
+                for (const auto& msg : history_line)
+                {
+                        const std::string msg_str = msg.text_with_repeats();
 
                         row += msg_str + " ";
                 }
 
                 info_lines_.push_back(
-                        {
+                        ColoredString(
                                 offset + row,
-                                        color_info
-                                        });
+                                color_info));
         }
 
         info_lines_.push_back({"", color_info});
@@ -346,15 +347,66 @@ void PostmortemMenu::on_popped()
 
 void PostmortemMenu::draw()
 {
-        P pos;
+        P menu_pos;
 
         if (config::is_tiles_mode())
         {
-                pos.set(50, 10);
+                // TODO: Reimplement
+                // io::draw_skull(P(27, 2));
+
+                io::draw_box(panels::get_area(Panel::screen));
+
+                menu_pos =
+                        panels::get_center(Panel::screen)
+                        .with_offsets(-9, -4);
         }
         else // Text mode
         {
-                pos.set(56, 13);
+                // The last line is the longest (grass)
+                const int ascii_graveyard_w =
+                        ascii_graveyard_lines_.back().size();
+
+                const int ascii_graveyard_h =
+                        ascii_graveyard_lines_.size();
+
+                const int screen_center_x = panels::get_center_x(Panel::screen);
+
+                const int screen_h = panels::get_h(Panel::screen);
+
+                const int ascii_graveyard_x0 =
+                        screen_center_x - (ascii_graveyard_w / 2);
+
+                const int ascii_graveyard_y0 = screen_h - ascii_graveyard_h;
+
+                int y = ascii_graveyard_y0;
+
+                for (const auto& line : ascii_graveyard_lines_)
+                {
+                        io::draw_text(
+                                line,
+                                Panel::screen,
+                                P(ascii_graveyard_x0, y),
+                                colors::gray());
+
+                        ++y;
+                }
+
+                const std::string name = map::player->name_the();
+
+                const int name_x =
+                        ascii_graveyard_x0
+                        + 44
+                        - ((name.length() - 1) / 2);
+
+                io::draw_text(
+                        name,
+                        Panel::screen,
+                        P(name_x, ascii_graveyard_y0 + 20),
+                        colors::gray());
+
+                menu_pos.set(
+                        ascii_graveyard_x0 + 56,
+                        ascii_graveyard_y0 + 13);
         }
 
         std::vector<std::string> labels = {
@@ -375,43 +427,14 @@ void PostmortemMenu::draw()
                         colors::menu_highlight() :
                         colors::menu_dark();
 
-                io::draw_text(label,
-                              Panel::screen,
-                              pos,
-                              color);
+                io::draw_text(
+                        label,
+                        Panel::screen,
+                        menu_pos,
+                        color);
 
-                ++pos.y;
+                ++menu_pos.y;
         }
-
-        if (config::is_tiles_mode())
-        {
-                io::draw_skull(P(27, 2));
-        }
-        else // Text mode
-        {
-                int y = 0;
-
-                for (const auto& line : ascii_graveyard_lines_)
-                {
-                        io::draw_text(line,
-                                      Panel::screen,
-                                      P(0, y),
-                                      colors::gray());
-
-                        ++y;
-                }
-
-                const std::string name = map::player->name_the();
-
-                const int name_x = 44 - ((name.length() - 1) / 2);
-
-                io::draw_text(name,
-                              Panel::screen,
-                              P(name_x, 20),
-                              colors::gray());
-        }
-
-        io::draw_box(panels::get_area(Panel::screen));
 }
 
 void PostmortemMenu::make_memorial_file(const std::string path) const
@@ -469,7 +492,6 @@ void PostmortemMenu::update()
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
 
                 // Display postmortem info
                 switch (browser_.y())
@@ -599,6 +621,7 @@ void PostmortemInfo::draw()
                                         Panel::screen,
                                         P(x, screen_y),
                                         d.color,
+                                        true, // Draw background color
                                         d.color_bg);
                         }
                 }

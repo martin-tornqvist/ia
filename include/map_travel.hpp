@@ -6,14 +6,6 @@
 
 #include "map_builder.hpp"
 
-// This includes forest intro level, rats in the walls level, etc (every level
-// that increments the dlvl number).
-enum class IsMainDungeon
-{
-        no,
-        yes
-};
-
 enum class AllowSpawnMonOverTime
 {
         no,
@@ -23,8 +15,6 @@ enum class AllowSpawnMonOverTime
 struct MapData
 {
         MapType type = MapType::std;
-
-        IsMainDungeon is_main_dungeon = IsMainDungeon::yes;
 
         AllowSpawnMonOverTime allow_spawn_mon_over_time =
                 AllowSpawnMonOverTime::yes;
@@ -48,4 +38,4 @@ MapData current_map_data();
 
 } // map_travel
 
-#endif
+#endif // MAP_TRAVEL_HPP

@@ -96,13 +96,11 @@ void PickBgState::update()
         const auto input = io::get(false);
 
         const MenuAction action =
-                browser_.read(input,
-                              MenuInputMode::scrolling_and_letters);
+                browser_.read(input, MenuInputMode::scrolling_and_letters);
 
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
         {
                 const Bg bg = bgs_[browser_.y()];
 
@@ -125,15 +123,18 @@ void PickBgState::update()
 
 void PickBgState::draw()
 {
+        const int screen_center_x = panels::get_center_x(Panel::screen);
+
         io::draw_text_center(
                 "What is your background?",
                 Panel::screen,
-                P(map_w_half, 0),
+                P(screen_center_x, 0),
                 colors::title(),
+                false, // Do not draw background color
                 colors::black(),
-                true);
+                true); // Allow pixel-level adjustment
 
-        int y = panels::get_y0(Panel::create_char_menu);
+        int y = 0;
 
         const Bg bg_marked = bgs_[browser_.y()];
 
@@ -152,8 +153,8 @@ void PickBgState::draw()
 
                 io::draw_text(
                         key_str + bg_name,
-                        Panel::screen,
-                        P(panels::get_x0(Panel::create_char_menu), y),
+                        Panel::create_char_menu,
+                        P(0, y),
                         draw_color);
 
                 ++y;
@@ -162,7 +163,7 @@ void PickBgState::draw()
         }
 
         // Description
-        y = panels::get_y0(Panel::create_char_descr);
+        y = 0;
 
         const auto descr = player_bon::bg_descr(bg_marked);
 
@@ -185,8 +186,8 @@ void PickBgState::draw()
                 {
                         io::draw_text(
                                 line,
-                                Panel::screen,
-                                P(panels::get_x0(Panel::create_char_descr), y),
+                                Panel::create_char_descr,
+                                P(0, y),
                                 descr_entry.color);
 
                         ++y;
@@ -268,7 +269,6 @@ void PickTraitState::update()
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
         {
                 if (screen_mode_ == TraitScreenMode::pick_new)
                 {
@@ -302,11 +302,14 @@ void PickTraitState::draw()
                 title += " [TAB] to view available traits";
         }
 
+        const int screen_center_x = panels::get_center_x(Panel::screen);
+
         io::draw_text_center(
                 title,
                 Panel::screen,
-                P(map_w_half, 0),
+                P(screen_center_x, 0),
                 colors::title(),
+                false, // Do not draw background color
                 colors::black(),
                 true);
 
@@ -334,7 +337,7 @@ void PickTraitState::draw()
         const Bg player_bg = player_bon::bg();
 
         // Traits
-        int y = panels::get_y0(Panel::create_char_menu);
+        int y = 0;
 
         const Range idx_range_shown = browser->range_shown();
 
@@ -375,8 +378,8 @@ void PickTraitState::draw()
 
                 io::draw_text(
                         key_str + trait_name,
-                        Panel::screen,
-                        P(panels::get_x0(Panel::create_char_menu), y),
+                        Panel::create_char_menu,
+                        P(0, y),
                         color);
 
                 ++y;
@@ -403,7 +406,7 @@ void PickTraitState::draw()
         // }
 
         // Description
-        y = panels::get_y0(Panel::create_char_descr);
+        y = 0;
 
         std::string descr = player_bon::trait_descr(trait_marked);
 
@@ -414,10 +417,11 @@ void PickTraitState::draw()
 
         for (const std::string& str : formatted_descr)
         {
-                io::draw_text(str,
-                              Panel::screen,
-                              P(panels::get_x0(Panel::create_char_descr), y),
-                              colors::white());
+                io::draw_text(
+                        str,
+                        Panel::create_char_descr,
+                        P(0, y),
+                        colors::white());
                 ++y;
         }
 
@@ -428,11 +432,12 @@ void PickTraitState::draw()
 
         int trait_marked_clvl_prereq = -1;
 
-        player_bon::trait_prereqs(trait_marked,
-                                  player_bg,
-                                  trait_marked_prereqs,
-                                  trait_marked_bg_prereq,
-                                  trait_marked_clvl_prereq);
+        player_bon::trait_prereqs(
+                trait_marked,
+                player_bg,
+                trait_marked_prereqs,
+                trait_marked_bg_prereq,
+                trait_marked_clvl_prereq);
 
         const int y0_prereqs = 10;
 
@@ -443,10 +448,11 @@ void PickTraitState::draw()
         {
                 const std::string label = "Prerequisite(s):";
 
-                io::draw_text(label,
-                              Panel::screen,
-                              P(panels::get_x0(Panel::create_char_descr), y),
-                              colors::white());
+                io::draw_text(
+                        label,
+                        Panel::create_char_descr,
+                        P(0, y),
+                        colors::white());
 
                 std::vector<ColoredString> prereq_titles;
 
@@ -501,16 +507,13 @@ void PickTraitState::draw()
                                 ColoredString(clvl_title, color));
                 }
 
-                const int prereq_list_x =
-                        panels::get_x0(Panel::create_char_descr) +
-                        label.size() +
-                        1;
+                const int prereq_list_x = label.size() + 1;
 
                 for (const ColoredString& title : prereq_titles)
                 {
                         io::draw_text(
                                 title.str,
-                                Panel::screen,
+                                Panel::create_char_descr,
                                 P(prereq_list_x, y),
                                 title.color);
 
@@ -616,10 +619,13 @@ void EnterNameState::update()
 
 void EnterNameState::draw()
 {
-        io::draw_text_center("What is your name?",
-                             Panel::screen,
-                             P(map_w_half, 0),
-                             colors::title());
+        const int screen_center_x = panels::get_center_x(Panel::screen);
+
+        io::draw_text_center(
+                "What is your name?",
+                Panel::screen,
+                P(screen_center_x, 0),
+                colors::title());
 
         const int y_name = 3;
 
@@ -628,13 +634,14 @@ void EnterNameState::draw()
                 current_str_ + "_" :
                 current_str_;
 
-        const size_t name_x0 = map_w_half - (player_name_max_len / 2);
+        const size_t name_x0 = screen_center_x - (player_name_max_len / 2);
         const size_t name_x1 = name_x0 + player_name_max_len - 1;
 
-        io::draw_text(name_str,
-                      Panel::screen,
-                      P(name_x0, y_name),
-                      colors::menu_highlight());
+        io::draw_text(
+                name_str,
+                Panel::screen,
+                P(name_x0, y_name),
+                colors::menu_highlight());
 
         R box_rect(P(name_x0 - 1, y_name - 1),
                    P(name_x1 + 1, y_name + 1));

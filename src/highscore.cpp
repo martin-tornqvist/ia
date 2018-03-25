@@ -17,16 +17,18 @@
 // -----------------------------------------------------------------------------
 // Highscore entry
 // -----------------------------------------------------------------------------
-HighscoreEntry::HighscoreEntry(std::string game_summary_file_path,
-                               std::string date,
-                               std::string player_name,
-                               int player_xp,
-                               int player_lvl,
-                               int player_dlvl,
-                               int turn_count,
-                               int player_insanity,
-                               IsWin is_win,
-                               Bg player_bg) :
+HighscoreEntry::HighscoreEntry(
+        std::string game_summary_file_path,
+        std::string date,
+        std::string player_name,
+        int player_xp,
+        int player_lvl,
+        int player_dlvl,
+        int turn_count,
+        int player_insanity,
+        IsWin is_win,
+        Bg player_bg) :
+
         game_summary_file_path_(game_summary_file_path),
         date_(date),
         name_(player_name),
@@ -311,14 +313,15 @@ void BrowseHighscore::draw()
                 panel,
                 P(map_w_half, 0),
                 colors::title(),
+                false, // Do not draw background color
                 colors::black(),
-                true);
+                true); // Allow pixel-level adjustment
 
         const Color& label_clr = colors::white();
 
         const int labels_y = 1;
 
-        const int x_date = 0;
+        const int x_date = 1;
         const int x_name = x_date + 12;
         const int x_bg = x_name + player_name_max_len + 1;
         const int x_lvl = x_bg + 13;
@@ -340,10 +343,11 @@ void BrowseHighscore::draw()
 
         for (const auto& label : labels)
         {
-                io::draw_text(label.first,
-                              panel,
-                              P(label.second, labels_y),
-                              label_clr);
+                io::draw_text(
+                        label.first,
+                        panel,
+                        P(label.second, labels_y),
+                        label_clr);
         }
 
         const int browser_y = browser_.y();
@@ -411,11 +415,9 @@ void BrowseHighscore::update()
 {
         if (entries_.empty())
         {
-                popup::show_msg("No high score entries found.");
+                popup::msg("No high score entries found.");
 
-                //
                 // Exit screen
-                //
                 states::pop();
 
                 return;
@@ -430,7 +432,6 @@ void BrowseHighscore::update()
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
         {
                 const int browser_y = browser_.y();
 
@@ -555,7 +556,7 @@ void BrowseHighscoreEntry::read_file()
 
         if (!file.is_open())
         {
-                popup::show_msg(
+                popup::msg(
                         "Path: \"" + file_path_ + "\"",
                         "Game summary file could not be opened",
                         SfxId::END,

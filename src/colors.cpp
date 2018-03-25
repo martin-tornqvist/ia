@@ -32,7 +32,7 @@ static SDL_Color light_cyan_;
 static SDL_Color brown_;
 static SDL_Color dark_brown_;
 static SDL_Color gray_brown_;
-static SDL_Color dark_gray_brown_brown_;
+static SDL_Color dark_gray_brown_;
 static SDL_Color violet_;
 static SDL_Color dark_violet_;
 static SDL_Color orange_;
@@ -185,7 +185,7 @@ static void load_colors()
         load_color(colors_e, "brown", brown_);
         load_color(colors_e, "dark_brown", dark_brown_);
         load_color(colors_e, "gray_brown", gray_brown_);
-        load_color(colors_e, "dark_gray_brown_brown", dark_gray_brown_brown_);
+        load_color(colors_e, "dark_gray_brown", dark_gray_brown_);
         load_color(colors_e, "violet", violet_);
         load_color(colors_e, "dark_violet", dark_violet_);
         load_color(colors_e, "orange", orange_);
@@ -511,9 +511,9 @@ Color gray_brown()
         return Color(gray_brown_);
 }
 
-Color dark_gray_brown_brown()
+Color dark_gray_brown()
 {
-        return Color(dark_gray_brown_brown_);
+        return Color(dark_gray_brown_);
 }
 
 Color violet()

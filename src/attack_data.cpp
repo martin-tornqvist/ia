@@ -192,10 +192,10 @@ MeleeAttData::MeleeAttData(Actor* const attacker,
         }
 
         hit_chance_tot =
-                skill_mod +
-                wpn_mod +
-                dodging_mod +
-                state_mod;
+                skill_mod
+                + wpn_mod
+                + dodging_mod
+                + state_mod;
 
         // NOTE: Total skill may be negative or above 100 (the attacker may
         // still critically hit or miss)
@@ -408,11 +408,11 @@ RangedAttData::RangedAttData(Actor* const attacker,
                 }
 
                 hit_chance_tot =
-                        skill_mod +
-                        wpn_mod +
-                        dodging_mod +
-                        dist_mod +
-                        state_mod;
+                        skill_mod
+                        + wpn_mod
+                        + dodging_mod
+                        + dist_mod
+                        + state_mod;
 
                 set_constr_in_range(5, hit_chance_tot, 99);
 
@@ -577,11 +577,11 @@ ThrowAttData::ThrowAttData(Actor* const attacker,
                 }
 
                 hit_chance_tot =
-                        skill_mod +
-                        wpn_mod +
-                        dodging_mod +
-                        dist_mod +
-                        state_mod;
+                        skill_mod
+                        + wpn_mod
+                        + dodging_mod
+                        + dist_mod
+                        + state_mod;
 
                 set_constr_in_range(5, hit_chance_tot, 99);
 

@@ -29,14 +29,16 @@ public:
 
         void draw() override;
 
+        void on_window_resized() override;
+
         void update() override;
 
         StateId id() override;
 
 private:
-        void read_file();
-
         MenuBrowser browser_;
+
+        std::vector<std::string> raw_lines_;
 
         std::vector<ManualPage> pages_;
 

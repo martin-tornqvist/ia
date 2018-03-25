@@ -20,13 +20,13 @@
 #include "create_character.hpp"
 #include "game.hpp"
 
-namespace
-{
-
-std::string current_quote_ = "";
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static std::string current_quote_ = "";
 
 // TODO: This should be loaded from a text file
-std::vector<std::string> quotes_ =
+static const std::vector<std::string> quotes_ =
 {
         "Happy is the tomb where no wizard hath lain and happy the town at night "
         "whose wizards are all ashes.",
@@ -198,7 +198,7 @@ std::vector<std::string> quotes_ =
         "never been stirred up.",
 };
 
-const std::vector<std::string> text_mode_logo_ =
+static const std::vector<std::string> text_mode_logo_ =
 {
         "        ___  __                __  __                  ",
         "| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ",
@@ -207,8 +207,9 @@ const std::vector<std::string> text_mode_logo_ =
         "               \\                 \\                      "
 };
 
-} // namespace
-
+// -----------------------------------------------------------------------------
+// Main menu state
+// -----------------------------------------------------------------------------
 MainMenuState::MainMenuState() :
 #ifdef NDEBUG
         browser_ (MenuBrowser(6))
@@ -231,7 +232,7 @@ StateId MainMenuState::id()
 
 void MainMenuState::draw()
 {
-        P pos(map_w_half, 3);
+        const int screen_center_x = panels::get_center_x(Panel::screen);
 
         io::clear_screen();
 
@@ -242,14 +243,15 @@ void MainMenuState::draw()
 
         if (config::is_tiles_mode())
         {
-                io::draw_main_menu_logo(0);
-
-                pos.y += 10;
+                io::draw_main_menu_logo();
         }
         else // Text mode
         {
-                const int logo_x_pos_left =
-                        (map_w - text_mode_logo_[0].size()) / 2;
+                const int logo_w = text_mode_logo_[0].size();
+
+                const int logo_x_pos_left = screen_center_x - (logo_w / 2);
+
+                P pos(0, 3);
 
                 for (const std::string& row : text_mode_logo_)
                 {
@@ -257,55 +259,65 @@ void MainMenuState::draw()
 
                         for (const char& character : row)
                         {
-                                if (character == ' ')
+                                if (character != ' ')
                                 {
-                                        continue;
+                                        Color color = colors::violet();
+
+                                        int g =
+                                                color.g() +
+                                                rnd::range(-50, 100);
+
+                                        g = constr_in_range(0, (int)g, 254);
+
+                                        color.set_g(g);
+
+                                        io::draw_character(
+                                                character,
+                                                Panel::screen,
+                                                pos,
+                                                color);
                                 }
-
-                                Color color = colors::violet();
-
-                                int g = color.g() + rnd::range(-50, 100);
-
-                                g = constr_in_range(0, (int)g, 254);
-
-                                color.set_g(g);
-
-                                io::draw_character(character,
-                                                   Panel::screen,
-                                                   pos,
-                                                   color);
 
                                 ++pos.x;
                         }
 
                         pos.y += 1;
                 }
-
-                pos.y += 3;
         }
 
 #ifndef NDEBUG
-        io::draw_text("DEBUG MODE",
-                      Panel::screen,
-                      P(1, 1),
-                      colors::black(),
-                      colors::dark_yellow());
+        io::draw_text(
+                "DEBUG MODE",
+                Panel::screen,
+                P(1, 1),
+                colors::black(),
+                true, // Draw background color
+                colors::dark_yellow());
 #endif // NDEBUG
 
-        std::vector<std::string> labels = {
+        const std::vector<std::string> labels = {
                 "New journey",
                 "Resurrect",
                 "Tome of Wisdom",
                 "Options",
                 "Graveyard",
                 "Escape to reality"
+#ifndef NDEBUG
+                , "DEBUG: RUN BOT"
+#endif // NDEBUG
         };
 
-#ifndef NDEBUG
-        labels.push_back("DEBUG: RUN BOT");
-#endif // NDEBUG
+        const P screen_dims = panels::get_dims(Panel::screen);
 
-        pos.set(48, 13);
+        // NOTE: The main menu logo is 311 pixels high, we place the main meny
+        // at least at this height, plus a little more
+        // TODO: Read the logo height programmatically instead of hard coding it
+        const P menu_pos(
+                (screen_dims.x * 6) / 10,
+                std::max(320 / config::gui_cell_px_h(),
+                         (screen_dims.y * 4) / 10));
+
+        P pos = menu_pos;
 
         for (size_t i = 0; i < labels.size(); ++i)
         {
@@ -354,7 +366,9 @@ void MainMenuState::draw()
 
         if (quote_w > 0)
         {
-                pos.set((quote_w / 2) + 2, 15);
+                pos.set(
+                        std::max((quote_w / 2) + 2, (screen_dims.x * 3) / 10),
+                        menu_pos.y + 2);
 
                 for (const std::string& line : quote_lines)
                 {
@@ -390,7 +404,6 @@ void MainMenuState::update()
         switch (action)
         {
         case MenuAction::selected:
-        case MenuAction::selected_shift:
                 switch (browser_.y())
                 {
                 case 0: // New game
@@ -403,15 +416,13 @@ void MainMenuState::update()
                         {
                                 config::toggle_bot_playing();
                         }
-#endif // NDEBUG
 
-#ifndef NDEBUG
                         if (!config::is_bot_playing())
-                        {
 #endif // NDEBUG
+                        {
                                 if (saving::is_save_available())
                                 {
-                                        const int choice = popup::show_menu_msg(
+                                        const int choice = popup::menu(
                                                 "Start a new game?",
                                                 {"Yes", "No"},
                                                 "A saved game exists");
@@ -421,9 +432,7 @@ void MainMenuState::update()
                                                 return;
                                         }
                                 }
-#ifndef NDEBUG
                         }
-#endif // NDEBUG
 
                         audio::fade_out_music();
 
@@ -453,7 +462,7 @@ void MainMenuState::update()
                         }
                         else // No save available
                         {
-                                popup::show_msg("No saved game found");
+                                popup::msg("No saved game found");
                         }
                 }
                 break;

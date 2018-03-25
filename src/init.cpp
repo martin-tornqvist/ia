@@ -2,31 +2,30 @@
 
 #include <cassert>
 
-#include "player_bon.hpp"
-#include "sdl_base.hpp"
-#include "config.hpp"
-#include "panel.hpp"
-#include "io.hpp"
 #include "audio.hpp"
-#include "line_calc.hpp"
-#include "item_scroll.hpp"
+#include "bot.hpp"
+#include "config.hpp"
+#include "draw_map.hpp"
+#include "game.hpp"
+#include "highscore.hpp"
+#include "insanity.hpp"
+#include "io.hpp"
+#include "item_artifact.hpp"
 #include "item_potion.hpp"
 #include "item_rod.hpp"
-#include "map.hpp"
-#include "msg_log.hpp"
-#include "game.hpp"
-#include "draw_map.hpp"
-#include "bot.hpp"
+#include "item_scroll.hpp"
+#include "line_calc.hpp"
 #include "manual.hpp"
-#include "player_spells.hpp"
+#include "map.hpp"
 #include "map_templates.hpp"
 #include "map_travel.hpp"
-#include "query.hpp"
-#include "item_artifact.hpp"
-#include "saving.hpp"
-#include "insanity.hpp"
-#include "highscore.hpp"
+#include "msg_log.hpp"
+#include "player_bon.hpp"
+#include "player_spells.hpp"
 #include "property_data.hpp"
+#include "query.hpp"
+#include "saving.hpp"
+#include "sdl_base.hpp"
 
 namespace init
 {
@@ -40,10 +39,8 @@ void init_io()
 
     sdl_base::init();
     config::init();
-    panels::init();
     io::init();
     query::init();
-    io::init();
     audio::init();
     colors::init();
 
@@ -55,7 +52,6 @@ void cleanup_io()
     TRACE_FUNC_BEGIN;
 
     audio::cleanup();
-    io::cleanup();
     io::cleanup();
     sdl_base::cleanup();
 

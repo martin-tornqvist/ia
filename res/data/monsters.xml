@@ -5787,7 +5787,7 @@
             <death_message>is destroyed.</death_message>
         </text>
         <graphics>
-            <tile>empty</tile>
+            <tile>none</tile>
             <character>X</character>
             <color>yellow</color>
         </graphics>

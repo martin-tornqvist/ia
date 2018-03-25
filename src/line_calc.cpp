@@ -9,9 +9,9 @@
 // -----------------------------------------------------------------------------
 // Private
 // -----------------------------------------------------------------------------
-static double fov_abs_distances_[fov_max_w_int][fov_max_w_int];
+static double fov_abs_distances_[fov_w_int][fov_w_int];
 
-static std::vector<P> fov_delta_lines_[fov_max_w_int][fov_max_w_int];
+static std::vector<P> fov_delta_lines_[fov_w_int][fov_w_int];
 
 // -----------------------------------------------------------------------------
 // line_calc
@@ -22,9 +22,9 @@ namespace line_calc
 void init()
 {
         // Calculate FOV absolute distances
-        for (int y = 0; y < fov_max_w_int; ++y)
+        for (int y = 0; y < fov_w_int; ++y)
         {
-                for (int x = 0; x < fov_max_w_int; ++x)
+                for (int x = 0; x < fov_w_int; ++x)
                 {
                         fov_abs_distances_[x][y] = 0;
                 }
@@ -32,21 +32,21 @@ void init()
 
         double delta_x, delta_y, hypot;
 
-        // delta_x corresponds to 'i - fov_max_w_int', and vice versa
+        // delta_x corresponds to 'i - fov_w_int', and vice versa
         // So:
-        // i = 0                 => delta_x = -fov_max_w_int
-        // i = fov_max_w_int * 2 => delta_x =  fov_max_w_int
+        // i = 0                => delta_x = -fov_w_int
+        // i = fov_w_int * 2    => delta_x =  fov_w_int
 
-        const int r_int = fov_max_radi_int;
+        const int r_int = fov_radi_int;
 
         for (int x = 0; x <= r_int * 2; ++x)
         {
                 for (int y = 0; y <= r_int * 2; ++y)
                 {
                         delta_x = double(x);
-                        delta_x -= fov_max_radi_db;
+                        delta_x -= fov_radi_db;
                         delta_y = double(y);
-                        delta_y -= fov_max_radi_db;
+                        delta_y -= fov_radi_db;
                         hypot = sqrt((delta_x * delta_x) + (delta_y * delta_y));
                         fov_abs_distances_[x][y] = floor(hypot);
                 }
@@ -69,10 +69,10 @@ void init()
 const std::vector<P>* fov_delta_line(const P& delta,
                                      const double& max_dist_abs)
 {
-        const int x = delta.x + fov_max_radi_int;
-        const int y = delta.y + fov_max_radi_int;
+        const int x = delta.x + fov_radi_int;
+        const int y = delta.y + fov_radi_int;
 
-        if (x >= 0 && y >= 0 && x < fov_max_w_int && y < fov_max_w_int)
+        if (x >= 0 && y >= 0 && x < fov_w_int && y < fov_w_int)
         {
                 if (fov_abs_distances_[x][y] <= max_dist_abs)
                 {
@@ -83,11 +83,12 @@ const std::vector<P>* fov_delta_line(const P& delta,
         return nullptr;
 }
 
-std::vector<P> calc_new_line(const P& origin,
-                             const P& target,
-                             const bool should_stop_at_target,
-                             const int king_dist_limit,
-                             const bool allow_outside_map)
+std::vector<P> calc_new_line(
+        const P& origin,
+        const P& target,
+        const bool should_stop_at_target,
+        const int king_dist_limit,
+        const bool allow_outside_map)
 {
         std::vector<P> line;
 

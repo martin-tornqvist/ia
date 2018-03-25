@@ -13,16 +13,17 @@
 class HighscoreEntry
 {
 public:
-        HighscoreEntry(std::string game_summary_file_path,
-                       std::string entry_date,
-                       std::string player_name,
-                       int player_xp,
-                       int player_lvl,
-                       int player_dlvl,
-                       int turn_count,
-                       int player_insanity,
-                       IsWin is_win,
-                       Bg player_bg);
+        HighscoreEntry(
+                std::string game_summary_file_path,
+                std::string entry_date,
+                std::string player_name,
+                int player_xp,
+                int player_lvl,
+                int player_dlvl,
+                int turn_count,
+                int player_insanity,
+                IsWin is_win,
+                Bg player_bg);
 
         ~HighscoreEntry();
 
