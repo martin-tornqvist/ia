@@ -375,7 +375,7 @@ static void load_tiles()
 
                 for (int x = 0; x < tile_px_w; ++x)
                 {
-                        for (int y = 0; y <= tile_px_h; ++y)
+                        for (int y = 0; y < tile_px_h; ++y)
                         {
                                 const auto current_px =
                                         px(*tile_srf_tmp, x, y);
