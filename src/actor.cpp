@@ -219,15 +219,24 @@ void Actor::init(const P& pos_, ActorData& actor_data)
 
     data_ = &actor_data;
 
-    const int hp_max_variation_pct = 50;
+    // NOTE: Cannot compare against global player pointer here, since it may not
+    // yet have been set up
+    if (data_->id == ActorId::player)
+    {
+            hp_max_ = data_->hp;
+    }
+    else // Is monster
+    {
+            const int hp_max_variation_pct = 50;
 
-    const int hp_range_min = (data_->hp * hp_max_variation_pct) / 100;
+            const int hp_range_min = (data_->hp * hp_max_variation_pct) / 100;
 
-    Range hp_range(hp_range_min, data_->hp + hp_range_min);
+            Range hp_range(hp_range_min, data_->hp + hp_range_min);
 
-    hp_range.min = std::max(1, hp_range.min);
+            hp_range.min = std::max(1, hp_range.min);
 
-    hp_max_ = hp_range.roll();
+            hp_max_ = hp_range.roll();
+    }
 
     hp_ = hp_max_;
 
