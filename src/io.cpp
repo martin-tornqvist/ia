@@ -573,6 +573,9 @@ void init()
 
         ASSERT(sdl_renderer_);
 
+	SDL_RenderSetLogicalSize(sdl_renderer_, screen_px_w, screen_px_h);
+	SDL_RenderSetIntegerScale(sdl_renderer_, SDL_TRUE);
+
         screen_srf_ = SDL_CreateRGBSurface(
                 0,
                 screen_px_w,
