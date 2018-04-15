@@ -556,25 +556,12 @@ void init()
         sdl_renderer_ = SDL_CreateRenderer(
                 sdl_window_,
                 -1,
-                SDL_RENDERER_ACCELERATED);
-
-        if (!sdl_renderer_)
-        {
-                TRACE << "Failed to create accelerated SDL renderer, "
-                      << "trying software renderer instead."
-                      << std::endl;
-
-                sdl_renderer_ = SDL_CreateRenderer(
-                        sdl_window_,
-                        -1,
-                        SDL_RENDERER_SOFTWARE);
-
-        }
+                SDL_RENDERER_SOFTWARE);
 
         ASSERT(sdl_renderer_);
 
-	SDL_RenderSetLogicalSize(sdl_renderer_, screen_px_w, screen_px_h);
-	SDL_RenderSetIntegerScale(sdl_renderer_, SDL_TRUE);
+        SDL_RenderSetLogicalSize(sdl_renderer_, screen_px_w, screen_px_h);
+        SDL_RenderSetIntegerScale(sdl_renderer_, SDL_TRUE);
 
         screen_srf_ = SDL_CreateRGBSurface(
                 0,
