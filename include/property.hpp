@@ -264,10 +264,12 @@ public:
                 return 0;
         }
 
-        virtual void affect_move_dir(const P& actor_pos, Dir& dir)
+        virtual PropEnded affect_move_dir(const P& actor_pos, Dir& dir)
         {
                 (void)actor_pos;
                 (void)dir;
+
+                return PropEnded::no;
         }
 
         virtual bool is_resisting_other_prop(const PropId prop_id) const
@@ -597,7 +599,7 @@ public:
 
         void on_applied() override;
 
-        void affect_move_dir(const P& actor_pos, Dir& dir) override;
+        PropEnded affect_move_dir(const P& actor_pos, Dir& dir) override;
 
 private:
         bool try_player_end_with_machete();
@@ -646,7 +648,7 @@ public:
         PropConfused() :
                 Prop(PropId::confused) {}
 
-        void affect_move_dir(const P& actor_pos, Dir& dir) override;
+        PropEnded affect_move_dir(const P& actor_pos, Dir& dir) override;
 
         bool allow_attack_melee(const Verbosity verbosity) const override;
         bool allow_attack_ranged(const Verbosity verbosity) const override;
@@ -674,7 +676,7 @@ public:
                 return "Nailed(" + std::to_string(nr_spikes_) + ")";
         }
 
-        void affect_move_dir(const P& actor_pos, Dir& dir) override;
+        PropEnded affect_move_dir(const P& actor_pos, Dir& dir) override;
 
         void on_more(const Prop& new_prop) override
         {
@@ -1003,7 +1005,7 @@ public:
         void on_applied() override;
         void on_end() override;
 
-        void affect_move_dir(const P& actor_pos, Dir& dir) override;
+        PropEnded affect_move_dir(const P& actor_pos, Dir& dir) override;
 
         bool allow_read_absolute(const Verbosity verbosity) const override;
         bool allow_cast_intr_spell_absolute(

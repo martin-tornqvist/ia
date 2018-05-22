@@ -191,18 +191,18 @@ void PropEntangled::on_applied()
         try_player_end_with_machete();
 }
 
-void PropEntangled::affect_move_dir(const P& actor_pos, Dir& dir)
+PropEnded PropEntangled::affect_move_dir(const P& actor_pos, Dir& dir)
 {
         (void)actor_pos;
 
         if (dir == Dir::center)
         {
-                return;
+                return PropEnded::no;
         }
 
         if (try_player_end_with_machete())
         {
-                return;
+                return PropEnded::yes;
         }
 
         dir = Dir::center;
@@ -229,7 +229,11 @@ void PropEntangled::affect_move_dir(const P& actor_pos, Dir& dir)
         if (rnd::one_in(8))
         {
                 owner_->properties().end_prop(id());
+
+                return PropEnded::yes;
         }
+
+        return PropEnded::no;
 }
 
 bool PropEntangled::try_player_end_with_machete()
@@ -501,13 +505,13 @@ void PropTerrified::on_applied()
         }
 }
 
-void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
+PropEnded PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
 {
         (void)actor_pos;
 
         if (dir == Dir::center)
         {
-                return;
+                return PropEnded::no;
         }
 
         dir = Dir::center;
@@ -535,7 +539,7 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
         if (!owner_->is_alive() ||
             !rnd::one_in(4))
         {
-                return;
+                return PropEnded::no;
         }
 
         --nr_spikes_;
@@ -555,6 +559,8 @@ void PropNailed::affect_move_dir(const P& actor_pos, Dir& dir)
                         msg_log::add(actor_name_the + " tears out a spike!");
                 }
         }
+
+        return PropEnded::no;
 }
 
 void PropWound::save() const
@@ -759,11 +765,11 @@ bool PropConfused::allow_attack_ranged(const Verbosity verbosity) const
         return true;
 }
 
-void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
+PropEnded PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
 {
         if (dir == Dir::center)
         {
-                return;
+                return PropEnded::no;
         }
 
         bool blocked[map_w][map_h];
@@ -797,21 +803,23 @@ void PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
                         dir = dir_utils::dir(d);
                 }
         }
+
+        return PropEnded::no;
 }
 
-void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
+PropEnded PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 {
         if (!owner_->is_player() ||
             (dir == Dir::center))
         {
-                return;
+                return PropEnded::no;
         }
 
         const auto seen_foes = owner_->seen_foes();
 
         if (seen_foes.empty())
         {
-                return;
+                return PropEnded::no;
         }
 
         std::vector<P> seen_foes_cells;
@@ -848,12 +856,14 @@ void PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
                 {
                         if (blocked[pos.x][pos.y])
                         {
-                                return;
+                                return PropEnded::no;
                         }
                 }
 
                 dir = dir_utils::dir(line[1] - actor_pos);
         }
+
+        return PropEnded::no;
 }
 
 bool PropFrenzied::is_resisting_other_prop(const PropId prop_id) const

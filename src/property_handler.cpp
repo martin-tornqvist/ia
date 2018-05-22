@@ -920,9 +920,20 @@ int PropHandler::affect_shock(const int shock) const
 
 void PropHandler::affect_move_dir(const P& actor_pos, Dir& dir) const
 {
-        for (auto& prop : props_)
+        for (size_t i = 0; i < props_.size(); /* No increment */)
         {
-                prop->affect_move_dir(actor_pos, dir);
+                Prop* prop = props_[i].get();
+
+                const auto prop_ended = prop->affect_move_dir(actor_pos, dir);
+
+                // NOTE: The property may have removed itself at this point, if
+                // so it signals this by returning 'PropEnded::yes'
+
+                if (prop_ended == PropEnded::no)
+                {
+                        // Property has not been removed
+                        ++i;
+                }
         }
 }
 
