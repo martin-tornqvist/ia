@@ -1038,7 +1038,7 @@ static void update_projectile_states(ProjectileFireData& fire_data)
         for (auto& projectile : fire_data.projectiles)
         {
                 if (projectile.is_dead ||
-                    (projectile.path_idx < 0))
+                    (projectile.path_idx < 1))
                 {
                         continue;
                 }
