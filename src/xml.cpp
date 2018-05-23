@@ -9,7 +9,7 @@
 // string is empty, we should not call the tinyxml2 function with the c string
 // of the empty name string, but rather with a nullptr. Use this function to
 // convert std::string's to c strings, rather than std::string::c_str().
-static const char* to_c_str(const std::string str)
+static const char* to_c_str(const std::string& str)
 {
         return str.empty() ? nullptr : str.c_str();
 }
