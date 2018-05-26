@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "global.hpp"
+#include "rl_utils.hpp"
 
 class Mon;
 
@@ -48,7 +49,7 @@ std::vector<P> find_path_to_leader(Mon& mon);
 
 std::vector<P> find_path_to_target(Mon& mon);
 
-void set_special_blocked_cells(Mon& mon, bool a[map_w][map_h]);
+void set_special_blocked_cells(Mon& mon, Array2<bool>& a);
 
 } // info
 

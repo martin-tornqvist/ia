@@ -22,7 +22,7 @@ void try_pick()
 
     const P& pos = map::player->pos;
 
-    Item* const item = map::cells[pos.x][pos.y].item;
+    Item* const item = map::cells.at(pos).item;
 
     if (!item)
     {
@@ -43,7 +43,7 @@ void try_pick()
     // (e.g. combine with others)
     inv.put_in_backpack(item);
 
-    map::cells[pos.x][pos.y].item = nullptr;
+    map::cells.at(pos).item = nullptr;
 
     game_time::tick();
 }
@@ -83,7 +83,7 @@ Ammo* unload_ranged_wpn(Wpn& wpn)
 
 void try_unload_wpn_or_pickup_ammo()
 {
-    Item* item = map::cells[map::player->pos.x][map::player->pos.y].item;
+    Item* item = map::cells.at(map::player->pos).item;
 
     if (item)
     {

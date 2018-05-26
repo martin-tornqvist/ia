@@ -1,22 +1,22 @@
 #include "insanity.hpp"
 
-#include "popup.hpp"
-#include "game.hpp"
-#include "sound.hpp"
-#include "map.hpp"
-#include "actor_player.hpp"
-#include "msg_log.hpp"
+#include "actor_factory.hpp"
 #include "actor_mon.hpp"
+#include "actor_player.hpp"
+#include "feature_rigid.hpp"
+#include "game.hpp"
+#include "game_time.hpp"
+#include "init.hpp"
+#include "io.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "msg_log.hpp"
+#include "popup.hpp"
 #include "property.hpp"
 #include "property_data.hpp"
 #include "property_handler.hpp"
-#include "feature_rigid.hpp"
-#include "actor_factory.hpp"
 #include "saving.hpp"
-#include "init.hpp"
-#include "game_time.hpp"
-#include "io.hpp"
-#include "map_parsing.hpp"
+#include "sound.hpp"
 
 // -----------------------------------------------------------------------------
 // Private
@@ -27,18 +27,18 @@ static bool is_player_standing_in_open_place()
 
         const R r(pos - 1, pos + 1);
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksLos()
                 .run(blocked,
-                     MapParseMode::overwrite,
-                     r);
+                     r,
+                     MapParseMode::overwrite);
 
         for (int x = r.p0.x; x <= r.p1.x; ++x)
         {
                 for (int y = r.p0.y; y <= r.p1.y; ++y)
                 {
-                        if (blocked[x][y])
+                        if (blocked.at(x, y))
                         {
                                 return false;
                         }
@@ -54,7 +54,7 @@ static bool is_player_standing_in_cramped_place()
 
         const R r(pos - 1, pos + 1);
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         // NOTE: Checking if adjacent cells blocks projectiles is probably the
         // best way to determine if this is an open place. If we check for
@@ -62,8 +62,8 @@ static bool is_player_standing_in_cramped_place()
         // blocking.
         map_parsers::BlocksProjectiles()
                 .run(blocked,
-                     MapParseMode::overwrite,
-                     r);
+                     r,
+                     MapParseMode::overwrite);
 
         int block_count = 0;
 
@@ -73,7 +73,7 @@ static bool is_player_standing_in_cramped_place()
         {
                 for (int y = r.p0.y; y <= r.p1.y; ++y)
                 {
-                        if (blocked[x][y])
+                        if (blocked.at(x, y))
                         {
                                 ++block_count;
 
@@ -490,7 +490,7 @@ void InsPhobiaDeep::on_new_player_turn(const std::vector<Actor*>& seen_foes)
         {
                 const P p(map::player->pos + d);
 
-                if (!map::cells[p.x][p.y].rigid->is_bottomless())
+                if (!map::cells.at(p).rigid->is_bottomless())
                 {
                         continue;
                 }
@@ -529,7 +529,7 @@ void InsPhobiaDark::on_new_player_turn(const std::vector<Actor*>& seen_foes)
                 const PropHandler& props = map::player->properties();
 
                 if ((props.allow_act() && !props.allow_see()) ||
-                    (map::dark[p.x][p.y] && !map::light[p.x][p.y]))
+                    (map::dark.at(p) && !map::light.at(p)))
                 {
                         msg_log::add("I am plagued by my phobia of the dark!");
 
@@ -572,7 +572,9 @@ void InsShadows::on_start_hook()
         const size_t nr = rnd::range(nr_shadows_lower, nr_shadows_upper);
 
         const auto summoned =
-                actor_factory::spawn(map::player->pos, {nr, ActorId::shadow})
+                actor_factory::spawn(map::player->pos,
+                                     {nr, ActorId::shadow},
+                                     map::rect())
                 .make_aware_of_player()
                 .for_each([](Mon* const mon)
                 {
@@ -612,7 +614,9 @@ void InsParanoia::on_start_hook()
         const P& pos = map::player->pos;
 
         const auto summoned =
-                actor_factory::spawn(pos, {ActorId::invis_stalker})
+                actor_factory::spawn(pos,
+                                     {ActorId::invis_stalker},
+                                     map::rect())
                 .make_aware_of_player()
                 .for_each([](Mon* const mon)
                 {

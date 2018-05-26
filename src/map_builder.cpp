@@ -38,7 +38,8 @@ void MapBuilder::build()
                 ++nr_attempts;
 #endif // NDEBUG
 
-                map::reset();
+                // TODO: Using hard coded (old) values for now...
+                map::reset({80, 22});
 
                 map_ok = build_specific();
 
@@ -66,7 +67,7 @@ void MapBuilder::build()
                         continue;
                 }
 
-                actor_factory::spawn(actor->pos, allies)
+                actor_factory::spawn(actor->pos, allies, map::rect())
                         .set_leader(actor)
                         .for_each([](Mon* mon)
                         {

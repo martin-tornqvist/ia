@@ -14,26 +14,26 @@ class Actor;
 // array (e.g. with a previous "overwrite" parse call)
 enum class MapParseMode
 {
-    overwrite,
-    append
+        overwrite,
+        append
 };
 
 enum class ParseCells
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class ParseMobs
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 enum class ParseActors
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 namespace map_parsers
@@ -45,279 +45,280 @@ namespace map_parsers
 class MapParser
 {
 public:
-    virtual ~MapParser() {}
+        virtual ~MapParser() {}
 
-    void run(bool out[map_w][map_h],
-             const MapParseMode write_rule = MapParseMode::overwrite,
-             const R& area_to_parse_cells = R(0, 0, map_w - 1, map_h - 1));
+        void run(Array2<bool>& out,
+                 const R& area_to_parse_cells,
+                 const MapParseMode write_rule = MapParseMode::overwrite);
 
-    bool cell(const P& p);
+        bool cell(const P& pos);
 
-    virtual bool parse(const Cell& c) const
-    {
-        (void)c;
+        virtual bool parse(const Cell& c, const P& pos) const
+        {
+                (void)c;
+                (void)pos;
 
-        return false;
-    }
+                return false;
+        }
 
-    virtual bool parse(const Mob& f) const
-    {
-        (void)f;
+        virtual bool parse(const Mob& f) const
+        {
+                (void)f;
 
-        return false;
-    }
+                return false;
+        }
 
-    virtual bool parse(const Actor& a) const
-    {
-        (void)a;
+        virtual bool parse(const Actor& a) const
+        {
+                (void)a;
 
-        return false;
-    }
+                return false;
+        }
 
 protected:
-    MapParser(ParseCells parse_cells,
-              ParseMobs parse_mobs,
-              ParseActors parse_actors) :
-        parse_cells_(parse_cells),
-        parse_mobs_(parse_mobs),
-        parse_actors_(parse_actors) {}
+        MapParser(ParseCells parse_cells,
+                  ParseMobs parse_mobs,
+                  ParseActors parse_actors) :
+                parse_cells_(parse_cells),
+                parse_mobs_(parse_mobs),
+                parse_actors_(parse_actors) {}
 
 private:
-    const ParseCells parse_cells_;
-    const ParseMobs parse_mobs_;
-    const ParseActors parse_actors_;
+        const ParseCells parse_cells_;
+        const ParseMobs parse_mobs_;
+        const ParseActors parse_actors_;
 };
 
 class BlocksLos : public MapParser
 {
 public:
-    BlocksLos() :
-        MapParser(ParseCells::yes,
-                  ParseMobs::yes,
-                  ParseActors::no) {}
+        BlocksLos() :
+                MapParser(ParseCells::yes,
+                          ParseMobs::yes,
+                          ParseActors::no) {}
 
 private:
-    bool parse(const Cell& c) const override;
-    bool parse(const Mob& f) const override;
+        bool parse(const Cell& c, const P& pos) const override;
+        bool parse(const Mob& f) const override;
 };
 
 class BlocksMoveCommon : public MapParser
 {
 public:
-    BlocksMoveCommon(ParseActors parse_actors) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::yes,
-                  parse_actors) {}
+        BlocksMoveCommon(ParseActors parse_actors) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::yes,
+                          parse_actors) {}
 
 private:
-    bool parse(const Cell& c) const override;
-    bool parse(const Mob& f) const override;
-    bool parse(const Actor& a) const override;
+        bool parse(const Cell& c, const P& pos) const override;
+        bool parse(const Mob& f) const override;
+        bool parse(const Actor& a) const override;
 };
 
 class BlocksActor : public MapParser
 {
 public:
-    BlocksActor(const Actor& actor, ParseActors parse_actors) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::yes,
-                  parse_actors),
-        actor_(actor) {}
+        BlocksActor(const Actor& actor, ParseActors parse_actors) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::yes,
+                          parse_actors),
+                actor_(actor) {}
 
 private:
-    bool parse(const Cell& c) const override;
-    bool parse(const Mob& f) const override;
-    bool parse(const Actor& a) const override;
+        bool parse(const Cell& c, const P& pos) const override;
+        bool parse(const Mob& f) const override;
+        bool parse(const Actor& a) const override;
 
-    const Actor& actor_;
+        const Actor& actor_;
 };
 
 class BlocksProjectiles : public MapParser
 {
 public:
-    BlocksProjectiles() :
-        MapParser(ParseCells::yes,
-                  ParseMobs::yes,
-                  ParseActors::no) {}
+        BlocksProjectiles() :
+                MapParser(ParseCells::yes,
+                          ParseMobs::yes,
+                          ParseActors::no) {}
 
 private:
-    bool parse(const Cell& c) const override;
-    bool parse(const Mob& f) const override;
+        bool parse(const Cell& c, const P& pos) const override;
+        bool parse(const Mob& f) const override;
 };
 
 class BlocksSound : public MapParser
 {
 public:
-    BlocksSound() :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no) {}
+        BlocksSound() :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 };
 
 class LivingActorsAdjToPos : public MapParser
 {
 public:
-    LivingActorsAdjToPos(const P& pos) :
-        MapParser(ParseCells::no,
-                  ParseMobs::no,
-                  ParseActors::yes),
-        pos_(pos) {}
+        LivingActorsAdjToPos(const P& pos) :
+                MapParser(ParseCells::no,
+                          ParseMobs::no,
+                          ParseActors::yes),
+                pos_(pos) {}
 
 private:
-    bool parse(const Actor& a) const override;
+        bool parse(const Actor& a) const override;
 
-    const P& pos_;
+        const P& pos_;
 };
 
 class BlocksItems : public MapParser
 {
 public:
-    BlocksItems() :
-        MapParser(ParseCells::yes,
-                  ParseMobs::yes,
-                  ParseActors::no) {}
+        BlocksItems() :
+                MapParser(ParseCells::yes,
+                          ParseMobs::yes,
+                          ParseActors::no) {}
 
 private:
-    bool parse(const Cell& c) const override;
-    bool parse(const Mob& f) const override;
+        bool parse(const Cell& c, const P& pos) const override;
+        bool parse(const Mob& f) const override;
 };
 
 class BlocksRigid : public MapParser
 {
 public:
-    BlocksRigid() :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no) {}
+        BlocksRigid() :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 };
 
 class IsFeature : public MapParser
 {
 public:
-    IsFeature(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        feature_(id) {}
+        IsFeature(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                feature_(id) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    const FeatureId feature_;
+        const FeatureId feature_;
 };
 
 class IsNotFeature : public MapParser
 {
 public:
-    IsNotFeature(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        feature_(id) {}
+        IsNotFeature(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                feature_(id) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    const FeatureId feature_;
+        const FeatureId feature_;
 };
 
 class IsAnyOfFeatures : public MapParser
 {
 public:
-    IsAnyOfFeatures(const std::vector<FeatureId>& features) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(features) {}
+        IsAnyOfFeatures(const std::vector<FeatureId>& features) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(features) {}
 
-    IsAnyOfFeatures(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(std::vector<FeatureId> {id}) {}
+        IsAnyOfFeatures(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(std::vector<FeatureId> {id}) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    std::vector<FeatureId> features_;
+        std::vector<FeatureId> features_;
 };
 
 class AllAdjIsFeature : public MapParser
 {
 public:
-    AllAdjIsFeature(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        feature_(id) {}
+        AllAdjIsFeature(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                feature_(id) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    const FeatureId feature_;
+        const FeatureId feature_;
 };
 
 class AllAdjIsAnyOfFeatures : public MapParser
 {
 public:
-    AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(features) {}
+        AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(features) {}
 
-    AllAdjIsAnyOfFeatures(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(std::vector<FeatureId> {id}) {}
+        AllAdjIsAnyOfFeatures(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(std::vector<FeatureId> {id}) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    std::vector<FeatureId> features_;
+        std::vector<FeatureId> features_;
 };
 
 class AllAdjIsNotFeature : public MapParser
 {
 public:
-    AllAdjIsNotFeature(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        feature_(id) {}
+        AllAdjIsNotFeature(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                feature_(id) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    const FeatureId feature_;
+        const FeatureId feature_;
 };
 
 class AllAdjIsNoneOfFeatures : public MapParser
 {
 public:
-    AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(features) {}
+        AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(features) {}
 
-    AllAdjIsNoneOfFeatures(const FeatureId id) :
-        MapParser(ParseCells::yes,
-                  ParseMobs::no,
-                  ParseActors::no),
-        features_(std::vector<FeatureId> {id}) {}
+        AllAdjIsNoneOfFeatures(const FeatureId id) :
+                MapParser(ParseCells::yes,
+                          ParseMobs::no,
+                          ParseActors::no),
+                features_(std::vector<FeatureId> {id}) {}
 
 private:
-    bool parse(const Cell& c) const override;
+        bool parse(const Cell& c, const P& pos) const override;
 
-    std::vector<FeatureId> features_;
+        std::vector<FeatureId> features_;
 };
 
 
@@ -328,24 +329,24 @@ private:
 // where the cells are set to true if they are within the specified distance
 // interval of the first array.
 // This can be used for example to find all cells up to N steps from a wall.
-void cells_within_dist_of_others(const bool in[map_w][map_h],
-                                 bool out[map_w][map_h],
-                                 const Range& dist_interval);
+Array2<bool> cells_within_dist_of_others(
+        const Array2<bool>& in,
+        const Range& dist_interval);
 
-void append(bool base[map_w][map_h],
-            const bool append[map_w][map_h]);
+void append(Array2<bool>& base,
+            const Array2<bool>& append);
 
 // Optimized for expanding with a distance of one
-void expand(const bool in[map_w][map_h],
-            bool out[map_w][map_h],
-            const R& area_allowed_to_modify = R(0, 0, map_w - 1, map_h - 1));
+Array2<bool> expand(
+        const Array2<bool>& in,
+        const R& area_allowed_to_modify);
 
 // Slower version that can expand any distance
-void expand(const bool in[map_w][map_h],
-            bool out[map_w][map_h],
-            const int dist);
+Array2<bool> expand(
+        const Array2<bool>& in,
+        const int dist);
 
-bool is_map_connected(const bool blocked[map_w][map_h]);
+bool is_map_connected(const Array2<bool>& blocked);
 
 } // map_parsers
 
@@ -354,24 +355,24 @@ bool is_map_connected(const bool blocked[map_w][map_h]);
 struct IsCloserToPos
 {
 public:
-    IsCloserToPos(const P& p) :
-        p_(p) {}
+        IsCloserToPos(const P& p) :
+                p_(p) {}
 
-    bool operator()(const P& p1, const P& p2);
+        bool operator()(const P& p1, const P& p2);
 
-    P p_;
+        P p_;
 };
 
 // Function object for sorting STL containers by distance to a position
 struct IsFurtherFromPos
 {
 public:
-    IsFurtherFromPos(const P& p) :
-        p_(p) {}
+        IsFurtherFromPos(const P& p) :
+                p_(p) {}
 
-    bool operator()(const P& p1, const P& p2);
+        bool operator()(const P& p1, const P& p2);
 
-    P p_;
+        P p_;
 };
 
 #endif // MAP_PARSING_HPP

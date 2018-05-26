@@ -45,7 +45,7 @@ public:
 
     void on_lever_pulled(Lever* const lever) override;
 
-    void add_light_hook(bool light[map_w][map_h]) const override;
+    void add_light_hook(Array2<bool>& light) const override;
 
     int nr_turns_active() const
     {

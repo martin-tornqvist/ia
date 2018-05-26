@@ -362,15 +362,15 @@ RangedAttData::RangedAttData(Actor* const attacker,
                         {
                                 Mon* const mon = static_cast<Mon*>(attacker);
 
-                                bool hard_blocked_los[map_w][map_h];
+                                Array2<bool> hard_blocked_los(map::dims());
 
                                 const R fov_rect =
                                         fov::get_fov_rect(attacker->pos);
 
                                 map_parsers::BlocksLos()
                                         .run(hard_blocked_los,
-                                             MapParseMode::overwrite,
-                                             fov_rect);
+                                             fov_rect,
+                                             MapParseMode::overwrite);
 
                                 can_attacker_see_tgt =
                                         mon->can_see_actor(*defender,

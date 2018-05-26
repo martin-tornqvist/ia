@@ -23,7 +23,7 @@ static std::vector< std::vector<P> > cells_reached(
         const R& area,
         const P& origin,
         const ExplExclCenter exclude_center,
-        bool blocked[map_w][map_h])
+        const Array2<bool>& blocked)
 {
         std::vector< std::vector<P> > out;
 
@@ -55,7 +55,7 @@ static std::vector< std::vector<P> > cells_reached(
 
                                 for (const P& path_pos : path)
                                 {
-                                        if (blocked[path_pos.x][path_pos.y])
+                                        if (blocked.at(path_pos))
                                         {
                                                 is_reached = false;
                                                 break;
@@ -79,7 +79,7 @@ static std::vector< std::vector<P> > cells_reached(
 }
 
 static void draw(const std::vector< std::vector<P> >& pos_lists,
-                 bool blocked[map_w][map_h],
+                 const Array2<bool>& blocked,
                  const Color color_override)
 {
         states::draw();
@@ -118,11 +118,11 @@ static void draw(const std::vector< std::vector<P> >& pos_lists,
 
                         for (const P& pos : inner)
                         {
-                                const auto& cell = map::cells[pos.x][pos.y];
+                                const auto& cell = map::cells.at(pos);
 
                                 if (cell.is_seen_by_player &&
-                                    !blocked[pos.x][pos.y] &&
-                                    viewport::is_in_ivew(pos))
+                                    !blocked.at(pos) &&
+                                    viewport::is_in_view(pos))
                                 {
                                         is_any_cell_seen_by_player = true;
 
@@ -159,7 +159,7 @@ static void apply_explosion_on_pos(
                 expl_dmg_plus;
 
         // Damage environment
-        Cell& cell = map::cells[pos.x][pos.y];
+        Cell& cell = map::cells.at(pos);
 
         cell.rigid->hit(
                 dmg,
@@ -253,7 +253,7 @@ static void apply_explosion_property_on_pos(
         // environment
         if (property->id() == PropId::burning)
         {
-                Cell& cell = map::cells[pos.x][pos.y];
+                Cell& cell = map::cells.at(pos);
 
                 cell.rigid->hit(1, // Doesn't matter
                                 DmgType::fire,
@@ -291,12 +291,10 @@ void run(const P& origin,
 
         const R area = explosion_area(origin, radi);
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksProjectiles().
-                run(blocked,
-                    MapParseMode::overwrite,
-                    area);
+                run(blocked, area);
 
         auto pos_lists =
                 cells_reached(
@@ -321,17 +319,17 @@ void run(const P& origin,
         draw(pos_lists, blocked, color_override);
 
         // Do damage, apply effect
-        Actor* living_actors[map_w][map_h];
+        Array2<Actor*> living_actors(map::dims());
 
-        std::vector<Actor*> corpses[map_w][map_h];
+        Array2< std::vector<Actor*> > corpses(map::dims());
 
-        for (int x = 0; x < map_w; ++x)
+        const size_t len = map::nr_cells();
+
+        for (size_t i = 0; i < len; ++i)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        living_actors[x][y] = nullptr;
-                        corpses[x][y].clear();
-                }
+                living_actors.at(i) = nullptr;
+
+                corpses.at(i).clear();
         }
 
         for (Actor* actor : game_time::actors)
@@ -340,11 +338,11 @@ void run(const P& origin,
 
                 if (actor->is_alive())
                 {
-                        living_actors[pos.x][pos.y] = actor;
+                        living_actors.at(pos) = actor;
                 }
                 else if (actor->is_corpse())
                 {
-                        corpses[pos.x][pos.y].push_back(actor);
+                        corpses.at(pos).push_back(actor);
                 }
         }
 
@@ -356,10 +354,9 @@ void run(const P& origin,
 
                 for (const P& pos : positions_at_radi)
                 {
-                        Actor* living_actor = living_actors[pos.x][pos.y];
+                        Actor* living_actor = living_actors.at(pos);
 
-                        std::vector<Actor*> corpses_here =
-                                corpses[pos.x][pos.y];
+                        std::vector<Actor*> corpses_here = corpses.at(pos);
 
                         if (expl_type == ExplType::expl)
                         {
@@ -397,17 +394,16 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
 
         const R area = explosion_area(origin, radi);
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksProjectiles()
-                .run(blocked,
-                     MapParseMode::overwrite,
-                     area);
+                .run(blocked, area);
 
-        auto pos_lists = cells_reached(area,
-                                       origin,
-                                       ExplExclCenter::no,
-                                       blocked);
+        auto pos_lists = cells_reached(
+                area,
+                origin,
+                ExplExclCenter::no,
+                blocked);
 
         // TODO: Sound message?
         Snd snd("",
@@ -424,7 +420,7 @@ void run_smoke_explosion_at(const P& origin, const int radi_change)
         {
                 for (const P& pos : inner)
                 {
-                        if (!blocked[pos.x][pos.y])
+                        if (!blocked.at(pos))
                         {
                                 game_time::add_mob(
                                         new Smoke(pos, rnd::range(25, 30)));
@@ -439,8 +435,8 @@ R explosion_area(const P& c, const int radi)
 {
         return R(P(std::max(c.x - radi, 1),
                    std::max(c.y - radi, 1)),
-                 P(std::min(c.x + radi, map_w - 2),
-                   std::min(c.y + radi, map_h - 2)));
+                 P(std::min(c.x + radi, map::w() - 2),
+                   std::min(c.y + radi, map::h() - 2)));
 }
 
 } // explosion

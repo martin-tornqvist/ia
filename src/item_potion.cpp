@@ -213,7 +213,7 @@ void Potion::on_actor_turn_in_inv(const InvType inv_type)
 
 void Potion::on_collide(const P& pos, Actor* const actor)
 {
-    const auto& cell = map::cells[pos.x][pos.y];
+    const auto& cell = map::cells.at(pos);
 
     if (!cell.rigid->is_bottomless() || actor)
     {

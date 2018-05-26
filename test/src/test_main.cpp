@@ -485,7 +485,7 @@ TEST_FIXTURE(BasicFixture, line_calculation)
 
 TEST_FIXTURE(BasicFixture, fov)
 {
-    bool blocked[map_w][map_h] = {};
+    Array2<bool> blocked = {};
 
     const int x = map_w_half;
     const int y = map_h_half;
@@ -541,7 +541,7 @@ TEST_FIXTURE(BasicFixture, light_map)
         {
             const P p(x, y);
 
-            Cell& cell = map::cells[p.x][p.y];
+            Cell& cell = map::cells.at(p);
 
             cell.is_dark    = true;
             cell.is_lit     = false;
@@ -916,7 +916,7 @@ TEST_FIXTURE(BasicFixture, using_inventory)
     CHECK(!body_slot.item);
 
     // Check that the item is on the ground
-    Cell& cell = map::cells[p.x][p.y];
+    Cell& cell = map::cells.at(p);
     CHECK(cell.item);
 
     // Check that the properties are cleared
@@ -1245,7 +1245,7 @@ TEST_FIXTURE(BasicFixture, loading_game)
 
 TEST_FIXTURE(BasicFixture, floodfilling)
 {
-    bool blocked[map_w][map_h] = {};
+    Array2<bool> blocked = {};
 
     // Set the edge of the map as blocking
     for (int y = 0; y < map_h; ++y)
@@ -1282,7 +1282,7 @@ TEST_FIXTURE(BasicFixture, floodfilling)
 TEST_FIXTURE(BasicFixture, pathfinding)
 {
     std::vector<P> path;
-    bool blocked[map_w][map_h] = {};
+    Array2<bool> blocked = {};
 
     for (int y = 0; y < map_h; ++y)
     {
@@ -1375,11 +1375,11 @@ TEST_FIXTURE(BasicFixture, pathfinding)
 
 TEST_FIXTURE(BasicFixture, map_parse_expand_one)
 {
-    bool in[map_w][map_h] = {};
+    Array2<bool> in = {};
 
     in[10][5] = true;
 
-    bool out[map_w][map_h];
+    Array2<bool> out;
     map_parsers::expand(in, out);
 
     CHECK(!out[8][5]);
@@ -1423,7 +1423,7 @@ TEST_FIXTURE(BasicFixture, map_parse_expand_one)
 
 TEST_FIXTURE(BasicFixture, find_corridor_entries)
 {
-    auto bool_map = [](const std::vector<P>& vec, bool out[map_w][map_h])
+    auto bool_map = [](const std::vector<P>& vec, Array2<bool> out)
     {
         std::fill_n(*out, nr_map_cells, false);
 
@@ -1450,7 +1450,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
     std::vector<P> entry_list;
     mapgen::valid_corridor_entries(*room, entry_list);
 
-    bool entry_map[map_w][map_h];
+    Array2<bool> entry_map;
     bool_map(entry_list, entry_map);
 
     CHECK(!entry_map[19][4]);
@@ -1506,7 +1506,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
 
     std::vector<P> entry_list_nearby_room;
     mapgen::valid_corridor_entries(*nearby_room, entry_list_nearby_room);
-    bool entry_map_near_room[map_w][map_h];
+    Array2<bool> entry_map_near_room;
     bool_map(entry_list_nearby_room, entry_map_near_room);
 
     for (int y = 5; y <= 10; ++y)
@@ -1608,7 +1608,7 @@ TEST_FIXTURE(BasicFixture, find_corridor_entries)
 
 TEST(find_choke_points)
 {
-    bool blocked[map_w][map_h];
+    Array2<bool> blocked;
 
     // --------------------------------------------------------------------------
     // Very simple test with three adjacent free positions. Verify that the
@@ -1688,7 +1688,7 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
     int flood[map_w][map_h];
 
-    bool blocked[map_w][map_h];
+    Array2<bool> blocked;
 
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
@@ -1707,8 +1707,8 @@ TEST_FIXTURE(BasicFixture, connect_rooms_with_corridor)
 
 TEST_FIXTURE(BasicFixture, map_parse_cells_within_dist_of_others)
 {
-    bool in[map_w][map_h] = {};
-    bool out[map_w][map_h] = {};
+    Array2<bool> in = {};
+    Array2<bool> out = {};
 
     in[20][10] = true;
 
@@ -1760,7 +1760,7 @@ namespace
 
 void check_connected()
 {
-    bool blocked[map_w][map_h];
+    Array2<bool> blocked;
 
     map_parsers::BlocksMoveCommon(ParseActors::no)
         .run(blocked);
@@ -1771,7 +1771,7 @@ void check_connected()
     {
         for (int y = 0; y < map_h; ++y)
         {
-            const auto id = map::cells[x][y].rigid->id();
+            const auto id = map::cells.at(x, y).rigid->id();
 
             if (id == FeatureId::stairs)
             {

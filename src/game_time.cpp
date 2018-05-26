@@ -114,26 +114,18 @@ static void run_std_turn_events()
         }
 
         // Allow already burning features to damage stuff, spread fire, etc
-        for (int x = 0; x < map_w; ++x)
+        for (auto& cell : map::cells)
         {
-                for (int y = 0; y < map_h; ++y)
+                if (cell.rigid->burn_state_ == BurnState::burning)
                 {
-                        auto& r = *map::cells[x][y].rigid;
-
-                        if (r.burn_state_ == BurnState::burning)
-                        {
-                                r.started_burning_this_turn_ = false;
-                        }
+                        cell.rigid->started_burning_this_turn_ = false;
                 }
         }
 
         // New turn for rigids
-        for (int x = 0; x < map_w; ++x)
+        for (auto& cell : map::cells)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        map::cells[x][y].rigid->on_new_turn();
-                }
+                cell.rigid->on_new_turn();
         }
 
         // New turn for mobs
@@ -190,7 +182,7 @@ static  void run_atomic_turn_events()
         {
                 const P& p = actor->pos;
 
-                const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+                const Rigid* const rigid = map::cells.at(p).rigid;
 
                 if (rigid->data().matl_type == Matl::fluid)
                 {
@@ -312,7 +304,7 @@ void erase_all_mobs()
 void add_actor(Actor* actor)
 {
         // Sanity checks
-        ASSERT(map::is_pos_inside_map(actor->pos));
+        // ASSERT(map::is_pos_inside_map(actor->pos));
 
 #ifndef NDEBUG
         for (Actor* const old_actor : actors)
@@ -413,7 +405,7 @@ void tick(const int speed_pct_diff)
 
 void update_light_map()
 {
-        bool light_tmp[map_w][map_h] = {};
+        Array2<bool> light_tmp(map::dims());
 
         for (const auto* const a : actors)
         {
@@ -425,16 +417,13 @@ void update_light_map()
                 m->add_light(light_tmp);
         }
 
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        map::cells[x][y].rigid->add_light(light_tmp);
-                }
+                map::cells.at(i).rigid->add_light(light_tmp);
         }
 
         // Copy the temporary buffer to the real light map
-        memcpy(map::light, light_tmp, nr_map_cells);
+        memcpy(map::light.data(), light_tmp.data(), map::light.length());
 }
 
 Actor* current_actor()

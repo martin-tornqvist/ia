@@ -485,7 +485,7 @@ void MapBuilderRatCave::handle_template_pos(const P& p, const char c)
         }
 }
 
-void on_template_built()
+void MapBuilderRatCave::on_template_built()
 {
         // Set all actors to non-roaming (they will be set to roaming later)
         for (Actor* const actor : game_time::actors)
@@ -601,7 +601,7 @@ std::unique_ptr<MapController> MapBuilderBoss::map_controller() const
 // -----------------------------------------------------------------------------
 void MapBuilderTrapez::handle_template_pos(const P& p, const char c)
 {
-        map::dark[p.x][p.y] = true;
+        map::dark.at(p) = true;
 
         switch (c)
         {

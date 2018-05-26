@@ -4,17 +4,18 @@
 #include <vector>
 
 #include "colors.hpp"
-#include "item_data.hpp"
 #include "config.hpp"
-#include "game.hpp"
 #include "fov.hpp"
+#include "game.hpp"
+#include "item_data.hpp"
+#include "rl_utils.hpp"
 
 class Rigid;
 class Mob;
 class Player;
 
-// TODO: This should probably be removed, and instead multiple smaller arrays
-// should be used (instead of a single array of a big data structure)
+// TODO: This should probably be removed, and multiple smaller arrays should be
+// used instead
 struct Cell
 {
     Cell();
@@ -26,7 +27,6 @@ struct Cell
     LosResult player_los; // Updated when player updates FOV
     Item* item;
     Rigid* rigid;
-    P pos;
 };
 
 struct ChokePointData
@@ -42,9 +42,11 @@ struct ChokePointData
 
     ChokePointData& operator=(const ChokePointData& other)
     {
-        p           = other.p;
-        sides[0]    = other.sides[0];
-        sides[1]    = other.sides[1];
+        p = other.p;
+
+        sides[0] = other.sides[0];
+        sides[1] = other.sides[1];
+
         return *this;
     }
 
@@ -64,10 +66,10 @@ extern Player* player;
 
 extern int dlvl;
 
-extern Cell cells[map_w][map_h];
+extern Array2<Cell> cells;
 
-extern bool light[map_w][map_h];
-extern bool dark[map_w][map_h];
+extern Array2<bool> light;
+extern Array2<bool> dark;
 
 extern Color wall_color;
 
@@ -75,7 +77,7 @@ extern Color wall_color;
 extern std::vector<Room*> room_list;
 
 // Helper array, for convenience and optimization
-extern Room* room_map[map_w][map_h];
+extern Array2<Room*> room_map;
 
 // NOTE: This data is only intended to be used for the purpose of map generation
 // (and placing items etc), it is NOT updated while playing the map.
@@ -87,7 +89,17 @@ void cleanup();
 void save();
 void load();
 
-void reset();
+void reset(const P& dims);
+
+int w();
+
+int h();
+
+P dims();
+
+R rect();
+
+size_t nr_cells();
 
 Rigid* put(Rigid* const rigid);
 
@@ -108,7 +120,7 @@ Mob* first_mob_at_pos(const P& pos);
 
 void actor_cells(const std::vector<Actor*>& actors, std::vector<P>& out);
 
-void make_actor_array(Actor* a[map_w][map_h]);
+Array2<Actor*> get_actor_array();
 
 Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors);
 

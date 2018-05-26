@@ -47,6 +47,7 @@ void run(Actor& defender,
                 // Defender is not knockable
 
                 TRACE_FUNC_END;
+
                 return;
         }
 
@@ -54,23 +55,19 @@ void run(Actor& defender,
 
         const P new_pos = defender.pos + d;
 
-        bool blocked[map_w][map_h];
-
-        map_parsers::BlocksActor(defender, ParseActors::yes)
-                .run(blocked);
+        const bool is_cell_blocked =
+                map_parsers::BlocksActor(defender, ParseActors::yes)
+                .cell(new_pos);
 
         const bool is_cell_bottomless =
-                map::cells[new_pos.x][new_pos.y].rigid->is_bottomless();
+                map::cells.at(new_pos).rigid->is_bottomless();
 
-        const bool is_cell_blocked =
-                blocked[new_pos.x][new_pos.y] && !is_cell_bottomless;
-
-        if (is_cell_blocked)
+        if (is_cell_blocked && !is_cell_bottomless)
         {
                 // Defender nailed to a wall from a spike gun?
                 if (is_spike_gun)
                 {
-                        Rigid* const f = map::cells[new_pos.x][new_pos.y].rigid;
+                        Rigid* const f = map::cells.at(new_pos).rigid;
 
                         if (!f->is_los_passable())
                         {
@@ -85,7 +82,7 @@ void run(Actor& defender,
                 TRACE_FUNC_END;
                 return;
         }
-        else // Target cell is free
+        else // Target cell is not blocked or is bottomless
         {
                 const bool player_see_defender =
                         is_defender_player ?
@@ -159,8 +156,7 @@ void run(Actor& defender,
                         return;
                 }
 
-                Rigid* const f =
-                        map::cells[defender.pos.x][defender.pos.y].rigid;
+                Rigid* const f = map::cells.at(defender.pos).rigid;
 
                 f->bump(defender);
 

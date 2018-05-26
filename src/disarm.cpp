@@ -53,7 +53,7 @@ void player_disarm()
                 const P pos(map::player->pos + dir_utils::offset(input_dir));
 
                 // Abort if cell is unseen
-                if (!map::cells[pos.x][pos.y].is_seen_by_player)
+                if (!map::cells.at(pos).is_seen_by_player)
                 {
                         msg_log::add("I cannot see there.");
 
@@ -78,7 +78,7 @@ void player_disarm()
                 }
                 else // No actor on the trap
                 {
-                        map::cells[pos.x][pos.y].rigid->disarm();
+                        map::cells.at(pos).rigid->disarm();
                 }
         }
 } // player_disarm

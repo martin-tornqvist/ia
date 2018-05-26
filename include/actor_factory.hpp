@@ -49,11 +49,11 @@ Actor* make(const ActorId id, const P& pos);
 MonSpawnResult spawn(
     const P& origin,
     const std::vector<ActorId>& monster_ids,
-    const R& area_allowed = R(0, 0, map_w - 1, map_h -1));
+    const R& area_allowed);
 
 MonSpawnResult spawn_random_position(
     const std::vector<ActorId>& monster_ids,
-    const R& area_allowed = R(0, 0, map_w - 1, map_h -1));
+    const R& area_allowed);
 
 } // actor_factory
 

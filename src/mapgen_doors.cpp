@@ -27,7 +27,7 @@ void try_make_door(const P& p)
 
             if ((dx != 0 || dy != 0) && map::is_pos_inside_map(check_pos))
             {
-                const Cell& cell = map::cells[check_pos.x][check_pos.y];
+                const Cell& cell = map::cells.at(check_pos);
 
                 if (cell.rigid->id() == FeatureId::door)
                 {
@@ -42,24 +42,24 @@ void try_make_door(const P& p)
 
     for (int d = -1; d <= 1; d++)
     {
-        if (map::cells[p.x + d][p.y].rigid->id() == FeatureId::wall)
+        if (map::cells.at(p.x + d, p.y).rigid->id() == FeatureId::wall)
         {
             is_good_hor = false;
         }
 
-        if (map::cells[p.x][p.y + d].rigid->id() == FeatureId::wall)
+        if (map::cells.at(p.x, p.y + d).rigid->id() == FeatureId::wall)
         {
             is_good_ver = false;
         }
 
         if (d != 0)
         {
-            if (map::cells[p.x][p.y + d].rigid->id() != FeatureId::wall)
+            if (map::cells.at(p.x, p.y + d).rigid->id() != FeatureId::wall)
             {
                 is_good_hor = false;
             }
 
-            if (map::cells[p.x + d][p.y].rigid->id() != FeatureId::wall)
+            if (map::cells.at(p.x + d, p.y).rigid->id() != FeatureId::wall)
             {
                 is_good_ver = false;
             }
@@ -68,9 +68,7 @@ void try_make_door(const P& p)
 
     if (is_good_hor || is_good_ver)
     {
-        //
         // Make most doors "common" wooden doors, and occasionally make gates
-        //
         Door* door = nullptr;
 
         if (rnd::fraction(4, 5))
@@ -96,26 +94,24 @@ void try_make_door(const P& p)
 
 void make_doors()
 {
-    TRACE << "Placing doors" << std:: endl;
+        TRACE << "Placing doors" << std:: endl;
 
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        for (int x = 0; x < map::w(); ++x)
         {
-            if (door_proposals[x][y] &&
-                rnd::fraction(4, 5))
-            {
-                try_make_door(P(x, y));
-            }
+                for (int y = 0; y < map::h(); ++y)
+                {
+                        if (door_proposals.at(x, y) &&
+                            rnd::fraction(4, 5))
+                        {
+                                try_make_door(P(x, y));
+                        }
+                }
         }
-    }
 }
 
 void make_metal_doors_and_levers()
 {
-    //
     // Only make metal on some maps, and never late game (theme)
-    //
     if (map::dlvl >= dlvl_first_late_game)
     {
         return;
@@ -133,9 +129,7 @@ void make_metal_doors_and_levers()
 
     for (int i = 0; i < nr_doors; ++i)
     {
-        //
         // Find all chokepoints with a door
-        //
         std::vector<const ChokePointData*> chokepoint_bucket;
 
         for (const auto& chokepoint : map::choke_point_data)
@@ -148,7 +142,7 @@ void make_metal_doors_and_levers()
 
             const P& p = chokepoint.p;
 
-            auto id = map::cells[p.x][p.y].rigid->id();
+            auto id = map::cells.at(p).rigid->id();
 
             if (id == FeatureId::door)
             {
@@ -161,97 +155,79 @@ void make_metal_doors_and_levers()
             return;
         }
 
-        //
         // Shuffle the chokepoint list
-        //
         rnd::shuffle(chokepoint_bucket);
 
-        bool blocks_levers[map_w][map_h];
-
         // Only allow levers in cells completely surrounded by floor
-        {
-            bool blocks_levers_tmp[map_w][map_h];
+        Array2<bool> blocks_levers(map::dims());
 
-            map_parsers::IsNotFeature(FeatureId::floor)
-                .run(blocks_levers_tmp);
+        map_parsers::IsNotFeature(FeatureId::floor)
+                .run(blocks_levers, blocks_levers.rect());
 
-            map_parsers::expand(blocks_levers_tmp, blocks_levers);
-        }
+        blocks_levers = map_parsers::expand(
+                blocks_levers,
+                blocks_levers.rect());
 
         // Block cells with actors
         for (const auto* const actor : game_time::actors)
         {
-            blocks_levers[actor->pos.x][actor->pos.y] = true;
+            blocks_levers.at(actor->pos) = true;
         }
 
-        //
         // Make a floodfill from the player - this will be used to ONLY place
         // levers in cells which are further from the player than the door.
         // It's probably (always?) more interesting to find the door first.
-        //
 
-        bool blocks_player[map_w][map_h];
+        Array2<bool> blocks_player(map::dims());
 
         map_parsers::BlocksMoveCommon(ParseActors::no)
-            .run(blocks_player);
+            .run(blocks_player, blocks_player.rect());
 
         // Do not consider doors blocking when floodfilling from the player
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-            for (int y = 0; y < map_h; ++y)
+            if (map::cells.at(i).rigid->id() == FeatureId::door)
             {
-                if (map::cells[x][y].rigid->id() == FeatureId::door)
-                {
-                    blocks_player[x][y] = false;
-                }
+                blocks_player.at(i) = false;
             }
         }
 
-        int player_flood[map_w][map_h];
-
-        floodfill(map::player->pos,
-                  blocks_player,
-                  player_flood);
+        const auto player_flood = floodfill(map::player->pos, blocks_player);
 
         // Cells blocking the player from reaching the levers
-        bool blocks_reaching_levers[map_w][map_h];
+        Array2<bool> blocks_reaching_levers(map::dims());
 
         map_parsers::BlocksMoveCommon(ParseActors::no)
-            .run(blocks_reaching_levers);
+            .run(blocks_reaching_levers, blocks_reaching_levers.rect());
 
         // Consider all metal doors to be blocking the player from reaching the
         // levers, and consider all non-metal doors to be free
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-            for (int y = 0; y < map_h; ++y)
+            const auto* r = map::cells.at(i).rigid;
+
+            const bool is_door = r->id() == FeatureId::door;
+
+            if (is_door)
             {
-                const auto* r = map::cells[x][y].rigid;
+                const auto* const door = static_cast<const Door*>(r);
 
-                const bool is_door = r->id() == FeatureId::door;
+                const bool is_metal = door->type() == DoorType::metal;
 
-                if (is_door)
-                {
-                    const auto* const door = static_cast<const Door*>(r);
-
-                    const bool is_metal = door->type() == DoorType::metal;
-
-                    blocks_reaching_levers[x][y] = is_metal;
-                }
+                blocks_reaching_levers.at(i) = is_metal;
             }
         }
 
         // Cells blocked on sides 1 and 2, respectively
-        bool blocks_lever_1[map_w][map_h];
-        bool blocks_lever_2[map_w][map_h];
-
-        int lever_reach_flood[map_w][map_h];
+        Array2<bool> blocks_lever_1(map::dims());
+        Array2<bool> blocks_lever_2(map::dims());
 
         for (const auto* const chokepoint : chokepoint_bucket)
         {
             const P& door_p = chokepoint->p;
 
             {
-                const auto* r = map::cells[door_p.x][door_p.y].rigid;
+                const auto* r = map::cells.at(door_p).rigid;
 
                 if ((r->id() == FeatureId::door) &&
                     static_cast<const Door*>(r)->type() == DoorType::metal)
@@ -261,24 +237,26 @@ void make_metal_doors_and_levers()
                 }
             }
 
-            //
             // We must find a lever position at least on the player side, the
             // other side is optional however
-            //
 
             // Cells generally blocked for placing levers - e.g. cells too close
             // to walls
-            memcpy(blocks_lever_1, blocks_levers, nr_map_cells);
-            memcpy(blocks_lever_2, blocks_levers, nr_map_cells);
+            memcpy(blocks_lever_1.data(),
+                   blocks_levers.data(),
+                   map::nr_cells());
+
+            memcpy(blocks_lever_2.data(),
+                   blocks_levers.data(),
+                   map::nr_cells());
 
             // Make a floodfill from the door to all player-reachable cells
-            floodfill(door_p,
-                      blocks_reaching_levers,
-                      lever_reach_flood);
+            const auto lever_reach_flood =
+                    floodfill(door_p, blocks_reaching_levers);
 
             // Require a greater distance from the player to the lever, than
             // from the lever to the door - we also require
-            int min_dist_from_player = player_flood[door_p.x][door_p.y] + 1;
+            int min_dist_from_player = player_flood.at(door_p) + 1;
 
             // Also require at least a fixed distance from the player, to avoid
             // situations where both the door and the lever are very near
@@ -288,26 +266,23 @@ void make_metal_doors_and_levers()
             // (annoying and weird)
             const int max_dist_from_player = 40;
 
-            for (int x = 0; x < map_w; ++x)
+            for (size_t i = 0; i < map::nr_cells(); ++i)
             {
-                for (int y = 0; y < map_h; ++y)
+                const bool is_unreachable =
+                    (lever_reach_flood.at(i) == 0);
+
+                const bool is_too_close_to_player =
+                    (player_flood.at(i) <= min_dist_from_player);
+
+                const bool is_too_far_From_door =
+                    (lever_reach_flood.at(i) > max_dist_from_player);
+
+                if (is_unreachable ||
+                    is_too_close_to_player ||
+                    is_too_far_From_door)
                 {
-                    const bool is_unreachable =
-                        (lever_reach_flood[x][y] == 0);
-
-                    const bool is_too_close_to_player =
-                        (player_flood[x][y] <= min_dist_from_player);
-
-                    const bool is_too_far_From_door =
-                        (lever_reach_flood[x][y] > max_dist_from_player);
-
-                    if (is_unreachable ||
-                        is_too_close_to_player ||
-                        is_too_far_From_door)
-                    {
-                        blocks_lever_1[x][y] = true;
-                        blocks_lever_2[x][y] = true;
-                    }
+                    blocks_lever_1.at(i) = true;
+                    blocks_lever_2.at(i) = true;
                 }
             }
 
@@ -320,13 +295,13 @@ void make_metal_doors_and_levers()
             // Block side 2 positions for the side 1 lever
             for (const auto& p : side_2)
             {
-                blocks_lever_1[p.x][p.y] = true;
+                blocks_lever_1.at(p) = true;
             }
 
             // Block side 1 positions for the side 2 lever
             for (const auto& p : side_1)
             {
-                blocks_lever_2[p.x][p.y] = true;
+                blocks_lever_2.at(p) = true;
             }
 
             std::vector<P> spawn_weight_positions_1;
@@ -356,14 +331,13 @@ void make_metal_doors_and_levers()
                 continue;
             }
 
-            //
             // OK, there exists valid positions for the door, and at least a
             // lever on the player side - now we can place stuff
-            //
-            auto* door = new Door(door_p,
-                                  nullptr, // No mimic needed
-                                  DoorType::metal,
-                                  DoorSpawnState::closed);
+            auto* door = new Door(
+                door_p,
+                nullptr, // No mimic needed
+                DoorType::metal,
+                DoorSpawnState::closed);
 
             map::put(door);
 
@@ -372,8 +346,7 @@ void make_metal_doors_and_levers()
 
             auto put_lever_random_p = [](const std::vector<int>& weights,
                                          const std::vector<P>& positions,
-                                         Door* const door)
-            {
+                                         Door* const door) {
                 const size_t lever_p_idx = rnd::weighted_choice(weights);
 
                 const P& lever_1_p = positions[lever_p_idx];

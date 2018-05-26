@@ -20,7 +20,7 @@ namespace item_drop
 
 void drop_all_characters_items(Actor& actor)
 {
-    actor.inv().drop_all_non_intrinsic(actor.pos);
+        actor.inv().drop_all_non_intrinsic(actor.pos);
 }
 
 void drop_item_from_inv(Actor& actor,
@@ -28,230 +28,235 @@ void drop_item_from_inv(Actor& actor,
                         const size_t idx,
                         const int nr_items_to_drop)
 {
-    Inventory& inv = actor.inv();
+        Inventory& inv = actor.inv();
 
-    Item* item_to_drop = nullptr;
+        Item* item_to_drop = nullptr;
 
-    if (inv_type == InvType::slots)
-    {
-        ASSERT(idx != (size_t)SlotId::END);
-
-        item_to_drop = inv.slots_[idx].item;
-    }
-    else // Backpack item
-    {
-        ASSERT(idx < inv.backpack_.size());
-
-        item_to_drop = inv.backpack_[idx];
-    }
-
-    if (!item_to_drop)
-    {
-        return;
-    }
-
-    const ItemData& data = item_to_drop->data();
-
-    const bool is_stackable = data.is_stackable;
-
-    const int nr_items_before_drop = item_to_drop->nr_items_;
-
-    const bool is_whole_stack_dropped =
-        !is_stackable ||
-        (nr_items_to_drop == -1) ||
-        (nr_items_to_drop >= nr_items_before_drop);
-
-    std::string item_ref = "";
-
-    Item* item_to_keep = nullptr;
-
-    if (is_whole_stack_dropped)
-    {
-        item_ref = item_to_drop->name(ItemRefType::plural);
-
-        item_to_drop = inv.remove_item(item_to_drop, false);
-    }
-    else // Only some items are dropped from a stack
-    {
-        // Drop a copy of the selected item
-        item_to_keep = item_to_drop;
-
-        item_to_drop = item_factory::copy_item(*item_to_keep);
-
-        item_to_drop->nr_items_ = nr_items_to_drop;
-
-        item_to_drop->on_removed_from_inv();
-
-        item_ref = item_to_drop->name(ItemRefType::plural);
-
-        item_to_keep->nr_items_ = nr_items_before_drop - nr_items_to_drop;
-    }
-
-    if (!item_to_drop)
-    {
-        return;
-    }
-
-    // Print message
-    if (&actor == map::player)
-    {
-        msg_log::add("I drop " + item_ref + ".",
-                     colors::text(),
-                     false,
-                     MorePromptOnMsg::yes);
-    }
-    else // Monster is dropping item
-    {
-        if (map::player->can_see_actor(actor))
+        if (inv_type == InvType::slots)
         {
-            const std::string mon_name_the =
-                text_format::first_to_upper(
-                    actor.name_the());
+                ASSERT(idx != (size_t)SlotId::END);
 
-            msg_log::add(mon_name_the + " drops " + item_ref + ".");
+                item_to_drop = inv.slots_[idx].item;
         }
-    }
+        else // Backpack item
+        {
+                ASSERT(idx < inv.backpack_.size());
 
-    drop_item_on_map(actor.pos, *item_to_drop);
+                item_to_drop = inv.backpack_[idx];
+        }
+
+        if (!item_to_drop)
+        {
+                return;
+        }
+
+        const ItemData& data = item_to_drop->data();
+
+        const bool is_stackable = data.is_stackable;
+
+        const int nr_items_before_drop = item_to_drop->nr_items_;
+
+        const bool is_whole_stack_dropped =
+                !is_stackable ||
+                (nr_items_to_drop == -1) ||
+                (nr_items_to_drop >= nr_items_before_drop);
+
+        std::string item_ref = "";
+
+        Item* item_to_keep = nullptr;
+
+        if (is_whole_stack_dropped)
+        {
+                item_ref = item_to_drop->name(ItemRefType::plural);
+
+                item_to_drop = inv.remove_item(item_to_drop, false);
+        }
+        else // Only some items are dropped from a stack
+        {
+                // Drop a copy of the selected item
+                item_to_keep = item_to_drop;
+
+                item_to_drop = item_factory::copy_item(*item_to_keep);
+
+                item_to_drop->nr_items_ = nr_items_to_drop;
+
+                item_to_drop->on_removed_from_inv();
+
+                item_ref = item_to_drop->name(ItemRefType::plural);
+
+                item_to_keep->nr_items_ =
+                        nr_items_before_drop - nr_items_to_drop;
+        }
+
+        if (!item_to_drop)
+        {
+                return;
+        }
+
+        // Print message
+        if (&actor == map::player)
+        {
+                msg_log::add("I drop " + item_ref + ".",
+                             colors::text(),
+                             false,
+                             MorePromptOnMsg::yes);
+        }
+        else // Monster is dropping item
+        {
+                if (map::player->can_see_actor(actor))
+                {
+                        const std::string mon_name_the =
+                                text_format::first_to_upper(
+                                        actor.name_the());
+
+                        msg_log::add(mon_name_the + " drops " + item_ref + ".");
+                }
+        }
+
+        drop_item_on_map(actor.pos, *item_to_drop);
 }
 
 Item* drop_item_on_map(const P& intended_pos, Item& item)
 {
-    TRACE_FUNC_BEGIN_VERBOSE;
+        TRACE_FUNC_BEGIN_VERBOSE;
 
-    ASSERT(map::is_pos_inside_map(intended_pos, false));
+        ASSERT(map::is_pos_inside_map(intended_pos, false));
 
-    // If target cell is bottomless, just destroy the item
-    const auto* const tgt_rigid =
-        map::cells[intended_pos.x][intended_pos.y].rigid;
+        // If target cell is bottomless, just destroy the item
+        const auto* const tgt_rigid = map::cells.at(intended_pos).rigid;
 
-    if (tgt_rigid->is_bottomless())
-    {
-        delete &item;
-
-        TRACE_FUNC_END_VERBOSE;
-        return nullptr;
-    }
-
-    // Make a vector of all cells on map with no blocking feature
-    bool free_cell_array[map_w][map_h];
-
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        if (tgt_rigid->is_bottomless())
         {
-            Rigid* const f = map::cells[x][y].rigid;
+                delete &item;
 
-            free_cell_array[x][y] =
-                f->can_have_item() &&
-                !f->is_bottomless();
+                TRACE_FUNC_END_VERBOSE;
+                return nullptr;
         }
-    }
 
-    auto free_cells = to_vec(free_cell_array, true);
+        // Make a vector of all cells on map with no blocking feature
+        Array2<bool> free_cell_array(map::dims());
 
-    if (free_cells.empty())
-    {
-        // No cells found were items could be placed - too bad!
-        delete &item;
+        const size_t len = map::nr_cells();
 
-        TRACE_FUNC_END_VERBOSE;
-        return nullptr;
-    }
-
-    // Sort the vector according to distance to origin
-    IsCloserToPos is_closer_to_origin(intended_pos);
-
-    sort(begin(free_cells), end(free_cells), is_closer_to_origin);
-
-    const bool is_stackable_type = item.data().is_stackable;
-
-    int dist_searched_stackable = -1;
-
-    // If the item is stackable, and there is a cell A in which the item can be
-    // stacked, and a cell B which is empty, and A and B are of equal distance
-    // to the origin, then we ALWAYS prefer cell A.
-    // In other words, try to drop as near as possible, but prefer stacking.
-    for (auto outer_it = begin(free_cells);
-         outer_it != end(free_cells);
-         ++outer_it)
-    {
-        const P& p = *outer_it;
-
-        if (is_stackable_type)
+        for (size_t i = 0; i < len; ++i)
         {
-            const int dist = king_dist(intended_pos, p);
+                Rigid* const f = map::cells.at(i).rigid;
 
-            ASSERT(dist >= dist_searched_stackable);
+                free_cell_array.at(i) =
+                        f->can_have_item() &&
+                        !f->is_bottomless();
+        }
 
-            // Have we searched at this distance before?
-            if (dist > dist_searched_stackable)
-            {
-                // Search each cell with equal distance to the current distance
-                for (auto stack_it = outer_it;
-                     stack_it != end(free_cells);
-                     ++stack_it)
+        auto free_cells = to_vec(
+                free_cell_array,
+                true,
+                free_cell_array.rect());
+
+        if (free_cells.empty())
+        {
+                // No cells found were items could be placed - too bad!
+                delete &item;
+
+                TRACE_FUNC_END_VERBOSE;
+                return nullptr;
+        }
+
+        // Sort the vector according to distance to origin
+        IsCloserToPos is_closer_to_origin(intended_pos);
+
+        sort(begin(free_cells), end(free_cells), is_closer_to_origin);
+
+        const bool is_stackable_type = item.data().is_stackable;
+
+        int dist_searched_stackable = -1;
+
+        // If the item is stackable, and there is a cell A in which the item can
+        // be stacked, and a cell B which is empty, and A and B are of equal
+        // distance to the origin, then we ALWAYS prefer cell A.
+        // In other words, try to drop as near as possible, but prefer stacking.
+        for (auto outer_it = begin(free_cells);
+             outer_it != end(free_cells);
+             ++outer_it)
+        {
+                const P& p = *outer_it;
+
+                const int dist = king_dist(intended_pos, p);
+
+                ASSERT(dist >= dist_searched_stackable);
+
+                if (is_stackable_type &&
+                    (dist > dist_searched_stackable))
                 {
-                    const P& stack_p = *stack_it;
-
-                    const int stack_dist = king_dist(intended_pos, stack_p);
-
-                    ASSERT(stack_dist >= dist);
-
-                    if (stack_dist > dist)
-                    {
-                        break;
-                    }
-
-                    Item* item_on_floor = map::cells[stack_p.x][stack_p.y].item;
-
-                    if (item_on_floor &&
-                        item_on_floor->data().id == item.data().id)
-                    {
-                        TRACE_VERBOSE << "Stacking item with item on floor"
-                                      << std::endl;
-
-                        item.nr_items_ += item_on_floor->nr_items_;
-
-                        delete item_on_floor;
-
-                        map::cells[stack_p.x][stack_p.y].item = &item;
-
-                        if (map::player->pos == stack_p)
+                        // Search each cell with equal distance to the
+                        // current distance
+                        for (auto stack_it = outer_it;
+                             stack_it != end(free_cells);
+                             ++stack_it)
                         {
-                            item.on_player_found();
+                                const P& stack_p = *stack_it;
+
+                                const int stack_dist =
+                                        king_dist(intended_pos, stack_p);
+
+                                ASSERT(stack_dist >= dist);
+
+                                if (stack_dist > dist)
+                                {
+                                        break;
+                                }
+
+                                Item* item_on_floor =
+                                        map::cells.at(stack_p).item;
+
+                                if (item_on_floor &&
+                                    item_on_floor->data().id == item.data().id)
+                                {
+                                        TRACE_VERBOSE
+                                                << "Stacking item on floor"
+                                                << std::endl;
+
+                                        item.nr_items_ +=
+                                                item_on_floor->nr_items_;
+
+                                        delete item_on_floor;
+
+                                        map::cells.at(stack_p).item = &item;
+
+                                        if (map::player->pos == stack_p)
+                                        {
+                                                item.on_player_found();
+                                        }
+
+                                        TRACE_FUNC_END_VERBOSE;
+                                        return &item;
+                                }
+                        } // Stack position loop
+
+                        dist_searched_stackable = dist;
+                }
+
+                // Item has not been stacked at this distance
+
+                if (!map::cells.at(p).item)
+                {
+                        // Alright, this cell is empty, let's put the item here
+                        map::cells.at(p).item = &item;
+
+                        if (map::player->pos == p)
+                        {
+                                item.on_player_found();
                         }
 
-                        TRACE_FUNC_END_VERBOSE;
                         return &item;
-                    }
-                } // Stack position loop
+                }
+        } // Free cells loop
 
-                dist_searched_stackable = dist;
-            }
-        }
+        // All free cells occupied by other items (and stacking failed)
+        // Too bad - goodbye item!
+        delete &item;
 
-        // Item has not been stacked at this distance
-
-        if (!map::cells[p.x][p.y].item)
-        {
-            // Alright, this cell is empty, let's put the item here
-            map::cells[p.x][p.y].item = &item;
-
-            if (map::player->pos == p)
-            {
-                item.on_player_found();
-            }
-
-            return &item;
-        }
-    } // Free cells loop
-
-    // All free cells occupied by other items (and stacking failed) - too bad!
-    delete &item;
-
-    TRACE_FUNC_END_VERBOSE;
-    return nullptr;
+        TRACE_FUNC_END_VERBOSE;
+        return nullptr;
 }
 
 } // item_drop

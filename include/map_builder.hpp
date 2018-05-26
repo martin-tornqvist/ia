@@ -143,6 +143,8 @@ private:
         }
 
         void handle_template_pos(const P& p, const char c) override;
+
+        void on_template_built() override;
 };
 
 // -----------------------------------------------------------------------------

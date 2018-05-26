@@ -19,9 +19,9 @@ int constr_in_range(const double min,
 
 // Takes a boolean map array, and populates a vector with positions inside the
 // given area matching the specified value to store (true/false).
-std::vector<P> to_vec(const bool a[map_w][map_h],
+std::vector<P> to_vec(const Array2<bool>& a,
                       const bool value_to_store,
-                      const R& area_to_parse = R(0, 0, map_w - 1, map_h - 1));
+                      const R& area_to_parse);
 
 bool is_pos_inside(const P& pos, const R& area);
 

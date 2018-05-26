@@ -1,21 +1,18 @@
 #include "status_lines.hpp"
 
-#include "game_time.hpp"
-#include "colors.hpp"
-#include "io.hpp"
-#include "panel.hpp"
 #include "actor_player.hpp"
-#include "map.hpp"
+#include "colors.hpp"
 #include "game.hpp"
-#include "mapgen.hpp"
-#include "player_bon.hpp"
+#include "game_time.hpp"
 #include "inventory.hpp"
-#include "feature_rigid.hpp"
-#include "feature_mob.hpp"
-#include "text_format.hpp"
+#include "io.hpp"
 #include "item.hpp"
 #include "item_device.hpp"
+#include "map.hpp"
+#include "panel.hpp"
+#include "player_bon.hpp"
 #include "property_handler.hpp"
+#include "text_format.hpp"
 
 namespace status_lines
 {

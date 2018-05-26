@@ -5,14 +5,11 @@
 #include "feature_event.hpp"
 #include "game_time.hpp"
 
-namespace mapgen
-{
-
-namespace
-{
-
-void make_crumble_room(const R& room_area_incl_walls,
-                     const P& event_pos)
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static void make_crumble_room(const R& room_area_incl_walls,
+                              const P& event_pos)
 {
     std::vector<P> wall_cells;
     std::vector<P> inner_cells;
@@ -49,14 +46,13 @@ void make_crumble_room(const R& room_area_incl_walls,
                              inner_cells));
 } // make_crumble_room
 
-//
 // NOTE: The positions and size can be outside map (e.g. negative positions).
-//       This function just returns false in that case.
-//
-bool try_make_aux_room(const P& p,
-                     const P& d,
-                     bool blocked[map_w][map_h],
-                     const P& door_p)
+// This function just returns false in that case.
+static bool try_make_aux_room(
+        const P& p,
+        const P& d,
+        const Array2<bool>& blocked,
+        const P& door_p)
 {
     const R aux_rect(p, p + d - 1);
 
@@ -75,7 +71,7 @@ bool try_make_aux_room(const P& p,
                  y <= aux_rect_with_border.p1.y;
                  ++y)
             {
-                if (blocked[x][y])
+                if (blocked.at(x, y))
                 {
                     // Can't build here, bye...
                     return false;
@@ -87,8 +83,9 @@ bool try_make_aux_room(const P& p,
         {
             for (int y = aux_rect.p0.y; y <= aux_rect.p1.y; ++y)
             {
-                blocked[x][y] = true;
-                ASSERT(!map::room_map[x][y]);
+                blocked.at(x, y) = true;
+
+                ASSERT(!map::room_map.at(x, y));
             }
         }
 
@@ -98,14 +95,14 @@ bool try_make_aux_room(const P& p,
             Room* const room =
                 room_factory::make(RoomType::crumble_room, aux_rect);
 
-            register_room(*room);
+            mapgen::register_room(*room);
 
             make_crumble_room(aux_rect_with_border,
                             door_p);
         }
         else // Not "crumble room"
         {
-            make_room(aux_rect, IsSubRoom::no);
+            mapgen::make_room(aux_rect, IsSubRoom::no);
         }
 
         return true;
@@ -115,7 +112,8 @@ bool try_make_aux_room(const P& p,
 
 } // try_make_aux_room
 
-} // namespace
+namespace mapgen
+{
 
 void make_aux_rooms(Region regions[3][3])
 {
@@ -130,24 +128,19 @@ void make_aux_rooms(Region regions[3][3])
                  range.roll());
     };
 
-    bool floor_cells[map_w][map_h];
+    Array2<bool> floor_cells(map::dims());
 
     // TODO: It would be better with a parse predicate that checks for free
-    //       cells immediately
+    // cells immediately
 
     // Get blocked cells
     map_parsers::BlocksMoveCommon(ParseActors::no)
-        .run(floor_cells);
+            .run(floor_cells, floor_cells.rect());
 
     // Flip the values so that we get free cells
-    for (int x = 0; x < map_w; ++x)
+    for (auto& is_floor : floor_cells)
     {
-        for (int y = 0; y < map_h; ++y)
-        {
-            bool& v = floor_cells[x][y];
-
-            v = !v;
-        }
+        is_floor = !is_floor;
     }
 
     for (int region_x = 0; region_x < 3; region_x++)
@@ -175,7 +168,7 @@ void make_aux_rooms(Region regions[3][3])
                                       rnd::range(con_p.y - aux_d.y + 1,
                                                  con_p.y));
 
-                        if (floor_cells[con_p.x - 1][con_p.y])
+                        if (floor_cells.at(con_p.x - 1, con_p.y))
                         {
                             const bool did_place_room =
                                 try_make_aux_room(aux_p,
@@ -208,7 +201,7 @@ void make_aux_rooms(Region regions[3][3])
                                                  con_p.x),
                                       con_p.y - 1);
 
-                        if (floor_cells[con_p.x][con_p.y + 1])
+                        if (floor_cells.at(con_p.x, con_p.y + 1))
                         {
                             const bool did_place_room =
                                 try_make_aux_room(aux_p,
@@ -241,7 +234,7 @@ void make_aux_rooms(Region regions[3][3])
                                       rnd::range(con_p.y - aux_d.y + 1,
                                                  con_p.y));
 
-                        if (floor_cells[con_p.x + 1][con_p.y])
+                        if (floor_cells.at(con_p.x + 1, con_p.y))
                         {
                             const bool did_place_room =
                                 try_make_aux_room(aux_p,
@@ -274,7 +267,7 @@ void make_aux_rooms(Region regions[3][3])
                                                  con_p.x),
                                       con_p.y + 1);
 
-                        if (floor_cells[con_p.x][con_p.y - 1])
+                        if (floor_cells.at(con_p.x, con_p.y - 1))
                         {
                             const bool did_place_room =
                                 try_make_aux_room(aux_p,

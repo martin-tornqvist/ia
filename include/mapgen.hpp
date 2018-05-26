@@ -31,13 +31,13 @@ public:
 namespace mapgen
 {
 
-// This variable is checked at certain points to see if the current map
-// has been flagged as "failed". Setting is_map_valid to false will generally
-// stop map generation, discard the map, and trigger generation of a new map.
+// This variable is checked at certain points to see if the current map has been
+// flagged as "failed". Setting 'is_map_valid' to false will generally stop map
+// generation, discard the map, and trigger generation of a new map.
 extern bool is_map_valid;
 
 // All cells marked as true in this array will be considered for door placement
-extern bool door_proposals[map_w][map_h];
+extern Array2<bool> door_proposals;
 
 // Standard dungeon level
 // TODO: Consider moving to MapBuilderStd
@@ -103,35 +103,33 @@ void valid_corridor_entries(
 
 bool is_choke_point(
         const P& p,
-        const bool blocked[map_w][map_h],
+        const Array2<bool>& blocked,
         ChokePointData* out);
 
 void make_pathfind_corridor(
         Room& r0,
         Room& r1,
-        bool door_proposals[map_w][map_h] = nullptr);
+        const Array2<bool>* const door_proposals = nullptr);
 
-void rnd_walk(
+std::vector<P> rnd_walk(
         const P& p0,
         int len,
-        std::vector<P>& pos_list_ref,
-        const bool allow_diagonal = true,
-        R area = R(1, 1, map_w - 2, map_h - 2));
+        R area,
+        const bool allow_diagonal = true);
 
-void pathfinder_walk(
+std::vector<P> pathfinder_walk(
         const P& p0,
         const P& p1,
-        std::vector<P>& pos_list_ref,
         const bool is_smooth);
 
 // Generates a map of spawn chance weights, with emphasis on hidden, optional,
 // or hard to reach areas - this can be used e.g. to place items or levers.
 void make_explore_spawn_weights(
-        const bool blocked[map_w][map_h],
+        const Array2<bool>& blocked,
         std::vector<P>& positions_out,
         std::vector<int>& weights_out);
 
-void allowed_stair_cells(bool out[map_w][map_h]);
+Array2<bool> allowed_stair_cells();
 
 void move_player_to_nearest_allowed_pos();
 

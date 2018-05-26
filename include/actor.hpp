@@ -17,247 +17,248 @@ class Inventory;
 
 enum class ActorDied
 {
-    no,
-    yes
+        no,
+        yes
 };
 
 class Actor
 {
 public:
-    Actor();
-    virtual ~Actor();
+        Actor();
+        virtual ~Actor();
 
-    PropHandler& properties()
-    {
-        return *properties_;
-    }
+        PropHandler& properties()
+        {
+                return *properties_;
+        }
 
-    const PropHandler& properties() const
-    {
-        return *properties_;
-    }
+        const PropHandler& properties() const
+        {
+                return *properties_;
+        }
 
-    // Shortcut to the same functions in the property handler
-    bool has_prop(const PropId id) const;
-    void apply_prop(Prop* const prop);
+        // Shortcut to the same functions in the property handler
+        bool has_prop(const PropId id) const;
+        void apply_prop(Prop* const prop);
 
-    ActorData& data()
-    {
-        return *data_;
-    }
+        ActorData& data()
+        {
+                return *data_;
+        }
 
-    const ActorData& data() const
-    {
-        return *data_;
-    }
+        const ActorData& data() const
+        {
+                return *data_;
+        }
 
-    Inventory& inv()
-    {
-        return *inv_;
-    }
+        Inventory& inv()
+        {
+                return *inv_;
+        }
 
-    const Inventory& inv() const
-    {
-        return *inv_;
-    }
+        const Inventory& inv() const
+        {
+                return *inv_;
+        }
 
-    int ability(const AbilityId id, const bool is_affected_by_props) const;
+        int ability(const AbilityId id, const bool is_affected_by_props) const;
 
-    // This function is not concerned with whether actors are within FOV, or if
-    // they are actually hidden or not. It merely performs a skill check,
-    // taking various conditions such as light/dark into concern.
-    ActionResult roll_sneak(const Actor& actor_searching) const;
+        // This function is not concerned with whether actors are within FOV, or
+        // if they are actually hidden or not. It merely performs a skill check,
+        // taking various conditions such as light/dark into concern.
+        ActionResult roll_sneak(const Actor& actor_searching) const;
 
-    void init(const P& pos_, ActorData& data);
+        void init(const P& pos_, ActorData& data);
 
-    ActorDied hit(int dmg,
-                  const DmgType dmg_type,
-                  const DmgMethod method = DmgMethod::END,
-                  const AllowWound allow_wound = AllowWound::yes);
+        ActorDied hit(int dmg,
+                      const DmgType dmg_type,
+                      const DmgMethod method = DmgMethod::END,
+                      const AllowWound allow_wound = AllowWound::yes);
 
-    ActorDied hit_spi(const int dmg,
-                      const Verbosity verbosity = Verbosity::verbose);
+        ActorDied hit_spi(const int dmg,
+                          const Verbosity verbosity = Verbosity::verbose);
 
-    bool restore_hp(const int hp_restored,
-                    const bool is_allowed_above_max = false,
-                    const Verbosity verbosity = Verbosity::verbose);
-
-    bool restore_spi(const int spi_restored,
-                     const bool is_allowed_above_max = false,
-                     const Verbosity verbosity = Verbosity::verbose);
-
-    void set_hp_and_spi_to_max();
-
-    void change_max_hp(const int change,
-                       const Verbosity verbosity = Verbosity::verbose);
-
-    void change_max_spi(const int change,
+        bool restore_hp(const int hp_restored,
+                        const bool is_allowed_above_max = false,
                         const Verbosity verbosity = Verbosity::verbose);
 
-    void die(const bool is_destroyed,
-             const bool allow_gore,
-             const bool allow_drop_items);
+        bool restore_spi(const int spi_restored,
+                         const bool is_allowed_above_max = false,
+                         const Verbosity verbosity = Verbosity::verbose);
 
-    void destroy();
+        void set_hp_and_spi_to_max();
 
-    // Set state immediately, without running any hooks etc
-    void set_state(const ActorState state)
-    {
-        state_ = state;
-    }
+        void change_max_hp(const int change,
+                           const Verbosity verbosity = Verbosity::verbose);
 
-    // Used by Ghoul class and Ghoul monsters
-    DidAction try_eat_corpse();
+        void change_max_spi(const int change,
+                            const Verbosity verbosity = Verbosity::verbose);
 
-    void on_feed();
+        void die(const bool is_destroyed,
+                 const bool allow_gore,
+                 const bool allow_drop_items);
 
-    void on_std_turn_common();
+        void destroy();
 
-    virtual void act() {}
+        // Set state immediately, without running any hooks etc
+        void set_state(const ActorState state)
+        {
+                state_ = state;
+        }
 
-    virtual void move(Dir dir) = 0;
+        // Used by Ghoul class and Ghoul monsters
+        DidAction try_eat_corpse();
 
-    virtual void on_actor_turn() {}
-    virtual void on_std_turn() {}
+        void on_feed();
 
-    virtual TileId tile() const;
+        void on_std_turn_common();
 
-    virtual char character() const;
+        virtual void act() {}
 
-    virtual Color color() const = 0;
+        virtual void move(Dir dir) = 0;
 
-    virtual std::vector<Actor*> seen_actors() const = 0;
+        virtual void on_actor_turn() {}
+        virtual void on_std_turn() {}
 
-    virtual std::vector<Actor*> seen_foes() const = 0;
+        virtual TileId tile() const;
 
-    ActorId id() const
-    {
-        return data_->id;
-    }
+        virtual char character() const;
 
-    int hp() const
-    {
-        return hp_;
-    }
+        virtual Color color() const = 0;
 
-    void set_hp(const int hp)
-    {
-        hp_ = hp;
-    }
+        virtual std::vector<Actor*> seen_actors() const = 0;
 
-    int spi() const
-    {
-        return spi_;
-    }
+        virtual std::vector<Actor*> seen_foes() const = 0;
 
-    int hp_max(const bool with_modifiers) const;
+        ActorId id() const
+        {
+                return data_->id;
+        }
 
-    int spi_max() const;
+        int hp() const
+        {
+                return hp_;
+        }
 
-    int speed_pct() const;
+        void set_hp(const int hp)
+        {
+                hp_ = hp;
+        }
 
-    int armor_points() const;
+        int spi() const
+        {
+                return spi_;
+        }
 
-    virtual SpellSkill spell_skill(const SpellId id) const = 0;
+        int hp_max(const bool with_modifiers) const;
 
-    virtual std::string name_the() const
-    {
-        return data_->name_the;
-    }
+        int spi_max() const;
 
-    virtual std::string name_a() const
-    {
-        return data_->name_a;
-    }
+        int speed_pct() const;
 
-    std::string corpse_name_a() const
-    {
-        return data_->corpse_name_a;
-    }
+        int armor_points() const;
 
-    std::string corpse_name_the() const
-    {
-        return data_->corpse_name_the;
-    }
+        virtual SpellSkill spell_skill(const SpellId id) const = 0;
 
-    virtual std::string descr() const
-    {
-        return data_->descr;
-    }
+        virtual std::string name_the() const
+        {
+                return data_->name_the;
+        }
 
-    bool is_humanoid() const
-    {
-        return data_->is_humanoid;
-    }
+        virtual std::string name_a() const
+        {
+                return data_->name_a;
+        }
 
-    void add_light(bool light_map[map_w][map_h]) const;
+        std::string corpse_name_a() const
+        {
+                return data_->corpse_name_a;
+        }
 
-    virtual void add_light_hook(bool light[map_w][map_h]) const
-    {
-        (void)light;
-    }
+        std::string corpse_name_the() const
+        {
+                return data_->corpse_name_the;
+        }
 
-    void teleport(
-        const ShouldCtrlTele ctrl_tele = ShouldCtrlTele::if_tele_ctrl_prop);
+        virtual std::string descr() const
+        {
+                return data_->descr;
+        }
 
-    void teleport(P p, bool blocked[map_w][map_h]);
+        bool is_humanoid() const
+        {
+                return data_->is_humanoid;
+        }
 
-    bool is_alive() const
-    {
-        return state_ == ActorState::alive;
-    }
+        void add_light(Array2<bool>& light_map) const;
 
-    bool is_corpse() const
-    {
-        return state_ == ActorState::corpse;
-    }
+        virtual void add_light_hook(Array2<bool>& light) const
+        {
+                (void)light;
+        }
 
-    ActorState state() const
-    {
-        return state_;
-    }
+        void teleport(
+                const ShouldCtrlTele ctrl_tele =
+                ShouldCtrlTele::if_tele_ctrl_prop);
 
-    virtual bool is_leader_of(const Actor* const actor) const = 0;
-    virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
+        void teleport(P p, const Array2<bool>& blocked);
 
-    bool is_player() const;
+        bool is_alive() const
+        {
+                return state_ == ActorState::alive;
+        }
 
-    P pos;
+        bool is_corpse() const
+        {
+                return state_ == ActorState::corpse;
+        }
 
-    int delay_;
+        ActorState state() const
+        {
+                return state_;
+        }
+
+        virtual bool is_leader_of(const Actor* const actor) const = 0;
+        virtual bool is_actor_my_leader(const Actor* const actor) const = 0;
+
+        bool is_player() const;
+
+        P pos;
+
+        int delay_;
 
 protected:
-    // TODO: This will be removed
-    virtual void on_death() {}
+        // TODO: This will be removed
+        virtual void on_death() {}
 
-    std::string death_msg() const;
+        std::string death_msg() const;
 
-    // Damages worn armor, and returns damage after armor absorbs damage
-    int hit_armor(int dmg);
+        // Damages worn armor, and returns damage after armor absorbs damage
+        int hit_armor(int dmg);
 
-    virtual void on_hit(int& dmg,
-                        const DmgType dmg_type,
-                        const DmgMethod method,
-                        const AllowWound allow_wound)
-    {
-        (void)dmg;
-        (void)dmg_type;
-        (void)method;
-        (void)allow_wound;
-    }
+        virtual void on_hit(int& dmg,
+                            const DmgType dmg_type,
+                            const DmgMethod method,
+                            const AllowWound allow_wound)
+        {
+                (void)dmg;
+                (void)dmg_type;
+                (void)method;
+                (void)allow_wound;
+        }
 
-    ActorState  state_;
+        ActorState  state_;
 
-    int hp_;
-    int hp_max_;
-    int spi_;
-    int spi_max_;
+        int hp_;
+        int hp_max_;
+        int spi_;
+        int spi_max_;
 
-    P lair_pos_;
+        P lair_pos_;
 
-    PropHandler* properties_;
-    ActorData* data_;
-    Inventory* inv_;
+        PropHandler* properties_;
+        ActorData* data_;
+        Inventory* inv_;
 };
 
 #endif // ACTOR_HPP

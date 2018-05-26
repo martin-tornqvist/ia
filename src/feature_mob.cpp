@@ -31,9 +31,9 @@ void Smoke::on_new_turn()
         const bool is_player = actor == map::player;
 
         // TODO: There needs to be some criteria here, so that e.g. a
-        //       statue-monster or a very alien monster can't get blinded by
-        //       smoke (but do not use is_humanoid - rats, wolves etc should
-        //       definitely be blinded by smoke).
+        // statue-monster or a very alien monster can't get blinded by smoke
+        // (but do not use is_humanoid - rats, wolves etc should definitely be
+        // blinded by smoke).
 
         // Perhaps add some variable like "has_eyes"?
 
@@ -196,37 +196,35 @@ void LitFlare::on_new_turn()
     }
 }
 
-void LitFlare::add_light(bool light[map_w][map_h]) const
+void LitFlare::add_light(Array2<bool>& light) const
 {
-    const int radi = fov_radi_int; //light_radius();
+        const int radi = fov_radi_int; //light_radius();
 
-    P p0(std::max(0, pos_.x - radi),
-         std::max(0, pos_.y - radi));
+        P p0(std::max(0, pos_.x - radi),
+             std::max(0, pos_.y - radi));
 
-    P p1(std::min(map_w - 1, pos_.x + radi),
-         std::min(map_h - 1, pos_.y + radi));
+        P p1(std::min(map::w() - 1, pos_.x + radi),
+             std::min(map::h() - 1, pos_.y + radi));
 
-    bool hard_blocked[map_w][map_h];
+        Array2<bool> hard_blocked(map::dims());
 
-    map_parsers::BlocksLos()
-        .run(hard_blocked,
-             MapParseMode::overwrite,
-             R(p0, p1));
+        map_parsers::BlocksLos()
+                .run(hard_blocked,
+                     R(p0, p1),
+                     MapParseMode::overwrite);
 
-    LosResult fov[map_w][map_h];
+        const auto light_fov = fov::run(pos_, hard_blocked);
 
-    fov::run(pos_, hard_blocked, fov);
-
-    for (int y = p0.y; y <= p1.y; ++y)
-    {
-        for (int x = p0.x; x <= p1.x; ++x)
+        for (int y = p0.y; y <= p1.y; ++y)
         {
-            if (!fov[x][y].is_blocked_hard)
-            {
-                light[x][y] = true;
-            }
+                for (int x = p0.x; x <= p1.x; ++x)
+                {
+                        if (!light_fov.at(x, y).is_blocked_hard)
+                        {
+                                light.at(x, y) = true;
+                        }
+                }
         }
-    }
 }
 
 std::string LitFlare::name(const Article article)  const

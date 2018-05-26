@@ -102,7 +102,7 @@ void reserve_river(Region regions[3][3])
                                 // Just put floor for now, river feature will be
                                 // placed later
                                 map::put(new Floor(P(x, y)));
-                                map::room_map[x][y] = room;
+                                map::room_map.at(x, y) = room;
                         }
                 }
         };

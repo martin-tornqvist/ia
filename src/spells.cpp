@@ -133,16 +133,27 @@ Range Spell::spi_cost(const SpellSkill skill, Actor* const caster) const
         if (caster == map::player)
         {
                 // Standing next to an altar reduces the cost
-                const int x0 = std::max(0, caster->pos.x - 1);
-                const int y0 = std::max(0, caster->pos.y - 1);
-                const int x1 = std::min(map_w - 1, caster->pos.x + 1);
-                const int y1 = std::min(map_h - 1, caster->pos.y + 1);
+                const int x0 = std::max(
+                        0,
+                        caster->pos.x - 1);
+
+                const int y0 = std::max(
+                        0,
+                        caster->pos.y - 1);
+
+                const int x1 = std::min(
+                        map::w() - 1,
+                        caster->pos.x + 1);
+
+                const int y1 = std::min(
+                        map::h() - 1,
+                        caster->pos.y + 1);
 
                 for (int x = x0; x <= x1; ++x)
                 {
                         for (int y = y0; y <= y1; ++y)
                         {
-                                if (map::cells[x][y].rigid->id() ==
+                                if (map::cells.at(x, y).rigid->id() ==
                                     FeatureId::altar)
                                 {
                                         cost_max -= 1;
@@ -417,19 +428,14 @@ void SpellDarkbolt::run_effect(Actor* const caster,
 
         target_bucket = caster->seen_foes();
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksProjectiles()
-                .run(blocked);
-
-        int flood[map_w][map_h];
+                .run(blocked, blocked.rect());
 
         const int travel_lmt = 12;
 
-        floodfill(caster->pos,
-                  blocked,
-                  flood,
-                  travel_lmt);
+        const auto flood = floodfill(caster->pos, blocked, travel_lmt);
 
         // Remove all actors to which there is no path
         for (auto it = begin(target_bucket); it != end(target_bucket); )
@@ -439,7 +445,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
                 const P& p = actor->pos;
 
                 // A path exists to this actor?
-                if (flood[p.x][p.y] > 0)
+                if (flood.at(p) > 0)
                 {
                         ++it;
                 }
@@ -489,13 +495,10 @@ void SpellDarkbolt::run_effect(Actor* const caster,
                 return;
         }
 
-        std::vector<P> path;
-
-        pathfind_with_flood(
+        const auto path = pathfind_with_flood(
                 caster->pos,
                 target->pos,
-                flood,
-                path);
+                flood);
 
         ASSERT(!path.empty());
 
@@ -512,8 +515,8 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         {
                 const P& p = path[i];
 
-                if (!map::cells[p.x][p.y].is_seen_by_player ||
-                    !viewport::is_in_ivew(p))
+                if (!map::cells.at(p).is_seen_by_player ||
+                    !viewport::is_in_view(p))
                 {
                         continue;
                 }
@@ -535,7 +538,7 @@ void SpellDarkbolt::run_effect(Actor* const caster,
         const P& target_p = target->pos;
 
         const bool player_see_cell =
-                map::cells[target_p.x][target_p.y].is_seen_by_player;
+                map::cells.at(target_p).is_seen_by_player;
 
         const bool player_see_tgt = map::player->can_see_actor(*target);
 
@@ -861,10 +864,21 @@ void SpellMayhem::run_effect(Actor* const caster,
 
         const int destr_radi = fov_radi_int + (int)skill * 2;
 
-        const int x0 = std::max(1, caster_pos.x - destr_radi);
-        const int y0 = std::max(1, caster_pos.y - destr_radi);
-        const int x1 = std::min(map_w - 1, caster_pos.x + destr_radi) - 1;
-        const int y1 = std::min(map_h - 1, caster_pos.y + destr_radi) - 1;
+        const int x0 = std::max(
+                1,
+                caster_pos.x - destr_radi);
+
+        const int y0 = std::max(
+                1,
+                caster_pos.y - destr_radi);
+
+        const int x1 = std::min(
+                map::w() - 1,
+                caster_pos.x + destr_radi) - 1;
+
+        const int y1 = std::min(
+                map::h() - 1,
+                caster_pos.y + destr_radi) - 1;
 
         // Run explosions
         std::vector<P> p_bucket;
@@ -875,7 +889,7 @@ void SpellMayhem::run_effect(Actor* const caster,
         {
                 for (int y = y0; y <= y1; ++y)
                 {
-                        const Rigid* const f = map::cells[x][y].rigid;
+                        const Rigid* const f = map::cells.at(x, y).rigid;
 
                         if (!f->can_move_common())
                         {
@@ -921,7 +935,7 @@ void SpellMayhem::run_effect(Actor* const caster,
         {
                 for (int y = y0; y <= y1; ++y)
                 {
-                        const auto id = map::cells[x][y].rigid->id();
+                        const auto id = map::cells.at(x, y).rigid->id();
 
                         if (id == FeatureId::brazier)
                         {
@@ -970,8 +984,7 @@ void SpellMayhem::run_effect(Actor* const caster,
                                 {
                                         const P p_adj(P(x, y) + d);
 
-                                        const auto& cell =
-                                                map::cells[p_adj.x][p_adj.y];
+                                        const auto& cell = map::cells.at(p_adj);
 
                                         if (cell.rigid->can_move_common())
                                         {
@@ -981,7 +994,7 @@ void SpellMayhem::run_effect(Actor* const caster,
 
                                 if (is_adj_to_walkable_cell)
                                 {
-                                        map::cells[x][y].rigid->hit(
+                                        map::cells.at(x, y).rigid->hit(
                                                 1, // Damage (doesn't matter)
                                                 DmgType::physical,
                                                 DmgMethod::explosion,
@@ -996,7 +1009,7 @@ void SpellMayhem::run_effect(Actor* const caster,
         {
                 for (int y = y0; y <= y1; ++y)
                 {
-                        auto* const f = map::cells[x][y].rigid;
+                        auto* const f = map::cells.at(x, y).rigid;
 
                         if (f->can_have_blood() &&
                             rnd::one_in(10))
@@ -1080,7 +1093,10 @@ void SpellPestilence::run_effect(Actor* const caster,
         bool is_any_seen_by_player = false;
 
         const auto mon_summoned =
-                actor_factory::spawn(caster->pos, {nr_mon, ActorId::rat})
+                actor_factory::spawn(
+                        caster->pos,
+                        {nr_mon, ActorId::rat},
+                        map::rect())
                 .make_aware_of_player()
                 .set_leader(leader)
                 .for_each([skill, &is_any_seen_by_player](Mon* const mon)
@@ -1179,25 +1195,23 @@ void SpellAnimWpns::run_effect(Actor* const caster,
         // TODO: Is this really necessary? Also there is a bug here, because the
         // 'actor_array' includes dead actors, so weapons on top of corpses
         // cannot be animated
-        Actor* actor_array[map_w][map_h];
-
-        map::make_actor_array(actor_array);
+        const auto actor_array = map::get_actor_array();
 
         std::vector<P> positions_to_anim;
 
         {
                 std::vector<P> anim_pos_bucket;
 
-                for (int x = 0; x < map_w; ++x)
+                for (int x = 0; x < map::w(); ++x)
                 {
-                        for (int y = 0; y < map_h; ++y)
+                        for (int y = 0; y < map::h(); ++y)
                         {
-                                Cell& cell = map::cells[x][y];
+                                Cell& cell = map::cells.at(x, y);
 
                                 Item* const item = cell.item;
 
                                 if (!cell.is_seen_by_player ||
-                                    actor_array[x][y] ||
+                                    actor_array.at(x, y) ||
                                     !item ||
                                     (item->data().type != ItemType::melee_wpn))
                                 {
@@ -1234,7 +1248,10 @@ void SpellAnimWpns::run_effect(Actor* const caster,
         for (const P& p : positions_to_anim)
         {
                 const auto summoned =
-                        actor_factory::spawn(p, { ActorId::animated_wpn})
+                        actor_factory::spawn(
+                                p,
+                                { ActorId::animated_wpn},
+                                map::rect())
                         .set_leader(map::player);
 
                 if (summoned.monsters.empty())
@@ -1244,7 +1261,7 @@ void SpellAnimWpns::run_effect(Actor* const caster,
 
                 Mon* const anim_wpn = summoned.monsters[0];
 
-                Cell& cell = map::cells[p.x][p.y];
+                Cell& cell = map::cells.at(p);
 
                 Item* const item = cell.item;
 
@@ -1405,7 +1422,10 @@ void SpellPharaohStaff::run_effect(Actor* const caster,
                 ActorId::croc_head_mummy;
 
         const auto summoned =
-                actor_factory::spawn(caster->pos, {actor_id})
+                actor_factory::spawn(
+                        caster->pos,
+                        {actor_id},
+                        map::rect())
                 .make_aware_of_player()
                 .set_leader(leader)
                 .for_each([](Mon* const mon)
@@ -1461,17 +1481,30 @@ void SpellSearching::run_effect(Actor* const caster,
         (void)caster;
 
         const int range =
-                (skill == SpellSkill::basic) ? 8 :
-                (skill == SpellSkill::expert) ? 16 :
-                999;
+                (skill == SpellSkill::basic)
+                ? 8
+                : (skill == SpellSkill::expert)
+                ? 16
+                : 999;
 
         const int orig_x = map::player->pos.x;
         const int orig_y = map::player->pos.y;
 
-        const int x0 = std::max(0, orig_x - range);
-        const int y0 = std::max(0, orig_y - range);
-        const int x1 = std::min(map_w - 1, orig_x + range);
-        const int y1 = std::min(map_h - 1, orig_y + range);
+        const int x0 = std::max(
+                0,
+                orig_x - range);
+
+        const int y0 = std::max(
+                0,
+                orig_y - range);
+
+        const int x1 = std::min(
+                map::w() - 1,
+                orig_x + range);
+
+        const int y1 = std::min(
+                map::h() - 1,
+                orig_y + range);
 
         std::vector<P> positions_detected;
 
@@ -1479,7 +1512,7 @@ void SpellSearching::run_effect(Actor* const caster,
         {
                 for (int x = x0; x <= x1; ++x)
                 {
-                        auto& cell = map::cells[x][y];
+                        auto& cell = map::cells.at(x, y);
 
                         auto* const f = cell.rigid;
 
@@ -1592,10 +1625,21 @@ void SpellOpening::run_effect(Actor* const caster,
         const int orig_x = map::player->pos.x;
         const int orig_y = map::player->pos.y;
 
-        const int x0 = std::max(0, orig_x - range);
-        const int y0 = std::max(0, orig_y - range);
-        const int x1 = std::min(map_w - 1, orig_x + range);
-        const int y1 = std::min(map_h - 1, orig_y + range);
+        const int x0 = std::max(
+                0,
+                orig_x - range);
+
+        const int y0 = std::max(
+                0,
+                orig_y - range);
+
+        const int x1 = std::min(
+                map::w() - 1,
+                orig_x + range);
+
+        const int y1 = std::min(
+                map::h() - 1,
+                orig_y + range);
 
         bool is_any_opened = false;
 
@@ -1612,7 +1656,7 @@ void SpellOpening::run_effect(Actor* const caster,
                                 continue;
                         }
 
-                        const auto& cell = map::cells[x][y];
+                        const auto& cell = map::cells.at(x, y);
 
                         auto* const f = cell.rigid;
 
@@ -1634,14 +1678,18 @@ void SpellOpening::run_effect(Actor* const caster,
                                     !door->is_open() &&
                                     ((int)skill >= (int)SpellSkill::expert))
                                 {
-                                        for (int x_lever = 0; x_lever < map_w; ++x_lever)
+                                        for (int x_lever = 0;
+                                             x_lever < map::w();
+                                             ++x_lever)
                                         {
-                                                for (int y_lever = 0; y_lever < map_h; ++y_lever)
+                                                for (int y_lever = 0;
+                                                     y_lever < map::h();
+                                                     ++y_lever)
                                                 {
-                                                        auto* const f_lever =
-                                                                map::cells[x_lever][y_lever].rigid;
+                                                        auto* const f_lever = map::cells.at(x_lever, y_lever).rigid;
 
-                                                        if (f_lever->id() != FeatureId::lever)
+                                                        if (f_lever->id() !=
+                                                            FeatureId::lever)
                                                         {
                                                                 continue;
                                                         }
@@ -2432,7 +2480,7 @@ void SpellSummonMon::run_effect(Actor* const caster,
         }
 
         const auto summoned =
-                actor_factory::spawn(caster->pos, {mon_id})
+                actor_factory::spawn(caster->pos, {mon_id}, map::rect())
                 .make_aware_of_player()
                 .set_leader(leader)
                 .for_each([](Mon* const mon)
@@ -2764,7 +2812,7 @@ void SpellTransmut::run_effect(Actor* const caster,
 
         const P& p = map::player->pos;
 
-        auto& cell = map::cells[p.x][p.y];
+        auto& cell = map::cells.at(p);
 
         Item* item_before = cell.item;
 

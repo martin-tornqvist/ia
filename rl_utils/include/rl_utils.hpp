@@ -95,10 +95,6 @@ void assert_impl(const bool check,
 #include <random>
 #include <ctime>
 
-// This header must be supplied by the "user" project, and contain some
-// necessary symbols such as "map_w" and "map_h".
-#include "global.hpp"
-
 // RL Utils includes
 // NOTE: The user project only needs to include rl_utils.hpp (this file)
 #include "array2.hpp"

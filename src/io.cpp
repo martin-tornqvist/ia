@@ -1599,115 +1599,6 @@ void draw_skull(const P pos)
         }
 }
 
-void draw_blast_at_field(
-        const P center_pos,
-        const int radius,
-        bool forbidden_cells[map_w][map_h],
-        const Color& color_inner,
-        const Color& color_outer)
-{
-        TRACE_FUNC_BEGIN;
-
-        if (!is_inited() || !panels::is_valid())
-        {
-                TRACE_FUNC_END;
-
-                return;
-        }
-
-        states::draw();
-
-        bool is_any_blast_rendered = false;
-
-        P pos;
-
-        for (pos.y = std::max(1, center_pos.y - radius);
-             pos.y <= std::min(map_h - 2, center_pos.y + radius);
-             pos.y++)
-        {
-                for (pos.x = std::max(1, center_pos.x - radius);
-                     pos.x <= std::min(map_w - 2, center_pos.x + radius);
-                     pos.x++)
-                {
-                        if (forbidden_cells[pos.x][pos.y] ||
-                            !viewport::is_in_ivew(pos))
-                        {
-                                continue;
-                        }
-
-                        const bool is_outer =
-                                pos.x == center_pos.x - radius ||
-                                pos.x == center_pos.x + radius ||
-                                pos.y == center_pos.y - radius ||
-                                pos.y == center_pos.y + radius;
-
-                        const Color color =
-                                is_outer ?
-                                color_outer :
-                                color_inner;
-
-                        draw_symbol(
-                                TileId::blast1,
-                                '*',
-                                Panel::map,
-                                viewport::to_view_pos(pos),
-                                color);
-
-                        is_any_blast_rendered = true;
-                }
-        }
-
-        update_screen();
-
-        if (is_any_blast_rendered)
-        {
-                sdl_base::sleep(config::delay_explosion() / 2);
-        }
-
-        for (pos.y = std::max(1, center_pos.y - radius);
-             pos.y <= std::min(map_h - 2, center_pos.y + radius);
-             pos.y++)
-        {
-                for (pos.x = std::max(1, center_pos.x - radius);
-                     pos.x <= std::min(map_w - 2, center_pos.x + radius);
-                     pos.x++)
-                {
-                        if (forbidden_cells[pos.x][pos.y] ||
-                            !viewport::is_in_ivew(pos))
-                        {
-                                continue;
-                        }
-
-                        const bool is_outer =
-                                pos.x == center_pos.x - radius ||
-                                pos.x == center_pos.x + radius ||
-                                pos.y == center_pos.y - radius ||
-                                pos.y == center_pos.y + radius;
-
-                        const Color color =
-                                is_outer ?
-                                color_outer :
-                                color_inner;
-
-                        draw_symbol(
-                                TileId::blast2,
-                                '*',
-                                Panel::map,
-                                viewport::to_view_pos(pos),
-                                color);
-                }
-        }
-
-        update_screen();
-
-        if (is_any_blast_rendered)
-        {
-                sdl_base::sleep(config::delay_explosion() / 2);
-        }
-
-        TRACE_FUNC_END;
-}
-
 void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 {
         TRACE_FUNC_BEGIN;
@@ -1723,7 +1614,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 
         for (const P pos : positions)
         {
-                if (!viewport::is_in_ivew(pos))
+                if (!viewport::is_in_view(pos))
                 {
                         continue;
                 }
@@ -1742,7 +1633,7 @@ void draw_blast_at_cells(const std::vector<P>& positions, const Color& color)
 
         for (const P pos : positions)
         {
-                if (!viewport::is_in_ivew(pos))
+                if (!viewport::is_in_view(pos))
                 {
                         continue;
                 }
@@ -1771,7 +1662,7 @@ void draw_blast_at_seen_cells(const std::vector<P>& positions,
 
                 for (const P p : positions)
                 {
-                        if (map::cells[p.x][p.y].is_seen_by_player)
+                        if (map::cells.at(p).is_seen_by_player)
                         {
                                 positions_with_vision.push_back(p);
                         }

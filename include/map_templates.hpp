@@ -21,9 +21,9 @@ enum class LevelTemplId
 struct RoomTempl
 {
     RoomTempl() :
-        symbols(),
-        type((RoomType)0),
-        base_templ_idx(0) {}
+            symbols(P(0, 0)),
+            type((RoomType)0),
+            base_templ_idx(0) {}
 
     Array2<char> symbols;
 

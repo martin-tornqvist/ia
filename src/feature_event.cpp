@@ -38,11 +38,11 @@ void EventWallCrumble::on_new_turn()
         }
 
         auto is_wall = [](const P& p) {
-                const auto id = map::cells[p.x][p.y].rigid->id();
+                const auto id = map::cells.at(p).rigid->id();
 
                 return
-                        (id == FeatureId::wall) ||
-                        (id == FeatureId::rubble_high);
+                (id == FeatureId::wall) ||
+                (id == FeatureId::rubble_high);
         };
 
         // Check that it still makes sense to run the crumbling
@@ -121,7 +121,7 @@ void EventWallCrumble::on_new_turn()
                                 continue;
                         }
 
-                        if (map::dark[p_adj.x][p_adj.y])
+                        if (map::dark.at(p_adj))
                         {
                                 should_make_dark = true;
 
@@ -145,10 +145,10 @@ void EventWallCrumble::on_new_turn()
 
                 if (should_make_dark)
                 {
-                        map::dark[p.x][p.y] = true;
+                        map::dark.at(p) = true;
                 }
 
-                auto* const f = map::cells[p.x][p.y].rigid;
+                auto* const f = map::cells.at(p).rigid;
 
                 f->hit(1, // Doesn't matter
                        DmgType::physical,
@@ -161,10 +161,10 @@ void EventWallCrumble::on_new_turn()
         {
                 if (should_make_dark)
                 {
-                        map::dark[p.x][p.y] = true;
+                        map::dark.at(p) = true;
                 }
 
-                Rigid* const f = map::cells[p.x][p.y].rigid;
+                Rigid* const f = map::cells.at(p).rigid;
 
                 f->hit(1, // Doesn't matter
                        DmgType::physical,
@@ -239,11 +239,9 @@ EventSnakeEmerge::EventSnakeEmerge() :
 
 bool EventSnakeEmerge::try_find_p()
 {
-        bool blocked[map_w][map_h];
+        const auto blocked = blocked_cells(map::rect());
 
-        blocked_cells(R(0, 0, map_w - 1, map_h - 1), blocked);
-
-        auto p_bucket = to_vec(blocked, false);
+        auto p_bucket = to_vec(blocked, false, blocked.rect());
 
         rnd::shuffle(p_bucket);
 
@@ -267,10 +265,10 @@ R EventSnakeEmerge::allowed_emerge_rect(const P& p) const
 {
         const int max_d = allowed_emerge_dist_range.max;
 
-        const int x0 = std::max(1,          p.x - max_d);
-        const int y0 = std::max(1,          p.y - max_d);
-        const int x1 = std::min(map_w - 2,  p.x + max_d);
-        const int y1 = std::min(map_h - 2,  p.y + max_d);
+        const int x0 = std::max(1, p.x - max_d);
+        const int y0 = std::max(1, p.y - max_d);
+        const int x1 = std::min(map::w() - 2,  p.x + max_d);
+        const int y1 = std::min(map::h() - 2,  p.y + max_d);
 
         return R(x0, y0, x1, y1);
 }
@@ -279,7 +277,7 @@ bool EventSnakeEmerge::is_ok_feature_at(const P& p) const
 {
         ASSERT(map::is_pos_inside_map(p, true));
 
-        const FeatureId id = map::cells[p.x][p.y].rigid->id();
+        const FeatureId id = map::cells.at(p).rigid->id();
 
         return id == FeatureId::floor ||
                 id == FeatureId::rubble_low;
@@ -287,12 +285,10 @@ bool EventSnakeEmerge::is_ok_feature_at(const P& p) const
 
 void EventSnakeEmerge::emerge_p_bucket(
         const P& p,
-        bool blocked[map_w][map_h],
+        const Array2<bool>& blocked,
         std::vector<P>& out) const
 {
-        LosResult fov[map_w][map_h];
-
-        fov::run(p, blocked, fov);
+        const auto fov = fov::run(p, blocked);
 
         const R r = allowed_emerge_rect(p);
 
@@ -304,8 +300,8 @@ void EventSnakeEmerge::emerge_p_bucket(
 
                         const int min_d = allowed_emerge_dist_range.min;
 
-                        if (!blocked[x][y] &&
-                            !fov[x][y].is_blocked_hard &&
+                        if (!blocked.at(x, y) &&
+                            !fov.at(x, y).is_blocked_hard &&
                             king_dist(p, tgt_p) >= min_d)
                         {
                                 out.push_back(tgt_p);
@@ -314,15 +310,17 @@ void EventSnakeEmerge::emerge_p_bucket(
         }
 }
 
-void EventSnakeEmerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
+Array2<bool> EventSnakeEmerge::blocked_cells(const R& r) const
 {
+        Array2<bool> result(r.dims());
+
         for (int x = r.p0.x; x <= r.p1.x; ++x)
         {
                 for (int y = r.p0.y; y <= r.p1.y; ++y)
                 {
                         const P p(x, y);
 
-                        out[x][y] = !is_ok_feature_at(p);
+                        result.at(p) = !is_ok_feature_at(p);
                 }
         }
 
@@ -330,8 +328,10 @@ void EventSnakeEmerge::blocked_cells(const R& r, bool out[map_w][map_h]) const
         {
                 const P& p = actor->pos;
 
-                out[p.x][p.y] = true;
+                result.at(p) = true;
         }
+
+        return result;
 }
 
 void EventSnakeEmerge::on_new_turn()
@@ -343,9 +343,7 @@ void EventSnakeEmerge::on_new_turn()
 
         const R r = allowed_emerge_rect(pos_);
 
-        bool blocked[map_w][map_h];
-
-        blocked_cells(r, blocked);
+        const auto blocked = blocked_cells(r);
 
         std::vector<P> tgt_bucket;
 
@@ -390,7 +388,7 @@ void EventSnakeEmerge::on_new_turn()
 
                 const P& p(tgt_bucket[i]);
 
-                if (map::cells[p.x][p.y].is_seen_by_player)
+                if (map::cells.at(p).is_seen_by_player)
                 {
                         seen_tgt_positions.push_back(p);
                 }

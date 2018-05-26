@@ -74,9 +74,7 @@ void Rigid::on_new_turn()
             actor.hit(1, DmgType::fire);
         };
 
-        //
         // TODO: Hit dead actors
-        //
 
         // Hit actor standing on feature
         auto* actor = map::actor_at_pos(pos_);
@@ -158,7 +156,7 @@ void Rigid::on_new_turn()
 
             if (map::is_pos_inside_map(p))
             {
-                auto& cell = map::cells[p.x][p.y];
+                auto& cell = map::cells.at(p);
 
                 cell.rigid->hit(
                     1, // Damage
@@ -282,7 +280,7 @@ void Rigid::hit(const int dmg,
             if (dmg_method == DmgMethod::kicking)
             {
                 const bool can_see_feature =
-                    !map::cells[pos_.x][pos_.y].is_seen_by_player;
+                    !map::cells.at(pos_).is_seen_by_player;
 
                 const std::string rigid_name =
                         can_see_feature
@@ -461,7 +459,7 @@ void Rigid::clear_gore()
     is_bloody_ = false;
 }
 
-void Rigid::add_light(bool light[map_w][map_h]) const
+void Rigid::add_light(Array2<bool>& light) const
 {
     if (burn_state_ == BurnState::burning)
     {
@@ -471,7 +469,7 @@ void Rigid::add_light(bool light[map_w][map_h]) const
 
             if (map::is_pos_inside_map(p, true))
             {
-                light[p.x][p.y] = true;
+                light.at(p) = true;
             }
         }
     }
@@ -575,9 +573,7 @@ void Wall::on_hit(const int dmg,
     (void)dmg;
     (void)actor;
 
-    //
     // TODO: This is copy pasted - it should be handled better!
-    //
 
     auto destr_adj_doors = [&]()
     {
@@ -587,7 +583,7 @@ void Wall::on_hit(const int dmg,
 
             if (map::is_pos_inside_map(p))
             {
-                if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
+                if (map::cells.at(p).rigid->id() == FeatureId::door)
                 {
                     map::put(new RubbleLow(p));
                 }
@@ -600,9 +596,7 @@ void Wall::on_hit(const int dmg,
         const P p(pos_);
         map::put(new RubbleLow(p));
 
-        //
         // NOTE: object is now deleted!
-        //
 
         if (rnd::one_in(4))
         {
@@ -1062,7 +1056,7 @@ void Statue::on_hit(const int dmg,
                 ? AlertsMon::yes
                 : AlertsMon::no;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("It topples over.");
         }
@@ -1100,7 +1094,7 @@ void Statue::on_hit(const int dmg,
             }
         }
 
-        const auto rigid_id = map::cells[dst_pos.x][dst_pos.y].rigid->id();
+        const auto rigid_id = map::cells.at(dst_pos).rigid->id();
 
         // NOTE: This is kinda hacky, but the rubble is mostly just for
         // decoration anyway, so it doesn't really matter.
@@ -1200,7 +1194,7 @@ void Stairs::on_hit(const int dmg,
 
 void Stairs::on_new_turn_hook()
 {
-    ASSERT(!map::cells[pos_.x][pos_.y].item);
+    ASSERT(!map::cells.at(pos_).item);
 }
 
 void Stairs::bump(Actor& actor_bumping)
@@ -1399,7 +1393,7 @@ Color LiquidShallow::color_default() const
 
 Color LiquidShallow::color_bg_default() const
 {
-    const auto* const item = map::cells[pos_.x][pos_.y].item;
+    const auto* const item = map::cells.at(pos_).item;
 
     const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
 
@@ -1568,7 +1562,7 @@ void Lever::bump(Actor& actor_bumping)
     TRACE_FUNC_BEGIN;
 
     // If player is blind, ask it they really want to pull the lever
-    if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+    if (!map::cells.at(pos_).is_seen_by_player)
     {
         msg_log::clear();
 
@@ -1960,7 +1954,7 @@ Color Chains::color_default() const
 
 Color Chains::color_bg_default() const
 {
-    const auto* const item = map::cells[pos_.x][pos_.y].item;
+    const auto* const item = map::cells.at(pos_).item;
 
     const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
 
@@ -1982,7 +1976,7 @@ void Chains::bump(Actor& actor_bumping)
     {
         std::string msg;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg = "The chains rattle.";
         }
@@ -2033,9 +2027,7 @@ void Grate::on_hit(const int dmg,
     (void)dmg;
     (void)actor;
 
-    //
     // TODO: This is copy pasted - it should be handled better!
-    //
 
     auto destr_adj_doors = [&]()
     {
@@ -2045,7 +2037,7 @@ void Grate::on_hit(const int dmg,
 
             if (map::is_pos_inside_map(p))
             {
-                if (map::cells[p.x][p.y].rigid->id() == FeatureId::door)
+                if (map::cells.at(p).rigid->id() == FeatureId::door)
                 {
                     map::put(new RubbleLow(p));
                 }
@@ -2190,7 +2182,7 @@ void Brazier::on_hit(const int dmg,
                 ? AlertsMon::yes
                 : AlertsMon::no;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("It topples over.");
         }
@@ -2213,8 +2205,7 @@ void Brazier::on_hit(const int dmg,
 
         // NOTE: "this" is now deleted!
 
-        Rigid* const dst_rigid =
-            map::cells[dst_pos.x][dst_pos.y].rigid;
+        Rigid* const dst_rigid = map::cells.at(dst_pos).rigid;
 
         if (!dst_rigid->data().is_bottomless)
         {
@@ -2233,9 +2224,7 @@ void Brazier::on_hit(const int dmg,
                 expl_d = -2;
             }
 
-            //
             // TODO: Emit sound from explosion center
-            //
 
             explosion::run(expl_pos,
                            ExplType::apply_prop,
@@ -2249,13 +2238,13 @@ void Brazier::on_hit(const int dmg,
     }
 }
 
-void Brazier::add_light_hook(bool light[map_w][map_h]) const
+void Brazier::add_light_hook(Array2<bool>& light) const
 {
     for (const P& d : dir_utils::dir_list_w_center)
     {
         const P p(pos_ + d);
 
-        light[p.x][p.y] = true;
+        light.at(p) = true;
     }
 }
 
@@ -2311,9 +2300,7 @@ void ItemContainer::init(const FeatureId feature_id,
 
             if (!item_d.allow_spawn)
             {
-                //
                 // Item not allowed to spawn - next item!
-                //
                 continue;
             }
 
@@ -2326,9 +2313,7 @@ void ItemContainer::init(const FeatureId feature_id,
 
             if (!can_spawn_in_container)
             {
-                //
                 // Item not allowed to spawn in this feature - next item!
-                //
                 continue;
             }
 
@@ -2654,7 +2639,7 @@ void Tomb::bump(Actor& actor_bumping)
         {
             msg_log::add("The tomb is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a stone box here.");
         }
@@ -2759,7 +2744,7 @@ DidOpen Tomb::open(Actor* const actor_opening)
                           AlertsMon::yes
                           ));
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("The lid comes off.");
         }
@@ -2780,7 +2765,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
 
     ActorId id_to_spawn = ActorId::END;
 
-    const bool is_seen = map::cells[pos_.x][pos_.y].is_seen_by_player;
+    const bool is_seen = map::cells.at(pos_).is_seen_by_player;
 
     switch (trait_)
     {
@@ -2930,7 +2915,7 @@ DidTriggerTrap Tomb::trigger_trap(Actor* const actor)
     if (id_to_spawn != ActorId::END)
     {
         const auto summoned =
-            actor_factory::spawn(pos_, {id_to_spawn})
+            actor_factory::spawn(pos_, {id_to_spawn}, map::rect())
             .make_aware_of_player()
             .for_each([this](Mon* const mon)
             {
@@ -3012,7 +2997,7 @@ void Chest::bump(Actor& actor_bumping)
         {
             msg_log::add("The chest is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a chest here.");
         }
@@ -3067,7 +3052,7 @@ DidOpen Chest::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("The chest opens.");
         }
@@ -3089,7 +3074,7 @@ void Chest::hit(const int dmg,
         {
         case DmgMethod::kicking:
         {
-            if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+            if (!map::cells.at(pos_).is_seen_by_player)
             {
                 // If player is blind, call the parent hit function instead
                 // (generic kicking)
@@ -3341,7 +3326,7 @@ void Fountain::bump(Actor& actor_bumping)
     {
         PropHandler& properties = map::player->properties();
 
-        if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::clear();
 
@@ -3521,7 +3506,7 @@ void Cabinet::bump(Actor& actor_bumping)
         {
             msg_log::add("The cabinet is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a cabinet here.");
         }
@@ -3565,7 +3550,7 @@ DidOpen Cabinet::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("The cabinet opens.");
         }
@@ -3652,7 +3637,7 @@ void Bookshelf::bump(Actor& actor_bumping)
         {
             msg_log::add("The bookshelf is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a bookshelf here.");
         }
@@ -3761,7 +3746,7 @@ void AlchemistBench::bump(Actor& actor_bumping)
         {
             msg_log::add("The bench is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a wooden bench here.");
         }
@@ -3881,7 +3866,7 @@ void Cocoon::bump(Actor& actor_bumping)
         {
             msg_log::add("The cocoon is empty.");
         }
-        else if (!map::cells[pos_.x][pos_.y].is_seen_by_player)
+        else if (!map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("There is a cocoon here.");
         }
@@ -3956,7 +3941,10 @@ DidTriggerTrap Cocoon::trigger_trap(Actor* const actor)
 
                 const ActorId actor_id_to_summon = spawn_bucket[idx];
 
-                actor_factory::spawn(pos_, {nr_spiders, actor_id_to_summon})
+                actor_factory::spawn(
+                        pos_,
+                        {nr_spiders, actor_id_to_summon},
+                        map::rect())
                     .make_aware_of_player();
 
                 is_trapped_ = false;
@@ -3993,7 +3981,7 @@ DidOpen Cocoon::open(Actor* const actor_opening)
     {
         is_open_ = true;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             msg_log::add("The cocoon opens.");
         }

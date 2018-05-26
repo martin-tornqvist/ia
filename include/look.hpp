@@ -52,13 +52,6 @@ private:
 
         std::string auto_description_str() const;
 
-        std::string mon_speed_str() const;
-
-        std::string mon_dwell_lvl_str() const;
-
-        void mon_shock_str(std::string& shock_str_out,
-                           std::string& punct_str_out) const;
-
         std::vector< std::vector<ActorDescrText> > lines_;
 
         int top_idx_;

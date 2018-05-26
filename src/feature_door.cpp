@@ -126,31 +126,26 @@ Door::Door(const P& feature_pos,
 
 Door::~Door()
 {
-    //
-    // Unlink all levers
-    //
-    if (type_ == DoorType::metal)
-    {
-        for (int x = 0; x < map_w; ++x)
+        // Unlink all levers
+        if (type_ == DoorType::metal)
         {
-            for (int y = 0; y < map_h; ++y)
-            {
-                auto* const rigid = map::cells[x][y].rigid;
-
-                if (rigid && (rigid->id() == FeatureId::lever))
+                for (size_t i = 0; i < map::nr_cells(); ++i)
                 {
-                    auto* const lever = static_cast<Lever*>(rigid);
+                        auto* const rigid = map::cells.at(i).rigid;
 
-                    if (lever->is_linked_to(*this))
-                    {
-                        lever->unlink();
-                    }
+                        if (rigid && (rigid->id() == FeatureId::lever))
+                        {
+                                auto* const lever = static_cast<Lever*>(rigid);
+
+                                if (lever->is_linked_to(*this))
+                                {
+                                        lever->unlink();
+                                }
+                        }
                 }
-            }
         }
-    }
 
-    delete mimic_feature_;
+        delete mimic_feature_;
 }
 
 void Door::on_hit(const int dmg,
@@ -623,19 +618,13 @@ TileId Door::tile() const
         case DoorType::wood:
         case DoorType::metal:
         {
-            ret =
-                is_open_ ?
-                TileId::door_open :
-                TileId::door_closed;
+            ret = is_open_ ? TileId::door_open : TileId::door_closed;
         }
         break;
 
         case DoorType::gate:
         {
-            ret =
-                is_open_ ?
-                TileId::gate_open :
-                TileId::gate_closed;
+            ret = is_open_ ? TileId::gate_open : TileId::gate_closed;
         }
         break;
         }
@@ -676,7 +665,7 @@ void Door::bump(Actor& actor_bumping)
 
         // Print messages as if this was a wall
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
             TRACE << "Player bumped into secret door, "
                   << "with vision in cell" << std::endl;
@@ -713,7 +702,7 @@ void Door::reveal(const Verbosity verbosity)
     is_secret_ = false;
 
     if (verbosity == Verbosity::verbose &&
-        map::cells[pos_.x][pos_.y].is_seen_by_player)
+        map::cells.at(pos_).is_seen_by_player)
     {
         msg_log::add("A secret is revealed.");
     }
@@ -737,13 +726,15 @@ bool Door::try_jam(Actor* actor_trying)
     if (is_player)
     {
         std::string a =
-            tryer_is_blind ?
-            "a " : "the ";
+                tryer_is_blind
+                ?  "a "
+                : "the ";
 
-        msg_log::add("I jam " +
-                     a +
-                     base_name_short() +
-                     " with a spike.");
+        msg_log::add(
+                "I jam " +
+                a +
+                base_name_short() +
+                " with a spike.");
     }
 
     game_time::tick();
@@ -776,9 +767,9 @@ void Door::try_close(Actor* actor_trying)
     bool is_closable = true;
 
     const bool player_see_tryer =
-        is_player ?
-        true :
-        map::player->can_see_actor(*actor_trying);
+            is_player
+            ? true
+            : map::player->can_see_actor(*actor_trying);
 
     // Already closed?
     if (is_closable && !is_open_)
@@ -815,7 +806,7 @@ void Door::try_close(Actor* actor_trying)
         }
 
         if (is_blocked_by_actor ||
-            map::cells[pos_.x][pos_.y].item)
+            map::cells.at(pos_).item)
         {
             is_closable = false;
 
@@ -919,9 +910,9 @@ void Door::try_close(Actor* actor_trying)
             if (is_player)
             {
                 const auto alerts_mon =
-                    player_bon::traits[(size_t)Trait::silent] ?
-                    AlertsMon::no :
-                    AlertsMon::yes;
+                        player_bon::traits[(size_t)Trait::silent]
+                        ? AlertsMon::no
+                        : AlertsMon::yes;
 
                 Snd snd("",
                         SfxId::door_close,
@@ -964,10 +955,8 @@ void Door::try_close(Actor* actor_trying)
         }
     }
 
-    //
     // TODO: It doesn't seem like a turn is spent if player is blind and fails
-    //       to close the door?
-    //
+    // to close the door?
     if (!is_open_ && is_closable)
     {
         game_time::tick();
@@ -986,12 +975,14 @@ void Door::try_open(Actor* actor_trying)
 
     const bool is_player = actor_trying == map::player;
 
-    const bool player_see_door = map::cells[pos_.x][pos_.y].is_seen_by_player;
+    const bool player_see_door =
+            map::cells.at(pos_)
+            .is_seen_by_player;
 
     const bool player_see_tryer =
-        is_player ?
-        true :
-        map::player->can_see_actor(*actor_trying);
+            is_player
+            ? true
+            : map::player->can_see_actor(*actor_trying);
 
     if (is_player &&
         type_ == DoorType::metal)
@@ -1232,9 +1223,7 @@ DidOpen Door::open(Actor* const actor_opening)
 
     is_stuck_ = false;
 
-    //
     // TODO: This is kind of a hack...
-    //
     if (type_ == DoorType::metal)
     {
         Snd snd("",
@@ -1257,9 +1246,7 @@ DidClose Door::close(Actor* const actor_closing)
 
     is_open_ = false;
 
-    //
     // TODO: This is kind of a hack...
-    //
     if (type_ == DoorType::metal)
     {
         Snd snd("",

@@ -56,7 +56,7 @@ static SDL_Color mon_temp_property_bg_;
 
 static std::vector< std::pair<std::string, Color> > str_color_pairs_;
 
-SDL_Color rgb_hex_str_to_sdl_color(const std::string str)
+static SDL_Color rgb_hex_str_to_sdl_color(const std::string str)
 {
         if (str.size() != 6)
         {

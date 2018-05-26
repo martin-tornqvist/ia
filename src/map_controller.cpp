@@ -33,10 +33,10 @@ void MapControllerBoss::on_start()
 
 void MapControllerBoss::on_std_turn()
 {
-        const P stair_pos(map_w - 2, 11);
+        const P stair_pos(map::w() - 2, 11);
 
         const auto feature_at_stair_pos =
-                map::cells[stair_pos.x][stair_pos.y].rigid->id();
+                map::cells.at(stair_pos).rigid->id();
 
         if (feature_at_stair_pos == FeatureId::stairs)
         {

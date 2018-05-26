@@ -34,10 +34,11 @@ void connect_rooms()
                         {
                                 io::cover_panel(Panel::log);
                                 states::draw();
-                                io::draw_text("Failed to connect map",
-                                              Panel::screen,
-                                              P(0, 0),
-                                              colors::light_red());
+                                io::draw_text(
+                                        "Failed to connect map",
+                                        Panel::screen,
+                                        P(0, 0),
+                                        colors::light_red());
                                 io::update_screen();
                                 sdl_base::sleep(8000);
                         }
@@ -47,8 +48,7 @@ void connect_rooms()
                 }
 
                 auto rnd_room = []() {
-                        return map::room_list[
-                                rnd::range(0, map::room_list.size() - 1)];
+                        return rnd::element(map::room_list);
                 };
 
                 // Standard rooms are connectable
@@ -106,7 +106,7 @@ void connect_rooms()
                         for (int y = y0; y <= y1; ++y)
                         {
                                 const Room* const room_here =
-                                        map::room_map[x][y];
+                                        map::room_map.at(x, y);
 
                                 if (room_here &&
                                     room_here != room0 &&
@@ -131,26 +131,24 @@ void connect_rooms()
                 }
 
                 // Alright, let's try to connect these rooms
-                make_pathfind_corridor(*room0,
-                                       *room1,
-                                       door_proposals);
+                make_pathfind_corridor(
+                        *room0,
+                        *room1,
+                        &door_proposals);
 
-                bool blocked[map_w][map_h];
+                Array2<bool> blocked(map::dims());
 
                 map_parsers::BlocksMoveCommon(ParseActors::no).
-                        run(blocked);
+                        run(blocked, blocked.rect());
 
                 // Do not consider doors blocking
-                for (int x = 0; x < map_w; ++x)
+                for (size_t i = 0; i < map::nr_cells(); ++i)
                 {
-                        for (int y = 0; y < map_h; ++y)
-                        {
-                                const auto id = map::cells[x][y].rigid->id();
+                        const auto id = map::cells.at(i).rigid->id();
 
-                                if (id == FeatureId::door)
-                                {
-                                        blocked[x][y] = false;
-                                }
+                        if (id == FeatureId::door)
+                        {
+                                blocked.at(i) = false;
                         }
                 }
 

@@ -576,7 +576,7 @@ static void print_projectile_hit_actor_msg(const RangedAttData& att_data,
         {
                 const P& pos = att_data.defender->pos;
 
-                if (!map::cells[pos.x][pos.y].is_seen_by_player)
+                if (!map::cells.at(pos).is_seen_by_player)
                 {
                         return;
                 }
@@ -677,7 +677,7 @@ static Actor* get_actor_hit_by_projectile(const Projectile& projectile)
 
 static Feature* get_feature_blocking_projectile(const P& pos)
 {
-        auto* rigid = map::cells[pos.x][pos.y].rigid;
+        auto* rigid = map::cells.at(pos).rigid;
 
         if (!rigid->is_projectile_passable())
         {
@@ -700,7 +700,7 @@ static Feature* get_ground_blocking_projectile(const Projectile& projectile)
 
         if (has_hit_ground)
         {
-                return map::cells[pos.x][pos.y].rigid;
+                return map::cells.at(pos).rigid;
         }
 
         return nullptr;
@@ -1056,7 +1056,7 @@ static void update_projectile_states(ProjectileFireData& fire_data)
                                 *fire_data.wpn);
 
                 projectile.is_seen_by_player =
-                        map::cells[projectile_pos.x][projectile_pos.y]
+                        map::cells.at(projectile_pos)
                         .is_seen_by_player;
 
                 // Projectile out of range?
@@ -1162,7 +1162,7 @@ static void draw_projectile(const Projectile& projectile)
                 return;
         }
 
-        if (!viewport::is_in_ivew(projectile.pos))
+        if (!viewport::is_in_view(projectile.pos))
         {
                 return;
         }

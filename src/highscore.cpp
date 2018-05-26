@@ -311,7 +311,7 @@ void BrowseHighscore::draw()
         io::draw_text_center(
                 title,
                 panel,
-                P(map_w_half, 0),
+                P(panels::get_center_x(Panel::screen), 0),
                 colors::title(),
                 false, // Do not draw background color
                 colors::black(),

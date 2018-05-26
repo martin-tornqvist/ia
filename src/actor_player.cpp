@@ -59,6 +59,13 @@ static void print_aware_invis_mon_msg(const Mon& mon)
         MorePromptOnMsg::yes);
 }
 
+static const std::vector<std::string> item_feeling_messages_
+{
+        "I feel like I should examine this place thoroughly.",
+        "I feel like there is something of great interest here.",
+        "I sense an object of great power here."
+};
+
 // -----------------------------------------------------------------------------
 // Player
 // -----------------------------------------------------------------------------
@@ -160,7 +167,7 @@ bool Player::can_see_actor(const Actor& other) const
         return true;
     }
 
-    const Cell& cell = map::cells[other.pos.x][other.pos.y];
+    const Cell& cell = map::cells.at(other.pos);
 
     // Dead actors are seen if the cell is seen
     if (!other.is_alive() &&
@@ -491,70 +498,57 @@ void Player::incr_insanity()
 
 void Player::item_feeling()
 {
-    if ((player_bon::bg() != Bg::rogue) ||
-        !rnd::percent(80))
-    {
-        return;
-    }
-
-    bool print_feeling = false;
-
-    auto is_nice = [](const Item& item)
-    {
-        return item.data().value == ItemValue::supreme_treasure;
-    };
-
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        if ((player_bon::bg() != Bg::rogue) ||
+            !rnd::percent(80))
         {
-            const auto& cell = map::cells[x][y];
-
-            // Nice item on the floor, which is not seen by the player?
-            if (cell.item &&
-                is_nice(*cell.item) &&
-                !cell.is_seen_by_player)
-            {
-                print_feeling = true;
-
-                break;
-            }
-
-            // Nice item in container?
-            const auto& cont_items = cell.rigid->item_container_.items_;
-
-            for (const auto* const item : cont_items)
-            {
-                if (is_nice(*item))
-                {
-                    print_feeling = true;
-
-                    break;
-                }
-            }
-
-            if (print_feeling)
-            {
-                const std::vector<std::string> msg_bucket
-                {
-                    "I feel like I should examine this place thoroughly.",
-                    "I feel like there is something of great interest here.",
-                    "I sense an object of great power here."
-                };
-
-                const std::string msg = rnd::element(msg_bucket);
-
-                msg_log::add(msg,
-                             colors::light_cyan(),
-                             false,
-                             MorePromptOnMsg::yes);
-
                 return;
-            }
+        }
 
-        } // y loop
+        bool print_feeling = false;
 
-    } // x loop
+        auto is_nice = [](const Item& item) {
+                return item.data().value == ItemValue::supreme_treasure;
+        };
+
+        for (auto& cell : map::cells)
+        {
+                // Nice item on the floor, which is not seen by the player?
+                if (cell.item &&
+                    is_nice(*cell.item) &&
+                    !cell.is_seen_by_player)
+                {
+                        print_feeling = true;
+
+                        break;
+                }
+
+                // Nice item in container?
+                const auto& cont_items = cell.rigid->item_container_.items_;
+
+                for (const auto* const item : cont_items)
+                {
+                        if (is_nice(*item))
+                        {
+                                print_feeling = true;
+
+                                break;
+                        }
+                }
+
+                if (print_feeling)
+                {
+                        const std::string msg =
+                                rnd::element(item_feeling_messages_);
+
+                        msg_log::add(
+                                msg,
+                                colors::light_cyan(),
+                                false,
+                                MorePromptOnMsg::yes);
+
+                        return;
+                }
+        } // map cells loop
 }
 
 void Player::on_new_dlvl_reached()
@@ -732,7 +726,7 @@ void Player::act()
         {
             const P p_adj(target + d);
 
-            const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+            const Cell& adj_cell = map::cells.at(p_adj);
 
             if (!adj_cell.is_seen_by_player)
             {
@@ -742,7 +736,7 @@ void Player::act()
             }
         }
 
-        const Cell& target_cell = map::cells[target.x][target.y];
+        const Cell& target_cell = map::cells.at(target);
 
         {
             bool should_abort = !target_cell.rigid->can_move(*this);
@@ -781,7 +775,7 @@ void Player::act()
             {
                 const P p_adj(p + d);
 
-                const Cell& adj_cell = map::cells[p_adj.x][p_adj.y];
+                const Cell& adj_cell = map::cells.at(p_adj);
 
                 if (adj_cell.is_seen_by_player &&
                     (adj_cell.rigid->id() == FeatureId::door))
@@ -815,7 +809,7 @@ void Player::act()
 
         bool should_abort = false;
 
-        if (map::dark[pos.x][pos.y])
+        if (map::dark.at(pos))
         {
             should_abort = true;
         }
@@ -882,7 +876,7 @@ bool Player::is_seeing_burning_feature() const
     {
         for (int y = fov_r.p0.y; y <= fov_r.p1.y; ++y)
         {
-            const auto& cell = map::cells[x][y];
+            const auto& cell = map::cells.at(x, y);
 
             if (cell.is_seen_by_player &&
                 (cell.rigid->burn_state_ == BurnState::burning))
@@ -926,36 +920,31 @@ void Player::on_actor_turn()
         }
     }
 
-    int vigilant_flood[map_w][map_h] = {};
+    Array2<int> vigilant_flood(map::dims());
 
     if (player_bon::has_trait(Trait::vigilant))
     {
-        bool blocks_sound[map_w][map_h];
+        Array2<bool> blocks_sound(map::dims());
 
         const int d = 3;
 
         const R area(
             P(std::max(0, pos.x - d),
               std::max(0, pos.y - d)),
-            P(std::min(map_w - 1, pos.x + d),
-              std::min(map_h - 1, pos.y + d)));
+            P(std::min(map::w() - 1, pos.x + d),
+              std::min(map::h() - 1, pos.y + d)));
 
         map_parsers::BlocksSound()
             .run(blocks_sound,
-                 MapParseMode::overwrite,
-                 area);
+                 area,
+                 MapParseMode::overwrite);
 
-        floodfill(pos,
-                  blocks_sound,
-                  vigilant_flood,
-                  d);
+        vigilant_flood = floodfill(pos, blocks_sound, d);
     }
 
     for (Actor* actor : game_time::actors)
     {
-        //
         // Not a hostile, living monster?
-        //
         if (actor->is_player() ||
             map::player->is_leader_of(actor) ||
             !actor->is_alive())
@@ -996,8 +985,7 @@ void Player::on_actor_turn()
         {
             mon.is_msg_mon_in_view_printed_ = false;
 
-            const bool is_cell_seen =
-                map::cells[mon.pos.x][mon.pos.y].is_seen_by_player;
+            const bool is_cell_seen = map::cells.at(mon.pos).is_seen_by_player;
 
             const bool is_mon_invis =
                 mon.has_prop(PropId::invis) ||
@@ -1007,9 +995,9 @@ void Player::on_actor_turn()
                 has_prop(PropId::see_invis);
 
             // NOTE: We only run the flodofill within a limited area, so ANY
-            //       cell reached by the flood is considered as within distance
+            // cell reached by the flood is considered as within distance
             const bool is_mon_within_vigilant_dist =
-                vigilant_flood[mon.pos.x][mon.pos.y] > 0;
+                    vigilant_flood.at(mon.pos) > 0;
 
             // If the monster is invisible (and the player cannot see invisible
             // monsters), or if the cells is not seen, being Vigilant will make
@@ -1220,7 +1208,7 @@ void Player::add_shock_from_seen_monsters()
         {
             const P mon_p = mon->pos;
 
-            if (map::cells[mon_p.x][mon_p.y].is_seen_by_player)
+            if (map::cells.at(mon_p).is_seen_by_player)
             {
                 // There is an invisible monster here! How scary!
                 shock_lvl = ShockLvl::terrifying;
@@ -1294,13 +1282,12 @@ void Player::update_tmp_shock()
     if (properties_->allow_see())
     {
         // Shock reduction from light?
-        if (map::light[pos.x][pos.y])
+        if (map::light.at(pos))
         {
             shock_tmp_ -= 20.0;
         }
         // Not lit - shock from darkness?
-        else if (map::dark[pos.x][pos.y] &&
-                 (player_bon::bg() != Bg::ghoul))
+        else if (map::dark.at(pos) && (player_bon::bg() != Bg::ghoul))
         {
             double shock_value = 20.0;
 
@@ -1318,7 +1305,7 @@ void Player::update_tmp_shock()
             const P p(pos + d);
 
             const double feature_shock_db =
-                (double)map::cells[p.x][p.y].rigid->shock_when_adj();
+                (double)map::cells.at(p).rigid->shock_when_adj();
 
             shock_tmp_ += shock_taken_after_mods(feature_shock_db,
                                                  ShockSrc::misc);
@@ -1496,40 +1483,37 @@ void Player::on_std_turn()
     if (!has_prop(PropId::confused) &&
         properties_->allow_see())
     {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::cells.length(); ++i)
         {
-            for (int y = 0; y < map_h; ++y)
-            {
-                if (!map::cells[x][y].is_seen_by_player)
+                if (!map::cells.at(i).is_seen_by_player)
                 {
-                    continue;
+                        continue;
                 }
 
-                auto* f = map::cells[x][y].rigid;
+                auto* f = map::cells.at(i).rigid;
 
-                const int lit_mod = map::light[x][y] ? 5 : 0;
+                const int lit_mod = map::light.at(i) ? 5 : 0;
 
                 const int dist = king_dist(pos, f->pos());
 
                 const int dist_mod = -((dist - 1) * 5);
 
                 int skill_tot =
-                    player_search_skill +
-                    lit_mod +
-                    dist_mod;
+                        player_search_skill +
+                        lit_mod +
+                        dist_mod;
 
                 if (skill_tot > 0)
                 {
-                    const bool is_spotted =
-                        ability_roll::roll(skill_tot) >=
-                        ActionResult::success;
+                        const bool is_spotted =
+                                ability_roll::roll(skill_tot) >=
+                                ActionResult::success;
 
-                    if (is_spotted)
-                    {
-                        f->reveal(Verbosity::verbose);
-                    }
+                        if (is_spotted)
+                        {
+                                f->reveal(Verbosity::verbose);
+                        }
                 }
-            }
         }
     }
 }
@@ -1684,7 +1668,7 @@ void Player::move(Dir dir)
     if (dir != Dir::center)
     {
         // Check if map features are blocking (used later)
-        Cell& cell = map::cells[tgt.x][tgt.y];
+        Cell& cell = map::cells.at(tgt);
 
         bool is_features_allow_move = cell.rigid->can_move(*this);
 
@@ -1841,7 +1825,7 @@ void Player::move(Dir dir)
             pos = tgt;
 
             // Walking on item?
-            Item* const item = map::cells[pos.x][pos.y].item;
+            Item* const item = map::cells.at(pos).item;
 
             if (item)
             {
@@ -1885,7 +1869,7 @@ void Player::move(Dir dir)
             mob->bump(*this);
         }
 
-        map::cells[tgt.x][tgt.y].rigid->bump(*this);
+        map::cells.at(tgt).rigid->bump(*this);
     }
 
     // If position is at the destination now, it means that the player either:
@@ -2041,7 +2025,7 @@ void Player::hand_att(Actor& defender)
     attack::melee(this, pos, defender, wpn);
 }
 
-void Player::add_light_hook(bool light_map[map_w][map_h]) const
+void Player::add_light_hook(Array2<bool>& light_map) const
 {
     LgtSize lgt_size = LgtSize::none;
 
@@ -2070,26 +2054,24 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
     {
     case LgtSize::fov:
     {
-        bool hard_blocked[map_w][map_h];
+         Array2<bool> hard_blocked(map::dims());
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parsers::BlocksLos()
             .run(hard_blocked,
-                 MapParseMode::overwrite,
-                 fov_lmt);
+                 fov_lmt,
+                 MapParseMode::overwrite);
 
-        LosResult fov[map_w][map_h];
+        const auto player_fov = fov::run(pos, hard_blocked);
 
-        fov::run(pos, hard_blocked, fov);
-
-        for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
+        for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
         {
-            for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
+            for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
             {
-                if (!fov[x][y].is_blocked_hard)
+                if (!player_fov.at(x, y).is_blocked_hard)
                 {
-                    light_map[x][y] = true;
+                    light_map.at(x, y) = true;
                 }
             }
         }
@@ -2101,7 +2083,7 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
         {
             for (int x = pos.x - 1; x <= pos.x + 1; ++x)
             {
-                light_map[x][y] = true;
+                light_map.at(x, y) = true;
             }
         }
         break;
@@ -2113,44 +2095,37 @@ void Player::add_light_hook(bool light_map[map_w][map_h]) const
 
 void Player::update_fov()
 {
-    for (int x = 0; x < map_w; ++x)
+    for (auto& cell : map::cells)
     {
-        for (int y = 0; y < map_h; ++y)
-        {
-            Cell& cell = map::cells[x][y];
+        cell.is_seen_by_player = false;
 
-            cell.is_seen_by_player = false;
+        cell.player_los.is_blocked_hard = true;
 
-            cell.player_los.is_blocked_hard = true;
-
-            cell.player_los.is_blocked_by_drk = false;
-        }
+        cell.player_los.is_blocked_by_drk = false;
     }
 
     const bool has_darkvision = has_prop(PropId::darkvision);
 
     if (properties_->allow_see())
     {
-        bool hard_blocked[map_w][map_h];
+         Array2<bool> hard_blocked(map::dims());
 
          const R fov_lmt = fov::get_fov_rect(pos);
 
         map_parsers::BlocksLos()
             .run(hard_blocked,
-                 MapParseMode::overwrite,
-                 fov_lmt);
+                 fov_lmt,
+                 MapParseMode::overwrite);
 
-        LosResult fov[map_w][map_h];
-
-        fov::run(pos, hard_blocked, fov);
+        const auto player_fov = fov::run(pos, hard_blocked);
 
         for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
         {
             for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
             {
-                const LosResult& los = fov[x][y];
+                const LosResult& los = player_fov.at(x, y);
 
-                Cell& cell = map::cells[x][y];
+                Cell& cell = map::cells.at(x, y);
 
                 cell.is_seen_by_player =
                     !los.is_blocked_hard &&
@@ -2160,12 +2135,11 @@ void Player::update_fov()
 
 #ifndef NDEBUG
                 // Sanity check - if the cell is ONLY blocked by darkness
-                // (i.e. not by a wall or other blocking feature), it should
-                // NOT be lit
-                if (!los.is_blocked_hard &&
-                    los.is_blocked_by_drk)
+                // (i.e. not by a wall or other blocking feature), it should NOT
+                // be lit
+                if (!los.is_blocked_hard && los.is_blocked_by_drk)
                 {
-                    ASSERT(!map::light[x][y]);
+                        ASSERT(!map::light.at(x, y));
                 }
 #endif // NDEBUG
             }
@@ -2176,59 +2150,54 @@ void Player::update_fov()
 
     // The player's current cell is always seen - mostly to update item info
     // while blind (i.e. when you pick up an item you should see it disappear)
-    map::cells[pos.x][pos.y].is_seen_by_player = true;
+    map::cells.at(pos).is_seen_by_player = true;
 
     // Cheat vision
     if (init::is_cheat_vision_enabled)
     {
         // Show all cells adjacent to cells which can be shot or seen through
-        bool reveal[map_w][map_h];
+        Array2<bool> reveal(map::dims());
 
         map_parsers::BlocksProjectiles()
-            .run(reveal);
+                .run(reveal, reveal.rect());
 
         map_parsers::BlocksLos()
-            .run(reveal, MapParseMode::append);
+            .run(reveal,
+                 reveal.rect(),
+                 MapParseMode::append);
 
-        for (int x = 0; x < map_w; ++x)
+        for (auto& reveal_cell : reveal)
         {
-            for (int y = 0; y < map_h; ++y)
-            {
-                reveal[x][y] = !reveal[x][y];
-            }
+                reveal_cell = !reveal_cell;
         }
 
-        bool reveal_expanded[map_w][map_h];
+        const auto reveal_expanded =
+                map_parsers::expand(reveal, reveal.rect());
 
-        map_parsers::expand(reveal, reveal_expanded);
-
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::cells.length(); ++i)
         {
-            for (int y = 0; y < map_h; ++y)
+            if (reveal_expanded.at(i))
             {
-                if (reveal_expanded[x][y])
-                {
-                    map::cells[x][y].is_seen_by_player = true;
-                }
+                map::cells.at(i).is_seen_by_player = true;
             }
         }
     }
 
     // Explore
-    for (int x = 0; x < map_w; ++x)
+    for (int x = 0; x < map::w(); ++x)
     {
-        for (int y = 0; y < map_h; ++y)
+        for (int y = 0; y < map::h(); ++y)
         {
             const bool is_blocking =
                 map_parsers::BlocksMoveCommon(ParseActors::no)
                 .cell(P(x, y));
 
             const bool allow_explore =
-                !map::dark[x][y] ||
+                !map::dark.at(x, y) ||
                 is_blocking ||
                 has_darkvision;
 
-            Cell& cell = map::cells[x][y];
+            Cell& cell = map::cells.at(x, y);
 
             // Do not explore dark floor cells
             if (cell.is_seen_by_player &&
@@ -2242,23 +2211,23 @@ void Player::update_fov()
 
 void Player::fov_hack()
 {
-    bool blocked_los[map_w][map_h];
+    Array2<bool> blocked_los(map::dims());
 
     map_parsers::BlocksLos()
-        .run(blocked_los);
+            .run(blocked_los, blocked_los.rect());
 
-    bool blocked[map_w][map_h];
+    Array2<bool> blocked(map::dims());
 
     map_parsers::BlocksMoveCommon(ParseActors::no)
-        .run(blocked);
+            .run(blocked, blocked.rect());
 
     const bool has_darkvision = has_prop(PropId::darkvision);
 
-    for (int x = 0; x < map_w; ++x)
+    for (int x = 0; x < map::w(); ++x)
     {
-        for (int y = 0; y < map_h; ++y)
+        for (int y = 0; y < map::h(); ++y)
         {
-            if (blocked_los[x][y] && blocked[x][y])
+            if (blocked_los.at(x, y) && blocked.at(x, y))
             {
                 const P p(x, y);
 
@@ -2269,15 +2238,15 @@ void Player::fov_hack()
                     if (map::is_pos_inside_map(p_adj))
                     {
                         const bool allow_explore =
-                            (!map::dark[p_adj.x][p_adj.y] ||
-                             map::light[p_adj.x][p_adj.y] ||
-                             has_darkvision) &&
-                            !blocked[p_adj.x][p_adj.y];
+                                (!map::dark.at(p_adj) ||
+                                 map::light.at(p_adj) ||
+                                 has_darkvision) &&
+                                !blocked.at(p_adj);
 
-                        if (map::cells[p_adj.x][p_adj.y].is_seen_by_player &&
+                        if (map::cells.at(p_adj).is_seen_by_player &&
                             allow_explore)
                         {
-                            Cell& cell = map::cells[x][y];
+                            Cell& cell = map::cells.at(x, y);
 
                             cell.is_seen_by_player = true;
 

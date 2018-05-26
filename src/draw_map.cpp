@@ -1,90 +1,83 @@
 #include "draw_map.hpp"
 
-#include "io.hpp"
-#include "map.hpp"
-#include "viewport.hpp"
 #include "actor.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
-#include "feature_rigid.hpp"
-#include "feature_mob.hpp"
 #include "feature_door.hpp"
+#include "feature_mob.hpp"
+#include "feature_rigid.hpp"
+#include "io.hpp"
+#include "map.hpp"
+#include "viewport.hpp"
 
 // -----------------------------------------------------------------------------
 // Private
 // -----------------------------------------------------------------------------
-static CellRenderData render_array[map_w][map_h];
-static CellRenderData render_array_player_memory[map_w][map_h];
+static Array2<CellRenderData> render_array_(0, 0);
+static Array2<CellRenderData> render_array_player_memory_(0, 0);
 
 static void clear_render_array()
 {
-        for (int x = 0; x < map_w; ++x)
-        {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        render_array[x][y] = CellRenderData();
-                }
-        }
+        std::fill(std::begin(render_array_),
+                  std::end(render_array_),
+                  CellRenderData());
 }
 
 static void set_rigids()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                auto& cell = map::cells.at(i);
+
+                if (!cell.is_seen_by_player)
                 {
-                        auto& cell = map::cells[x][y];
+                        continue;
+                }
 
-                        if (!cell.is_seen_by_player)
+                auto& render_data = render_array_.at(i);
+
+                const auto* const f = cell.rigid;
+
+                TileId gore_tile = TileId::END;
+
+                char gore_character = 0;
+
+                if (f->can_have_gore())
+                {
+                        gore_tile = f->gore_tile();
+                        gore_character = f->gore_character();
+                }
+
+                if (gore_tile == TileId::END)
+                {
+                        render_data.tile = f->tile();
+                        render_data.character = f->character();
+                        render_data.color = f->color();
+
+                        const Color feature_color_bg = f->color_bg();
+
+                        if (feature_color_bg != colors::black())
                         {
-                                continue;
+                                render_data.color_bg =
+                                        feature_color_bg;
                         }
-
-                        auto& render_data = render_array[x][y];
-
-                        const auto* const f = cell.rigid;
-
-                        TileId gore_tile = TileId::END;
-
-                        char gore_character = 0;
-
-                        if (f->can_have_gore())
-                        {
-                                gore_tile = f->gore_tile();
-                                gore_character = f->gore_character();
-                        }
-
-                        if (gore_tile == TileId::END)
-                        {
-                                render_data.tile = f->tile();
-                                render_data.character = f->character();
-                                render_data.color = f->color();
-
-                                const Color feature_color_bg = f->color_bg();
-
-                                if (feature_color_bg != colors::black())
-                                {
-                                        render_data.color_bg =
-                                                feature_color_bg;
-                                }
-                        }
-                        else // Has gore
-                        {
-                                render_data.tile = gore_tile;
-                                render_data.character = gore_character;
-                                render_data.color = colors::red();
-                        }
+                }
+                else // Has gore
+                {
+                        render_data.tile = gore_tile;
+                        render_data.character = gore_character;
+                        render_data.color = colors::red();
                 }
         }
 }
 
 static void post_process_wall_tiles()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (int x = 0; x < map::w(); ++x)
         {
-                for (int y = 0; y < (map_h - 1); ++y)
+                for (int y = 0; y < (map::h() - 1); ++y)
                 {
-                        auto& render_data = render_array[x][y];
+                        auto& render_data = render_array_.at(x, y);
 
                         const auto tile = render_data.tile;
 
@@ -99,7 +92,7 @@ static void post_process_wall_tiles()
                         const Wall* wall = nullptr;
 
                         {
-                                const auto* const f = map::cells[x][y].rigid;
+                                const auto* const f = map::cells.at(x, y).rigid;
 
                                 const auto id = f->id();
 
@@ -123,10 +116,10 @@ static void post_process_wall_tiles()
                                 }
                         }
 
-                        if (map::cells[x][y + 1].is_explored)
+                        if (map::cells.at(x, y + 1).is_explored)
                         {
                                 const auto tile_below =
-                                        render_array[x][y + 1].tile;
+                                        render_array_.at(x, y + 1).tile;
 
                                 if (Wall::is_wall_front_tile(tile_below) ||
                                     Wall::is_wall_top_tile(tile_below) ||
@@ -159,7 +152,7 @@ static void set_dead_actors()
         {
                 const P& p(actor->pos);
 
-                if (!map::cells[p.x][p.y].is_seen_by_player ||
+                if (!map::cells.at(p).is_seen_by_player ||
                     !actor->is_corpse() ||
                     actor->data().character == 0 ||
                     actor->data().character == ' ' ||
@@ -168,7 +161,7 @@ static void set_dead_actors()
                         continue;
                 }
 
-                auto& render_data = render_array[p.x][p.y];
+                auto& render_data = render_array_.at(p);
 
                 render_data.color = actor->color();
                 render_data.tile = actor->tile();
@@ -178,61 +171,46 @@ static void set_dead_actors()
 
 static void set_items()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                const Item* const item = map::cells.at(i).item;
+
+                if (!map::cells.at(i).is_seen_by_player || !item)
                 {
-                        const Item* const item = map::cells[x][y].item;
-
-                        if (!map::cells[x][y].is_seen_by_player || !item)
-                        {
-                                continue;
-                        }
-
-                        auto& render_data = render_array[x][y];
-
-                        render_data.color = item->color();
-                        render_data.tile = item->tile();
-                        render_data.character = item->character();
+                        continue;
                 }
+
+                auto& render_data = render_array_.at(i);
+
+                render_data.color = item->color();
+                render_data.tile = item->tile();
+                render_data.character = item->character();
         }
 }
 
 static void copy_seen_cells_to_player_memory()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                if (map::cells.at(i).is_seen_by_player)
                 {
-                        if (!map::cells[x][y].is_seen_by_player)
-                        {
-                                continue;
-                        }
-
-                        render_array_player_memory[x][y] = render_array[x][y];
+                        render_array_player_memory_.at(i) = render_array_.at(i);
                 }
         }
 }
 
 static void set_light()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                const auto* const f = map::cells.at(i).rigid;
+
+                if (map::cells.at(i).is_seen_by_player &&
+                    map::light.at(i) &&
+                    f->is_los_passable() &&
+                    !f->is_bottomless())
                 {
-                        auto& render_data = render_array[x][y];
-
-                        const auto* const f = map::cells[x][y].rigid;
-
-                        if (!map::cells[x][y].is_seen_by_player ||
-                            !map::light[x][y] ||
-                            !f->is_los_passable() ||
-                            f->is_bottomless())
-                        {
-                                continue;
-                        }
-
-                        auto& color = render_data.color;
+                        auto& color = render_array_.at(i).color;
 
                         color.set_r(std::min(255, color.r() + 40));
                         color.set_g(std::min(255, color.g() + 40));
@@ -250,19 +228,17 @@ static void set_mobiles()
 
                 const char mob_character = mob->character();
 
-                if (!map::cells[p.x][p.y].is_seen_by_player ||
-                    mob_tile == TileId::END ||
-                    mob_character == 0 ||
-                    mob_character == ' ')
+                if (map::cells.at(p).is_seen_by_player &&
+                    mob_tile != TileId::END &&
+                    mob_character != 0 &&
+                    mob_character != ' ')
                 {
-                        continue;
+                        auto& render_data = render_array_.at(p);
+
+                        render_data.color = mob->color();
+                        render_data.tile = mob_tile;
+                        render_data.character = mob_character;
                 }
-
-                auto& render_data = render_array[p.x][p.y];
-
-                render_data.color = mob->color();
-                render_data.tile = mob_tile;
-                render_data.character = mob_character;
         }
 }
 
@@ -336,7 +312,7 @@ static void set_living_monsters()
 
                 const P& pos = actor->pos;
 
-                auto& render_data = render_array[pos.x][pos.y];
+                auto& render_data = render_array_.at(pos);
 
                 const auto* const mon = static_cast<const Mon*>(actor);
 
@@ -351,22 +327,17 @@ static void set_living_monsters()
         }
 }
 
-void set_unseen_cells_from_player_memory()
+static void set_unseen_cells_from_player_memory()
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                auto& render_data = render_array_.at(i);
+
+                const Cell& cell = map::cells.at(i);
+
+                if (!cell.is_seen_by_player && cell.is_explored)
                 {
-                        auto& render_data = render_array[x][y];
-
-                        const Cell& cell = map::cells[x][y];
-
-                        if (cell.is_seen_by_player || !cell.is_explored)
-                        {
-                                continue;
-                        }
-
-                        render_data = render_array_player_memory[x][y];
+                        render_data = render_array_player_memory_.at(i);
 
                         const double div = 3.0;
 
@@ -391,7 +362,7 @@ static void draw_render_array()
 
                         const P view_pos = viewport::to_view_pos(map_pos);
 
-                        auto& render_data = render_array[map_pos.x][map_pos.y];
+                        auto& render_data = render_array_.at(map_pos);
 
                         // NOTE: It can happen that text is drawn on the map
                         // even in tiles mode - for example exclamation marks on
@@ -449,7 +420,7 @@ static void draw_life_bar(const Actor& actor)
 
         const P map_pos = actor.pos.with_y_offset(1);
 
-        if (!viewport::is_in_ivew(map_pos))
+        if (!viewport::is_in_view(map_pos))
         {
                 return;
         }
@@ -509,7 +480,7 @@ static void draw_player_character()
 {
         const P& pos = map::player->pos;
 
-        if (!viewport::is_in_ivew(pos))
+        if (!viewport::is_in_view(pos))
         {
                 return;
         }
@@ -537,7 +508,7 @@ static void draw_player_character()
 
         const char character = '@';
 
-        auto& player_render_data = render_array[pos.x][pos.y];
+        auto& player_render_data = render_array_.at(pos);
 
         player_render_data.tile = tile;
         player_render_data.character = character;
@@ -564,19 +535,22 @@ namespace draw_map
 
 void clear()
 {
-        for (int x = 0; x < map_w; ++x)
-        {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        render_array[x][y] = CellRenderData();
+        clear_render_array();
 
-                        render_array_player_memory[x][y] = CellRenderData();
-                }
-        }
+        std::fill(std::begin(render_array_),
+                  std::end(render_array_),
+                  CellRenderData());
 }
 
 void run()
 {
+        if (render_array_.length() != map::nr_cells())
+        {
+                render_array_.resize(map::dims());
+
+                render_array_player_memory_.resize(map::dims());
+        }
+
         clear_render_array();
 
         set_unseen_cells_from_player_memory();
@@ -609,12 +583,12 @@ void run()
 
 const CellRenderData& get_drawn_cell(int x, int y)
 {
-        return render_array[x][y];
+        return render_array_.at(x, y);
 }
 
 const CellRenderData& get_drawn_cell_player_memory(int x, int y)
 {
-        return render_array_player_memory[x][y];
+        return render_array_player_memory_.at(x, y);
 }
 
 } // draw_map

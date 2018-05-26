@@ -27,8 +27,9 @@ void try_sprain_player()
         }
 
         const int sprain_one_in_n =
-                player_bon::traits[(size_t)Trait::tough] ?
-                10 : 4;
+                player_bon::traits[(size_t)Trait::tough]
+                ? 10
+                : 4;
 
         if (rnd::one_in(sprain_one_in_n))
         {
@@ -89,10 +90,10 @@ void run()
                                 TRACE << "Player is allowed to do melee attack"
                                       << std::endl;
 
-                                bool blocked[map_w][map_h];
+                                Array2<bool> blocked(map::dims());
 
                                 map_parsers::BlocksLos()
-                                        .run(blocked);
+                                        .run(blocked, blocked.rect());
 
                                 TRACE << "Player can see actor" << std::endl;
 
@@ -149,20 +150,20 @@ void run()
         if (corpse)
         {
                 const bool is_seeing_cell =
-                        map::cells[att_pos.x][att_pos.y].is_seen_by_player;
+                        map::cells.at(att_pos).is_seen_by_player;
 
                 std::string corpse_name =
-                        is_seeing_cell ?
-                        corpse->corpse_name_the() :
-                        "a corpse";
+                        is_seeing_cell
+                        ? corpse->corpse_name_the()
+                        : "a corpse";
 
                 corpse_name = text_format::first_to_lower(corpse_name);
 
                 // Decide if we should kick or use wielded weapon
                 const auto* const wpn_used_att_corpse =
-                        wpn->data().melee.att_corpse ?
-                        wpn :
-                        kick_wpn.get();
+                        wpn->data().melee.att_corpse
+                        ? wpn
+                        : kick_wpn.get();
 
                 const std::string melee_att_msg =
                         wpn_used_att_corpse->data().melee.att_msgs.player;
@@ -232,7 +233,7 @@ void run()
         if (input_dir != Dir::center)
         {
                 // Decide if we should kick or use wielded weapon
-                auto* const feature = map::cells[att_pos.x][att_pos.y].rigid;
+                auto* const feature = map::cells.at(att_pos).rigid;
 
                 bool allow_wpn_att_rigid = wpn->data().melee.att_rigid;
 
@@ -280,19 +281,20 @@ void run()
                 }
 
                 const auto* const wpn_used_att_feature =
-                        allow_wpn_att_rigid ?
-                        wpn :
-                        kick_wpn.get();
+                        allow_wpn_att_rigid
+                        ? wpn
+                        : kick_wpn.get();
 
                 const Dice dmg_dice =
                         wpn_used_att_feature->melee_dmg(map::player);
 
                 const int dmg = dmg_dice.roll();
 
-                feature->hit(dmg,
-                             DmgType::physical,
-                             wpn_used_att_feature->data().melee.dmg_method,
-                             map::player);
+                feature->hit(
+                        dmg,
+                        DmgType::physical,
+                        wpn_used_att_feature->data().melee.dmg_method,
+                        map::player);
 
                 // Attacking ends cloaking
                 map::player->properties().end_prop(PropId::cloaked);

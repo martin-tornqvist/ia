@@ -2,26 +2,29 @@
 
 #include <algorithm>
 
-#include "init.hpp"
-#include "room.hpp"
-#include "feature_trap.hpp"
-#include "map.hpp"
 #include "actor_factory.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
-#include "map_parsing.hpp"
-#include "game_time.hpp"
+#include "feature_trap.hpp"
 #include "flood.hpp"
+#include "game_time.hpp"
+#include "init.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "room.hpp"
 
-namespace populate_mon
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+enum class AllowSpawnUniqueMon
 {
+        no,
+        yes
+};
 
-namespace
-{
+static const int min_dist_to_player = fov_radi_int + 4;
 
-const int min_dist_to_player = fov_radi_int + 4;
-
-int random_out_of_depth()
+static int random_out_of_depth()
 {
         int nr_levels = 0;
 
@@ -33,7 +36,7 @@ int random_out_of_depth()
         return nr_levels;
 }
 
-std::vector<ActorId> valid_auto_spawn_monsters(
+static std::vector<ActorId> valid_auto_spawn_monsters(
         const int nr_lvls_out_of_depth,
         const AllowSpawnUniqueMon allow_spawn_unique)
 {
@@ -99,9 +102,10 @@ std::vector<ActorId> valid_auto_spawn_monsters(
         return ret;
 }
 
-bool make_random_group_for_room(const RoomType room_type,
-                                const std::vector<P>& sorted_free_cells,
-                                bool blocked_out[map_w][map_h])
+static bool make_random_group_for_room(
+        const RoomType room_type,
+        const std::vector<P>& sorted_free_cells,
+        Array2<bool>& blocked_out)
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -158,22 +162,23 @@ bool make_random_group_for_room(const RoomType room_type,
         {
                 const auto id = rnd::element(id_bucket);
 
-                make_group_at
-                        (id,
-                         sorted_free_cells,
-                         blocked_out,
-                         MonRoamingAllowed::yes);
+                populate_mon::make_group_at(
+                        id,
+                        sorted_free_cells,
+                        &blocked_out,
+                        MonRoamingAllowed::yes);
 
                 TRACE_FUNC_END_VERBOSE;
                 return true;
         }
 }
 
-void make_random_group_at(const std::vector<P>& sorted_free_cells,
-                          bool blocked_out[map_w][map_h],
-                          const int nr_lvls_out_of_depth_allowed,
-                          const MonRoamingAllowed is_roaming_allowed,
-                          const AllowSpawnUniqueMon allow_spawn_unique)
+static void make_random_group_at(
+        const std::vector<P>& sorted_free_cells,
+        Array2<bool>& blocked_out,
+        const int nr_lvls_out_of_depth_allowed,
+        const MonRoamingAllowed is_roaming_allowed,
+        const AllowSpawnUniqueMon allow_spawn_unique)
 {
         const auto id_bucket =
                 valid_auto_spawn_monsters(nr_lvls_out_of_depth_allowed,
@@ -183,50 +188,25 @@ void make_random_group_at(const std::vector<P>& sorted_free_cells,
         {
                 const auto id = rnd::element(id_bucket);
 
-                make_group_at(
+                populate_mon::make_group_at(
                         id,
                         sorted_free_cells,
-                        blocked_out,
+                        &blocked_out,
                         is_roaming_allowed);
         }
 }
 
-} // namespace
-
-std::vector<P> make_sorted_free_cells(const P& origin,
-                                      const bool blocked[map_w][map_h])
+// -----------------------------------------------------------------------------
+// populate_mon
+// -----------------------------------------------------------------------------
+namespace populate_mon
 {
-        std::vector<P> out;
 
-        const int radi = 10;
-
-        const int x0 = constr_in_range(1, origin.x - radi, map_w - 2);
-        const int y0 = constr_in_range(1, origin.y - radi, map_h - 2);
-        const int x1 = constr_in_range(1, origin.x + radi, map_w - 2);
-        const int y1 = constr_in_range(1, origin.y + radi, map_h - 2);
-
-        for (int x = x0; x <= x1; ++x)
-        {
-                for (int y = y0; y <= y1; ++y)
-                {
-                        if (!blocked[x][y])
-                        {
-                                out.push_back(P(x, y));
-                        }
-                }
-        }
-
-        IsCloserToPos sorter(origin);
-
-        std::sort(begin(out), end(out), sorter);
-
-        return out;
-}
-
-void make_group_at(const ActorId id,
-                   const std::vector<P>& sorted_free_cells,
-                   bool blocked_out[map_w][map_h],
-                   const MonRoamingAllowed is_roaming_allowed)
+void make_group_at(
+        const ActorId id,
+        const std::vector<P>& sorted_free_cells,
+        Array2<bool>* const blocked_out,
+        const MonRoamingAllowed is_roaming_allowed)
 {
         const ActorData& d = actor_data::data[(size_t)id];
 
@@ -275,7 +255,7 @@ void make_group_at(const ActorId id,
 
                 if (blocked_out != nullptr)
                 {
-                        ASSERT(!blocked_out[p.x][p.y]);
+                        ASSERT(!blocked_out->at(p));
                 }
 
                 Actor* const actor = actor_factory::make(id, p);
@@ -302,9 +282,42 @@ void make_group_at(const ActorId id,
 
                 if (blocked_out != nullptr)
                 {
-                        blocked_out[p.x][p.y] = true;
+                        blocked_out->at(p) = true;
                 }
         }
+} // make_group_at
+
+std::vector<P> make_sorted_free_cells(
+        const P& origin,
+        const Array2<bool>& blocked)
+{
+        std::vector<P> out;
+
+        const int radi = 10;
+
+        const P dims = blocked.dims();
+
+        const int x0 = constr_in_range(1, origin.x - radi, dims.x - 2);
+        const int y0 = constr_in_range(1, origin.y - radi, dims.y - 2);
+        const int x1 = constr_in_range(1, origin.x + radi, dims.x - 2);
+        const int y1 = constr_in_range(1, origin.y + radi, dims.y - 2);
+
+        for (int x = x0; x <= x1; ++x)
+        {
+                for (int y = y0; y <= y1; ++y)
+                {
+                        if (!blocked.at(x, y))
+                        {
+                                out.push_back(P(x, y));
+                        }
+                }
+        }
+
+        IsCloserToPos sorter(origin);
+
+        std::sort(begin(out), end(out), sorter);
+
+        return out;
 }
 
 void make_random_group()
@@ -316,33 +329,44 @@ void make_random_group()
                 return;
         }
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksMoveCommon(ParseActors::yes)
-                .run(blocked);
+                .run(blocked, blocked.rect());
 
         const P& player_pos = map::player->pos;
 
-        const int x0 = std::max(0, player_pos.x - min_dist_to_player);
-        const int y0 = std::max(0, player_pos.y - min_dist_to_player);
-        const int x1 = std::min(map_w - 1, player_pos.x + min_dist_to_player);
-        const int y1 = std::min(map_h - 1, player_pos.y + min_dist_to_player);
+        const int x0 = std::max(
+                0,
+                player_pos.x - min_dist_to_player);
+
+        const int y0 = std::max(
+                0,
+                player_pos.y - min_dist_to_player);
+
+        const int x1 = std::min(
+                map::w() - 1,
+                player_pos.x + min_dist_to_player);
+
+        const int y1 = std::min(
+                map::h() - 1,
+                player_pos.y + min_dist_to_player);
 
         for (int x = x0; x <= x1; ++x)
         {
                 for (int y = y0; y <= y1; ++y)
                 {
-                        blocked[x][y] = true;
+                        blocked.at(x, y) = true;
                 }
         }
 
         std::vector<P> free_cells_vector;
 
-        for (int x = 1; x < map_w - 2; ++x)
+        for (int x = 1; x < map::w() - 2; ++x)
         {
-                for (int y = 1; y < map_h - 2; ++y)
+                for (int y = 1; y < map::h() - 2; ++y)
                 {
-                        if (!blocked[x][y])
+                        if (!blocked.at(x, y))
                         {
                                 free_cells_vector.push_back(P(x, y));
                         }
@@ -357,7 +381,7 @@ void make_random_group()
 
                 if (!free_cells_vector.empty())
                 {
-                        if (map::cells[origin.x][origin.y].is_explored)
+                        if (map::cells.at(origin).is_explored)
                         {
                                 const int nr_ood = random_out_of_depth();
 
@@ -372,7 +396,7 @@ void make_random_group()
         }
 
         TRACE_FUNC_END;
-}
+} // make_random_group
 
 void populate_std_lvl()
 {
@@ -382,34 +406,27 @@ void populate_std_lvl()
 
         int nr_groups_spawned = 0;
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksMoveCommon(ParseActors::yes)
-                .run(blocked);
-
-        int flood[map_w][map_h];
+                .run(blocked, blocked.rect());
 
         const P& player_p = map::player->pos;
 
-        floodfill(player_p,
-                  blocked,
-                  flood);
+        const auto flood = floodfill(player_p, blocked);
 
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        const int v = flood[x][y];
+                const int v = flood.at(i);
 
-                        if ((v > 0) &&
-                            (v < min_dist_to_player))
-                        {
-                                blocked[x][y] = true;
-                        }
+                if ((v > 0) &&
+                    (v < min_dist_to_player))
+                {
+                        blocked.at(i) = true;
                 }
         }
 
-        blocked[player_p.x][player_p.y] = true;
+        blocked.at(player_p) = true;
 
         // First, attempt to populate all non-plain standard rooms
         for (Room* const room : map::room_list)
@@ -448,9 +465,10 @@ void populate_std_lvl()
                                      ++x)
                                 {
                                         const bool is_current_room =
-                                                map::room_map[x][y] == room;
+                                                map::room_map.at(x, y) == room;
 
-                                        if (is_current_room && !blocked[x][y])
+                                        if (is_current_room &&
+                                            !blocked.at(x, y))
                                         {
                                                 origin_bucket.push_back(
                                                         P(x, y));
@@ -505,9 +523,9 @@ void populate_std_lvl()
                              x <= room->r_.p1.x;
                              ++x)
                         {
-                                if (map::room_map[x][y] == room)
+                                if (map::room_map.at(x, y) == room)
                                 {
-                                        blocked[x][y] = true;
+                                        blocked.at(x, y) = true;
                                 }
                         }
                 }
@@ -518,13 +536,13 @@ void populate_std_lvl()
         // groups to place
         std::vector<P> origin_bucket;
 
-        for (int y = 1; y < map_h - 1; ++y)
+        for (int y = 1; y < map::h() - 1; ++y)
         {
-                for (int x = 1; x < map_w - 1; ++x)
+                for (int x = 1; x < map::w() - 1; ++x)
                 {
-                        Room* const room = map::room_map[x][y];
+                        Room* const room = map::room_map.at(x, y);
 
-                        if (!blocked[x][y] &&
+                        if (!blocked.at(x, y) &&
                             room &&
                             (room->type_ == RoomType::plain))
                         {
@@ -556,6 +574,6 @@ void populate_std_lvl()
         }
 
         TRACE_FUNC_END;
-}
+} // populate_std_lvl
 
 } // populate_mon

@@ -4,14 +4,11 @@
 #include "feature_rigid.hpp"
 #include "feature_door.hpp"
 
-namespace mapgen
-{
-
-namespace
-{
-
-void put_templ_features(const Array2<char>& templ,
-                        const P& p0)
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static void put_templ_features(const Array2<char>& templ,
+                               const P& p0)
 {
     const P dims(templ.dims());
 
@@ -23,7 +20,7 @@ void put_templ_features(const Array2<char>& templ,
 
             const P p(p0 + templ_p);
 
-            const char c = templ(templ_p);
+            const char c = templ.at(templ_p);
 
             bool is_room_cell = true;
 
@@ -120,7 +117,7 @@ void put_templ_features(const Array2<char>& templ,
                       << std::endl;
 
                 // Release mode robustness: invalidate the map
-                is_map_valid = false;
+                mapgen::is_map_valid = false;
 
                 ASSERT(false);
 
@@ -132,13 +129,13 @@ void put_templ_features(const Array2<char>& templ,
 
             if (!is_room_cell)
             {
-                map::room_map[p.x][p.y] = nullptr;
+                map::room_map.at(p) = nullptr;
             }
         } // y loop
     } // x loop
 }
 
-Room* make_template_room(const RoomTempl& templ, Region& region)
+static Room* make_template_room(const RoomTempl& templ, Region& region)
 {
     const P dims(templ.symbols.dims());
 
@@ -153,7 +150,7 @@ Room* make_template_room(const RoomTempl& templ, Region& region)
 
     auto* room = new TemplateRoom(r, templ.type);
 
-    register_room(*room);
+    mapgen::register_room(*room);
 
     // Place features on the map based on the template
 
@@ -168,7 +165,11 @@ Room* make_template_room(const RoomTempl& templ, Region& region)
 
 } // make_template_room
 
-} // namespace
+// -----------------------------------------------------------------------------
+// mapgen
+// -----------------------------------------------------------------------------
+namespace mapgen
+{
 
 Room* make_room(Region& region)
 {

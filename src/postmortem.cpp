@@ -22,12 +22,10 @@
 #include "create_character.hpp"
 #include "draw_map.hpp"
 
-namespace
-{
-
-std::vector<ColoredString> info_lines_;
-
-} // namespace
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static std::vector<ColoredString> info_lines_;
 
 // -----------------------------------------------------------------------------
 // Postmortem menu
@@ -423,9 +421,9 @@ void PostmortemMenu::draw()
                 const std::string& label = labels[i];
 
                 const Color& color =
-                        browser_.is_at_idx(i) ?
-                        colors::menu_highlight() :
-                        colors::menu_dark();
+                        browser_.is_at_idx(i)
+                        ? colors::menu_highlight()
+                        : colors::menu_dark();
 
                 io::draw_text(
                         label,
@@ -451,11 +449,11 @@ void PostmortemMenu::make_memorial_file(const std::string path) const
         }
 
         // Add text map to file
-        for (int y = 0; y < map_h; ++y)
+        for (int y = 0; y < map::h(); ++y)
         {
                 std::string map_line;
 
-                for (int x = 0; x < map_w; ++x)
+                for (int x = 0; x < map::w(); ++x)
                 {
                         char c = draw_map::get_drawn_cell(x, y).character;
 
@@ -586,7 +584,7 @@ void PostmortemInfo::draw()
 
         const int nr_info_lines = (int)info_lines_.size();
 
-        const int nr_lines_tot = nr_info_lines + map_h;
+        const int nr_lines_tot = nr_info_lines + map::h();
 
         int screen_y = 1;
 
@@ -608,9 +606,9 @@ void PostmortemInfo::draw()
                         const int map_y = i - nr_info_lines;
 
                         ASSERT(map_y >= 0);
-                        ASSERT(map_y < map_h);
+                        ASSERT(map_y < map::h());
 
-                        for (int x = 0; x < map_w; ++x)
+                        for (int x = 0; x < map::w(); ++x)
                         {
                                 const CellRenderData& d =
                                         draw_map::get_drawn_cell(x, map_y);
@@ -636,7 +634,7 @@ void PostmortemInfo::update()
 {
         const int line_jump = 3;
 
-        const int nr_lines_tot = info_lines_.size() + map_h;
+        const int nr_lines_tot = info_lines_.size() + map::h();
 
         const auto input = io::get(false);
 

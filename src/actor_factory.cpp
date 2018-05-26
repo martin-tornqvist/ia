@@ -60,27 +60,24 @@ Actor* make_actor_from_id(const ActorId id)
         return new AnimatedWpn();
 
     default:
-        return new Mon();
-
-    case ActorId::END:
         break;
     }
 
-    return nullptr;
+    return new Mon();
 }
 
 std::vector<P> free_spawn_positions(const R& area)
 {
-    bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
-    map_parsers::BlocksMoveCommon(ParseActors::yes)
-        .run(blocked,
-             MapParseMode::overwrite,
-             area);
+        map_parsers::BlocksMoveCommon(ParseActors::yes)
+                .run(blocked,
+                     area,
+                     MapParseMode::overwrite);
 
-    const auto free_positions = to_vec(blocked, false, area);
+        const auto free_positions = to_vec(blocked, false, area);
 
-    return free_positions;
+        return free_positions;
 }
 
 Mon* spawn_at(const P& pos, const ActorId id)

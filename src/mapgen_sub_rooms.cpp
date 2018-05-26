@@ -13,8 +13,9 @@ void make_sub_rooms()
     const int nr_tries_to_make_room = 100;
 
     const int max_nr_sub_rooms =
-        rnd::one_in(3) ?
-        1 : 7;
+            rnd::one_in(3)
+            ? 1
+            : 7;
 
     // Minimum allowed size of the sub room, including the walls
     const P walls_min_d(4, 4);
@@ -110,9 +111,9 @@ void make_sub_rooms()
                             continue;
                         }
 
-                        const auto& f_id = map::cells[x][y].rigid->id();
+                        const auto& f_id = map::cells.at(x, y).rigid->id();
 
-                        const Room* const room = map::room_map[x][y];
+                        const Room* const room = map::room_map.at(x, y);
 
                         // Rules to allow building:
                         //* Cells belonging to the outer room must be floor
@@ -205,7 +206,7 @@ void make_sub_rooms()
 
                     map::put(new Floor(door_pos));
 
-                    door_proposals[door_pos.x][door_pos.y] = true;
+                    door_proposals.at(door_pos) = true;
                 }
                 else // Place multiple "doorless" entrances
                 {

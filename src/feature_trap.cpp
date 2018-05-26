@@ -39,7 +39,7 @@ Trap::Trap(const P& feature_pos,
 {
         ASSERT(id != TrapId::END);
 
-        auto* const rigid_here = map::cells[feature_pos.x][feature_pos.y].rigid;
+        auto* const rigid_here = map::cells.at(feature_pos).rigid;
 
         if (!rigid_here->can_have_rigid())
         {
@@ -472,7 +472,10 @@ void Trap::disarm()
 
                 states::draw();
 
-                const int trigger_one_in_n = is_blessed ? 9 : is_cursed ? 2 : 6;
+                const int trigger_one_in_n =
+                        is_blessed
+                        ? 9
+                        : is_cursed ? 2 : 6;
 
                 if (rnd::one_in(trigger_one_in_n))
                 {
@@ -547,7 +550,7 @@ void Trap::reveal(const Verbosity verbosity)
 
         clear_gore();
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 states::draw();
 
@@ -589,14 +592,14 @@ std::string Trap::name(const Article article) const
 Color Trap::color_default() const
 {
         return
-                is_hidden_ ?
-                mimic_feature_->color() :
-                trap_impl_->color();
+                is_hidden_
+                ? mimic_feature_->color()
+                : trap_impl_->color();
 }
 
 Color Trap::color_bg_default() const
 {
-        const auto* const item = map::cells[pos_.x][pos_.y].item;
+        const auto* const item = map::cells.at(pos_).item;
 
         const auto* const corpse = map::actor_at_pos(pos_, ActorState::corpse);
 
@@ -613,25 +616,25 @@ Color Trap::color_bg_default() const
 char Trap::character() const
 {
         return
-                is_hidden_ ?
-                mimic_feature_->character() :
-                trap_impl_->character();
+                is_hidden_
+                ? mimic_feature_->character()
+                : trap_impl_->character();
 }
 
 TileId Trap::tile() const
 {
         return
-                is_hidden_ ?
-                mimic_feature_->tile() :
-                trap_impl_->tile();
+                is_hidden_
+                ? mimic_feature_->tile()
+                : trap_impl_->tile();
 }
 
 Matl Trap::matl() const
 {
         return
-                is_hidden_ ?
-                mimic_feature_->matl() :
-                data().matl_type;
+                is_hidden_
+                ? mimic_feature_->matl()
+                : data().matl_type;
 }
 
 // -----------------------------------------------------------------------------
@@ -662,7 +665,7 @@ TrapPlacementValid TrapDart::on_place()
                 {
                         p += d;
 
-                        const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+                        const Rigid* const rigid = map::cells.at(p).rigid;
 
                         const bool is_wall = rigid->id() == FeatureId::wall;
 
@@ -711,7 +714,7 @@ void TrapDart::trigger()
         ASSERT(dart_origin_.x == pos_.x || dart_origin_.y == pos_.y);
         ASSERT(dart_origin_ != pos_);
 
-        const auto& origin_cell = map::cells[dart_origin_.x][dart_origin_.y];
+        const auto& origin_cell = map::cells.at(dart_origin_);
 
         if (origin_cell.rigid->id() != FeatureId::wall)
         {
@@ -729,11 +732,17 @@ void TrapDart::trigger()
 
         if (dart_origin_.x == pos_.x)
         {
-                aim_pos.y = dart_origin_.y > pos_.y ? 0 : (map_h - 1);
+                aim_pos.y =
+                        (dart_origin_.y > pos_.y)
+                        ? 0
+                        : (map::h() - 1);
         }
         else // Dart origin is on same vertial line as the trap
         {
-                aim_pos.x = dart_origin_.x > pos_.x ? 0 : (map_w - 1);
+                aim_pos.x =
+                        (dart_origin_.x > pos_.x)
+                        ? 0
+                        : (map::w() - 1);
         }
 
         if (origin_cell.is_seen_by_player)
@@ -787,7 +796,7 @@ TrapPlacementValid TrapSpear::on_place()
         {
                 const P p = pos_ + d;
 
-                const Rigid* const rigid = map::cells[p.x][p.y].rigid;
+                const Rigid* const rigid = map::cells.at(p).rigid;
 
                 const bool is_wall = rigid->id() == FeatureId::wall;
 
@@ -819,7 +828,7 @@ void TrapSpear::trigger()
         ASSERT(spear_origin_.x == pos_.x || spear_origin_.y == pos_.y);
         ASSERT(spear_origin_ != pos_);
 
-        const auto& origin_cell = map::cells[spear_origin_.x][spear_origin_.y];
+        const auto& origin_cell = map::cells.at(spear_origin_);
 
         if (origin_cell.rigid->id() != FeatureId::wall)
         {
@@ -876,7 +885,7 @@ void TrapGasConfusion::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add(
                         "A burst of gas is released from a vent in the floor!");
@@ -908,7 +917,7 @@ void TrapGasParalyzation::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add(
                         "A burst of gas is released from a vent in the floor!");
@@ -939,7 +948,7 @@ void TrapGasFear::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add(
                         "A burst of gas is released from a vent in the floor!");
@@ -971,7 +980,7 @@ void TrapBlindingFlash::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add("There is an intense flash of light!");
         }
@@ -991,7 +1000,7 @@ void TrapDeafening::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add(
                         "There is suddenly a crushing pressure in the air!");
@@ -1147,7 +1156,9 @@ void TrapSummonMon::trigger()
                 TRACE_VERBOSE << "Actor id: " << int(id_to_summon) << std::endl;
 
                 const auto summoned =
-                        actor_factory::spawn(pos_, {id_to_summon})
+                        actor_factory::spawn(pos_,
+                                             {id_to_summon},
+                                             map::rect())
                         .make_aware_of_player()
                         .for_each([](Mon* const mon)
                         {
@@ -1254,7 +1265,7 @@ void TrapSmoke::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add(
                         "A burst of smoke is released from a vent in the "
@@ -1280,7 +1291,7 @@ void TrapFire::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add("Flames burst out from a vent in the floor!");
         }
@@ -1309,7 +1320,7 @@ void TrapAlarm::trigger()
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+        if (map::cells.at(pos_).is_seen_by_player)
         {
                 msg_log::add("An alarm sounds!");
         }

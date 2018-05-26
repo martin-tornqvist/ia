@@ -966,7 +966,8 @@ void PlayerGhoulClaw::on_melee_kill(Actor& actor_killed)
                 const size_t nr_worms = rnd::range(1, 2);
 
                 actor_factory::spawn(actor_killed.pos,
-                                     {nr_worms, ActorId::worm_mass})
+                                     {nr_worms, ActorId::worm_mass},
+                                     map::rect())
                         .make_aware_of_player()
                         .set_leader(map::player);
         }
@@ -1677,7 +1678,7 @@ void Dynamite::on_player_paralyzed()
 
         const P& p = map::player->pos;
 
-        auto* const f = map::cells[p.x][p.y].rigid;
+        auto* const f = map::cells.at(p).rigid;
 
         if (!f->is_bottomless())
         {
@@ -1831,7 +1832,7 @@ void Flare::on_player_paralyzed()
         map::player->active_explosive_ = nullptr;
 
         const P& p = map::player->pos;
-        auto* const f = map::cells[p.x][p.y].rigid;
+        auto* const f = map::cells.at(p).rigid;
 
         if (!f->is_bottomless())
         {
@@ -1882,7 +1883,7 @@ void SmokeGrenade::on_player_paralyzed()
         map::player->active_explosive_ = nullptr;
 
         const P& p = map::player->pos;
-        auto* const f = map::cells[p.x][p.y].rigid;
+        auto* const f = map::cells.at(p).rigid;
 
         if (!f->is_bottomless())
         {

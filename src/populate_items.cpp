@@ -12,13 +12,10 @@
 #include "feature_door.hpp"
 #include "feature_trap.hpp"
 
-namespace populate_items
-{
-
-namespace
-{
-
-int nr_items()
+// -----------------------------------------------------------------------------
+// Private
+// -----------------------------------------------------------------------------
+static int nr_items()
 {
         int nr = rnd::range(4, 5);
 
@@ -30,7 +27,7 @@ int nr_items()
         return nr;
 }
 
-std::vector<ItemId> make_item_bucket()
+static std::vector<ItemId> make_item_bucket()
 {
         std::vector<ItemId> item_bucket;
         item_bucket.clear();
@@ -51,32 +48,37 @@ std::vector<ItemId> make_item_bucket()
         return item_bucket;
 }
 
-void make_blocked_map(bool out[map_w][map_h])
+static Array2<bool> make_blocked_map()
 {
+        Array2<bool> result(map::dims());
+
         map_parsers::BlocksItems()
-                .run(out);
+                .run(result, result.rect());
 
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        // Shallow liquids doesn't block items, but let's not
-                        // spawn there...
-                        const FeatureId id = map::cells[x][y].rigid->id();
+                // Shallow liquids doesn't block items, but let's not
+                // spawn there...
+                const FeatureId id = map::cells.at(i).rigid->id();
 
-                        if (id == FeatureId::liquid_shallow)
-                        {
-                                out[x][y] = true;
-                        }
+                if (id == FeatureId::liquid_shallow)
+                {
+                        result.at(i) = true;
                 }
         }
 
         const P& player_p = map::player->pos;
 
-        out[player_p.x][player_p.y] = true;
+        result.at(player_p) = true;
+
+        return result;
 }
 
-} // namespace
+// -----------------------------------------------------------------------------
+// populate_items
+// -----------------------------------------------------------------------------
+namespace populate_items
+{
 
 void make_items_on_floor()
 {
@@ -90,9 +92,7 @@ void make_items_on_floor()
 
         std::vector<int> position_weights;
 
-        bool blocked[map_w][map_h];
-
-        make_blocked_map(blocked);
+        const auto blocked = make_blocked_map();
 
         mapgen::make_explore_spawn_weights(
                 blocked,

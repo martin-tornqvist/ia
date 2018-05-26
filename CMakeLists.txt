@@ -11,15 +11,15 @@ project(ia)
 # ------------------------------------------------------------------------------
 set(SRC
   include/ability_values.hpp
+  include/actor.hpp
   include/actor_data.hpp
   include/actor_factory.hpp
   include/actor_items.hpp
-  include/actor.hpp
   include/actor_mon.hpp
   include/actor_player.hpp
   include/ai.hpp
-  include/attack_data.hpp
   include/attack.hpp
+  include/attack_data.hpp
   include/audio.hpp
   include/bot.hpp
   include/browser.hpp
@@ -32,10 +32,10 @@ set(SRC
   include/draw_map.hpp
   include/drop.hpp
   include/explosion.hpp
+  include/feature.hpp
   include/feature_data.hpp
   include/feature_door.hpp
   include/feature_event.hpp
-  include/feature.hpp
   include/feature_mob.hpp
   include/feature_monolith.hpp
   include/feature_pylon.hpp
@@ -51,15 +51,15 @@ set(SRC
   include/info_screen_state.hpp
   include/init.hpp
   include/insanity.hpp
-  include/inventory_handling.hpp
   include/inventory.hpp
+  include/inventory_handling.hpp
   include/io.hpp
+  include/item.hpp
   include/item_artifact.hpp
   include/item_att_property.hpp
   include/item_data.hpp
   include/item_device.hpp
   include/item_factory.hpp
-  include/item.hpp
   include/item_potion.hpp
   include/item_rod.hpp
   include/item_scroll.hpp
@@ -68,14 +68,14 @@ set(SRC
   include/look.hpp
   include/main_menu.hpp
   include/manual.hpp
-  include/mapgen.hpp
+  include/map.hpp
   include/map_builder.hpp
   include/map_controller.hpp
-  include/map.hpp
   include/map_parsing.hpp
   include/map_patterns.hpp
   include/map_templates.hpp
   include/map_travel.hpp
+  include/mapgen.hpp
   include/marker.hpp
   include/msg_log.hpp
   include/panel.hpp
@@ -89,8 +89,8 @@ set(SRC
   include/postmortem.hpp
   include/property.hpp
   include/property_data.hpp
-  include/property_handler.hpp
   include/property_factory.hpp
+  include/property_handler.hpp
   include/query.hpp
   include/reload.hpp
   include/room.hpp
@@ -114,8 +114,8 @@ set(SRC
   src/actor_mon.cpp
   src/actor_player.cpp
   src/ai.cpp
-  src/attack_data.cpp
   src/attack.cpp
+  src/attack_data.cpp
   src/audio.cpp
   src/bot.cpp
   src/browser.cpp
@@ -149,8 +149,8 @@ set(SRC
   src/inventory.cpp
   src/inventory_handling.cpp
   src/io.cpp
-  src/item_artifact.cpp
   src/item.cpp
+  src/item_artifact.cpp
   src/item_data.cpp
   src/item_device.cpp
   src/item_factory.cpp
@@ -163,11 +163,15 @@ set(SRC
   src/main.cpp
   src/main_menu.cpp
   src/manual.cpp
+  src/map.cpp
   src/map_builder.cpp
   src/map_builder_special.cpp
   src/map_builder_std.cpp
   src/map_controller.cpp
-  src/map.cpp
+  src/map_parsing.cpp
+  src/map_patterns.cpp
+  src/map_templates.cpp
+  src/map_travel.cpp
   src/mapgen_aux_rooms.cpp
   src/mapgen_connect_rooms.cpp
   src/mapgen_decorate.cpp
@@ -180,10 +184,6 @@ set(SRC
   src/mapgen_room.cpp
   src/mapgen_sub_rooms.cpp
   src/mapgen_utils.cpp
-  src/map_parsing.cpp
-  src/map_patterns.cpp
-  src/map_templates.cpp
-  src/map_travel.cpp
   src/marker.cpp
   src/msg_log.cpp
   src/panel.cpp
@@ -197,8 +197,8 @@ set(SRC
   src/postmortem.cpp
   src/property.cpp
   src/property_data.cpp
-  src/property_handler.cpp
   src/property_factory.cpp
+  src/property_handler.cpp
   src/query.cpp
   src/reload.cpp
   src/room.cpp
@@ -215,7 +215,6 @@ set(SRC
   src/xml.cpp
 
   rl_utils/include/array2.hpp
-  rl_utils/include/bresenham.hpp
   rl_utils/include/direction.hpp
   rl_utils/include/flood.hpp
   rl_utils/include/misc.hpp
@@ -226,7 +225,6 @@ set(SRC
   rl_utils/include/rl_utils.hpp
   rl_utils/include/time.hpp
 
-  rl_utils/src/bresenham.cpp
   rl_utils/src/direction.cpp
   rl_utils/src/flood.cpp
   rl_utils/src/misc.cpp
@@ -247,7 +245,7 @@ set(SRC
 set(RC_FILE "")
 
 if(WIN32)
- set(RC_FILE ${CMAKE_SOURCE_DIR}/icon/icon.rc)
+  set(RC_FILE ${CMAKE_SOURCE_DIR}/icon/icon.rc)
 endif()
 
 
@@ -275,10 +273,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR(CMAKE_C_COMPILER_ID MATCHES "Clang") OR(CMAKE_CXX
     -Wall
     -Wextra
     -Werror
+    -Wmissing-declarations
     )
 
   set(DEBUG_COMPILE_FLAGS
     -fno-exceptions
+    -Wunused
+    -Wnull-dereference
     -O0
     -g
     )

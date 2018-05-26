@@ -106,7 +106,7 @@ public:
         (void)lever;
     }
 
-    void add_light(bool light[map_w][map_h]) const override final;
+    void add_light(Array2<bool>& light) const override final;
 
     void make_bloody()
     {
@@ -142,7 +142,7 @@ protected:
 
     virtual DidTriggerTrap trigger_trap(Actor* const actor);
 
-    virtual void add_light_hook(bool light[map_w][map_h]) const
+    virtual void add_light_hook(Array2<bool>& light) const
     {
         (void)light;
     }
@@ -388,7 +388,7 @@ private:
                 const DmgMethod dmg_method,
                 Actor* const actor) override;
 
-    void add_light_hook(bool light[map_w][map_h]) const override;
+    void add_light_hook(Array2<bool>& light) const override;
 };
 
 enum class WallType

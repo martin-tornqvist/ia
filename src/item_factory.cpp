@@ -320,7 +320,12 @@ Item* make(const ItemId item_id, const int nr_items)
         break;
 
     case ItemId::END:
-        return nullptr;
+            break;
+    }
+
+    if (!r)
+    {
+            return nullptr;
     }
 
     // Sanity check number of items (non-stackable items should never be set to

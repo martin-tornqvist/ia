@@ -1,9 +1,9 @@
 #include "viewport.hpp"
 
-#include "rl_utils.hpp"
-#include "panel.hpp"
 #include "io.hpp"
-#include "global.hpp"
+#include "map.hpp"
+#include "panel.hpp"
+#include "rl_utils.hpp"
 
 // -----------------------------------------------------------------------------
 // Private
@@ -16,8 +16,8 @@ static P get_map_view_dims()
 
         P map_coord_dims = io::gui_to_map_coords(gui_coord_dims);
 
-        map_coord_dims.x = std::min(map_coord_dims.x, map_w);
-        map_coord_dims.y = std::min(map_coord_dims.y, map_h);
+        map_coord_dims.x = std::min(map_coord_dims.x, map::w());
+        map_coord_dims.y = std::min(map_coord_dims.y, map::h());
 
         return map_coord_dims;
 }
@@ -45,15 +45,15 @@ void focus_on(const P map_pos)
         set_constr_in_range(
                 0,
                 p0_.x,
-                map_w - map_view_dims.x);
+                map::w() - map_view_dims.x);
 
         set_constr_in_range(
                 0,
                 p0_.y,
-                map_h - map_view_dims.y);
+                map::h() - map_view_dims.y);
 }
 
-bool is_in_ivew(const P map_pos)
+bool is_in_view(const P map_pos)
 {
         return get_map_view_area().is_pos_inside(map_pos);
 }

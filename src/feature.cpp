@@ -25,7 +25,7 @@ void Feature::bump(Actor& actor_bumping)
     {
         if (actor_bumping.is_player())
         {
-            if (map::cells[pos_.x][pos_.y].is_seen_by_player)
+            if (map::cells.at(pos_).is_seen_by_player)
             {
                 msg_log::add(data().msg_on_player_blocked);
             }
@@ -37,7 +37,7 @@ void Feature::bump(Actor& actor_bumping)
     }
 }
 
-void Feature::add_light(bool light[map_w][map_h]) const
+void Feature::add_light(Array2<bool>& light) const
 {
     (void)light;
 }

@@ -212,30 +212,25 @@ void RodCuring::run_effect()
 
 void RodOpening::run_effect()
 {
-    bool is_any_opened = false;
+        bool is_any_opened = false;
 
-    for (int y = 1; y < map_h - 1; ++y)
-    {
-        for (int x = 1; x < map_w - 1; ++x)
+        for (auto& cell : map::cells)
         {
-            const auto& cell = map::cells[x][y];
-
-            if (cell.is_seen_by_player)
-            {
-                DidOpen did_open = cell.rigid->open(nullptr);
-
-                if (did_open == DidOpen::yes)
+                if (cell.is_seen_by_player)
                 {
-                    is_any_opened = true;
-                }
-            }
-        }
-    }
+                        DidOpen did_open = cell.rigid->open(nullptr);
 
-    if (is_any_opened)
-    {
-        identify(Verbosity::verbose);
-    }
+                        if (did_open == DidOpen::yes)
+                        {
+                                is_any_opened = true;
+                        }
+                }
+        }
+
+        if (is_any_opened)
+        {
+                identify(Verbosity::verbose);
+        }
 }
 
 void RodBless::run_effect()
@@ -280,7 +275,7 @@ void RodShockwave::run_effect()
     {
         const P p(player_pos + d);
 
-        Rigid* const rigid = map::cells[p.x][p.y].rigid;
+        Rigid* const rigid = map::cells.at(p).rigid;
 
         rigid->hit(1, // Doesn't matter
                    DmgType::physical,

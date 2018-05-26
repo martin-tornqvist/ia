@@ -28,7 +28,9 @@ void CharacterDescr::on_start()
 
         const std::string offset = "   ";
 
-        const int max_w_descr = (map_w * 3) / 4;
+        // TODO: Magic number, this should be based on the minimum required
+        // window width instead (e.g. 3/4 of this width)
+        const int max_w_descr = 60;
 
         const Color& clr_heading = colors::light_white();
 

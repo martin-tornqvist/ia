@@ -63,8 +63,7 @@ ConsumeItem Scroll::activate(Actor* const actor)
 
     const P& player_pos(map::player->pos);
 
-    if (map::dark[player_pos.x][player_pos.y] &&
-        !map::light[player_pos.x][player_pos.y])
+    if (map::dark.at(player_pos) && !map::light.at(player_pos))
     {
         msg_log::add("It's too dark to read here.");
 

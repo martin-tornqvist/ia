@@ -31,6 +31,8 @@ StateId MarkerState::id()
 
 void MarkerState::on_start()
 {
+        marker_render_data_.resize(map::dims());
+
         pos_ = map::player->pos;
 
         if (use_player_tgt())
@@ -61,7 +63,7 @@ void MarkerState::on_popped()
 
 void MarkerState::draw()
 {
-        if (!viewport::is_in_ivew(pos_))
+        if (!viewport::is_in_view(pos_))
         {
                 viewport::focus_on(pos_);
         }
@@ -92,7 +94,7 @@ void MarkerState::draw()
                 {
                         const P& p(line[i]);
 
-                        const Cell& c = map::cells[p.x][p.y];
+                        const Cell& c = map::cells.at(p);
 
                         if (c.is_seen_by_player &&
                             !c.rigid->is_projectile_passable())
@@ -228,15 +230,12 @@ void MarkerState::draw_marker(
         const int red_from_king_dist,
         const int red_from_idx)
 {
-        for (int x = 0; x < map_w; ++x)
+        for (size_t i = 0; i < map::nr_cells(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
-                {
-                        auto& d = marker_render_data_[x][y];
+                auto& d = marker_render_data_.at(i);
 
-                        d.tile  = TileId::END;
-                        d.character = 0;
-                }
+                d.tile  = TileId::END;
+                d.character = 0;
         }
 
         Color color = colors::light_green();
@@ -250,7 +249,7 @@ void MarkerState::draw_marker(
         {
                 const P& line_pos = line[line_idx];
 
-                if (!viewport::is_in_ivew(line_pos))
+                if (!viewport::is_in_view(line_pos))
                 {
                         continue;
                 }
@@ -285,7 +284,7 @@ void MarkerState::draw_marker(
 
                 if ((int)line_idx < tail_size_int)
                 {
-                        auto& d = marker_render_data_[line_pos.x][line_pos.y];
+                        auto& d = marker_render_data_.at(line_pos);
 
                         d.tile = TileId::aim_marker_line;
 
@@ -312,9 +311,9 @@ void MarkerState::draw_marker(
                 ? origin_
                 : line.back();
 
-        if (viewport::is_in_ivew(head_pos))
+        if (viewport::is_in_view(head_pos))
         {
-                auto& d = marker_render_data_[head_pos.x][head_pos.y];
+                auto& d = marker_render_data_.at(head_pos);
 
                 d.tile = TileId::aim_marker_head;
 
@@ -482,8 +481,8 @@ void Aiming::handle_input(const InputData& input)
                 key = 'f';
 
                 pos_.set(
-                        rnd::range(0, map_w - 1),
-                        rnd::range(0, map_h - 1));
+                        rnd::range(0, map::w() - 1),
+                        rnd::range(0, map::h() - 1));
         }
 
         switch (key)
@@ -684,14 +683,15 @@ void ThrowingExplosive::on_draw()
                 {
                         const P p(x, y);
 
-                        if (!viewport::is_in_ivew(p))
+                        if (!viewport::is_in_view(p))
                         {
                                 continue;
                         }
 
                         const auto& render_d = draw_map::get_drawn_cell(x, y);
 
-                        const auto& marker_render_d = marker_render_data_[x][y];
+                        const auto& marker_render_d =
+                                marker_render_data_.at(x, y);
 
                         // Draw overlay if the cell contains either a map
                         // symbol, or a marker symbol
@@ -770,10 +770,11 @@ int ThrowingExplosive::red_from_king_dist() const
 // -----------------------------------------------------------------------------
 // Teleport control marker state
 // -----------------------------------------------------------------------------
-CtrlTele::CtrlTele(const P& origin, const bool blocked[map_w][map_h]) :
-        MarkerState(origin)
+CtrlTele::CtrlTele(const P& origin, const Array2<bool>& blocked) :
+        MarkerState(origin),
+        blocked_(blocked)
 {
-        memcpy(blocked_, blocked, nr_map_cells);
+
 }
 
 int CtrlTele::chance_of_success_pct(const P& tgt) const
@@ -823,13 +824,13 @@ void CtrlTele::handle_input(const InputData& input)
 
                         const bool is_tele_success =
                                 roll_ok &&
-                                !blocked_[pos_.x][pos_.y];
+                                !blocked_.at(pos_);
 
                         const P tgt_p(pos_);
 
                         states::pop();
 
-                        // NOTE: This object is now destroyed!
+                        // NOTE: This object is now destroyed
 
                         if (is_tele_success)
                         {

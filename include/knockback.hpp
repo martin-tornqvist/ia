@@ -1,6 +1,7 @@
 #ifndef KNOCKBACK_HPP
 #define KNOCKBACK_HPP
 
+#include "global.hpp"
 #include "rl_utils.hpp"
 
 class Actor;

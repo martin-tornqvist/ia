@@ -78,11 +78,11 @@ private:
 
         bool is_ok_feature_at(const P& p) const;
 
-        void blocked_cells(const R& r, bool out[map_w][map_h]) const;
+        Array2<bool> blocked_cells(const R& r) const;
 
         void emerge_p_bucket(
                 const P& p,
-                bool blocked[map_w][map_h],
+                const Array2<bool>& blocked,
                 std::vector<P>& out) const;
 
         const Range allowed_emerge_dist_range =

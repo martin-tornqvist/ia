@@ -73,7 +73,7 @@ public:
     Color color() const override;
 
     //TODO: Lit dynamite should add light on their own cell (just one cell)
-    //void add_light(bool light[map_w][map_h]) const;
+    //void add_light(Array2<bool>& light) const;
 
     void on_new_turn() override;
 
@@ -105,7 +105,7 @@ public:
 
     void on_new_turn() override;
 
-    void add_light(bool light[map_w][map_h]) const override;
+    void add_light(Array2<bool>& light) const override;
 
 private:
     int nr_turns_left_;

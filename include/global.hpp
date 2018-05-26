@@ -28,15 +28,6 @@ const std::string skull_img_path = images_path + "/skull.png";
 
 const int screen_bpp = 32;
 
-const int map_w = 80;
-const int map_h = 22;
-const int map_w_half = map_w / 2;
-const int map_h_half = map_h / 2;
-const int nr_map_cells = map_w * map_h;
-
-const int player_start_x = 10;
-const int player_start_y = map_h_half;
-
 const int player_max_clvl = 12;
 
 // NOTE:

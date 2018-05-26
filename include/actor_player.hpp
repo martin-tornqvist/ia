@@ -110,7 +110,7 @@ public:
     void kick_mon(Actor& defender);
     void hand_att(Actor& defender);
 
-    void add_light_hook(bool light_map[map_w][map_h]) const override;
+    void add_light_hook(Array2<bool>& light_map) const override;
 
     void on_log_msg_printed();  // Aborts e.g. searching and quick move
     void interrupt_actions();   // Aborts e.g. healing

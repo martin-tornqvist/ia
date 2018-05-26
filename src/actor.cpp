@@ -2,30 +2,30 @@
 
 #include "init.hpp"
 
-#include "io.hpp"
-#include "game_time.hpp"
 #include "actor_items.hpp"
 #include "actor_mon.hpp"
 #include "actor_player.hpp"
-#include "map.hpp"
-#include "fov.hpp"
-#include "msg_log.hpp"
-#include "feature_trap.hpp"
 #include "drop.hpp"
 #include "explosion.hpp"
-#include "game.hpp"
-#include "inventory.hpp"
-#include "map_parsing.hpp"
-#include "item.hpp"
-#include "marker.hpp"
-#include "look.hpp"
-#include "map_travel.hpp"
-#include "popup.hpp"
 #include "feature_door.hpp"
-#include "text_format.hpp"
+#include "feature_trap.hpp"
+#include "fov.hpp"
+#include "game.hpp"
+#include "game_time.hpp"
+#include "inventory.hpp"
+#include "io.hpp"
+#include "item.hpp"
+#include "look.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "map_travel.hpp"
+#include "marker.hpp"
+#include "msg_log.hpp"
+#include "popup.hpp"
 #include "property.hpp"
 #include "property_data.hpp"
 #include "property_handler.hpp"
+#include "text_format.hpp"
 
 Actor::Actor() :
     pos(),
@@ -78,60 +78,62 @@ int Actor::ability(const AbilityId id,
 
 ActionResult Actor::roll_sneak(const Actor& actor_searching) const
 {
-    const int sneak_skill = ability(AbilityId::stealth, true);
+        const int sneak_skill = ability(AbilityId::stealth, true);
 
-    const int search_mod =
-        actor_searching.is_player() ?
-        actor_searching.ability(AbilityId::searching, true) :
-        0;
+        const int search_mod =
+                actor_searching.is_player()
+                ? actor_searching.ability(AbilityId::searching, true)
+                : 0;
 
-    const int dist = king_dist(pos, actor_searching.pos);
+        const int dist = king_dist(pos, actor_searching.pos);
 
-    // Distance  Sneak bonus
-    // ----------------------
-    // 1         -7
-    // 2          0
-    // 3          7
-    // 4         14
-    // 5         21
-    // 6         28
-    // 7         35
-    // 8         42
-    const int dist_mod = (dist - 2) * 7;
+        // Distance  Sneak bonus
+        // ----------------------
+        // 1         -7
+        // 2          0
+        // 3          7
+        // 4         14
+        // 5         21
+        // 6         28
+        // 7         35
+        // 8         42
+        const int dist_mod = (dist - 2) * 7;
 
-    const bool is_lit = map::light[pos.x][pos.y];
+        const bool is_lit = map::light.at(pos);
 
-    const bool is_dark = map::light[pos.x][pos.y];
+        const bool is_dark = map::light.at(pos);
 
-    const int lgt_mod =
-        is_lit ?
-        20 : 0;
+        const int lgt_mod =
+                is_lit
+                ? 20
+                : 0;
 
-    const int drk_mod =
-        (is_dark && !is_lit) ?
-        20 : 0;
+        const int drk_mod =
+                (is_dark && !is_lit)
+                ? 20
+                : 0;
 
-    int sneak_tot =
-        sneak_skill
-        - search_mod
-        + dist_mod
-        - lgt_mod
-        + drk_mod;
+        int sneak_tot =
+                sneak_skill
+                - search_mod
+                + dist_mod
+                - lgt_mod
+                + drk_mod;
 
-    // std::cout << "SNEAKING" << std::endl
-    //           << "------------------" << std::endl
-    //           << "sneak_skill : " << sneak_skill << std::endl
-    //           << "dist_mod    : " << dist_mod << std::endl
-    //           << "lgt_mod     : " << lgt_mod << std::endl
-    //           << "drk_mod     : " << drk_mod << std::endl
-    //           << "sneak_tot   : " << sneak_tot << std::endl;
+        // std::cout << "SNEAKING" << std::endl
+        //           << "------------------" << std::endl
+        //           << "sneak_skill : " << sneak_skill << std::endl
+        //           << "dist_mod    : " << dist_mod << std::endl
+        //           << "lgt_mod     : " << lgt_mod << std::endl
+        //           << "drk_mod     : " << drk_mod << std::endl
+        //           << "sneak_tot   : " << sneak_tot << std::endl;
 
-    // NOTE: There is no need to cap the sneak value, since there's always
-    // critical fails
+        // NOTE: There is no need to cap the sneak value, since there's always
+        // critical fails
 
-    const auto result = ability_roll::roll(sneak_tot);
+        const auto result = ability_roll::roll(sneak_tot);
 
-    return result;
+        return result;
 }
 
 int Actor::hp_max(const bool with_modifiers) const
@@ -273,7 +275,7 @@ void Actor::init(const P& pos_, ActorData& actor_data)
 void Actor::on_std_turn_common()
 {
     // Do light damage if in lit cell
-    if (map::light[pos.x][pos.y])
+    if (map::light.at(pos))
     {
         hit(1, DmgType::light);
     }
@@ -327,90 +329,82 @@ void Actor::on_std_turn_common()
 
 void Actor::teleport(const ShouldCtrlTele ctrl_tele)
 {
-    bool blocks_flood[map_w][map_h];
+        Array2<bool> blocks_flood(map::dims());
 
-    map_parsers::BlocksActor(*this, ParseActors::no)
-        .run(blocks_flood);
+        map_parsers::BlocksActor(*this, ParseActors::no)
+                .run(blocks_flood, blocks_flood.rect());
 
-    // Consider all doors, except for metal doors, to be free
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        const size_t len = map::nr_cells();
+
+        // Consider all doors, except for metal doors, to be free
+        for (size_t i = 0; i < len; ++i)
         {
-            const auto* const r = map::cells[x][y].rigid;
+                const auto* const r = map::cells.at(i).rigid;
 
-            if (r->id() == FeatureId::door)
-            {
-                const auto* const door = static_cast<const Door*>(r);
-
-                // - For the player, only metal doors block the flood
-                // - For monsters, no doors block the flood
-                if ((door->type() != DoorType::metal) ||
-                    !is_player())
+                if (r->id() == FeatureId::door)
                 {
-                    blocks_flood[x][y] = false;
+                        const auto* const door = static_cast<const Door*>(r);
+
+                        // * For the player, only metal doors block the flood
+                        // * For monsters, no doors block the flood
+                        if ((door->type() != DoorType::metal) ||
+                            !is_player())
+                        {
+                                blocks_flood.at(i) = false;
+                        }
                 }
-            }
         }
-    }
 
-    int flood[map_w][map_h];
+        const auto flood = floodfill(pos, blocks_flood);
 
-    floodfill(pos,
-              blocks_flood,
-              flood);
+        Array2<bool> blocked(map::dims());
 
-    bool blocked[map_w][map_h];
+        map_parsers::BlocksActor(*this, ParseActors::yes)
+                .run(blocked, blocked.rect());
 
-    map_parsers::BlocksActor(*this, ParseActors::yes)
-        .run(blocked);
-
-    for (int x = 0; x < map_w; ++x)
-    {
-        for (int y = 0; y < map_h; ++y)
+        for (size_t i = 0; i < len; ++i)
         {
-            if (flood[x][y] <= 0)
-            {
-                blocked[x][y] = true;
-            }
+                if (flood.at(i) <= 0)
+                {
+                        blocked.at(i) = true;
+                }
         }
-    }
 
-    // Make sure we do not teleport to the position we are standing in
-    blocked[pos.x][pos.y] = false;
+        // Make sure we do not teleport to the position we are standing in
+        blocked.at(pos) = false;
 
-    // Teleport control?
-    const bool can_actor_use_tele_ctrl =
-        is_player() &&
-        properties_->has_prop(PropId::tele_ctrl) &&
-        !properties_->has_prop(PropId::confused);
+        // Teleport control?
+        const bool can_actor_use_tele_ctrl =
+                is_player() &&
+                properties_->has_prop(PropId::tele_ctrl) &&
+                !properties_->has_prop(PropId::confused);
 
-    if ((ctrl_tele == ShouldCtrlTele::always) ||
-        ((ctrl_tele == ShouldCtrlTele::if_tele_ctrl_prop) &&
-         can_actor_use_tele_ctrl))
-    {
-        auto tele_ctrl_state = std::unique_ptr<State>(
-            new CtrlTele(pos, blocked));
+        if ((ctrl_tele == ShouldCtrlTele::always) ||
+            ((ctrl_tele == ShouldCtrlTele::if_tele_ctrl_prop) &&
+             can_actor_use_tele_ctrl))
+        {
+                auto tele_ctrl_state = std::unique_ptr<State>(
+                        new CtrlTele(pos, blocked));
 
-        states::push(std::move(tele_ctrl_state));
+                states::push(std::move(tele_ctrl_state));
 
-        return;
-    }
+                return;
+        }
 
-    // Teleport randomly
-    const auto pos_bucket = to_vec(blocked, false);
+        // Teleport randomly
+        const auto pos_bucket = to_vec(blocked, false, blocked.rect());
 
-    if (pos_bucket.empty())
-    {
-        return;
-    }
+        if (pos_bucket.empty())
+        {
+                return;
+        }
 
-    const P tgt_pos = rnd::element(pos_bucket);
+        const P tgt_pos = rnd::element(pos_bucket);
 
-    teleport(tgt_pos, blocked);
+        teleport(tgt_pos, blocked);
 }
 
-void Actor::teleport(P p, bool blocked[map_w][map_h])
+void Actor::teleport(P p, const Array2<bool>& blocked)
 {
     if (!is_player() &&
         map::player->can_see_actor(*this))
@@ -455,7 +449,7 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
                 {
                     const P adj_p(actor->pos + d);
 
-                    if (!blocked[adj_p.x][adj_p.y])
+                    if (!blocked.at(adj_p))
                     {
                         p_bucket.push_back(adj_p);
                     }
@@ -492,12 +486,14 @@ void Actor::teleport(P p, bool blocked[map_w][map_h])
     // the player after the teleport
     if (is_player())
     {
-        bool blocks_los[map_w][map_h];
+        Array2<bool> blocks_los(map::dims());
 
         const R r = fov::get_fov_rect(pos);
 
         map_parsers::BlocksLos()
-            .run(blocks_los, MapParseMode::overwrite, r);
+                .run(blocks_los,
+                     r,
+                     MapParseMode::overwrite);
 
         for (auto* const actor : game_time::actors)
         {
@@ -796,7 +792,7 @@ ActorDied Actor::hit(int dmg,
                 map::make_gore(pos);
             }
 
-            if (map::cells[pos.x][pos.y].is_seen_by_player)
+            if (map::cells.at(pos).is_seen_by_player)
             {
                 msg_log::add(text_format::first_to_upper(corpse_name_the()) +
                              " is destroyed.");
@@ -887,7 +883,7 @@ ActorDied Actor::hit(int dmg,
     if (hp() <= 0)
     {
         const bool is_on_bottomless =
-            map::cells[pos.x][pos.y].rigid->is_bottomless();
+            map::cells.at(pos).rigid->is_bottomless();
 
         // Destroy the corpse if the killing blow damage is either:
         //
@@ -975,7 +971,7 @@ ActorDied Actor::hit_spi(const int dmg, const Verbosity verbosity)
         }
 
         const bool is_on_bottomless =
-            map::cells[pos.x][pos.y].rigid->is_bottomless();
+            map::cells.at(pos).rigid->is_bottomless();
 
         const bool is_destroyed =
             !data_->can_leave_corpse ||
@@ -1022,10 +1018,8 @@ int Actor::armor_points() const
 
 int Actor::hit_armor(int dmg)
 {
-    //
     // NOTE: We retrieve armor points BEFORE damaging the armor - since it
-    //       should reduce damage taken even if it gets damaged or destroyed
-    //
+    // should reduce damage taken even if it gets damaged or destroyed
     const int ap = armor_points();
 
     // Danage worn armor
@@ -1100,7 +1094,7 @@ void Actor::die(const bool is_destroyed,
         properties_->end_prop_silent(PropId::wound);
 
         // If player died due to falling down a chasm, go to next level
-        if (map::cells[pos.x][pos.y].rigid->is_bottomless())
+        if (map::cells.at(pos).rigid->is_bottomless())
         {
             map_travel::go_to_nxt();
         }
@@ -1180,40 +1174,38 @@ void Actor::die(const bool is_destroyed,
 
     if (is_destroyed)
     {
-        if (data_->can_bleed && allow_gore)
-        {
-            map::make_gore(pos);
-            map::make_blood(pos);
-        }
+            if (data_->can_bleed && allow_gore)
+            {
+                    map::make_gore(pos);
+                    map::make_blood(pos);
+            }
     }
     else // Not destroyed
     {
-        if (!is_player())
-        {
-            P new_pos;
-
-            auto* feature_here = map::cells[pos.x][pos.y].rigid;
-
-            // TODO: this should be decided with a floodfill instead
-            if (!feature_here->can_have_corpse())
+            if (!is_player())
             {
-                for (int dx = -1; dx <= 1; ++dx)
-                {
-                    for (int dy = -1; dy <= 1; ++dy)
-                    {
-                        new_pos = pos + P(dx, dy);
-                        feature_here = map::cells[pos.x + dx][pos.y + dy].rigid;
+                    P new_pos;
 
-                        if (feature_here->can_have_corpse())
-                        {
-                            pos.set(new_pos);
-                            dx = 9999;
-                            dy = 9999;
-                        }
+                    auto* feature_here = map::cells.at(pos).rigid;
+
+                    // TODO: this should be decided with a floodfill instead
+                    if (!feature_here->can_have_corpse())
+                    {
+                            for (const P& d : dir_utils::dir_list_w_center)
+                            {
+                                    new_pos = pos + d;
+
+                                    feature_here = map::cells.at(new_pos).rigid;
+
+                                    if (feature_here->can_have_corpse())
+                                    {
+                                            pos.set(new_pos);
+
+                                            break;
+                                    }
+                            }
                     }
-                }
             }
-        }
     }
 
     on_death();
@@ -1410,50 +1402,45 @@ void Actor::on_feed()
     }
 }
 
-void Actor::add_light(bool light_map[map_w][map_h]) const
+void Actor::add_light(Array2<bool>& light_map) const
 {
-    if (state_ == ActorState::alive &&
-        properties_->has_prop(PropId::radiant))
-    {
-        // TODO: Much of the code below is duplicated from
-        // ActorPlayer::add_light_hook(), some refactoring is needed.
-
-        bool hard_blocked[map_w][map_h];
-
-         const R fov_lmt = fov::get_fov_rect(pos);
-
-        map_parsers::BlocksLos()
-            .run(hard_blocked,
-                 MapParseMode::overwrite,
-                 fov_lmt);
-
-        LosResult fov[map_w][map_h];
-
-        fov::run(pos, hard_blocked, fov);
-
-        for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
+        if (state_ == ActorState::alive &&
+            properties_->has_prop(PropId::radiant))
         {
-            for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
-            {
-                if (!fov[x][y].is_blocked_hard)
+                // TODO: Much of the code below is duplicated from
+                // ActorPlayer::add_light_hook(), some refactoring is needed.
+
+                Array2<bool> hard_blocked(map::dims());
+
+                const R fov_lmt = fov::get_fov_rect(pos);
+
+                map_parsers::BlocksLos()
+                        .run(hard_blocked,
+                             fov_lmt,
+                             MapParseMode::overwrite);
+
+                const auto actor_fov = fov::run(pos, hard_blocked);
+
+                for (int x = fov_lmt.p0.x; x <= fov_lmt.p1.x; ++x)
                 {
-                    light_map[x][y] = true;
+                        for (int y = fov_lmt.p0.y; y <= fov_lmt.p1.y; ++y)
+                        {
+                                if (!actor_fov.at(x, y).is_blocked_hard)
+                                {
+                                        light_map.at(x, y) = true;
+                                }
+                        }
                 }
-            }
         }
-    }
-    else if (properties_->has_prop(PropId::burning))
-    {
-        for (int dx = -1; dx <= 1; ++dx)
+        else if (properties_->has_prop(PropId::burning))
         {
-            for (int dy = -1; dy <= 1; ++dy)
-            {
-                light_map[pos.x + dx][pos.y + dy] = true;
-            }
+                for (const auto d : dir_utils::dir_list_w_center)
+                {
+                        light_map.at(pos + d) = true;
+                }
         }
-    }
 
-    add_light_hook(light_map);
+        add_light_hook(light_map);
 }
 
 bool Actor::is_player() const

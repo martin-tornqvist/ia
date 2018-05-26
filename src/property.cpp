@@ -61,7 +61,7 @@ void PropBlessed::bless_adjacent() const
         {
                 const P p_adj(p + d);
 
-                Cell& cell = map::cells[p_adj.x][p_adj.y];
+                Cell& cell = map::cells.at(p_adj);
 
                 Rigid* const rigid = cell.rigid;
 
@@ -142,7 +142,7 @@ void PropCursed::curse_adjacent() const
         {
                 const P p_adj(p + d);
 
-                Cell& cell = map::cells[p_adj.x][p_adj.y];
+                Cell& cell = map::cells.at(p_adj);
 
                 Rigid* const rigid = cell.rigid;
 
@@ -435,7 +435,7 @@ void PropPossessedByZuul::on_death()
         // Zuul is now free, allow it to spawn infinitely
         actor_data::data[(size_t)ActorId::zuul].nr_left_allowed_to_spawn = -1;
 
-        actor_factory::spawn(pos, {ActorId::zuul})
+        actor_factory::spawn(pos, {ActorId::zuul}, map::rect())
                 .make_aware_of_player();
 }
 
@@ -772,15 +772,15 @@ PropEnded PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
                 return PropEnded::no;
         }
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         const R area_check_blocked(actor_pos - P(1, 1),
                                    actor_pos + P(1, 1));
 
         map_parsers::BlocksActor(*owner_, ParseActors::yes)
                 .run(blocked,
-                     MapParseMode::overwrite,
-                     area_check_blocked);
+                     area_check_blocked,
+                     MapParseMode::overwrite);
 
         if (rnd::one_in(8))
         {
@@ -790,7 +790,7 @@ PropEnded PropConfused::affect_move_dir(const P& actor_pos, Dir& dir)
                 {
                         const P tgt_p(actor_pos + d);
 
-                        if (!blocked[tgt_p.x][tgt_p.y])
+                        if (!blocked.at(tgt_p))
                         {
                                 d_bucket.push_back(d);
                         }
@@ -837,10 +837,10 @@ PropEnded PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
 
         const P& closest_mon_pos = seen_foes_cells[0];
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksActor(*owner_, ParseActors::no)
-                .run(blocked);
+                .run(blocked, blocked.rect());
 
         const auto line =
                 line_calc::calc_new_line(
@@ -854,7 +854,7 @@ PropEnded PropFrenzied::affect_move_dir(const P& actor_pos, Dir& dir)
         {
                 for (const P& pos : line)
                 {
-                        if (blocked[pos.x][pos.y])
+                        if (blocked.at(pos))
                         {
                                 return PropEnded::no;
                         }
@@ -1217,7 +1217,7 @@ PropEnded PropBurrowing::on_tick()
 {
         const P& p = owner_->pos;
 
-        map::cells[p.x][p.y].rigid->hit(1, // Doesn't matter
+        map::cells.at(p).rigid->hit(1, // Doesn't matter
                                         DmgType::physical,
                                         DmgMethod::forced);
 
@@ -1299,14 +1299,14 @@ PropActResult PropVortex::on_act()
         TRACE << "Player pos: "
               << player_pos.x << ", " << player_pos.y << std::endl;
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         const R fov_rect = fov::get_fov_rect(mon->pos);
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     fov_rect);
+                     fov_rect,
+                     MapParseMode::overwrite);
 
         if (mon->can_see_actor(*(map::player), blocked_los))
         {
@@ -1371,7 +1371,7 @@ void PropSplitsOnDeath::on_death()
         const P pos = owner_->pos;
 
         if (is_very_destroyed ||
-            map::cells[pos.x][pos.y].rigid->is_bottomless() ||
+            map::cells.at(pos).rigid->is_bottomless() ||
             (game_time::actors.size() >= max_nr_actors_on_map))
         {
                 return;
@@ -1380,7 +1380,7 @@ void PropSplitsOnDeath::on_death()
         auto* const leader = static_cast<Mon*>(owner_)->leader_;
 
         const auto summoned =
-                actor_factory::spawn(pos, {2, owner_->id()})
+                actor_factory::spawn(pos, {2, owner_->id()}, map::rect())
                 .make_aware_of_player()
                 .set_leader(leader)
                 .for_each([this](Mon* const mon)
@@ -1458,7 +1458,7 @@ PropActResult PropCorruptsEnvColor::on_act()
 {
         const auto pos = owner_->pos;
 
-        Rigid* r = map::cells[pos.x][pos.y].rigid;
+        Rigid* r = map::cells.at(pos).rigid;
 
         r->corrupt_color();
 
@@ -1491,7 +1491,7 @@ PropActResult PropCorpseRises::on_act()
 
         --owner_->data().nr_kills;
 
-        if (map::cells[owner_->pos.x][owner_->pos.y].is_seen_by_player)
+        if (map::cells.at(owner_->pos).is_seen_by_player)
         {
                 const std::string name =
                         text_format::first_to_upper(
@@ -1528,7 +1528,7 @@ void PropSpawnsZombiePartsOnDestroyed::on_destroyed()
 {
         const P& pos = owner_->pos;
 
-        if (map::cells[pos.x][pos.y].rigid->is_bottomless())
+        if (map::cells.at(pos).rigid->is_bottomless())
         {
                 return;
         }
@@ -1599,7 +1599,7 @@ void PropSpawnsZombiePartsOnDestroyed::on_destroyed()
 
         }
 
-        if (map::cells[pos.x][pos.y].is_seen_by_player)
+        if (map::cells.at(pos).is_seen_by_player)
         {
                 ASSERT(!spawn_msg.empty());
 
@@ -1611,7 +1611,7 @@ void PropSpawnsZombiePartsOnDestroyed::on_destroyed()
 
         ASSERT(id_to_spawn != ActorId::END);
 
-        actor_factory::spawn(pos, {id_to_spawn})
+        actor_factory::spawn(pos, {id_to_spawn}, map::rect())
                 .make_aware_of_player()
                 .for_each([](Mon* const mon)
                 {
@@ -1701,14 +1701,14 @@ PropActResult PropSpeaksCurses::on_act()
                 return PropActResult();
         }
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         const R fov_rect = fov::get_fov_rect(mon->pos);
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     fov_rect);
+                     fov_rect,
+                     MapParseMode::overwrite);
 
         if (mon->can_see_actor(*map::player, blocked_los))
         {
@@ -1756,14 +1756,14 @@ PropActResult PropMajorClaphamSummon::on_act()
                 return PropActResult();
         }
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         const R fov_rect = fov::get_fov_rect(mon->pos);
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     fov_rect);
+                     fov_rect,
+                     MapParseMode::overwrite);
 
         if (!mon->can_see_actor(*(map::player), blocked_los))
         {
@@ -1791,7 +1791,7 @@ PropActResult PropMajorClaphamSummon::on_act()
         }
 
         auto spawned =
-                actor_factory::spawn(mon->pos, ids_to_summon)
+                actor_factory::spawn(mon->pos, ids_to_summon, map::rect())
                 .make_aware_of_player()
                 .set_leader(mon)
                 .for_each([](Mon* const mon)

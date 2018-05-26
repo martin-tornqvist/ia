@@ -20,9 +20,10 @@ class MarkerState: public State
 {
 public:
         MarkerState(const P& origin) :
-                State   (),
-                origin_ (origin),
-                pos_    () {}
+                State(),
+                marker_render_data_(P(0, 0)),
+                origin_(origin),
+                pos_() {}
 
         virtual ~MarkerState() {}
 
@@ -44,10 +45,11 @@ public:
 protected:
         virtual void on_start_hook() {}
 
-        void draw_marker(const std::vector<P>& trail,
-                         const int orange_from_king_dist,
-                         const int red_from_king_dist,
-                         const int red_from_idx);
+        void draw_marker(
+                const std::vector<P>& trail,
+                const int orange_from_king_dist,
+                const int red_from_king_dist,
+                const int red_from_idx);
 
         // Fire etc
         virtual void handle_input(const InputData& input) = 0;
@@ -79,7 +81,7 @@ protected:
         }
 
         // Necessary e.g. for marker states drawing overlayed graphics
-        CellRenderData marker_render_data_[map_w][map_h];
+        Array2<CellRenderData> marker_render_data_;
 
         const P origin_;
 
@@ -228,7 +230,7 @@ protected:
 class CtrlTele: public MarkerState
 {
 public:
-        CtrlTele(const P& origin, const bool blocked[map_w][map_h]);
+        CtrlTele(const P& origin, const Array2<bool>& blocked);
 
         ~CtrlTele() {}
 
@@ -242,7 +244,7 @@ protected:
 private:
         int chance_of_success_pct(const P& tgt) const;
 
-        bool blocked_[map_w][map_h];
+        Array2<bool> blocked_;
 };
 
 #endif // MARKER_HPP

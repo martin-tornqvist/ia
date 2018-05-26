@@ -38,7 +38,7 @@ static std::vector<SpellOpt> spells_avail()
 
         Inventory& inv = map::player->inv();
 
-        for (auto slot : inv.slots_)
+        for (auto& slot : inv.slots_)
         {
                 if (!slot.item)
                 {

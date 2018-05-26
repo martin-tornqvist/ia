@@ -8,16 +8,16 @@ namespace mapgen
 
 void decorate()
 {
-    bool blocked[map_w][map_h];
+    Array2<bool> blocked(map::dims());
 
     map_parsers::BlocksMoveCommon(ParseActors::no).
-        run(blocked);
+        run(blocked, blocked.rect());
 
-    for (int x = 0; x < map_w; ++x)
+    for (int x = 0; x < map::w(); ++x)
     {
-        for (int y = 0; y < map_h; ++y)
+            for (int y = 0; y < map::h(); ++y)
         {
-            Cell& cell = map::cells[x][y];
+            Cell& cell = map::cells.at(x, y);
 
             if (cell.rigid->id() == FeatureId::wall)
             {
@@ -56,7 +56,7 @@ void decorate()
                             continue;
                         }
 
-                        auto& adj_cell = map::cells[p_adj.x][p_adj.y];
+                        auto& adj_cell = map::cells.at(p_adj);
 
                         const auto adj_id = adj_cell.rigid->id();
 
@@ -116,13 +116,13 @@ void decorate()
 
     } // x loop
 
-    for (int x = 1; x < map_w - 1; ++x)
+    for (int x = 1; x < map::w() - 1; ++x)
     {
-        for (int y = 1; y < map_h - 1; ++y)
+        for (int y = 1; y < map::h() - 1; ++y)
         {
             const P p(x, y);
 
-            const auto& cell = map::cells[x][y];
+            const auto& cell = map::cells.at(x, y);
 
             if (cell.rigid->id() == FeatureId::floor)
             {
@@ -141,8 +141,8 @@ void decorate()
                         const P adj_p(p + d);
 
                         const bool is_floor =
-                            map::cells[adj_p.x][adj_p.y].rigid->id() ==
-                            FeatureId::floor;
+                                map::cells.at(adj_p).rigid->id() ==
+                                FeatureId::floor;
 
                         if (is_floor &&
                             rnd::one_in(3))
@@ -167,8 +167,7 @@ void decorate()
                         {
                             const P p_adj(p + P(dx, dy));
 
-                            auto adj_id =
-                                map::cells[p_adj.x][p_adj.y].rigid->id();
+                            auto adj_id = map::cells.at(p_adj).rigid->id();
 
                             if (adj_id == FeatureId::grate)
                             {
@@ -191,9 +190,8 @@ void decorate()
                         const P adj_ver_1 = p.with_y_offset(1);
                         const P adj_ver_2 = p.with_y_offset(-1);
 
-                        auto is_free = [&](const P& p)
-                        {
-                            return !blocked[p.x][p.y];
+                        auto is_free = [&](const P& p) {
+                            return !blocked.at(p);
                         };
 
                         const bool is_free_hor_1 = is_free(adj_hor_1);

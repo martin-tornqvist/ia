@@ -363,7 +363,9 @@ ConsumeItem DeviceSentryDrone::run_effect()
 {
     msg_log::add("The Sentry Drone awakens!");
 
-    actor_factory::spawn(map::player->pos, {ActorId::sentry_drone})
+    actor_factory::spawn(map::player->pos,
+                         {ActorId::sentry_drone},
+                         map::rect())
         .make_aware_of_player()
         .set_leader(map::player);
 

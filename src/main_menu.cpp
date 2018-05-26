@@ -438,7 +438,7 @@ void MainMenuState::update()
 
                         init::init_session();
 
-                        std::unique_ptr<State> new_game_state(new NewGameState);
+                        auto new_game_state = std::make_unique<NewGameState>();
 
                         states::push(std::move(new_game_state));
                 }
@@ -454,9 +454,8 @@ void MainMenuState::update()
 
                                 saving::load_game();
 
-                                std::unique_ptr<State> game_state(
-                                        new GameState(
-                                                GameEntryMode::load_game));
+                                auto game_state = std::make_unique<GameState>(
+                                        GameEntryMode::load_game);
 
                                 states::push(std::move(game_state));
                         }

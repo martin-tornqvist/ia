@@ -4,64 +4,61 @@
 #include <cstring>
 #include <algorithm>
 
-#include "init.hpp"
-#include "item.hpp"
+#include "actor_factory.hpp"
 #include "actor_player.hpp"
-#include "game_time.hpp"
+#include "ai.hpp"
 #include "attack.hpp"
-#include "reload.hpp"
-#include "inventory.hpp"
-#include "feature_trap.hpp"
+#include "drop.hpp"
+#include "feature_door.hpp"
 #include "feature_mob.hpp"
+#include "feature_trap.hpp"
+#include "fov.hpp"
+#include "game_time.hpp"
+#include "gods.hpp"
+#include "init.hpp"
+#include "inventory.hpp"
+#include "io.hpp"
+#include "item.hpp"
+#include "item_factory.hpp"
+#include "knockback.hpp"
+#include "line_calc.hpp"
+#include "map.hpp"
+#include "map_parsing.hpp"
+#include "msg_log.hpp"
+#include "popup.hpp"
 #include "property.hpp"
 #include "property_data.hpp"
 #include "property_handler.hpp"
-#include "io.hpp"
+#include "reload.hpp"
 #include "sound.hpp"
-#include "map.hpp"
-#include "msg_log.hpp"
-#include "map_parsing.hpp"
-#include "ai.hpp"
-#include "line_calc.hpp"
-#include "gods.hpp"
-#include "item_factory.hpp"
-#include "actor_factory.hpp"
-#include "knockback.hpp"
-#include "popup.hpp"
-#include "fov.hpp"
 #include "text_format.hpp"
-#include "feature_door.hpp"
-#include "drop.hpp"
 
 // -----------------------------------------------------------------------------
 // Private
 // -----------------------------------------------------------------------------
 static void unblock_passable_doors(const ActorData& actor_data,
-                                   bool blocked[map_w][map_h])
+                                   Array2<bool>& blocked)
 {
-        for (int x = 0; x < map_w; ++x) for (int y = 0; y < map_h; ++y)
+        for (size_t i = 0; i < blocked.length(); ++i)
         {
-                for (int y = 0; y < map_h; ++y)
+                const auto* const f = map::cells.at(i).rigid;
+
+                if (f->id() != FeatureId::door)
                 {
-                        const auto* const f = map::cells[x][y].rigid;
+                        continue;
+                }
 
-                        if (f->id() != FeatureId::door)
-                        {
-                                continue;
-                        }
+                const auto* const door = static_cast<const Door*>(f);
 
-                        const auto* const door = static_cast<const Door*>(f);
+                if (door->type() == DoorType::metal)
+                {
+                        continue;
+                }
 
-                        if (door->type() == DoorType::metal)
-                        {
-                                continue;
-                        }
-
-                        if (actor_data.can_open_doors ||
-                            actor_data.can_bash_doors)
-                        {
-                                blocked[x][y] = false;
-                        }
+                if (actor_data.can_open_doors ||
+                    actor_data.can_bash_doors)
+                {
+                        blocked.at(i) = false;
                 }
         }
 }
@@ -399,18 +396,14 @@ std::vector<Actor*> Mon::unseen_foes_aware_of() const
                 // spells on unreachable hostile monsters - but it probably
                 // doesn't matter for now
 
-                bool blocked[map_w][map_h];
+                Array2<bool> blocked(map::dims());
 
                 map_parsers::BlocksActor(*this, ParseActors::no)
-                        .run(blocked);
+                        .run(blocked, blocked.rect());
 
                 unblock_passable_doors(data(), blocked);
 
-                int flood[map_w][map_h];
-
-                floodfill(pos,
-                          blocked,
-                          flood);
+                const auto flood = floodfill(pos, blocked);
 
                 // Add all player-hostile monsters which the player is aware of
                 for (Actor* const actor : game_time::actors)
@@ -419,7 +412,7 @@ std::vector<Actor*> Mon::unseen_foes_aware_of() const
 
                         if (!actor->is_player() &&
                             !actor->is_actor_my_leader(map::player) &&
-                            (flood[p.x][p.y] > 0))
+                            (flood.at(p) > 0))
                         {
                                 auto* const mon = static_cast<Mon*>(actor);
 
@@ -449,7 +442,7 @@ std::vector<Actor*> Mon::unseen_foes_aware_of() const
 }
 
 bool Mon::can_see_actor(const Actor& other,
-                        const bool hard_blocked_los[map_w][map_h]) const
+                        const Array2<bool>& hard_blocked_los) const
 {
         const bool is_seeable = is_actor_seeable(other, hard_blocked_los);
 
@@ -484,7 +477,7 @@ bool Mon::can_see_actor(const Actor& other,
 }
 
 bool Mon::is_actor_seeable(const Actor& other,
-                           const bool hard_blocked_los[map_w][map_h]) const
+                           const Array2<bool>& hard_blocked_los) const
 {
         if ((this == &other) ||
             (!other.is_alive()))
@@ -547,22 +540,21 @@ std::vector<Actor*> Mon::seen_actors() const
 {
         std::vector<Actor*> out;
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         R los_rect(std::max(0, pos.x - fov_radi_int),
                    std::max(0, pos.y - fov_radi_int),
-                   std::min(map_w - 1, pos.x + fov_radi_int),
-                   std::min(map_h - 1, pos.y + fov_radi_int));
+                   std::min(map::w() - 1, pos.x + fov_radi_int),
+                   std::min(map::h() - 1, pos.y + fov_radi_int));
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     los_rect);
+                     los_rect,
+                     MapParseMode::overwrite);
 
         for (Actor* actor : game_time::actors)
         {
-                if ((actor != this) &&
-                    actor->is_alive())
+                if ((actor != this) && actor->is_alive())
                 {
                         const Mon* const mon = static_cast<const Mon*>(this);
 
@@ -580,17 +572,17 @@ std::vector<Actor*> Mon::seen_foes() const
 {
         std::vector<Actor*> out;
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         R los_rect(std::max(0, pos.x - fov_radi_int),
                    std::max(0, pos.y - fov_radi_int),
-                   std::min(map_w - 1, pos.x + fov_radi_int),
-                   std::min(map_h - 1, pos.y + fov_radi_int));
+                   std::min(map::w() - 1, pos.x + fov_radi_int),
+                   std::min(map::h() - 1, pos.y + fov_radi_int));
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     los_rect);
+                     los_rect,
+                     MapParseMode::overwrite);
 
         for (Actor* actor : game_time::actors)
         {
@@ -601,9 +593,9 @@ std::vector<Actor*> Mon::seen_foes() const
                                 !is_actor_my_leader(map::player);
 
                         const bool is_other_hostile_to_player =
-                                actor->is_player() ?
-                                false :
-                                !actor->is_actor_my_leader(map::player);
+                                actor->is_player()
+                                ? false
+                                : !actor->is_actor_my_leader(map::player);
 
                         const bool is_enemy =
                                 is_hostile_to_player !=
@@ -626,14 +618,14 @@ std::vector<Actor*> Mon::seeable_foes() const
 {
         std::vector<Actor*> out;
 
-        bool blocked_los[map_w][map_h];
+        Array2<bool> blocked_los(map::dims());
 
         const R fov_rect = fov::get_fov_rect(pos);
 
         map_parsers::BlocksLos()
                 .run(blocked_los,
-                     MapParseMode::overwrite,
-                     fov_rect);
+                     fov_rect,
+                     MapParseMode::overwrite);
 
         for (Actor* actor : game_time::actors)
         {
@@ -785,7 +777,7 @@ void Mon::move(Dir dir)
                         m->bump(*this);
                 }
 
-                map::cells[pos.x][pos.y].rigid->bump(*this);
+                map::cells.at(pos).rigid->bump(*this);
         }
 
         game_time::tick();
@@ -1342,12 +1334,12 @@ DidAction Khephren::on_act()
 
         const R fov_rect = fov::get_fov_rect(pos);
 
-        bool blocked[map_w][map_h];
+        Array2<bool> blocked(map::dims());
 
         map_parsers::BlocksLos()
                 .run(blocked,
-                     MapParseMode::overwrite,
-                     fov_rect);
+                     fov_rect,
+                     MapParseMode::overwrite);
 
         if (!can_see_actor(*(map::player), blocked))
         {
@@ -1364,7 +1356,10 @@ DidAction Khephren::on_act()
         const size_t nr_of_spawns = 15;
 
         const auto summoned =
-                actor_factory::spawn(pos, {nr_of_spawns, ActorId::locust})
+                actor_factory::spawn(
+                        pos,
+                        {nr_of_spawns, ActorId::locust},
+                        map::rect())
                 .set_leader(leader_of_spawned_mon)
                 .make_aware_of_player()
                 .for_each([](Mon* const mon)

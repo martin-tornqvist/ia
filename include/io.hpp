@@ -169,13 +169,6 @@ void draw_rectangle_solid(
         const PxPos px_dims,
         const Color& color);
 
-void draw_blast_at_field(
-        const P center_pos,
-        const int radius,
-        bool forbidden_cells[map_w][map_h],
-        const Color& color_inner,
-        const Color& color_outer);
-
 void draw_blast_at_cells(
         const std::vector<P>& positions,
         const Color& color);

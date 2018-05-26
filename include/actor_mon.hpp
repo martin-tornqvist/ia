@@ -41,7 +41,7 @@ public:
         virtual ~Mon();
 
         bool can_see_actor(const Actor& other,
-                           const bool hard_blocked_los[map_w][map_h]) const;
+                           const Array2<bool>& hard_blocked_los) const;
 
         std::vector<Actor*> seen_actors() const override;
 
@@ -123,7 +123,7 @@ protected:
         // it's not impossible due to invisibility, etc), but the actor may or
         // may not currently be seen due to (lack of) awareness
         bool is_actor_seeable(const Actor& other,
-                              const bool hard_blocked_los[map_w][map_h]) const;
+                              const Array2<bool>& hard_blocked_los) const;
 
         void make_leader_aware_silent() const;
 

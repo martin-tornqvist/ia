@@ -4,24 +4,21 @@
 #include <vector>
 
 #include "actor_data.hpp"
-
-enum class AllowSpawnUniqueMon
-{
-        no,
-        yes
-};
+#include "rl_utils.hpp"
 
 namespace populate_mon
 {
 
-void make_group_at(const ActorId id,
-                   const std::vector<P>& sorted_free_cells,
-                   bool blocked_out[map_w][map_h],
-                   const MonRoamingAllowed roaming_allowed);
+void make_group_at(
+        const ActorId id,
+        const std::vector<P>& sorted_free_cells,
+        Array2<bool>* const blocked_out,
+        const MonRoamingAllowed roaming_allowed);
 
 // TODO: This is a very general function, it should not be here
-std::vector<P> make_sorted_free_cells(const P& origin,
-                                      const bool blocked[map_w][map_h]);
+std::vector<P> make_sorted_free_cells(
+        const P& origin,
+        const Array2<bool>& blocked);
 
 void make_random_group();
 

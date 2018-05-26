@@ -1,31 +1,29 @@
 #include "map_templates.hpp"
 
+#include <fstream>
+#include <unordered_map>
+#include <vector>
+
 #include "rl_utils.hpp"
 #include "saving.hpp"
 
-#include <fstream>
-#include <unordered_map>
+// -----------------------------------------------------------------------------
+// private
+// -----------------------------------------------------------------------------
+static std::vector< Array2<char> > level_templates_;
 
-namespace map_templates
-{
+static std::vector<RoomTempl> room_templates_;
 
-namespace
-{
-
-Array2<char> level_templates_[(size_t)LevelTemplId::END];
-
-std::vector<RoomTempl> room_templates_;
-
-std::vector<RoomTemplStatus> room_templ_status_;
+static std::vector<RoomTemplStatus> room_templ_status_;
 
 // Space and tab
-const std::string whitespace_chars = " \t";
+static const std::string whitespace_chars = " \t";
 
-const char comment_symbol = '\'';
+static const char comment_symbol = '\'';
 
 
 // Checks if this line has non-whitespace characters, and is not commented out
-bool line_has_content(const std::string& line)
+static bool line_has_content(const std::string& line)
 {
     const size_t first_non_space =
         line.find_first_not_of(whitespace_chars);
@@ -35,7 +33,7 @@ bool line_has_content(const std::string& line)
         (line[first_non_space] != comment_symbol);
 }
 
-void trim_trailing_whitespace(std::string& line)
+static void trim_trailing_whitespace(std::string& line)
 {
     const size_t end_pos =
         line.find_last_not_of(whitespace_chars);
@@ -43,7 +41,7 @@ void trim_trailing_whitespace(std::string& line)
     line = line.substr(0, end_pos + 1);
 }
 
-size_t max_length(const std::vector<std::string>& lines)
+static size_t max_length(const std::vector<std::string>& lines)
 {
     size_t max_len = 0;
 
@@ -60,9 +58,12 @@ size_t max_length(const std::vector<std::string>& lines)
     return max_len;
 }
 
-void load_level_templates()
+static void load_level_templates()
 {
     TRACE_FUNC_BEGIN;
+
+    level_templates_.clear();
+    level_templates_.reserve((size_t)LevelTemplId::END);
 
     std::ifstream ifs("res/data/map/levels.txt");
 
@@ -126,10 +127,11 @@ void load_level_templates()
 
                 if (id_it == name_to_level_id.end())
                 {
-                    TRACE << "Unrecognized level template name: "
-                          << name_str << std::endl;
+                        TRACE_ERROR_RELEASE
+                                << "Unrecognized level template name: "
+                                << name_str << std::endl;
 
-                    ASSERT(false);
+                        PANIC;
                 }
 
                 current_id = id_it->second;
@@ -152,15 +154,13 @@ void load_level_templates()
             current_id != LevelTemplId::END &&
             !template_buffer.empty())
         {
-            ASSERT(template_buffer.size() == map_h);
-
             // Not all lines in a template needs to be the same length, so we
             // to find the length of the longest line
             const size_t max_len = max_length(template_buffer);
 
-            ASSERT(max_len == map_w);
-
-            auto& templ = level_templates_[(size_t)current_id];
+            // TODO: Using hard coded (old) values for now. The size should be
+            // determined from the dimensions in the template file though
+            Array2<char> templ(P(80, 22));
 
             templ.resize(max_len, template_buffer.size());
 
@@ -178,9 +178,13 @@ void load_level_templates()
                      line_idx < max_len;
                      ++line_idx)
                 {
-                    templ(line_idx, buffer_idx) = buffer_line[line_idx];
+                    templ.at(line_idx, buffer_idx) = buffer_line[line_idx];
                 }
             }
+
+            level_templates_.insert(
+                    begin(level_templates_) + (size_t)current_id,
+                    templ);
 
             current_id = LevelTemplId::END;
 
@@ -194,25 +198,19 @@ void load_level_templates()
 } // load_level_templates
 
 
-//
 // Add all combinations of rotating and flipping the template
-//
-void make_room_templ_variants(RoomTempl& templ)
+static void make_room_templ_variants(RoomTempl& templ)
 {
     auto& symbols = templ.symbols;
 
-    //
     // "Up"
-    //
     room_templates_.push_back(templ);
 
     symbols.flip_hor();
 
     room_templates_.push_back(templ);
 
-    //
     // "Right"
-    //
     symbols.rotate_cw();
 
     room_templates_.push_back(templ);
@@ -221,9 +219,7 @@ void make_room_templ_variants(RoomTempl& templ)
 
     room_templates_.push_back(templ);
 
-    //
     // "Down"
-    //
     symbols.rotate_cw();
 
     room_templates_.push_back(templ);
@@ -232,9 +228,7 @@ void make_room_templ_variants(RoomTempl& templ)
 
     room_templates_.push_back(templ);
 
-    //
     // "Left"
-    //
     symbols.rotate_cw();
 
     room_templates_.push_back(templ);
@@ -245,8 +239,7 @@ void make_room_templ_variants(RoomTempl& templ)
 
 } // make_room_templ_variants
 
-
-void load_room_templates()
+static void load_room_templates()
 {
     TRACE_FUNC_BEGIN;
 
@@ -325,10 +318,11 @@ void load_room_templates()
 
                 if (type_it == name_to_room_type.end())
                 {
-                    TRACE << "Unrecognized room template type: "
-                          << type_str << std::endl;
+                        TRACE_ERROR_RELEASE
+                                << "Unrecognized room template type: "
+                                << type_str << std::endl;
 
-                    ASSERT(false);
+                        PANIC;
                 }
 
                 templ.type = type_it->second;
@@ -369,7 +363,8 @@ void load_room_templates()
                      line_idx < max_len;
                      ++line_idx)
                 {
-                    templ.symbols(line_idx, buffer_idx) = buffer_line[line_idx];
+                    templ.symbols.at(line_idx, buffer_idx) =
+                            buffer_line[line_idx];
                 }
             }
 
@@ -395,7 +390,11 @@ void load_room_templates()
     TRACE_FUNC_END;
 }
 
-} // namespace
+// -----------------------------------------------------------------------------
+// map_templates
+// -----------------------------------------------------------------------------
+namespace map_templates
+{
 
 void init()
 {

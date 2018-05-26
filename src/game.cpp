@@ -398,7 +398,7 @@ void handle_player_input(const InputData& input)
     {
         const P& p = map::player->pos;
 
-        Item* const item_at_player = map::cells[p.x][p.y].item;
+        Item* const item_at_player = map::cells.at(p).item;
 
         if (item_at_player &&
             item_at_player->data().id == ItemId::trapez)
@@ -624,8 +624,9 @@ void handle_player_input(const InputData& input)
     {
         if (map::player->properties().allow_see())
         {
-            std::unique_ptr<State> view_state(
-                new Viewing(map::player->pos));
+            auto view_state =
+                    std::make_unique<Viewing>(
+                            map::player->pos);
 
             states::push(std::move(view_state));
         }
@@ -756,13 +757,10 @@ void handle_player_input(const InputData& input)
     {
         if (init::is_cheat_vision_enabled)
         {
-            for (int x = 0; x < map_w; ++x)
+            for (auto& cell : map::cells)
             {
-                for (int y = 0; y < map_h; ++y)
-                {
-                    map::cells[x][y].is_seen_by_player = false;
-                    map::cells[x][y].is_explored = false;
-                }
+                cell.is_seen_by_player = false;
+                cell.is_explored = false;
             }
 
             init::is_cheat_vision_enabled = false;
@@ -818,16 +816,17 @@ void handle_player_input(const InputData& input)
         io::draw_text(query_str, Panel::screen, P(0, 0), colors::yellow());
 
         const int idx =
-            query::number(P(query_str.size(), 0),
-                          colors::light_white(),
-                          0,
-                          (int)ActorId::END,
-                          0,
-                          false);
+                query::number(
+                        P(query_str.size(), 0),
+                        colors::light_white(),
+                        0,
+                        (int)ActorId::END,
+                        0,
+                        false);
 
         const ActorId mon_id = ActorId(idx);
 
-        actor_factory::spawn(map::player->pos, {mon_id});
+        actor_factory::spawn(map::player->pos, {mon_id}, map::rect());
     }
     break;
 #endif // NDEBUG
@@ -942,81 +941,84 @@ void incr_clvl()
 
 void win_game()
 {
-    io::cover_panel(Panel::screen);
-    io::update_screen();
+        io::cover_panel(Panel::screen);
+        io::update_screen();
 
-    const std::vector<std::string> win_msg =
-    {
-        "As I approach the crystal, an eerie glow illuminates the area. "
-        "I notice a figure observing me from the edge of the light. "
-        "There is no doubt concerning the nature of this entity; "
-        "it is the Faceless God who dwells in the depths of the earth - "
-        "Nyarlathotep!",
+        const std::vector<std::string> win_msg =
+                {
+                        "As I approach the crystal, an eerie glow illuminates "
+                        "the area. I notice a figure observing me from the "
+                        "edge of the light. There is no doubt concerning the "
+                        "nature of this entity; it is the Faceless God who "
+                        "dwells in the depths of the earth - Nyarlathotep!",
 
-        "I panic. Why is it I find myself here, stumbling around in darkness? "
-        "Is this all part of a plan? "
-        "The being beckons me to gaze into the stone.",
+                        "I panic. Why is it I find myself here, stumbling "
+                        "around in darkness? Is this all part of a plan? The "
+                        "being beckons me to gaze into the stone.",
 
-        "In the radiance I see visions beyond eternity, visions of unreal "
-        "reality, visions of the brightest light of day and the darkest night "
-        "of madness. There is only onward now, I have to see, I have to KNOW.",
+                        "In the radiance I see visions beyond eternity, "
+                        "visions of unreal reality, visions of the brightest "
+                        "light of day and the darkest night of madness. There "
+                        "is only onward now, I have to see, I have to KNOW.",
 
-        "So I make a pact with the Fiend.",
+                        "So I make a pact with the Fiend.",
 
-        "I now harness the shadows that stride from world to world to sow "
-        "death and madness. "
-        "The destinies of all things on earth, living and dead, are mine."
-    };
+                        "I now harness the shadows that stride from world to "
+                        "world to sow death and madness. The destinies of all "
+                        "things on earth, living and dead, are mine."
+                };
 
-    const int padding = 9;
+        const int padding = 9;
 
-    const int x0 = padding;
+        const int x0 = padding;
 
-    const int max_w = map_w - (padding * 2);
+        const int max_w = panels::get_w(Panel::screen) - (padding * 2);
 
-    const int line_delay = 50;
+        const int line_delay = 50;
 
-    int y = 2;
+        int y = 2;
 
-    for (const std::string& section_msg : win_msg)
-    {
-        const auto section_lines = text_format::split(section_msg, max_w);
-
-        for (const std::string& line : section_lines)
+        for (const std::string& section_msg : win_msg)
         {
-            io::draw_text(line,
-                          Panel::screen,
-                          P(x0, y),
-                          colors::white(),
-                          false, // Do not draw background color
-                          colors::black());
+                const auto section_lines =
+                        text_format::split(section_msg, max_w);
 
-            io::update_screen();
+                for (const std::string& line : section_lines)
+                {
+                        io::draw_text(
+                                line,
+                                Panel::screen,
+                                P(x0, y),
+                                colors::white(),
+                                false, // Do not draw background color
+                                colors::black());
 
-            sdl_base::sleep(line_delay);
+                        io::update_screen();
 
-            ++y;
+                        sdl_base::sleep(line_delay);
+
+                        ++y;
+                }
+                ++y;
         }
+
         ++y;
-    }
 
-    ++y;
+        const int screen_w = panels::get_w(Panel::screen);
+        const int screen_h = panels::get_h(Panel::screen);
 
-    const int screen_w = panels::get_w(Panel::screen);
-    const int screen_h = panels::get_h(Panel::screen);
+        io::draw_text_center(
+                "[space/esc/enter] to continue",
+                Panel::screen,
+                P((screen_w - 1) / 2, screen_h - 2),
+                colors::menu_dark(),
+                false, // Do not draw background color
+                colors::black(),
+                false); // Do not allow pixel-level adjustment
 
-    io::draw_text_center(
-        "[space/esc/enter] to continue",
-        Panel::screen,
-        P((screen_w - 1) / 2, screen_h - 2),
-        colors::menu_dark(),
-        false, // Do not draw background color
-        colors::black(),
-        false); // Do not allow pixel-level adjustment
+        io::update_screen();
 
-    io::update_screen();
-
-    query::wait_for_confirm();
+        query::wait_for_confirm();
 }
 
 void on_mon_seen(Actor& actor)
@@ -1185,7 +1187,16 @@ void GameState::draw()
 {
     if (states::is_current_state(*this))
     {
-        viewport::focus_on(map::player->pos);
+#ifndef NDEBUG
+        if (!init::is_demo_mapgen)
+        {
+#endif // NDEBUG
+
+            viewport::focus_on(map::player->pos);
+
+#ifndef NDEBUG
+        }
+#endif // NDEBUG
     }
 
     draw_map::run();
