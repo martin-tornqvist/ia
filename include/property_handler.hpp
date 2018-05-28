@@ -1,21 +1,19 @@
 #ifndef PROPERTY_HANDLER_HPP
 #define PROPERTY_HANDLER_HPP
 
+#include <memory>
 #include <string>
 
-#include "property_data.hpp"
-#include "global.hpp"
 #include "ability_values.hpp"
+#include "global.hpp"
+#include "property_data.hpp"
 #include "rl_utils.hpp"
 
-class Prop;
 class Actor;
 class Item;
+class Prop;
 class Wpn;
 
-// -----------------------------------------------------------------------------
-// Support types
-// -----------------------------------------------------------------------------
 enum class PropSrc
 {
         // Properties applied by potions, spells, etc, or "natural" properties
