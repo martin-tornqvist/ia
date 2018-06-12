@@ -298,8 +298,9 @@ PropEnded PropInfected::on_tick()
         {
                 PropHandler& properties = owner_->properties();
 
-                // NOTE: This property is now deleted
                 owner_->properties().end_prop_silent(id());
+
+                // NOTE: This property is now deleted
 
                 auto prop_diseased = new PropDiseased();
 
@@ -317,15 +318,14 @@ PropEnded PropInfected::on_tick()
 
 int PropDiseased::affect_max_hp(const int hp_max) const
 {
-#ifndef NDEBUG
-        ASSERT(!owner_->properties().has_prop(PropId::infected));
-#endif // NDEBUG
-
         return hp_max / 2;
 }
 
 void PropDiseased::on_applied()
 {
+        // End infection
+        owner_->properties().end_prop_silent(PropId::infected);
+
         // If this is a permanent disease that the player caught, log it as a
         // historic event
         if (owner_->is_player() &&

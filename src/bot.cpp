@@ -337,7 +337,7 @@ void act()
             }
         }
 
-        PropId prop_id = prop_bucket[rnd::range(0, prop_bucket.size() - 1)];
+        PropId prop_id = rnd::element(prop_bucket);
 
         auto* const prop = property_factory::make(prop_id);
 
