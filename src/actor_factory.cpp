@@ -82,7 +82,7 @@ std::vector<P> free_spawn_positions(const R& area)
 
 Mon* spawn_at(const P& pos, const ActorId id)
 {
-    ASSERT(map::is_pos_inside_map(pos, false));
+    ASSERT(map::is_pos_inside_outer_walls(pos));
 
     Actor* const actor = make(id, pos);
 

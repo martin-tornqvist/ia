@@ -84,8 +84,8 @@ void make_sub_rooms()
 
                 const P p1(p0 + walls_d - 1);
 
-                ASSERT(map::is_pos_inside_map(p0, true));
-                ASSERT(map::is_pos_inside_map(p1, true));
+                ASSERT(map::is_pos_inside_map(p0));
+                ASSERT(map::is_pos_inside_map(p1));
 
                 if (p0.x <= outer_room_rect.p0.x &&
                     p0.y <= outer_room_rect.p0.y &&
@@ -106,7 +106,7 @@ void make_sub_rooms()
                     {
                         const P p_check(x, y);
 
-                        if (!map::is_pos_inside_map(p_check, true))
+                        if (!map::is_pos_inside_map(p_check))
                         {
                             continue;
                         }

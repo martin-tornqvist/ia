@@ -120,7 +120,7 @@ Item* drop_item_on_map(const P& intended_pos, Item& item)
 {
         TRACE_FUNC_BEGIN_VERBOSE;
 
-        ASSERT(map::is_pos_inside_map(intended_pos, false));
+        ASSERT(map::is_pos_inside_outer_walls(intended_pos));
 
         // If target cell is bottomless, just destroy the item
         const auto* const tgt_rigid = map::cells.at(intended_pos).rigid;

@@ -477,7 +477,7 @@ void StdRoom::place_auto_features()
 
                         TRACE_VERBOSE << "Placing feature" << std::endl;
 
-                        ASSERT(map::is_pos_inside_map(p, false));
+                        ASSERT(map::is_pos_inside_outer_walls(p));
 
                         map::put(static_cast<Rigid*>(d.make_obj(p)));
 

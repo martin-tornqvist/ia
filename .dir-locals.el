@@ -4,8 +4,6 @@
 (
  ;; For all modes
  (nil
-  ;; TODO: This does not seem to have any effect
-  (compile-command . "./build-debug.sh")
   (indent-tabs-mode))
  ;; For c++-mode
  (c++-mode

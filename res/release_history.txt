@@ -11,6 +11,7 @@ Gameplay
 * Spiders become aware of the player when the player gets stuck in a spider web
 * Spiders can use pathfinding to move to their target
 * Improved check for if Phobia of open places should trigger (for example it no longer triggers while standing in smoke)
+* Changed the standard map size
 
 Interface
 * The interface has a new layout, and there is a scrolling viewport centered on the player

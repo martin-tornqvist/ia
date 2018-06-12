@@ -27,6 +27,9 @@ bool MapBuilderStd::build_specific()
 {
         TRACE_FUNC_BEGIN;
 
+        // TODO: Using hard coded values for now
+        map::reset({48, 48});
+
         mapgen::is_map_valid = true;
 
         mapgen::door_proposals.resize(map::dims());
@@ -557,8 +560,11 @@ bool MapBuilderStd::build_specific()
         // Place "snake emerge" events
         // ---------------------------------------------------------------------
         const int nr_snake_emerge_events_to_try =
-                rnd::one_in(60) ? 2 :
-                rnd::one_in(16) ? 1 : 0;
+                rnd::one_in(60)
+                ? 2
+                : rnd::one_in(16)
+                ? 1
+                : 0;
 
         for (int i = 0; i < nr_snake_emerge_events_to_try; ++i)
         {

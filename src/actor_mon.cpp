@@ -108,7 +108,7 @@ void Mon::act()
 
 #ifndef NDEBUG
         // Sanity check - verify that monster is not outside the map
-        if (!map::is_pos_inside_map(pos, false))
+        if (!map::is_pos_inside_outer_walls(pos))
         {
                 TRACE << "Monster outside map" << std::endl;
                 ASSERT(false);
@@ -749,7 +749,7 @@ void Mon::move(Dir dir)
                 ASSERT(false);
         }
 
-        if (!map::is_pos_inside_map(pos, false))
+        if (!map::is_pos_inside_outer_walls(pos))
         {
                 TRACE << "Monster outside map" << std::endl;
                 ASSERT(false);
@@ -764,7 +764,7 @@ void Mon::move(Dir dir)
         const P target_p(pos + dir_utils::offset(dir));
 
         if ((dir != Dir::center) &&
-            map::is_pos_inside_map(target_p, false))
+            map::is_pos_inside_outer_walls(target_p))
         {
                 pos = target_p;
 

@@ -271,10 +271,6 @@ private:
 
         T& get_element_ref(const P& p) const
         {
-#ifndef NDEBUG
-                check_pos(p);
-#endif // NDEBUG
-
                 const size_t idx = pos_to_idx(p);
 
                 return data_[idx];
@@ -289,19 +285,6 @@ private:
         {
                 return pos_to_idx(P(x, y));
         }
-
-#ifndef NDEBUG
-        void check_pos(const P& p) const
-        {
-                if ((p.x < 0) ||
-                    (p.y < 0) ||
-                    (p.x >= dims_.x) ||
-                    (p.y >= dims_.y))
-                {
-                        ASSERT(false);
-                }
-        }
-#endif // NDEBUG
 
         T* data_;
         P dims_;

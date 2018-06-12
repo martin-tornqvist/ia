@@ -305,7 +305,7 @@ void delete_and_remove_room_from_list(Room* const room)
 
 bool is_pos_seen_by_player(const P& p)
 {
-        ASSERT(map::is_pos_inside_map(p));
+        ASSERT(is_pos_inside_map(p));
 
         return cells.at(p).is_seen_by_player;
 }
@@ -406,28 +406,28 @@ Actor* random_closest_actor(const P& c, const std::vector<Actor*>& actors)
         return closest_actors[element];
 }
 
-bool is_pos_inside_map(const P& pos, const bool count_edge_as_inside)
+bool is_pos_inside_map(const P& pos)
 {
-        if (count_edge_as_inside)
-        {
-                return
-                        (pos.x >= 0) &&
-                        (pos.y >= 0) &&
-                        (pos.x < w()) &&
-                        (pos.y < h());
-        }
-        else // Edge counts as outside the map
-        {
-                return (pos.x > 0) &&
-                        (pos.y > 0) &&
-                        (pos.x < (w() - 1)) &&
-                        (pos.y < (h() - 1));
-        }
+        return
+                (pos.x >= 0) &&
+                (pos.y >= 0) &&
+                (pos.x < w()) &&
+                (pos.y < h());
+}
+
+bool is_pos_inside_outer_walls(const P& pos)
+{
+        return
+                (pos.x > 0) &&
+                (pos.y > 0) &&
+                (pos.x < (w() - 1)) &&
+                (pos.y < (h() - 1));
 }
 
 bool is_area_inside_map(const R& area)
 {
-        return is_pos_inside_map(area.p0) &&
+        return
+                is_pos_inside_map(area.p0) &&
                 is_pos_inside_map(area.p1);
 }
 

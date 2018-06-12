@@ -56,13 +56,17 @@ void Snd::on_heard(Actor& actor) const
 // -----------------------------------------------------------------------------
 static int nr_snd_msg_printed_current_turn_;
 
-static bool is_snd_heard_at_range(const int range, const Snd& snd)
+static int get_max_dist(const Snd& snd)
 {
         return
-                (range <= (snd.is_loud())
-                 ?
-                 snd_dist_loud :
-                 snd_dist_normal);
+                snd.is_loud()
+                ? snd_dist_loud
+                : snd_dist_normal;
+}
+
+static bool is_snd_heard_at_range(const int range, const Snd& snd)
+{
+        return range <= get_max_dist(snd);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,10 +97,12 @@ void run(Snd snd)
         // free here)
         blocked.at(origin.x, origin.y) = false;
 
+        const int snd_max_dist = get_max_dist(snd);
+
         const auto flood = floodfill(
                 origin,
                 blocked,
-                999,
+                snd_max_dist,
                 P(-1, -1),
                 true);
 
@@ -106,13 +112,16 @@ void run(Snd snd)
         {
                 const int flood_val_at_actor = flood.at(actor->pos);
 
-                const bool is_origin_seen_by_player =
-                        map::cells.at(origin).is_seen_by_player;
+                const P& actor_pos = actor->pos;
 
-                if (!is_snd_heard_at_range(flood_val_at_actor, snd))
+                if (((flood_val_at_actor == 0) && (actor_pos != origin)) ||
+                    !is_snd_heard_at_range(flood_val_at_actor, snd))
                 {
                         continue;
                 }
+
+                const bool is_origin_seen_by_player =
+                        map::cells.at(origin).is_seen_by_player;
 
                 if (actor->is_player())
                 {
@@ -122,36 +131,31 @@ void run(Snd snd)
                                 snd.clear_msg();
                         }
 
-                        const P& player_pos = map::player->pos;
-
                         if (!snd.msg().empty())
                         {
                                 // Add a direction to the message (i.e. "(NW)")
-                                if (player_pos != origin)
+                                if (actor_pos != origin)
                                 {
                                         const std::string dir_str =
                                                 dir_utils::compass_dir_name(
-                                                        player_pos,
+                                                        actor_pos,
                                                         origin);
 
                                         snd.add_string("(" + dir_str + ")");
                                 }
                         }
 
-                        const int snd_max_dist =
-                                snd.is_loud() ?
-                                snd_dist_loud : snd_dist_normal;
-
                         const int pct_dist =
                                 (flood_val_at_actor * 100) / snd_max_dist;
 
-                        const P offset = (origin - player_pos).signs();
+                        const P offset = (origin - actor_pos).signs();
 
                         const Dir dir_to_origin = dir_utils::dir(offset);
 
-                        map::player->hear_sound(snd,
-                                                is_origin_seen_by_player,
-                                                dir_to_origin, pct_dist);
+                        map::player->hear_sound(
+                                snd,
+                                is_origin_seen_by_player,
+                                dir_to_origin, pct_dist);
                 }
                 else // Not player
                 {

@@ -116,7 +116,7 @@ void EventWallCrumble::on_new_turn()
                 {
                         const P p_adj(p + d);
 
-                        if (!map::is_pos_inside_map(p_adj, false))
+                        if (!map::is_pos_inside_outer_walls(p_adj))
                         {
                                 continue;
                         }
@@ -138,7 +138,7 @@ void EventWallCrumble::on_new_turn()
         // Destroy the outer walls
         for (const P& p : wall_cells_)
         {
-                if (!map::is_pos_inside_map(p, false))
+                if (!map::is_pos_inside_outer_walls(p))
                 {
                         continue;
                 }
@@ -275,7 +275,7 @@ R EventSnakeEmerge::allowed_emerge_rect(const P& p) const
 
 bool EventSnakeEmerge::is_ok_feature_at(const P& p) const
 {
-        ASSERT(map::is_pos_inside_map(p, true));
+        ASSERT(map::is_pos_inside_map(p));
 
         const FeatureId id = map::cells.at(p).rigid->id();
 

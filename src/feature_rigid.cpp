@@ -467,7 +467,7 @@ void Rigid::add_light(Array2<bool>& light) const
         {
             const P p(pos_ + d);
 
-            if (map::is_pos_inside_map(p, true))
+            if (map::is_pos_inside_map(p))
             {
                 light.at(p) = true;
             }
@@ -2101,7 +2101,7 @@ void Tree::on_hit(const int dmg,
 
 WasDestroyed Tree::on_finished_burning()
 {
-    if (map::is_pos_inside_map(pos_, false))
+    if (map::is_pos_inside_outer_walls(pos_))
     {
         Grass* const grass = new Grass(pos_);
 

@@ -173,7 +173,7 @@ bool MapParser::cell(const P& pos)
 bool BlocksLos::parse(const Cell& c, const P& pos)  const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->is_los_passable();
 }
 
@@ -185,7 +185,7 @@ bool BlocksLos::parse(const Mob& f) const
 bool BlocksMoveCommon::parse(const Cell& c, const P& pos) const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->can_move_common();
 }
 
@@ -202,7 +202,7 @@ bool BlocksMoveCommon::parse(const Actor& a) const
 bool BlocksActor::parse(const Cell& c, const P& pos) const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->can_move(actor_);
 }
 
@@ -219,7 +219,7 @@ bool BlocksActor::parse(const Actor& a) const
 bool BlocksProjectiles::parse(const Cell& c, const P& pos)  const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->is_projectile_passable();
 }
 
@@ -231,7 +231,7 @@ bool BlocksProjectiles::parse(const Mob& f)  const
 bool BlocksSound::parse(const Cell& c, const P& pos)  const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->is_sound_passable();
 }
 
@@ -248,7 +248,7 @@ bool LivingActorsAdjToPos::parse(const Actor& a) const
 bool BlocksItems::parse(const Cell& c, const P& pos)  const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->can_have_item();
 }
 
@@ -260,7 +260,7 @@ bool BlocksItems::parse(const Mob& f) const
 bool BlocksRigid::parse(const Cell& c, const P& pos)  const
 {
         return
-                !map::is_pos_inside_map(pos, false) ||
+                !map::is_pos_inside_outer_walls(pos) ||
                 !c.rigid->can_have_rigid();
 }
 
@@ -297,7 +297,7 @@ bool AllAdjIsFeature::parse(const Cell& c, const P& pos) const
 {
         (void)c;
 
-        if (!map::is_pos_inside_map(pos, false))
+        if (!map::is_pos_inside_outer_walls(pos))
         {
                 return false;
         }
@@ -619,7 +619,7 @@ bool is_map_connected(const Array2<bool>& blocked)
                 }
         }
 
-        ASSERT(map::is_pos_inside_map(origin, false));
+        ASSERT(map::is_pos_inside_outer_walls(origin));
 
         const auto flood = floodfill(
                 origin,

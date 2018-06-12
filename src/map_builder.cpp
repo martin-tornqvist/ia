@@ -38,9 +38,6 @@ void MapBuilder::build()
                 ++nr_attempts;
 #endif // NDEBUG
 
-                // TODO: Using hard coded (old) values for now...
-                map::reset({80, 22});
-
                 map_ok = build_specific();
 
                 if (map_ok)
@@ -106,6 +103,8 @@ bool MapBuilderTemplateLevel::build_specific()
         template_ = &map_templates::level_templ(template_id());
 
         const P templ_dims = template_->dims();
+
+        map::reset(templ_dims);
 
         for (int x = 0; x < templ_dims.x; ++x)
         {

@@ -44,8 +44,8 @@ void register_room(Room& room)
         const P room_p0(room.r_.p0);
         const P room_p1(room.r_.p1);
 
-        ASSERT(map::is_pos_inside_map(room_p0, false));
-        ASSERT(map::is_pos_inside_map(room_p1, false));
+        ASSERT(map::is_pos_inside_outer_walls(room_p0));
+        ASSERT(map::is_pos_inside_outer_walls(room_p1));
 
         for (int x = room_p0.x; x <= room_p1.x; ++x)
         {
@@ -817,8 +817,8 @@ void make_pathfind_corridor(Room& room_0,
                                         const P p_adj(p + d);
 
                                         const bool is_inside =
-                                                map::is_pos_inside_map(
-                                                        p_adj, false);
+                                                map::is_pos_inside_outer_walls(
+                                                        p_adj);
 
                                         if (is_inside &&
                                             !blocked_expanded.at(p_adj))
