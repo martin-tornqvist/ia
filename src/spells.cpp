@@ -2187,19 +2187,19 @@ void SpellEnfeeble::run_effect(Actor* const caster,
                 {
                 case SpellSkill::basic:
                         msg_log::add(
-                                "The bugs on the ground suddenly moves very "
+                                "The bugs on the ground suddenly move very "
                                 "feebly.");
                         break;
 
                 case SpellSkill::expert:
                         msg_log::add(
-                                "The bugs on the ground suddenly moves very "
+                                "The bugs on the ground suddenly move very "
                                 "slowly.");
                         break;
 
                 case SpellSkill::master:
                         msg_log::add(
-                                "The bugs on the ground suddenly stops "
+                                "The bugs on the ground suddenly stop "
                                 "moving.");
                         break;
 
