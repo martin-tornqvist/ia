@@ -3934,56 +3934,62 @@
     </monster>
 
     <!--************************************************************-->
-    <!-- byakhee -->
+    <!-- warping_aberrance -->
     <!--************************************************************-->
-    <monster id="byakhee">
+    <monster id="warping_aberrance">
         <text>
-            <name_a>a Byakhee</name_a>
-            <name_the>the Byakhee</name_the>
-            <corpse_name_a>a Byakhee corpse</corpse_name_a>
-            <corpse_name_the>the Byakhee corpse</corpse_name_the>
-            <description>"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed human beings, but something I cannot and must not recall."-H.P. Lovecraft, "The Festival". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.</description>
+            <name_a>Warping Aberrance</name_a>
+            <name_the>The Warping Aberrance</name_the>
+            <corpse_name_a></corpse_name_a>
+            <corpse_name_the></corpse_name_the>
+            <description>An otherworldly life form, akin to a macroscopic amoeba. It disrupts physical space around it, likely an effect of its dissonance with any other cosmos than its own.</description>
             <allow_generated_description>true</allow_generated_description>
             <wary_message>looks wary.</wary_message>
             <aware_message_seen></aware_message_seen>
-            <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
+            <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
+            <death_message>is destroyed.</death_message>
         </text>
         <graphics>
-            <tile>byakhee</tile>
-            <character>B</character>
-            <color>dark_brown</color>
+            <tile>amoeba</tile>
+            <character>E</character>
+            <color>violet</color>
         </graphics>
         <audio>
-            <aware_sfx_seen>flapping_wings</aware_sfx_seen>
-            <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
+            <aware_sfx_seen></aware_sfx_seen>
+            <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
         <attributes>
             <hit_points>32</hit_points>
             <spirit>20</spirit>
-            <speed_percent>150</speed_percent>
-            <shock_level>terrifying</shock_level>
-            <melee>70</melee>
+            <speed_percent>100</speed_percent>
+            <shock_level>frightening</shock_level>
+            <melee>0</melee>
             <ranged>0</ranged>
-            <dodging>30</dodging>
+            <dodging>20</dodging>
             <stealth>0</stealth>
             <searching>0</searching>
             <can_open_doors>false</can_open_doors>
-            <can_bash_doors>true</can_bash_doors>
+            <can_bash_doors>false</can_bash_doors>
             <size>humanoid</size>
             <always_prevent_knockback>false</always_prevent_knockback>
-            <can_bleed>true</can_bleed>
-            <can_leave_corpse>true</can_leave_corpse>
+            <can_bleed>false</can_bleed>
+            <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
-        <attacks>
-            <attack id="claw">
-                <damage>9</damage>
-            </attack>
-        </attacks>
+        <spells>
+            <spell skill="basic">summon_tentacles</spell>
+        </spells>
         <properties>
+            <property>alters_environment</property>
             <property>darkvision</property>
             <property>flying</property>
+            <property>r_poison</property>
+            <property>r_fear</property>
+            <property>r_conf</property>
+            <property>r_disease</property>
+            <property>r_blind</property>
+            <property>r_para</property>
         </properties>
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
@@ -3991,23 +3997,24 @@
             <ranged_cooldown_turns>0</ranged_cooldown_turns>
             <looks>true</looks>
             <avoids_blocking_friend>true</avoids_blocking_friend>
-            <attacks>true</attacks>
-            <paths_to_target_when_aware>true</paths_to_target_when_aware>
-            <moves_to_target_when_los>true</moves_to_target_when_los>
-            <moves_to_lair>false</moves_to_lair>
-            <moves_to_leader>true</moves_to_leader>
+            <attacks>false</attacks>
+            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <moves_to_target_when_los>false</moves_to_target_when_los>
+            <moves_to_lair>true</moves_to_lair>
+            <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
         <spawning>
-            <min_dungeon_level>8</min_dungeon_level>
-            <max_dungeon_level>27</max_dungeon_level>
+            <min_dungeon_level>12</min_dungeon_level>
+            <max_dungeon_level>24</max_dungeon_level>
             <auto_spawn>true</auto_spawn>
             <can_be_summoned_by_monster>true</can_be_summoned_by_monster>
             <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
-            <group_size weight="4">alone</group_size>
-            <group_size weight="1">few</group_size>
+            <group_size>alone</group_size>
             <native_room>plain</native_room>
-            <native_room>chasm</native_room>
+            <native_room>ritual</native_room>
+            <native_room>cave</native_room>
+            <native_room>forest</native_room>
         </spawning>
     </monster>
 
@@ -5933,6 +5940,86 @@
             <native_room>muddy</native_room>
             <native_room>forest</native_room>
             <native_room>chasm</native_room>
+        </spawning>
+    </monster>
+
+    <!--************************************************************-->
+    <!-- tentacles -->
+    <!--************************************************************-->
+    <monster id="tentacles">
+        <text>
+            <name_a>Tentacles</name_a>
+            <name_the>the Tentacles</name_the>
+            <corpse_name_a></corpse_name_a>
+            <corpse_name_the></corpse_name_the>
+            <description>An array of writhing tentacles sprouting up from the ground.</description>
+            <allow_generated_description>false</allow_generated_description>
+            <wary_message>seem disturbed.</wary_message>
+            <aware_message_seen></aware_message_seen>
+            <aware_message_hidden></aware_message_hidden>
+            <spell_message></spell_message>
+            <death_message>are destroyed.</death_message>
+        </text>
+        <graphics>
+            <tile>tentacles</tile>
+            <character>e</character>
+            <color>violet</color>
+        </graphics>
+        <audio>
+            <aware_sfx_seen></aware_sfx_seen>
+            <aware_sfx_hidden></aware_sfx_hidden>
+        </audio>
+        <attributes>
+            <hit_points>10</hit_points>
+            <spirit>12</spirit>
+            <speed_percent>100</speed_percent>
+            <shock_level>unsettling</shock_level>
+            <melee>50</melee>
+            <ranged>0</ranged>
+            <dodging>20</dodging>
+            <stealth>0</stealth>
+            <searching>0</searching>
+            <can_open_doors>false</can_open_doors>
+            <can_bash_doors>false</can_bash_doors>
+            <size>humanoid</size>
+            <always_prevent_knockback>true</always_prevent_knockback>
+            <can_bleed>true</can_bleed>
+            <can_leave_corpse>false</can_leave_corpse>
+            <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
+        </attributes>
+        <attacks>
+            <attack id="strike">
+                <damage>5</damage>
+            </attack>
+        </attacks>
+        <properties>
+            <property>r_breath</property>
+            <property>r_blind</property>
+        </properties>
+        <ai>
+            <erratic_move_percent>0</erratic_move_percent>
+            <turns_aware>10</turns_aware>
+            <ranged_cooldown_turns>0</ranged_cooldown_turns>
+            <looks>true</looks>
+            <avoids_blocking_friend>false</avoids_blocking_friend>
+            <attacks>true</attacks>
+            <paths_to_target_when_aware>false</paths_to_target_when_aware>
+            <moves_to_target_when_los>false</moves_to_target_when_los>
+            <moves_to_lair>false</moves_to_lair>
+            <moves_to_leader>false</moves_to_leader>
+            <moves_randomly_when_unaware>false</moves_randomly_when_unaware>
+        </ai>
+        <spawning>
+            <min_dungeon_level>3</min_dungeon_level>
+            <max_dungeon_level>8</max_dungeon_level>
+            <auto_spawn>true</auto_spawn>
+            <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
+            <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
+            <group_size>few</group_size>
+            <native_room>plain</native_room>
+            <native_room>ritual</native_room>
+            <native_room>cave</native_room>
+            <native_room>forest</native_room>
         </spawning>
     </monster>
 

@@ -51,6 +51,9 @@ Spell* make_spell_from_id(const SpellId spell_id)
         case SpellId::summon:
                 return new SpellSummonMon;
 
+        case SpellId::summon_tentacles:
+                return new SpellSummonTentacles;
+
         case SpellId::heal:
                 return new SpellHeal;
 
@@ -2533,6 +2536,65 @@ bool SpellSummonMon::allow_mon_cast_now(Mon& mon) const
         return
                 mon.target_ &&
                 (mon.is_target_seen_ || rnd::one_in(20));
+}
+
+// -----------------------------------------------------------------------------
+// Summon tentacles
+// -----------------------------------------------------------------------------
+void SpellSummonTentacles::run_effect(Actor* const caster,
+                                      const SpellSkill skill) const
+{
+        (void)skill;
+
+        Actor* leader = nullptr;
+
+        if (caster->is_player())
+        {
+                leader = caster;
+        }
+        else // Caster is monster
+        {
+                Actor* const caster_leader = static_cast<Mon*>(caster)->leader_;
+
+                leader =
+                        caster_leader
+                        ? caster_leader
+                        : caster;
+        }
+
+        const auto summoned =
+                actor_factory::spawn(caster->pos,
+                                     {ActorId::tentacles},
+                                     map::rect())
+                .make_aware_of_player()
+                .set_leader(leader)
+                .for_each([](Mon* const mon)
+                {
+                        mon->apply_prop(new PropSummoned());
+
+                        auto prop_waiting = new PropWaiting();
+
+                        prop_waiting->set_duration(2);
+
+                        mon->apply_prop(prop_waiting);
+                });
+
+        if (summoned.monsters.empty())
+        {
+                return;
+        }
+
+        Mon* const mon = summoned.monsters[0];
+
+        if (map::player->can_see_actor(*mon))
+        {
+                msg_log::add("Monstrous tentacles rises up from the ground!");
+        }
+}
+
+bool SpellSummonTentacles::allow_mon_cast_now(Mon& mon) const
+{
+        return mon.target_ && mon.is_target_seen_;
 }
 
 // -----------------------------------------------------------------------------

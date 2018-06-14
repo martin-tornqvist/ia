@@ -68,6 +68,7 @@ enum class ItemId
         // NOTE: There is a string -> id map below for these entries
         intr_bite,
         intr_claw,
+        intr_strike,
         intr_punch,
         intr_zombie_axe,
         intr_acid_spit,
@@ -174,6 +175,7 @@ const std::unordered_map<std::string, ItemId> str_to_intr_item_id_map =
 {
         {"bite", ItemId::intr_bite},
         {"claw", ItemId::intr_claw},
+        {"strike", ItemId::intr_strike},
         {"punch", ItemId::intr_punch},
         {"zombie_axe", ItemId::intr_zombie_axe},
         {"acid_spit", ItemId::intr_acid_spit},

@@ -1210,6 +1210,12 @@ void init()
     data[(size_t)d.id] = d;
 
     reset_data(d, ItemType::melee_wpn_intr);
+    d.id = ItemId::intr_strike;
+    d.melee.att_msgs = {"", "strikes me"};
+    d.melee.dmg_method = DmgMethod::blunt;
+    data[(size_t)d.id] = d;
+
+    reset_data(d, ItemType::melee_wpn_intr);
     d.id = ItemId::intr_punch;
     d.melee.att_msgs = {"", "punches me"};
     d.melee.dmg_method = DmgMethod::blunt;

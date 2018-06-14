@@ -15,7 +15,6 @@
 #include "item_att_property.hpp"
 #include "item_data.hpp"
 
-// TODO: This enum will be removed
 enum class ActorId
 {
         player,
@@ -66,7 +65,6 @@ enum class ActorId
         giant_bat,
         vampire_bat,
         abaxu, // Unique bat
-        byakhee,
         giant_mantis,
         locust,
         mummy,
@@ -91,6 +89,8 @@ enum class ActorId
         animated_wpn,
         mold,
         gas_spore,
+        tentacles,
+        warping_aberrance,
         death_fiend,
         the_high_priest,
         high_priest_guard_war_vet,

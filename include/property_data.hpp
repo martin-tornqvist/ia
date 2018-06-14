@@ -59,6 +59,7 @@ enum class PropId
     corpse_eater,
     teleports,
     corrupts_env_color, // "Strange color" monster corrupting the area
+    alters_env,
     regenerates,
     corpse_rises,
     spawns_zombie_parts_on_destroyed,
@@ -145,6 +146,7 @@ const std::unordered_map<std::string, PropId> str_to_prop_id_map = {
     {"corpse_eater", PropId::corpse_eater},
     {"teleports", PropId::teleports},
     {"corrupts_environment_color", PropId::corrupts_env_color},
+    {"alters_environment", PropId::alters_env},
     {"regenerates", PropId::regenerates},
     {"corpse_rises", PropId::corpse_rises},
     {"spawns_zombie_parts_on_destroyed",

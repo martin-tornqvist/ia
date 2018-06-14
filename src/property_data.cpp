@@ -731,6 +731,9 @@ static void init_data_list()
         d.id = PropId::corrupts_env_color;
         add(d);
 
+        d.id = PropId::alters_env;
+        add(d);
+
         d.id = PropId::regenerates;
         add(d);
 

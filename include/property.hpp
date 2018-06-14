@@ -1261,6 +1261,15 @@ public:
         PropActResult on_act() override;
 };
 
+class PropAltersEnv: public Prop
+{
+public:
+        PropAltersEnv() :
+                Prop(PropId::alters_env) {}
+
+        void on_std_turn() override;
+};
+
 class PropRegenerates: public Prop
 {
 public:

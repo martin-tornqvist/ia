@@ -1465,6 +1465,96 @@ PropActResult PropCorruptsEnvColor::on_act()
         return PropActResult();
 }
 
+void PropAltersEnv::on_std_turn()
+{
+        if (!rnd::one_in(4))
+        {
+                return;
+        }
+
+        Array2<bool> blocked(map::dims());
+
+        map_parsers::BlocksMoveCommon(ParseActors::no)
+                .run(blocked, blocked.rect());
+
+        // Do not consider doors blocking
+        for (size_t i = 0; i < map::nr_cells(); ++i)
+        {
+                if (map::cells.at(i).rigid->id() == FeatureId::door)
+                {
+                        blocked.at(i) = false;
+                }
+        }
+
+        Array2<bool> has_actor(map::dims());
+
+        for (auto actor : game_time::actors)
+        {
+                has_actor.at(actor->pos) = true;
+        }
+
+        const int r = 3;
+
+        const int x0 = std::max(
+                1,
+                owner_->pos.x - r);
+
+        const int y0 = std::max(
+                1,
+                owner_->pos.y - r);
+
+        const int x1 = std::min(
+                map::w() - 2,
+                owner_->pos.x + r);
+
+        const int y1 = std::min(
+                map::h() - 2,
+                owner_->pos.y + r);
+
+        for (int x = x0; x <= x1; ++x)
+        {
+                for (int y = y0; y <= y1; ++y)
+                {
+                        if (has_actor.at(x, y) || !rnd::one_in(6))
+                        {
+                                continue;
+                        }
+
+                        const P pos(x, y);
+
+                        const FeatureId current_id =
+                                map::cells.at(x, y).rigid->id();
+
+                        if (current_id == FeatureId::wall)
+                        {
+                                blocked.at(x, y) = true;
+
+                                if (map_parsers::is_map_connected(blocked))
+                                {
+                                        map::put(new Floor(pos));
+                                }
+                                else
+                                {
+                                        blocked.at(x, y) = false;
+                                }
+                        }
+                        else if (current_id == FeatureId::floor)
+                        {
+                                blocked.at(x, y) = true;
+
+                                if (map_parsers::is_map_connected(blocked))
+                                {
+                                        map::put(new Wall(pos));
+                                }
+                                else
+                                {
+                                        blocked.at(x, y) = false;
+                                }
+                        }
+                }
+        }
+}
+
 void PropRegenerates::on_std_turn()
 {
         if (owner_->is_alive() &&
