@@ -6012,7 +6012,7 @@
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>8</max_dungeon_level>
-            <auto_spawn>true</auto_spawn>
+            <auto_spawn>false</auto_spawn>
             <can_be_summoned_by_monster>false</can_be_summoned_by_monster>
             <nr_allowed_to_spawn>-1</nr_allowed_to_spawn>
             <group_size>few</group_size>
