@@ -60,6 +60,11 @@ private:
 
         virtual LevelTemplId template_id() const = 0;
 
+        virtual bool allow_transform_template() const
+        {
+                return true;
+        }
+
         virtual void handle_template_pos(const P& p, const char c) = 0;
 
         virtual void on_template_built() {}
@@ -98,6 +103,11 @@ private:
         LevelTemplId template_id() const override
         {
                 return LevelTemplId::intro_forest;
+        }
+
+        bool allow_transform_template() const override
+        {
+                return false;
         }
 
         void handle_template_pos(const P& p, const char c) override;
@@ -167,6 +177,11 @@ private:
         LevelTemplId template_id() const override
         {
                 return LevelTemplId::boss_level;
+        }
+
+        bool allow_transform_template() const override
+        {
+                return false;
         }
 
         void handle_template_pos(const P& p, const char c) override;

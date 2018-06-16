@@ -102,19 +102,22 @@ bool MapBuilderTemplateLevel::build_specific()
 {
         template_ = map_templates::level_templ(template_id());
 
-        if (rnd::coin_toss())
+        if (allow_transform_template())
         {
-                template_.rotate_cw();
-        }
+                if (rnd::coin_toss())
+                {
+                        template_.rotate_cw();
+                }
 
-        if (rnd::coin_toss())
-        {
-                template_.flip_hor();
-        }
+                if (rnd::coin_toss())
+                {
+                        template_.flip_hor();
+                }
 
-        if (rnd::coin_toss())
-        {
-                template_.flip_ver();
+                if (rnd::coin_toss())
+                {
+                        template_.flip_ver();
+                }
         }
 
         const P templ_dims = template_.dims();
