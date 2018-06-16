@@ -45,12 +45,15 @@ class MapBuilderTemplateLevel: public MapBuilder
 public:
         MapBuilderTemplateLevel() :
                 MapBuilder(),
-                template_(nullptr) {}
+                template_(P(0, 0)) {}
 
         virtual ~MapBuilderTemplateLevel() {}
 
 protected:
-        const Array2<char>* template_;
+        const Array2<char>& get_template() const
+        {
+                return template_;
+        }
 
 private:
         bool build_specific() override final;
@@ -60,6 +63,8 @@ private:
         virtual void handle_template_pos(const P& p, const char c) = 0;
 
         virtual void on_template_built() {}
+
+        Array2<char> template_;
 };
 
 // -----------------------------------------------------------------------------

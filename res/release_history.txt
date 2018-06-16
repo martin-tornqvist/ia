@@ -13,6 +13,7 @@ Gameplay
 * Spiders can use pathfinding to move to their target
 * Improved check for if Phobia of open places should trigger (for example it no longer triggers while standing in smoke)
 * Changed the standard map size
+* Maps built from templates are randomly flipped and rotated
 
 Interface
 * The interface has a new layout, and there is a scrolling viewport centered on the player

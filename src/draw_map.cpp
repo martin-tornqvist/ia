@@ -537,14 +537,14 @@ void clear()
 {
         clear_render_array();
 
-        std::fill(std::begin(render_array_),
-                  std::end(render_array_),
+        std::fill(std::begin(render_array_player_memory_),
+                  std::end(render_array_player_memory_),
                   CellRenderData());
 }
 
 void run()
 {
-        if (render_array_.length() != map::nr_cells())
+        if (render_array_.dims() != map::dims())
         {
                 render_array_.resize(map::dims());
 

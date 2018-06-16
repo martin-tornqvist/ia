@@ -100,9 +100,24 @@ std::unique_ptr<MapController> MapBuilder::map_controller() const
 // -----------------------------------------------------------------------------
 bool MapBuilderTemplateLevel::build_specific()
 {
-        template_ = &map_templates::level_templ(template_id());
+        template_ = map_templates::level_templ(template_id());
 
-        const P templ_dims = template_->dims();
+        if (rnd::coin_toss())
+        {
+                template_.rotate_cw();
+        }
+
+        if (rnd::coin_toss())
+        {
+                template_.flip_hor();
+        }
+
+        if (rnd::coin_toss())
+        {
+                template_.flip_ver();
+        }
+
+        const P templ_dims = template_.dims();
 
         map::reset(templ_dims);
 
@@ -112,7 +127,7 @@ bool MapBuilderTemplateLevel::build_specific()
                 {
                         const P p(x, y);
 
-                        handle_template_pos(p, template_->at(p));
+                        handle_template_pos(p, template_.at(p));
                 }
         }
 

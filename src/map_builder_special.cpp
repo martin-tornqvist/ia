@@ -72,7 +72,7 @@ void MapBuilderIntroForest::handle_template_pos(const P&p, const char c)
 
                 for (const P& d : dir_utils::dir_list)
                 {
-                        const char adj_c = template_->at(p + d);
+                        const char adj_c = get_template().at(p + d);
 
                         if (adj_c == '+')
                         {
