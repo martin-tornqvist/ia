@@ -15,15 +15,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>player_firearm</tile>
             <character>@</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>14</hit_points>
             <spirit>4</spirit>
@@ -43,6 +46,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -70,15 +74,18 @@
             <aware_message_hidden>I hear a growling voice.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>zombie_unarmed</tile>
             <character>Z</character>
             <color>brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>zombie_growl</aware_sfx_seen>
             <aware_sfx_hidden>zombie_growl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>14</hit_points>
             <spirit>0</spirit>
@@ -99,6 +106,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <!--
                 TODO: Zombies should also have something like grip/strangle.
@@ -109,11 +117,13 @@
                 <property_applied percent_chance="25">infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>corpse_rises</property>
             <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -127,6 +137,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -161,15 +172,18 @@
             <aware_message_hidden>I hear a growling voice.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>zombie_armed</tile>
             <character>Z</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>zombie_growl</aware_sfx_seen>
             <aware_sfx_hidden>zombie_growl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>14</hit_points>
             <spirit>0</spirit>
@@ -190,16 +204,19 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="zombie_axe">
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>corpse_rises</property>
             <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -213,6 +230,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>2</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -247,15 +265,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>zombie_bloated</tile>
             <character>Z</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>30</hit_points>
             <spirit>0</spirit>
@@ -276,6 +297,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <!--
                 TODO: Zombies should also have something like grip/strangle
@@ -287,11 +309,13 @@
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>corpse_rises</property>
             <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -305,6 +329,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -337,15 +362,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>zombie_unarmed</tile>
             <character>Z</character>
             <color>light_cyan</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>26</hit_points>
             <spirit>0</spirit>
@@ -366,18 +394,21 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>6</damage>
                 <property_applied percent_chance="25">infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>major_clapham_summon</property>
             <property>corpse_rises</property>
             <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>20</turns_aware>
@@ -391,6 +422,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -421,15 +453,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>zombie_unarmed</tile>
             <character>Z</character>
             <color>cyan</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>26</hit_points>
             <spirit>0</spirit>
@@ -450,17 +485,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>true</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>6</damage>
                 <property_applied percent_chance="25">infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>corpse_rises</property>
             <property>spawns_zombie_parts_on_destroyed</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>20</turns_aware>
@@ -474,6 +512,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -504,15 +543,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>crawling_intestines</tile>
             <character>z</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>8</spirit>
@@ -532,14 +574,17 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="strangle">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -553,6 +598,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>2</min_dungeon_level>
             <max_dungeon_level>4</max_dungeon_level>
@@ -581,15 +627,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>crawling_hand</tile>
             <character>z</character>
             <color>brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>8</spirit>
@@ -609,14 +658,17 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="strangle">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -630,6 +682,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>2</min_dungeon_level>
             <max_dungeon_level>4</max_dungeon_level>
@@ -659,15 +712,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>crawling_hand</tile>
             <character>z</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>28</hit_points>
             <spirit>25</spirit>
@@ -687,17 +743,21 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="strangle">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="basic">teleport</spell>
         </spells>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -711,6 +771,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -742,15 +803,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>floating_skull</tile>
             <character>z</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>16</spirit>
@@ -770,16 +834,19 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>speaks_curses</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>10</turns_aware>
@@ -793,6 +860,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -824,15 +892,18 @@
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>cultist_firearm</tile>
             <character>P</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>12</spirit>
@@ -852,15 +923,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>firearm</item_set>
             <item_set percent_chance="10">minor_treasure</item_set>
         </items>
+
         <spells>
             <spell skill="basic" percent_chance="5">darkbolt</spell>
             <spell skill="basic" percent_chance="5">enfeeble</spell>
             <spell skill="basic" percent_chance="5">knockback</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -874,6 +948,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -904,15 +979,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>bog_tcher</tile>
             <character>p</character>
             <color>dark_brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>12</spirit>
@@ -932,10 +1010,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>spike_gun</item_set>
             <item_set percent_chance="1">rare_treasure</item_set>
         </items>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -949,6 +1029,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>7</max_dungeon_level>
@@ -980,15 +1061,18 @@
             <aware_message_hidden>I hear a repulsive croaking voice.</aware_message_hidden>
             <spell_message>croaks incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>witch_or_warlock</tile>
             <character>P</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>60</spirit>
@@ -1008,9 +1092,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set min="2" max="3">minor_treasure</item_set>
         </items>
+
         <spells>
             <spell skill="expert">teleport</spell>
             <spell skill="expert">heal</spell>
@@ -1021,6 +1107,7 @@
             <spell skill="expert">spell_shield</spell>
             <spell skill="basic">enfeeble</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -1034,6 +1121,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -1047,6 +1135,7 @@
             <native_room>forest</native_room>
             <native_room>cave</native_room>
         </spawning>
+
         <starting_allies>
             <monster id="brown_jenkin"/>
         </starting_allies>
@@ -1068,15 +1157,18 @@
             <aware_message_hidden>I hear a loathsome titter.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>rat_thing</tile>
             <character>r</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>10</hit_points>
             <spirit>25</spirit>
@@ -1096,17 +1188,21 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>5</damage>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="basic">teleport</spell>
         </spells>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -1120,6 +1216,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -1147,15 +1244,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>giant_spider</tile>
             <character>A</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>40</hit_points>
             <spirit>0</spirit>
@@ -1175,6 +1275,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>10</damage>
@@ -1183,9 +1284,11 @@
                 <damage>6</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -1199,6 +1302,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>16</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -1231,15 +1335,18 @@
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>cultist_dagger</tile>
             <character>P</character>
             <color>light_cyan</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>30</spirit>
@@ -1259,10 +1366,12 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>priest_dagger</item_set>
             <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+
         <spells>
             <spell skill="basic">heal</spell>
             <spell skill="basic">darkbolt</spell>
@@ -1273,6 +1382,7 @@
             <spell skill="basic" percent_chance="50">summon</spell>
             <spell skill="basic" percent_chance="50">pestilence</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -1286,6 +1396,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -1317,15 +1428,18 @@
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>witch_or_warlock</tile>
             <character>P</character>
             <color>yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>40</spirit>
@@ -1345,9 +1459,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+
         <spells>
             <spell skill="expert">heal</spell>
             <spell skill="expert">darkbolt</spell>
@@ -1358,6 +1474,7 @@
             <spell skill="expert" percent_chance="50">summon</spell>
             <spell skill="expert" percent_chance="50">pestilence</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>14</turns_aware>
@@ -1371,6 +1488,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>10</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -1402,15 +1520,18 @@
             <aware_message_hidden use_cultist_messages="true"/>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>witch_or_warlock</tile>
             <character>P</character>
             <color>light_blue</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>40</hit_points>
             <spirit>50</spirit>
@@ -1430,9 +1551,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set min="1" max="2" percent_chance="75">minor_treasure</item_set>
         </items>
+
         <spells>
             <spell skill="master">heal</spell>
             <spell skill="master">darkbolt</spell>
@@ -1443,6 +1566,7 @@
             <spell skill="master" percent_chance="50">summon</spell>
             <spell skill="master" percent_chance="50">pestilence</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -1456,6 +1580,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>20</min_dungeon_level>
             <max_dungeon_level>29</max_dungeon_level>
@@ -1487,15 +1612,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>giant_spider</tile>
             <character>A</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>16</hit_points>
             <spirit>0</spirit>
@@ -1515,15 +1643,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>5</damage>
                 <property_applied duration="3">blind</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1537,6 +1668,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>18</max_dungeon_level>
@@ -1567,15 +1699,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>giant_spider</tile>
             <character>A</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>16</hit_points>
             <spirit>0</spirit>
@@ -1595,15 +1730,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>5</damage>
                 <property_applied duration="2">paralyzed</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1617,6 +1755,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>18</max_dungeon_level>
@@ -1647,15 +1786,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>giant_spider</tile>
             <character>A</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>16</hit_points>
             <spirit>0</spirit>
@@ -1675,15 +1817,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>5</damage>
                 <property_applied>weakened</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1697,6 +1842,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>18</max_dungeon_level>
@@ -1727,15 +1873,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>giant_spider</tile>
             <character>a</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>0</spirit>
@@ -1755,15 +1904,18 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>light_sensitive</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1777,6 +1929,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -1809,15 +1962,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>rat</tile>
             <character>r</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>2</hit_points>
             <spirit>1</spirit>
@@ -1837,15 +1993,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>1</damage>
                 <property_applied percent_chance="25">infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1859,6 +2018,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>6</max_dungeon_level>
@@ -1887,15 +2047,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>rat_thing</tile>
             <character>r</character>
             <color>dark_brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>8</spirit>
@@ -1915,14 +2078,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -1936,6 +2102,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>3</max_dungeon_level>
@@ -1968,15 +2135,18 @@
             <aware_message_hidden>hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>snake</tile>
             <character>S</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>hiss</aware_sfx_seen>
             <aware_sfx_hidden>hiss</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>0</spirit>
@@ -1997,15 +2167,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>1</damage>
                 <property_applied duration="16">poisoned</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -2019,6 +2192,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -2049,15 +2223,18 @@
             <aware_message_hidden>I hear hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>snake</tile>
             <character>S</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>hiss</aware_sfx_seen>
             <aware_sfx_hidden>hiss</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>0</spirit>
@@ -2078,6 +2255,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>1</damage>
@@ -2087,9 +2265,11 @@
                 <damage>1</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -2103,6 +2283,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -2133,15 +2314,18 @@
             <aware_message_hidden>I hear hissing.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>snake</tile>
             <character>S</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>hiss</aware_sfx_seen>
             <aware_sfx_hidden>hiss</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>6</hit_points>
             <spirit>0</spirit>
@@ -2162,15 +2346,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>1</damage>
                 <property_applied duration="16">poisoned</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -2184,6 +2371,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -2214,15 +2402,18 @@
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>hound</tile>
             <character>d</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>dog_snarl</aware_sfx_seen>
             <aware_sfx_hidden>dog_snarl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>0</spirit>
@@ -2242,6 +2433,7 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="fire_breath">
                 <damage>4</damage>
@@ -2251,12 +2443,14 @@
                 <damage>6</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fire</property>
             <property>r_poison</property>
             <property>r_disease</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -2270,6 +2464,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>27</max_dungeon_level>
@@ -2299,15 +2494,18 @@
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>hound</tile>
             <character>d</character>
             <color>yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>dog_snarl</aware_sfx_seen>
             <aware_sfx_hidden>dog_snarl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>32</hit_points>
             <spirit>0</spirit>
@@ -2327,6 +2525,7 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="energy_breath">
                 <damage>8</damage>
@@ -2336,12 +2535,14 @@
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_poison</property>
             <property>r_elec</property>
             <property>r_disease</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -2355,6 +2556,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>15</min_dungeon_level>
             <max_dungeon_level>28</max_dungeon_level>
@@ -2385,15 +2587,18 @@
             <aware_message_hidden>I hear a snarl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>hound</tile>
             <character>D</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>dog_snarl</aware_sfx_seen>
             <aware_sfx_hidden>dog_snarl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>80</hit_points>
             <spirit>40</spirit>
@@ -2413,16 +2618,19 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>zuul_possess_priest</property>
             <property>r_fear</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>50</turns_aware>
@@ -2436,6 +2644,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>13</min_dungeon_level>
             <max_dungeon_level>999</max_dungeon_level>
@@ -2468,15 +2677,18 @@
             <aware_message_hidden>I hear a droning voice.</aware_message_hidden>
             <spell_message>speaks incantations in a droning voice.</spell_message>
         </text>
+
         <graphics>
             <tile>mi_go</tile>
             <character>E</character>
             <color>dark_brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>10</hit_points>
             <spirit>20</spirit>
@@ -2495,22 +2707,27 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>mi_go_gun</item_set>
             <item_set percent_chance="5">rare_treasure</item_set>
         </items>
+
         <attacks>
             <attack id="sting">
                 <damage>5</damage>
                 <property_applied duration="8">poisoned</property_applied>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="basic">mi_go_hypno</spell>
         </spells>
+
         <properties>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -2524,6 +2741,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>6</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -2555,15 +2773,18 @@
             <aware_message_hidden>I hear a droning voice.</aware_message_hidden>
             <spell_message>speaks incantations in a droning voice.</spell_message>
         </text>
+
         <graphics>
             <tile>mi_go</tile>
             <character>E</character>
             <color>green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>24</hit_points>
             <spirit>20</spirit>
@@ -2582,23 +2803,28 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>mi_go_gun</item_set>
             <item_set percent_chance="25">mi_go_armor</item_set>
             <item_set percent_chance="5">rare_treasure</item_set>
         </items>
+
         <attacks>
             <attack id="sting">
                 <damage>8</damage>
                 <property_applied duration="8">poisoned</property_applied>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="basic">mi_go_hypno</spell>
         </spells>
+
         <properties>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -2612,6 +2838,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>12</min_dungeon_level>
             <max_dungeon_level>28</max_dungeon_level>
@@ -2642,15 +2869,18 @@
             <aware_message_hidden>I hear a shrill whistling.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>polyp</tile>
             <character>E</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>12</hit_points>
             <spirit>20</spirit>
@@ -2669,12 +2899,14 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="sting">
                 <damage>4</damage>
                 <property_applied duration="1" percent_chance="25">paralyzed</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>r_phys</property>
             <property>r_fire</property>
@@ -2688,6 +2920,7 @@
             <property>see_invis</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -2701,6 +2934,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>5</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -2730,15 +2964,18 @@
             <aware_message_hidden>I hear a shrill whistling.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>polyp</tile>
             <character>E</character>
             <color>light_cyan</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>70</hit_points>
             <spirit>30</spirit>
@@ -2757,12 +2994,14 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="sting">
                 <damage>9</damage>
                 <property_applied duration="1" percent_chance="25">paralyzed</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>r_phys</property>
             <property>r_fire</property>
@@ -2776,6 +3015,7 @@
             <property>see_invis</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -2789,6 +3029,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>10</min_dungeon_level>
             <max_dungeon_level>27</max_dungeon_level>
@@ -2818,15 +3059,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>leech</tile>
             <character>L</character>
             <color>dark_yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>40</spirit>
@@ -2845,17 +3089,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="mind_leech_sting">
                 <damage>2</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
             <property>r_disease</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -2869,6 +3116,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -2898,15 +3146,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>leech</tile>
             <character>L</character>
             <color>violet</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>40</spirit>
@@ -2925,17 +3176,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="spirit_leech_sting">
                 <damage>1</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
             <property>r_disease</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -2949,6 +3203,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -2978,15 +3233,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>leech</tile>
             <character>L</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>40</spirit>
@@ -3005,17 +3263,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="life_leech_sting">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_sleep</property>
             <property>r_breath</property>
             <property>r_disease</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -3029,6 +3290,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -3058,15 +3320,18 @@
             <aware_message_hidden>I hear a chilling howl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>ghoul</tile>
             <character>M</character>
             <color>green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ghoul_growl</aware_sfx_seen>
             <aware_sfx_hidden>wolf_howl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>30</hit_points>
             <spirit>20</spirit>
@@ -3087,17 +3352,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>8</damage>
                 <property_applied>infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>corpse_eater</property>
             <property>r_disease</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -3111,6 +3379,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>6</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -3144,15 +3413,18 @@
             <spell_message></spell_message>
             <death_message>fades.</death_message>
         </text>
+
         <graphics>
             <tile>shadow</tile>
             <character>M</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>12</spirit>
@@ -3172,17 +3444,20 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
             <property>light_sensitive</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -3196,6 +3471,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>8</max_dungeon_level>
@@ -3224,15 +3500,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>shadow</tile>
             <character>M</character>
             <color>yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>18</hit_points>
             <spirit>12</spirit>
@@ -3252,17 +3531,20 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
             <property>invis</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>24</turns_aware>
@@ -3276,6 +3558,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -3305,15 +3588,18 @@
             <aware_message_hidden>I hear a chilling howl.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>wolf</tile>
             <character>d</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>dog_snarl</aware_sfx_seen>
             <aware_sfx_hidden>wolf_howl</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>2</spirit>
@@ -3333,14 +3619,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -3354,6 +3643,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>0</min_dungeon_level>
             <max_dungeon_level>2</max_dungeon_level>
@@ -3384,15 +3674,18 @@
             <spell_message></spell_message>
             <death_message>is put to rest.</death_message>
         </text>
+
         <graphics>
             <tile>ghost</tile>
             <character>G</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>12</spirit>
@@ -3413,12 +3706,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="ghost_touch">
                 <damage>1</damage>
                 <property_applied>terrified</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>r_conf</property>
@@ -3426,6 +3721,7 @@
             <property>darkvision</property>
             <property>ethereal</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -3439,6 +3735,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>8</max_dungeon_level>
@@ -3467,15 +3764,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>void_traveler</tile>
             <character>Y</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>50</hit_points>
             <spirit>30</spirit>
@@ -3494,14 +3794,17 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>9</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>teleports</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -3515,6 +3818,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>10</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -3546,15 +3850,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>void_traveler</tile>
             <character>Y</character>
             <color>orange</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>70</hit_points>
             <spirit>30</spirit>
@@ -3573,20 +3880,24 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="expert">heal</spell>
             <spell skill="expert">burn</spell>
             <spell skill="expert">deafen</spell>
             <spell skill="expert">spell_shield</spell>
         </spells>
+
         <properties>
             <property>teleports</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>12</turns_aware>
@@ -3600,6 +3911,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>20</min_dungeon_level>
             <max_dungeon_level>28</max_dungeon_level>
@@ -3631,15 +3943,18 @@
             <aware_message_hidden>I hear the flapping of wings.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>raven</tile>
             <character>b</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>flapping_wings</aware_sfx_seen>
             <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>2</hit_points>
             <spirit>6</spirit>
@@ -3658,14 +3973,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="raven_peck">
                 <damage>1</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -3679,6 +3997,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -3709,15 +4028,18 @@
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>bat</tile>
             <character>B</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>flapping_wings</aware_sfx_seen>
             <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>8</hit_points>
             <spirit>6</spirit>
@@ -3736,15 +4058,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>2</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -3758,6 +4083,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -3789,15 +4115,18 @@
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>bat</tile>
             <character>B</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>flapping_wings</aware_sfx_seen>
             <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>12</hit_points>
             <spirit>8</spirit>
@@ -3816,15 +4145,18 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="vampiric_bite">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -3838,6 +4170,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>6</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -3868,15 +4201,18 @@
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>bat</tile>
             <character>B</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>flapping_wings</aware_sfx_seen>
             <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>120</hit_points>
             <spirit>36</spirit>
@@ -3895,17 +4231,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="vampiric_bite">
                 <damage>11</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>r_disease</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>24</turns_aware>
@@ -3919,6 +4258,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>20</min_dungeon_level>
             <max_dungeon_level>999</max_dungeon_level>
@@ -3950,15 +4290,18 @@
             <spell_message></spell_message>
             <death_message>is destroyed.</death_message>
         </text>
+
         <graphics>
             <tile>amoeba</tile>
             <character>E</character>
             <color>violet</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>32</hit_points>
             <spirit>20</spirit>
@@ -3977,9 +4320,11 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <spells>
             <spell skill="basic">summon_tentacles</spell>
         </spells>
+
         <properties>
             <property>alters_environment</property>
             <property>darkvision</property>
@@ -3991,6 +4336,7 @@
             <property>r_blind</property>
             <property>r_para</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4004,6 +4350,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>12</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -4034,15 +4381,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>mantis</tile>
             <character>I</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>25</hit_points>
             <spirit>20</spirit>
@@ -4061,14 +4411,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>6</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4082,6 +4435,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -4110,15 +4464,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>locust</tile>
             <character>i</character>
             <color>brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>3</hit_points>
             <spirit>2</spirit>
@@ -4137,16 +4494,19 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>1</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>breeds</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4160,6 +4520,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>7</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -4188,15 +4549,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
         </text>
+
         <graphics>
             <tile>mummy</tile>
             <character>P</character>
             <color>magenta</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>36</hit_points>
             <spirit>30</spirit>
@@ -4217,9 +4581,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set percent_chance="50">minor_treasure</item_set>
         </items>
+
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -4229,9 +4595,11 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="expert">disease</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -4245,6 +4613,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>10</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -4273,15 +4642,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>casts a spell.</spell_message>
         </text>
+
         <graphics>
             <tile>croc_head_mummy</tile>
             <character>P</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>36</hit_points>
             <spirit>30</spirit>
@@ -4302,11 +4674,13 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="spear_thrust">
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>999</turns_aware>
@@ -4320,6 +4694,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>14</min_dungeon_level>
             <max_dungeon_level>27</max_dungeon_level>
@@ -4351,15 +4726,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
         </text>
+
         <graphics>
             <tile>mummy</tile>
             <character>P</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>80</hit_points>
             <spirit>60</spirit>
@@ -4380,9 +4758,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set min="1" max="2">minor_treasure</item_set>
         </items>
+
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -4392,6 +4772,7 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="expert">darkbolt</spell>
             <spell skill="expert">disease</spell>
@@ -4399,6 +4780,7 @@
             <spell skill="expert">burn</spell>
             <spell skill="basic">enfeeble</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -4412,6 +4794,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -4440,15 +4823,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
         </text>
+
         <graphics>
             <tile>mummy</tile>
             <character>P</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>80</hit_points>
             <spirit>60</spirit>
@@ -4469,9 +4855,11 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set min="1" max="2">minor_treasure</item_set>
         </items>
+
         <attacks>
             <!--
                 TODO: Mummies should also have something like grip/strangle
@@ -4481,6 +4869,7 @@
                 <property_applied>cursed</property_applied>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="expert">darkbolt</spell>
             <spell skill="expert">disease</spell>
@@ -4488,6 +4877,7 @@
             <spell skill="expert">burn</spell>
             <spell skill="basic">enfeeble</spell>
         </spells>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -4501,6 +4891,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>11</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -4530,15 +4921,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>deep_one</tile>
             <character>F</character>
             <color>white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>26</hit_points>
             <spirit>12</spirit>
@@ -4559,6 +4953,7 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="spear_thrust">
                 <damage>9</damage>
@@ -4568,6 +4963,7 @@
                 <property_applied duration="indefinite">entangled</property_applied>
             </attack>
         </attacks>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -4581,6 +4977,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>6</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -4612,15 +5009,18 @@
             <aware_message_hidden>I hear a beast howling.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>ape</tile>
             <character>M</character>
             <color>white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ape</aware_sfx_seen>
             <aware_sfx_hidden>ape</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>6</spirit>
@@ -4640,14 +5040,17 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="maul">
                 <damage>6</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>7</turns_aware>
@@ -4661,6 +5064,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>20</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -4691,15 +5095,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>mass_of_worms</tile>
             <character>w</character>
             <color>white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>2</hit_points>
             <spirit>1</spirit>
@@ -4718,15 +5125,18 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>2</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>splits_on_death</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4740,6 +5150,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>1</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -4771,15 +5182,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>mass_of_worms</tile>
             <character>w</character>
             <color>violet</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>4</hit_points>
             <spirit>2</spirit>
@@ -4798,16 +5212,19 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>3</damage>
                 <property_applied duration="9">confused</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>splits_on_death</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4821,6 +5238,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>6</min_dungeon_level>
             <max_dungeon_level>19</max_dungeon_level>
@@ -4852,15 +5270,18 @@
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>vortex</tile>
             <character>V</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>16</hit_points>
             <spirit>12</spirit>
@@ -4879,11 +5300,13 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="dust_engulf">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>vortex</property>
             <property>r_poison</property>
@@ -4894,6 +5317,7 @@
             <property>r_para</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4907,6 +5331,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>14</max_dungeon_level>
@@ -4935,15 +5360,18 @@
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>vortex</tile>
             <character>V</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>20</hit_points>
             <spirit>12</spirit>
@@ -4962,12 +5390,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="fire_engulf">
                 <damage>6</damage>
                 <property_applied>burning</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>vortex</property>
             <property>r_fire</property>
@@ -4979,6 +5409,7 @@
             <property>r_para</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -4992,6 +5423,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>8</min_dungeon_level>
             <max_dungeon_level>27</max_dungeon_level>
@@ -5020,15 +5452,18 @@
             <aware_message_hidden>I hear a howling wind.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>vortex</tile>
             <character>V</character>
             <color>yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>30</hit_points>
             <spirit>12</spirit>
@@ -5047,12 +5482,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="energy_engulf">
                 <damage>8</damage>
                 <property_applied duration="2" percent_chance="30">burning</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>vortex</property>
             <property>r_fire</property>
@@ -5065,6 +5502,7 @@
             <property>r_para</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>9</turns_aware>
@@ -5078,6 +5516,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>15</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -5107,15 +5546,18 @@
             <spell_message></spell_message>
             <death_message>disintegrates.</death_message>
         </text>
+
         <graphics>
             <tile>ooze</tile>
             <character>o</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ooze_gurgle</aware_sfx_seen>
             <aware_sfx_hidden>ooze_gurgle</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>16</hit_points>
             <spirit>12</spirit>
@@ -5134,11 +5576,13 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="pus_spew">
                 <damage>4</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5149,6 +5593,7 @@
             <property>darkvision</property>
             <property>ooze</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -5162,6 +5607,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>2</min_dungeon_level>
             <max_dungeon_level>3</max_dungeon_level>
@@ -5194,15 +5640,18 @@
             <spell_message></spell_message>
             <death_message>disintegrates.</death_message>
         </text>
+
         <graphics>
             <tile>ooze</tile>
             <character>o</character>
             <color>light_white</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ooze_gurgle</aware_sfx_seen>
             <aware_sfx_hidden>ooze_gurgle</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>12</hit_points>
             <spirit>12</spirit>
@@ -5221,11 +5670,13 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="pus_spew">
                 <damage>3</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5236,6 +5687,7 @@
             <property>darkvision</property>
             <property>ooze</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -5249,6 +5701,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>4</min_dungeon_level>
             <max_dungeon_level>6</max_dungeon_level>
@@ -5281,15 +5734,18 @@
             <spell_message></spell_message>
             <death_message>disintegrates.</death_message>
         </text>
+
         <graphics>
             <tile>ooze</tile>
             <character>o</character>
             <color>green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ooze_gurgle</aware_sfx_seen>
             <aware_sfx_hidden>ooze_gurgle</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>18</hit_points>
             <spirit>12</spirit>
@@ -5308,12 +5764,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="pus_spew">
                 <damage>4</damage>
                 <property_applied>infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5324,6 +5782,7 @@
             <property>darkvision</property>
             <property>ooze</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -5337,6 +5796,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>5</min_dungeon_level>
             <max_dungeon_level>7</max_dungeon_level>
@@ -5369,15 +5829,18 @@
             <spell_message></spell_message>
             <death_message>disintegrates.</death_message>
         </text>
+
         <graphics>
             <tile>ooze</tile>
             <character>o</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>ooze_gurgle</aware_sfx_seen>
             <aware_sfx_hidden>ooze_gurgle</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>20</hit_points>
             <spirit>12</spirit>
@@ -5396,12 +5859,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="pus_spew">
                 <damage>4</damage>
                 <property_applied>poisoned</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>regenerates</property>
             <property>r_poison</property>
@@ -5412,6 +5877,7 @@
             <property>darkvision</property>
             <property>ooze</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -5425,6 +5891,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>7</min_dungeon_level>
             <max_dungeon_level>9</max_dungeon_level>
@@ -5457,15 +5924,18 @@
             <spell_message></spell_message>
             <death_message>disintegrates.</death_message>
         </text>
+
         <graphics>
             <tile>ooze</tile>
             <character>O</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>35</hit_points>
             <spirit>40</spirit>
@@ -5484,11 +5954,13 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="acid_touch">
                 <damage>10</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>confuses_adjacent</property>
             <property>corrupts_environment_color</property>
@@ -5504,6 +5976,7 @@
             <property>ethereal</property>
             <property>ooze</property>
         </properties>
+
         <ai>
             <erratic_move_percent>35</erratic_move_percent>
             <turns_aware>8</turns_aware>
@@ -5517,6 +5990,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>14</min_dungeon_level>
             <max_dungeon_level>24</max_dungeon_level>
@@ -5547,15 +6021,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>chthonian</tile>
             <character>W</character>
             <color>dark_brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>250</hit_points>
             <spirit>40</spirit>
@@ -5574,16 +6051,19 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>15</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>darkvision</property>
             <property>burrowing</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>24</turns_aware>
@@ -5597,6 +6077,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>15</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -5626,15 +6107,18 @@
             <aware_message_hidden>I hear the flapping of great wings.</aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>hunting_horror</tile>
             <character>W</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen>flapping_wings</aware_sfx_seen>
             <aware_sfx_hidden>flapping_wings</aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>100</hit_points>
             <spirit>40</spirit>
@@ -5653,17 +6137,20 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="bite">
                 <damage>12</damage>
                 <property_applied>poisoned</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>10</turns_aware>
@@ -5677,6 +6164,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>24</min_dungeon_level>
             <max_dungeon_level>999</max_dungeon_level>
@@ -5707,15 +6195,18 @@
             <aware_message_hidden>I hear a deep buzzing sound.</aware_message_hidden>
             <spell_message>makes buzzing sounds in peculiar frequencies.</spell_message>
         </text>
+
         <graphics>
             <tile>device2</tile>
             <character>T</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>18</hit_points>
             <spirit>40</spirit>
@@ -5734,11 +6225,13 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <spells>
             <spell skill="expert">darkbolt</spell>
             <spell skill="expert">burn</spell>
             <spell skill="expert">heal</spell>
         </spells>
+
         <properties>
             <property>r_poison</property>
             <property>r_sleep</property>
@@ -5748,6 +6241,7 @@
             <property>r_blind</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -5761,6 +6255,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>10</min_dungeon_level>
             <max_dungeon_level>14</max_dungeon_level>
@@ -5793,15 +6288,18 @@
             <spell_message></spell_message>
             <death_message>is destroyed.</death_message>
         </text>
+
         <graphics>
             <tile>none</tile>
             <character>X</character>
             <color>yellow</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>22</hit_points>
             <spirit>40</spirit>
@@ -5820,6 +6318,7 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <properties>
             <property>r_fire</property>
             <property>r_poison</property>
@@ -5832,6 +6331,7 @@
             <property>r_blind</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>5</erratic_move_percent>
             <turns_aware>16</turns_aware>
@@ -5845,6 +6345,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -5872,15 +6373,18 @@
             <spell_message></spell_message>
             <death_message>is destroyed.</death_message>
         </text>
+
         <graphics>
             <tile>fungi</tile>
             <character>e</character>
             <color>light_green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>1</hit_points>
             <spirit>1</spirit>
@@ -5899,12 +6403,14 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="spores">
                 <damage>1</damage>
                 <property_applied duration="12">poisoned</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>breeds</property>
             <property>r_poison</property>
@@ -5915,6 +6421,7 @@
             <property>r_disease</property>
             <property>r_blind</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>10</turns_aware>
@@ -5928,6 +6435,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>false</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>8</max_dungeon_level>
@@ -5960,15 +6468,18 @@
             <spell_message></spell_message>
             <death_message>are destroyed.</death_message>
         </text>
+
         <graphics>
             <tile>tentacles</tile>
             <character>e</character>
             <color>violet</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>10</hit_points>
             <spirit>12</spirit>
@@ -5987,15 +6498,18 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="strike">
                 <damage>5</damage>
             </attack>
         </attacks>
+
         <properties>
             <property>r_breath</property>
             <property>r_blind</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>10</turns_aware>
@@ -6009,6 +6523,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>false</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>3</min_dungeon_level>
             <max_dungeon_level>8</max_dungeon_level>
@@ -6039,15 +6554,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message></spell_message>
         </text>
+
         <graphics>
             <tile>gas_spore</tile>
             <character>E</character>
             <color>light_red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>1</hit_points>
             <spirit>1</spirit>
@@ -6066,6 +6584,7 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <properties>
             <property>explodes_on_death</property>
             <property>r_poison</property>
@@ -6078,6 +6597,7 @@
             <property>darkvision</property>
             <property>flying</property>
         </properties>
+
         <ai>
             <erratic_move_percent>15</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -6091,6 +6611,7 @@
             <moves_to_leader>false</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>2</min_dungeon_level>
             <max_dungeon_level>7</max_dungeon_level>
@@ -6123,15 +6644,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
         </text>
+
         <graphics>
             <tile>fiend</tile>
             <character>Y</character>
             <color>gray</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>100</hit_points>
             <spirit>40</spirit>
@@ -6151,16 +6675,19 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>15</damage>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="expert">enfeeble</spell>
             <spell skill="expert">disease</spell>
             <spell skill="expert">spell_shield</spell>
         </spells>
+
         <properties>
             <property>r_fire</property>
             <property>r_sleep</property>
@@ -6169,6 +6696,7 @@
             <property>r_para</property>
             <property>darkvision</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>5</turns_aware>
@@ -6182,6 +6710,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>24</min_dungeon_level>
             <max_dungeon_level>28</max_dungeon_level>
@@ -6210,15 +6739,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>speaks incantations in a deep hollow voice.</spell_message>
         </text>
+
         <graphics>
             <tile>the_high_priest</tile>
             <character>P</character>
             <color>red</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>110</hit_points>
             <spirit>999</spirit>
@@ -6239,11 +6771,13 @@
             <can_leave_corpse>false</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>8</damage>
             </attack>
         </attacks>
+
         <spells>
             <spell skill="master">darkbolt</spell>
             <spell skill="master">summon</spell>
@@ -6253,12 +6787,14 @@
             <spell skill="master">disease</spell>
             <spell skill="expert">enfeeble</spell>
         </spells>
+
         <properties>
             <property>r_fire</property>
             <property>r_fear</property>
             <property>r_conf</property>
             <property>r_breath</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -6272,6 +6808,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -6299,15 +6836,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>player_firearm</tile>
             <character>P</character>
             <color>green</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>100</hit_points>
             <spirit>999</spirit>
@@ -6328,13 +6868,16 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>high_priest_guard_war_vet</item_set>
         </items>
+
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -6348,6 +6891,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -6375,15 +6919,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>player_melee</tile>
             <character>P</character>
             <color>cyan</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>80</hit_points>
             <spirit>999</spirit>
@@ -6404,13 +6951,16 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <items>
             <item_set>high_priest_guard_rogue</item_set>
         </items>
+
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -6424,6 +6974,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
@@ -6451,15 +7002,18 @@
             <aware_message_hidden></aware_message_hidden>
             <spell_message>mutters incantations.</spell_message>
         </text>
+
         <graphics>
             <tile>ghoul</tile>
             <character>P</character>
             <color>brown</color>
         </graphics>
+
         <audio>
             <aware_sfx_seen></aware_sfx_seen>
             <aware_sfx_hidden></aware_sfx_hidden>
         </audio>
+
         <attributes>
             <hit_points>140</hit_points>
             <spirit>999</spirit>
@@ -6480,16 +7034,19 @@
             <can_leave_corpse>true</can_leave_corpse>
             <prioritize_destroying_corpse>false</prioritize_destroying_corpse>
         </attributes>
+
         <attacks>
             <attack id="claw">
                 <damage>10</damage>
                 <property_applied>infected</property_applied>
             </attack>
         </attacks>
+
         <properties>
             <property>r_fear</property>
             <property>r_breath</property>
         </properties>
+
         <ai>
             <erratic_move_percent>0</erratic_move_percent>
             <turns_aware>9999</turns_aware>
@@ -6503,6 +7060,7 @@
             <moves_to_leader>true</moves_to_leader>
             <moves_randomly_when_unaware>true</moves_randomly_when_unaware>
         </ai>
+
         <spawning>
             <min_dungeon_level>-1</min_dungeon_level>
             <max_dungeon_level>-1</max_dungeon_level>
