@@ -573,7 +573,7 @@ std::string trait_descr(const Trait id)
         case Trait::indomitable_fury:
                 return
                         "While Frenzied, you are immune to Wounds, and your "
-                        "attacks causes fear";
+                        "attacks cause fear";
 
         case Trait::END:
                 break;
